@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this line to the <head> section of your HTML file -->
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+    <!-- Local bootstrap.js-->
+    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+</head>
+
+<body>
+    <div id="customAppointmentAlert" class="custom-alert">
+        <h2>Appointment registered successfully</h2>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center text-white mt-5">
+            <div class="col-md-6 bg-light p-4 rounded">
+                <h1 class="text-center mb-4">Appointment Booking</h1>
+                <form id="appointmentForm">
+                    <div class="form-group">
+                        <label for="repairType">Type of Repair</label>
+                        <select class="form-control" id="repairType" name="repairType" required onchange="changeTimeContainer()">
+                            <option value="1">Oil change</option>
+                            <option value="120">Paint job</option>
+                            <option value="4">Overall checkup or tuning</option>
+                            <option value="4">Custom parts</option>
+                            <option value="1">Project discussion</option>
+                        </select>
+                    </div>
+                    <label for="repairType" class="text-white">Choose a day</label>
+                    <div class="container text-dark">
+                        <div class="row justify-content-center ">
+                            <div class="col-lg-8">
+                                <div class="card">
+                                    <div class="card-header row">
+                                        <button id="prevMonth" class="btn btn-outline-secondary m-auto">&lt;</button>
+                                        <h3 id="monthYear" class="m-auto"></h3>
+                                        <button id="nextMonth" class="btn btn-outline-secondary m-auto">&gt;</button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row" id="daysOfWeek">
+                                            <!-- Days of the week will be appended here -->
+                                        </div>
+                                        <div class="row" id="calendar">
+                                            <!-- Calendar will be appended here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="" id="time-container">
+                        <!-- Choices for time will dynamically appear here-->
+                    </div>  
+                    <div class="form-group mt-2">
+                        <label class="form-label" for="additionalInfo">Additional Information</label>
+                        <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="4" placeholder="Enter any additional information about the appointment"></textarea>
+                    </div>
+                    <div class="">
+                    <button type="submit" class="btn btn-outline-secondary ">Make Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+<script>
+    let selectedDateTime = null; // Variable to store the selected datetime
+    let selectedDate = null; // Variable to store the selected date
+    let user = null;
+    
+    document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Retrieve form data
+        const additionalInfo = document.getElementById('additionalInfo').value;
+
+        
+        // Fetch user information from the server
+        fetch('http://localhost:5001/user-info', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            // Update the profile information on the page
+            user = data.user.idUser;
+            const endDateTime = new Date(selectedDateTime.getTime());
+        const repairTypeSelect = document.getElementById('repairType');
+        const repairTypeDuration = parseInt(repairTypeSelect.value); // Convert the value to an integer
+
+        // Add the specified number of hours to the selected date time
+        endDateTime.setHours(endDateTime.getHours() + repairTypeDuration);
+
+        console.log('Selected Repair Type Duration:', repairTypeDuration);
+        console.log('Selected Repair will end:', endDateTime);
+        // Construct the data object to send to the backend
+        const requestData = {
+            idUser: user,
+            StartDate: selectedDateTime,
+            EndDateProjection: endDateTime,
+            ProjectInfo: additionalInfo
+        };
+        console.log(requestData)
+        // Fetch request to send form data to backend
+        fetch(window.location.origin + ':5001'+ '/make-appointment', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json' // Specify JSON content type
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Appointment created successfully:', data);
+            // Optionally, you can display a success message to the user
+            showCustomAppointmentAlert();
+
+        })
+        .catch(error => {
+            console.error('Error creating appointment:', error);
+            // Optionally, you can display an error message to the user
+        });
+          } else {
+            console.error('Error fetching user information:', data.message);
+          }
+        })
+
+        .catch(error => {
+          console.error('Error fetching user information:', error);
+        });
+
+        console.log(`User:${user}`)
+        
+});
+
+    function changeTimeContainer() {
+            renderCalendar();
+            selectedDate = null;
+            const repairType = document.getElementById('repairType').value;
+            let timeContainerHTML = '';
+            switch (repairType) {
+                case '1':
+                    timeContainerHTML = `
+                    <label class="mt-4">Choose Appointment Time</label>
+                        <div class="time-container text-white">
+                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="m-auto">
+                                        <!-- Loop from 9am to 6pm -->
+                                        <!-- Each button has an ID representing the hour (e.g., 9am, 10am, ...) -->
+                                        <!-- Replace the onclick handler with your logic -->
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="9am" onclick="selectTime('9')">9:00-10:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="10am" onclick="selectTime('10')">10:00-11:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="11am" onclick="selectTime('11')">11:00-12:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="12pm" onclick="selectTime('12')">12:00-13:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="1pm" onclick="selectTime('13')">13:00-14:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="2pm" onclick="selectTime('14')">14:00-15:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="3pm" onclick="selectTime('15')">15:00-16:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="4pm" onclick="selectTime('16')">16:00-17:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="5pm" onclick="selectTime('17')">17:00-18:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="6pm" onclick="selectTime('18')">18:00-19:00</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case '120':
+                    timeContainerHTML = `
+                    `;
+                    break;
+                case '4':
+                    timeContainerHTML = `
+                    <label class="mt-4">Choose Appointment Time</label>
+                    <div class="time-container text-white">
+                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="m-auto">
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="9" onclick="selectTime('9')">9:00-13:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="14" onclick="selectTime('14')">14:00-18:00</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case '4':
+                    timeContainerHTML = `
+                    <label class="mt-4">Choose Appointment Time</label>
+                    <div class="time-container text-white">
+                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="m-auto">
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="9" onclick="selectTime('9')">9:00-13:00</button>
+                                        <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="14" onclick="selectTime('14')">14:00-18:00</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                default:
+                    timeContainerHTML = '';
+                    break;
+            }
+            document.getElementById('time-container').innerHTML = timeContainerHTML;
+        }
+
+        function selectTime(time) {
+            // Logic to handle time selection
+            console.log('Selected time:', time);
+        }
+
+        // Add your calendar rendering logic here
+
+
+
+    /* Scripts for calendar */
+    const daysOfWeekElement = document.getElementById('daysOfWeek');
+    const calendarElement = document.getElementById('calendar');
+    const monthYearElement = document.getElementById('monthYear');
+    const prevMonthButton = document.getElementById('prevMonth');
+    const nextMonthButton = document.getElementById('nextMonth');
+    let currentDate = new Date();
+    function renderCalendar() {
+        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const lastDayOfPrevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+        monthYearElement.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getFullYear()}`;
+        // Clear previous calendar
+        calendarElement.innerHTML = '';
+        daysOfWeekElement.innerHTML = '';
+        // Add days of the week
+        const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+        daysOfWeek.forEach(day => {
+            const dayOfWeek = document.createElement('div');
+            dayOfWeek.textContent = day;
+            dayOfWeek.classList.add('font-weight-normal', 'text-center', 'small-font', 'ml-25', 'mr-25');
+            daysOfWeekElement.appendChild(dayOfWeek);
+        });
+        let currentDay = 1;
+        let currentMonthFinished = false;
+        // Iterate through the weeks
+        while (!currentMonthFinished) {
+            // Create a row for the week
+            const weekRow = document.createElement('div');
+            weekRow.classList.add('row', 'ml-1', 'mr-1');
+            // Populate the row with days
+            for (let i = 0; i < 7; i++) {
+                const dayCell = document.createElement('div');
+                dayCell.classList.add('day', 'text-center', 'btn', 'btn-outline-secondary', 'btn-sm', 'm-1', 'outline', 'col', 'p-1');
+                if ((i >= firstDayOfMonth.getDay() || currentDay > 1) && currentDay <= lastDayOfMonth.getDate()) {
+                    const dayOfMonth = currentDay;
+                    dayCell.textContent = dayOfMonth;
+                    dayCell.classList.add('currentMonth');
+                    // Check if the day is before today
+                    const currentDateObject = new Date();
+                    if ((currentDate.getFullYear() < currentDateObject.getFullYear() ||
+                        (currentDate.getFullYear() === currentDateObject.getFullYear() &&
+                            currentDate.getMonth() < currentDateObject.getMonth())) ||
+                        (currentDate.getFullYear() === currentDateObject.getFullYear() &&
+                            currentDate.getMonth() === currentDateObject.getMonth() &&
+                            dayOfMonth < currentDateObject.getDate())) {
+                        dayCell.classList.add('disabled', 'prevDay');
+                        dayCell.classList.remove('btn-outline-secondary');
+                    }
+                    else {
+                        // Add click event listener to each day cell
+                        dayCell.addEventListener('click', () => {
+                            document.querySelectorAll('.day').forEach(button => {
+                            button.classList.remove('active');
+                        });
+                        selectedDate = null;
+                            openTimeMenuForDay(dayOfMonth);
+                        });
+                    }
+                    currentDay++;
+                }
+                else if (currentDay < firstDayOfMonth.getDay()) {
+                    // Day is part of the previous month
+                    // in case i wanna show the before month dates dayCell.textContent =  lastDayOfPrevMonth - (firstDayOfMonth.getDay() - i - 1);
+                    dayCell.textContent = '';
+                    dayCell.classList.add('prevMonth', 'disabled');
+                    dayCell.classList.remove('btn-outline-secondary');
+                }
+                else if (currentDay >= lastDayOfMonth.getDay()) {
+                    // Day is part of the next month
+                    dayCell.textContent = '';
+                    dayCell.classList.add('nextMonth', 'disabled');
+                    dayCell.classList.remove('btn-outline-secondary');
+                    currentDay++;
+                }
+                weekRow.appendChild(dayCell);
+            }
+            // Append the week row to the calendar
+            calendarElement.appendChild(weekRow);
+            // Check if we have finished rendering the current month
+            if (currentDay > lastDayOfMonth.getDate()) {
+                currentMonthFinished = true;
+            }
+        }
+    }
+   
+
+    function openTimeMenuForDay(day) {
+        
+        // Replace this function with your logic to open a menu of times for the selected day
+            // Add the active class to the clicked button
+            event.target.classList.add('active');
+            
+            // Store the selected date
+            selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            console.log('Selected date:', selectedDate);
+             // If repair type is '120', select the next five days too
+            const repairTypeSelect = document.getElementById('repairType');
+            const repairTypeValue = repairTypeSelect.value;
+            if (repairTypeValue === '120') {
+            // Get the index of the clicked day button
+            const dayButtons = document.querySelectorAll('.day');
+            const clickedDayIndex = Array.from(dayButtons).indexOf(event.target);
+            // Select the next five days
+            for (let i = 0; i < 5; i++) {
+                if (clickedDayIndex + i < dayButtons.length) {
+                    dayButtons[clickedDayIndex + i].classList.add('active');
+                }
+            }
+            // Show information about the selected date range
+            const selectedDateRangeInfo = document.getElementById('time-container');
+            if (selectedDateRangeInfo) {
+                const endDate = new Date(selectedDate);
+                endDate.setDate(endDate.getDate() + 5); // Add 5 days
+                selectedDateRangeInfo.innerHTML = `
+                        <div class="mt-4">
+                            Selected Date Range: ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}
+                        </div>
+                            `;
+                }
+            }
+    }
+
+    /* Scripts for showing time choosing options */
+
+
+    
+    function selectTime(hour) {
+        if (selectedDate === null) {
+            // If no date is selected, show an alert
+            alert('Please select a day first.');
+            return;
+        }
+
+        // Construct the selected datetime using the selected date and hour
+        const selectedHour = parseInt(hour);
+        selectedDateTime = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), selectedHour, 0, 0);
+        console.log('Selected datetime:', selectedDateTime);
+
+        // Update the time-container with the selected datetime
+        const timeContainer = document.querySelector('.time-container');
+        timeContainer.querySelectorAll('p.selected-time').forEach(element => {
+            element.remove();
+        });
+
+        // Construct the HTML string for the selected time paragraph
+        const selectedTimeHTML = `<p class="mt-2 selected-time">Selected Date & Time: ${selectedDate.toLocaleDateString()} ${selectedDateTime.getHours().toString().padStart(2, '0')}:${selectedDateTime.getMinutes().toString().padStart(2, '0')}</p>`;
+        
+        // Add the selected time paragraph to the timeContainer
+        timeContainer.insertAdjacentHTML('beforeend', selectedTimeHTML);
+    }
+
+
+    
+
+    prevMonthButton.addEventListener('click', () => {
+        event.preventDefault();
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+    nextMonthButton.addEventListener('click', () => {
+        event.preventDefault();
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+
+    // Initial render
+    renderCalendar();
+    changeTimeContainer(); // Initial run of TimeContainer creation
+</script>
+
+</body>
+
+</html>
+``

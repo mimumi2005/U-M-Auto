@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this line to the <head> section of your HTML file -->
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+    <!-- Local bootstrap.js-->
+    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+    <!-- Vector library for car painting UI-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script> 
+
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div id="customSignUpAlert" class="custom-alert">
+        <h2>Succesfully Signed up</h2>
+    </div>
+    <div class="container mx-80 mt-4">
+        <div class="row justify-content-center  text-white">
+            <div class="col-md-4 bg-light">
+                <h1 class="text-center">Sign Up</h1>
+                <form id="signupForm" action="/signup" method="post">
+                    <div class="form-group">
+                      <label class="row ml-0 mb-2" id='name-red' for="name">Name <span class="ml-1" id="EmptyName" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a name</b></label>
+                      <input type="name" class="form-control" placeholder="Enter your name" id="name" name="name" >
+                    </div>
+                    <div class="form-group">
+                      <div id="email-red" class="row ml-0 mb-2" for="email">Email <span class="ml-1" id="BadEmail" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a valid email</b></span> <span class="ml-1" id="TakenEmail" style="display:none; color:rgb(255, 0, 0)"><b>- Email is taken</b></span><span class="ml-1" id="EmptyEmail" style="display:none; color:rgb(255, 0, 0)"><b>- Enter an email</b></div>
+                      <input type="text" class="form-control" placeholder="Enter your email address" id="email" name="email" >
+                    </div>
+                    <div class="form-group">
+                      <div id="username-red" class="row ml-0 mb-2" for="username">Username <span class="ml-1" id="TakenUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Username is taken</b></span><span class="ml-1" id="EmptyUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a username</b></span></div>
+                      <input type="text" class="form-control" placeholder="Choose a username" id="username" name="username" >
+                    </div>
+                    <div class="form-group">
+                      <div id="password-red" class="row ml-0 mb-2" for="password">Password <span class="ml-1" id="BadPassword" style="display:none; color:rgb(255, 0, 0)"><b>- enter a safe password</b></span></div>
+                      <input type="password" class="form-control" placeholder="Enter your desired password" id="password" name="password" >
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="acceptPolicy" required>
+                      <label class="form-check-label" for="acceptPolicy"> I accept the <a href="#termsConditionsModal" data-bs-toggle="modal">terms and conditions</a></label>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-block mb-3" >Create Account</button>
+                  </form>                  
+            </div>
+        </div>
+    </div>
+    <!-- Terms and Conditions Modal -->
+    <div class="modal fade" id="termsConditionsModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" ari-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Terms and Conditions</h5>
+        </div>
+        <div class="modal-body">
+            <!-- Terms and conditions text here -->
+            I will own you.
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Scripts for sign up event listeners and email validation -->
+<script>
+    document.getElementById('name').focus();
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+        // Prevent the default form submission
+        e.preventDefault();
+
+        // Resets the error message styles
+        document.getElementById('name-red').style.color="#fff";
+        document.getElementById('username-red').style.color="#fff";
+        document.getElementById('email-red').style.color="#fff";
+        document.getElementById('password-red').style.color="#fff";
+
+        document.getElementById('EmptyName').style.display="none";
+        document.getElementById('EmptyUsername').style.display="none";
+        document.getElementById('BadEmail').style.display="none";
+        document.getElementById('BadPassword').style.display="none";
+        document.getElementById('TakenEmail').style.display="none";
+        document.getElementById('TakenUsername').style.display="none";
+
+        document.getElementById('name').classList.remove('form-control-incorrect')
+        document.getElementById('username').classList.remove('form-control-incorrect');
+        document.getElementById('email').classList.remove('form-control-incorrect');
+        document.getElementById('password').classList.remove('form-control-incorrect')
+
+        // Name validation
+        const NameValue = document.getElementById('name').value.trim();
+        if(NameValue==''){
+            document.getElementById('name-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('name').classList.add('form-control-incorrect')
+            document.getElementById('EmptyName').style.display="block";
+            return
+        }
+        
+
+        // Email validation
+        const EmailInput = document.getElementById('email');
+        const EmailPattern = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+        const EmailValue = EmailInput.value.trim();
+        if ((!EmailPattern.test(EmailValue))){
+            document.getElementById('email').classList.add('form-control-incorrect');
+            document.getElementById('BadEmail').style.display="block";
+            document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+            return;
+        }
+        if(EmailValue==''){
+            document.getElementById('email').classList.add('form-control-incorrect');
+            document.getElementById('EmptyEmail').style.display="block";
+            document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+            return;
+        }     
+
+        // Username validation
+        const UsernameValue = document.getElementById("username").value.trim();
+        if (UsernameValue==''){
+            document.getElementById('username').classList.add('form-control-incorrect');
+            document.getElementById('EmptyUsername').style.display="block";
+            document.getElementById('username-red').style.color="rgb(255, 0, 0)";
+            return;
+        }
+        
+        //password validation
+        const passwordInput = document.getElementById('password');
+        const passwordValue = passwordInput.value.trim();
+        const passwordRegex = /^(?=.*[0-9A-Z!@#$%^&*])(.{5,})$/;
+        
+        if (!passwordRegex.test(passwordValue)) {
+            document.getElementById('password').classList.add('form-control-incorrect');
+            document.getElementById('BadPassword').style.display="block";
+            document.getElementById('password-red').style.color="rgb(255, 0, 0)";
+            return;
+        }
+
+        if(passwordValue==''){
+            document.getElementById('password').classList.add('form-control-incorrect');
+            document.getElementById('EmptyPassword').style.display="block";
+            document.getElementById('password-red').style.color="rgb(255, 0, 0)";
+            return;
+        }     
+
+        // Collect form data
+        const formData = {
+            name: document.getElementById('name').value,
+            email: EmailValue,
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+        // Add other form fields as needed
+        };
+        document.getElementById('password').value = '';
+        // Make a POST request to the backend
+        console.log('Form Data:', formData);
+        console.log('Sending Data:', JSON.stringify(formData));
+
+
+        fetch(window.location.origin + ':5001'+ '/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        .then(response => response.json())
+        .then(data => handleResponse(data))
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    
+    
+    
+    });
+    function handleResponse(response) {
+        // On success announces it 
+        if (response.status === 'success') {
+            console.log('Server response:', response);
+            showCustomSignUpAlert();
+            loginUser();
+            document.querySelector('form').reset();
+        } else {
+            console.error('Error:', response);
+
+        // Divides errors
+        if(response.message=='Email is already taken'){
+                document.getElementById('TakenEmail').style.display="block";
+                document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+                document.getElementById('email').classList.add('form-control-incorrect');
+
+                
+        
+            }
+        if(response.message=='Username is already taken'){
+            document.getElementById('TakenUsername').style.display="block";
+            document.getElementById('username-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('username').classList.add('form-control-incorrect');
+            
+        }
+    }
+}
+
+// Removes red border of form input when user clicks that part of form
+    document.getElementById('email').addEventListener('focus', function() {
+            document.getElementById('email').classList.remove('form-control-incorrect');
+    });
+    document.getElementById('username').addEventListener('focus', function() {
+        document.getElementById('username').classList.remove('form-control-incorrect');
+    });
+    document.getElementById('name').addEventListener('focus', function() {
+        document.getElementById('name').classList.remove('form-control-incorrect')
+    });
+</script>
+
+</body>
+</html>

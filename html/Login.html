@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this line to the <head> section of your HTML file -->
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+    <!-- Local bootstrap.js-->
+    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+    <!-- Vector library for car painting UI-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script> 
+
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div id="customLoginAlert" class="custom-alert">
+        <h2>Succesfully logged in</h2>
+    </div>
+
+    <div class="container text-white mt-5 mx-80">
+        <div class="row justify-content-center ">
+            <div class="col-md-4 bg-light">
+                <form id="loginForm">
+                    <h1 class="text-center">Login</h1>  
+                    <div class="form-group">
+                        <div id="username-red" class="row ml-0 mb-2" for="username">Username <span class="ml-1" id="WrongUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Invalid credentials</b></span><span class="ml-1" id="EmptyUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Enter your username</b></span></div>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <div id="password-red" class="row ml-0 mb-2" for="password">Password<span class="ml-1" id="WrongPassword" style="display:none; color:rgb(255, 8, 8)"><b>- Incorrect password</b></span><span class="ml-1" id="EmptyPassword" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
+                        <input type="password" class="form-control " id="password" placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-block">Login</button>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    // Instantly focuses user on username field
+    document.getElementById('username').focus();
+
+    const form = document.getElementById('loginForm');
+    const inputs = form.querySelectorAll('input');
+
+    // Add event listener to each input field
+    inputs.forEach(function(input, index) {
+      input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          console.log(index);
+          if (index != 1) { // If the current input field is the third one (index 2)S
+            event.preventDefault();
+            const nextIndex = (index + 1) % inputs.length;
+            inputs[nextIndex].focus();
+          }
+        }
+      });
+    });
+    document.querySelector('form').addEventListener('submit', function (e) {
+        // Resets visuals for all error messages/styles
+        document.getElementById('WrongUsername').style.display="none";
+        document.getElementById('WrongPassword').style.display="none";
+        document.getElementById('EmptyPassword').style.display="none";
+        document.getElementById('EmptyUsername').style.display="none";
+        document.getElementById('username').classList.remove('form-control-incorrect');
+        document.getElementById('password').classList.remove('form-control-incorrect');
+        document.getElementById('username-red').style.color="rgb(255, 255, 255)";
+        document.getElementById('password-red').style.color="rgb(255, 255, 255)";
+
+        // Prevent the default form submission
+        e.preventDefault();
+
+        //Empty check
+        const UsernameValue = document.getElementById('username').value.trim();
+        const PasswordValue = document.getElementById('password').value.trim();
+
+        if(UsernameValue==''){
+            document.getElementById('username-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('username').classList.add('form-control-incorrect')
+            document.getElementById('EmptyUsername').style.display="block";
+            document.getElementById('username').focus();
+            return
+        }
+        if(PasswordValue==''){
+            document.getElementById('password-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('password').classList.add('form-control-incorrect')
+            document.getElementById('EmptyPassword').style.display="block";
+            return
+        }
+
+        // Saves info in formData
+        const formData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+        };
+        document.getElementById('password').value = '';
+        // Communicates with API to login to account
+        fetch(window.location.origin + ':5001'+ '/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+        .then(response => response.json())
+        .then(data => handleResponse(data))
+        .catch(error => {
+        alert(`Cannot connect to server :P ${error}`);
+        });
+    });
+        function handleResponse(response) {
+         // If succesful announces it and resets form
+            if (response.status === 'success') {
+                console.log('Server response:', response);
+                loginUser();
+                setTimeout(function() {
+                    document.querySelector('form').reset();
+                    }, 3000);
+            
+        } else {
+            //Else divides errors to wrong username or wrong password
+            console.error('Error:', response);
+            
+            if(response.status=='1'){
+                document.getElementById('WrongUsername').style.display="block";
+                document.getElementById('username-red').style.color="rgb(255, 0, 0)";
+                document.getElementById('username').classList.add('form-control-incorrect');
+
+                document.getElementById('WrongPassword').style.display="none";
+                document.getElementById('password-red').style.color="white";
+                document.getElementById('password').classList.remove('form-control-incorrect');
+                document.getElementById('username').focus();
+        
+            }
+            if(response.status=='2'){
+                document.getElementById('WrongPassword').style.display="block";
+                document.getElementById('password-red').style.color="rgb(255, 0, 0)";
+                document.getElementById('password').classList.add('form-control-incorrect');
+                
+            }
+        }
+}
+
+// When user focuses username removes red border
+document.getElementById('username').addEventListener('focus', function() {
+        document.getElementById('username').classList.remove('form-control-incorrect');
+    });
+
+document.getElementById('password').addEventListener('focus', function() {
+    document.getElementById('password').classList.remove('form-control-incorrect');
+});
+</script>
+
+</body>
+
+</html>

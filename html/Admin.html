@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this line to the <head> section of your HTML file -->
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+    <!-- Local bootstrap.js-->
+    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+    <!-- Vector library for car painting UI-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script> 
+
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   
+</head>
+<body>
+    <section class="container col-lg-4 mt-5 bg-light text-white " id="admin-view">
+        
+        <div class="card-body">
+            <h2 class="card-title text-center">View</h2>
+            <div class="card-text row">
+                <div class="col">
+                    <h3 class="text-center">Users</h3>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewAllUsers()">View user by username</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewAllUsers()">View all current users</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewAllUsers()">View all users</button>
+                </div>
+                <div class="col">
+                    <h3 class="text-center" >Projects</h3>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewAllProjects()">View projects by client</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewAllProjects()">View delayed projects</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewAllProjects()">View active projects</button>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+
+    <div class=" nodisplay mt-4" id="userDataContainer">
+        <!-- User data will be dynamically added here -->
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <div class=" nodisplay mt-4" id="ProjectDataContainer">
+        <!-- User data will be dynamically added here -->
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+    </div>
+<script>
+
+
+function deleteUser(userID) {
+    // Make a fetch request to your backend to retrieve all user data
+    fetch(window.location.origin +':5001'+ `/user-delete/${userID}`, {
+        method: 'DELETE', // Use the DELETE method to indicate deletion
+        headers: {
+            'Content-Type': 'application/json' // Specify that the request body is JSON
+        },
+    })  
+    .then(response => {
+        if(response.status == 200){
+            const card = document.getElementById(`Users_div${userID}`);
+            if(card){
+                card.remove();
+            }
+            card.remove();
+            viewAllUsers();
+        }
+    })
+    .then(data => {
+        // Process the response data
+        console.log(data);
+    })
+    .catch(error => console.error('Error deleting user:', error))
+}
+
+function deleteProject(ProjectID){
+    fetch(window.location.origin +':5001'+ `/project-delete/${ProjectID}`, {
+        method: 'DELETE', // Use the DELETE method to indicate deletion
+        headers: {
+            'Content-Type': 'application/json' // Specify that the request body is JSON
+        },
+    })  
+    .then(response => {
+        if(response.status == 200){
+            const card = document.getElementById(`Project_div${ProjectID}`);
+            if(card){
+                card.remove();
+            }
+            card.remove();
+            viewAllProjects();
+        }
+    })
+    .then(data => {
+        // Process the response data
+        console.log(data);
+    })
+    .catch(error => console.error('Error deleting project:', error))
+}
+  </script>
+  
