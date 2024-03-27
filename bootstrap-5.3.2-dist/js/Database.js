@@ -4,7 +4,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import globals from './globals.mjs';
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 const connection = mysql2.createConnection({
@@ -42,6 +43,45 @@ app.listen(PORT, () => {
 });
 
 
+// Function to handle login logic
+function loginUser(username, password, connection, res) {
+  const UUID = uuidv4();
+
+  // Check if username or email and password match a user in the database
+  const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
+  connection.query(query, [username, username], (err, results) => {
+    if (err) {
+      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    }
+
+    if (results.length === 0) {
+      // No user found with the provided username or email
+      return res.status(401).json({ status: '1', message: 'Invalid credentials' });
+    }
+
+    // Filter results for a match with the provided password
+    const matchedUser = results.find(user => user.password === password);
+
+    if (matchedUser) {
+      // Passwords match, login successful
+      const userid = matchedUser.idUser;
+      const instance_query = 'INSERT INTO user_instance (idInstance, idUsers, instanceStart)  VALUES (?,?,?)';
+      connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
+        if (err) {
+          console.error('Error inserting data into the database:', err);
+          return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+        }
+      });
+      console.log(`\nUser-${username} \nPassword-${password} \nLogin instance-${UUID}\n`);
+      res.json({ status: 'success', message: 'Login successful!', data: UUID });
+    }
+     else {
+      // Passwords do not match
+      res.status(401).json({ status: '2', message: 'Wrong password' });
+    }
+  });
+}
+
 app.post("/signup", (req, res) => {
   const { name, email, username, password } = req.body;
 
@@ -78,12 +118,10 @@ app.post("/signup", (req, res) => {
           console.error('Error inserting data into the database:', err);
           return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
         }
-
-        globals.LoggedInUser = username;
-        res.status(201).json({ status: 'success', message: "User registered successfully!" });
+        loginUser(username, password, connection, res);
       });
-    });
   });
+});
 });
 
 
@@ -104,67 +142,77 @@ app.post("/make-appointment",(req,res)=>{
   })
 });
 
-
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
-  console.log(username, password);
-  req.cookies.loggedInUser = username;
+  loginUser(username, password, connection, res); // Call loginUser function with parameters
+});
+
+
+app.post("/log-out", (req, res) => {
+  const {UUID} = req.body;
   // Check if username or email and password match a user in the database
-  const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
-  connection.query(query, [username, username], (err, results) => {
+  const query = 'SELECT * FROM user_instance WHERE idInstance = ?';
+  connection.query(query, [UUID], (err, results) => {
     if (err) {
       return res.status(500).json({ status: 'error', message:'Internal Server Error' });
     }
 
     if (results.length === 0) {
-      // No user found with the provided username or email
-      return res.status(401).json({ status: '1', message: 'Invalid credentials' });
+      // No user found with the provided UUID
+      return res.status(401).json({ status: '1', message: 'User not logged in' });
     }
-
-    // Filter results for a match with the provided password
-    const matchedUser = results.find(user => user.password === password);
-
-    if (matchedUser) {
+    const delete_query ='DELETE FROM user_instance WHERE idInstance = ?';
       // Passwords match, login successful
-        globals.LoggedInUser = username;
-        res.json({ status: 'success', message: 'Login successful!' });
-
-    } else {
-      // Passwords do not match
-      res.status(401).json({ status: '2', message: 'Wrong password' });
-    }
-  });
+        connection.query(delete_query, [UUID], (err, result) => {
+          if(err){
+            console.error('Error inserting data into the database:', err);
+            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+          }
+          console.log(`Instance: ${UUID} stopped`);
+          res.json({ status: 'success', message: 'Log out successful!' });
+        });
+  }); 
 });
 
 
-app.post("/change-password", (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  const loggedInUser = globals.LoggedInUser;
 
-  // Check if the current password matches the user's current password
-  const checkCurrentPasswordQuery = 'SELECT * FROM users WHERE username = ? AND password = ?';
-  connection.query(checkCurrentPasswordQuery, [loggedInUser, currentPassword], (err, results) => {
+
+app.post("/change-password", (req, res) => {
+  const { currentPassword, newPassword, UUID } = req.body;
+
+  const checkUserQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
+  connection.query(checkUserQuery, [UUID], (err, results) => {
     if (err) {
       console.error('Error checking current password in the database:', err);
       return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
-
-    if (results.length === 0) {
-      // Incorrect current password
-      return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
-    }
-
-    // Update the user's password with the new one
-    const updatePasswordQuery = 'UPDATE users SET password = ? WHERE username = ?';
-    connection.query(updatePasswordQuery, [newPassword, loggedInUser], (updateErr) => {
-      if (updateErr) {
-        console.error('Error updating password in the database:', updateErr);
+    const loggedInUser = results.idUser;
+    
+    // Check if the current password matches the user's current password
+    const checkCurrentPasswordQuery = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    connection.query(checkCurrentPasswordQuery, [loggedInUser, currentPassword], (err, results) => {
+      if (err) {
+        console.error('Error checking current password in the database:', err);
         return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
       }
 
-      res.json({ status: 'success', message: 'Password updated successfully!' });
+      if (results.length === 0) {
+        // Incorrect current password
+        return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
+      }
+
+      // Update the user's password with the new one
+      const updatePasswordQuery = 'UPDATE users SET password = ? WHERE username = ?';
+      connection.query(updatePasswordQuery, [newPassword, loggedInUser], (updateErr) => {
+        if (updateErr) {
+          console.error('Error updating password in the database:', updateErr);
+          return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+        }
+
+        res.json({ status: 'success', message: 'Password updated successfully!' });
+      });
     });
-  });
+});
 });
 
 

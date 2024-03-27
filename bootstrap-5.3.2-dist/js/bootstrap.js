@@ -4,7 +4,6 @@
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 
-
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@popperjs/core')) :
   typeof define === 'function' && define.amd ? define(['@popperjs/core'], factory) :
@@ -4547,6 +4546,7 @@ function calculatePrice() {
 
 let isLoggedIn=false;
 let isAdmin=false;
+
 document.addEventListener("DOMContentLoaded", function() {
   // Fetch and insert the header HTML into the current page
   
@@ -4554,7 +4554,7 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(response => response.text())
       .then(data => {
           document.body.insertAdjacentHTML("afterbegin", data);
-          const isLoggedInCookie = document.cookie.includes("isLoggedIn=true");
+          const isLoggedInCookie = document.cookie.includes("LoggedUser");
           isLoggedIn = isLoggedInCookie;  
           updateButtonVisibility();
       });
@@ -4613,14 +4613,25 @@ function updateButtonVisibility() {
       }
   }
 }
+function getCookie(name) {
+  const cookieName = name + "=";
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    let cookie = cookies[i].trim();
+    if (cookie.startsWith(cookieName)) {
+      return cookie.substring(cookieName.length);
+    }
+  }
+  return null;
+}
 
-
-function loginUser() {
+function loginUser(UUID) {
   showCustomLoginAlert();
   setTimeout(function() {
-    document.cookie = `isLoggedIn=true; path=/`;
+    document.cookie = `LoggedUser=${UUID}; path=/`;
     isLoggedIn = true;
 
+    // Log the document cookie after setting to verify
 
     updateButtonVisibility();
     window.location.href = 'Home.html?showSuccess=true';
@@ -4630,10 +4641,26 @@ function loginUser() {
 }
 
 function LogOut(){
+    
+    const loggedUser = getCookie("LoggedUser");
+    console.log('Logged user:',loggedUser)
+    fetch(window.location.origin + ':5001'+ '/log-out', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ UUID: loggedUser })
+  })
+      .then(response => console.log('log out:',response.json()))
+      .then(data => console.log(data))
+      .catch(error => {
+      alert(`Cannot connect to server :P ${error}`);
+      });
     isLoggedIn = false;
     updateButtonVisibility();
     window.location.href = 'Home.html';
     clearCookies();
+    
 }
 
 
@@ -4848,3 +4875,4 @@ function displayProjectData(projects) {
      
        });
 }
+

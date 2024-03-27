@@ -50,7 +50,7 @@
       </section>
     
 <script>
-
+    const loggedUserUUID= getCookie("LoggedUser");
     const form = document.getElementById('change-password-form');
     const inputs = form.querySelectorAll('input');
 
@@ -145,6 +145,7 @@
         body: JSON.stringify({
             currentPassword: currentPassword,
             newPassword: newPassword,
+            UUID: loggedUserUUID,
         }),
     })
     .then(response => response.json())
@@ -184,6 +185,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
+        
       })
       .then(response => response.json())
       .then(data => {

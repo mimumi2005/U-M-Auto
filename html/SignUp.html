@@ -185,7 +185,7 @@
         if (response.status === 'success') {
             console.log('Server response:', response);
             showCustomSignUpAlert();
-            loginUser();
+            loginUser(response.data);
             document.querySelector('form').reset();
         } else {
             console.error('Error:', response);
