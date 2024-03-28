@@ -8,6 +8,7 @@ Instant functions will include:
 - Services page that neately displays all offered services;
 - Map location;
 - Log-in and Sign-up.
+  
 Functions unlocked on Log-in include:
 - 
    - Online price estimator with integrated layout of a car, for users to select parts required to be painted;
