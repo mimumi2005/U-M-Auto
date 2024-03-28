@@ -181,19 +181,22 @@
     function fetchUserInfo() {
       // Fetch user information from the server
       fetch('http://localhost:5001/user-info', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+            UUID: loggedUserUUID
+        }),
         
       })
       .then(response => response.json())
       .then(data => {
         if (data.status === 'success') {
           // Update the profile information on the page
-          document.getElementById("name").innerText = "Name: " + data.user.name;
-          document.getElementById("username").innerText = "Username: " + data.user.username;
-          document.getElementById("email").innerText = "Email: " + data.user.email;
+          document.getElementById("name").innerText = "Name: " + data.user.Name;
+          document.getElementById("username").innerText = "Username: " + data.user.Username;
+          document.getElementById("email").innerText = "Email: " + data.user.Email;
         } else {
           console.error('Error fetching user information:', data.message);
         }

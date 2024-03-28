@@ -71,30 +71,42 @@
     let selectedDateTime = null; // Variable to store the selected datetime
     let selectedDate = null; // Variable to store the selected date
     let user = null;
-    
+    const loggedUserUUID = getCookie("LoggedUser")
     document.getElementById('appointmentForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
-
         // Retrieve form data
         const additionalInfo = document.getElementById('additionalInfo').value;
-
-        
         // Fetch user information from the server
         fetch('http://localhost:5001/user-info', {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            UUID: loggedUserUUID
+        }),
         })
         .then(response => response.json())
         .then(data => {
           if (data.status === 'success') {
             // Update the profile information on the page
             user = data.user.idUser;
-            const endDateTime = new Date(selectedDateTime.getTime());
-        const repairTypeSelect = document.getElementById('repairType');
-        const repairTypeDuration = parseInt(repairTypeSelect.value); // Convert the value to an integer
-
+            
+            const repairTypeSelect = document.getElementById('repairType');
+            const repairTypeDuration = parseInt(repairTypeSelect.value); // Convert the value to an integer
+            if(repairTypeDuration < 120)
+            {
+                endDateTime = new Date(selectedDateTime.getTime());
+            
+            }
+            else{
+                
+                selectedDate.setHours(selectedDate.getHours() + 9);
+                selectedDateTime = new Date(selectedDate);
+                selectedDate.setHours(selectedDate.getHours() + 6);
+                endDateTime = new Date(selectedDate.getTime());
+                
+            }
         // Add the specified number of hours to the selected date time
         endDateTime.setHours(endDateTime.getHours() + repairTypeDuration);
 
@@ -161,7 +173,6 @@
                                     <div class="m-auto">
                                         <!-- Loop from 9am to 6pm -->
                                         <!-- Each button has an ID representing the hour (e.g., 9am, 10am, ...) -->
-                                        <!-- Replace the onclick handler with your logic -->
                                         <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="9am" onclick="selectTime('9')">9:00-10:00</button>
                                         <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="10am" onclick="selectTime('10')">10:00-11:00</button>
                                         <button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="11am" onclick="selectTime('11')">11:00-12:00</button>
@@ -238,83 +249,89 @@
     const nextMonthButton = document.getElementById('nextMonth');
     let currentDate = new Date();
     function renderCalendar() {
-        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-        const lastDayOfPrevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
-        monthYearElement.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getFullYear()}`;
-        // Clear previous calendar
-        calendarElement.innerHTML = '';
-        daysOfWeekElement.innerHTML = '';
-        // Add days of the week
-        const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-        daysOfWeek.forEach(day => {
-            const dayOfWeek = document.createElement('div');
-            dayOfWeek.textContent = day;
-            dayOfWeek.classList.add('font-weight-normal', 'text-center', 'small-font', 'ml-25', 'mr-25');
-            daysOfWeekElement.appendChild(dayOfWeek);
-        });
-        let currentDay = 1;
-        let currentMonthFinished = false;
-        // Iterate through the weeks
-        while (!currentMonthFinished) {
-            // Create a row for the week
-            const weekRow = document.createElement('div');
-            weekRow.classList.add('row', 'ml-1', 'mr-1');
-            // Populate the row with days
-            for (let i = 0; i < 7; i++) {
-                const dayCell = document.createElement('div');
-                dayCell.classList.add('day', 'text-center', 'btn', 'btn-outline-secondary', 'btn-sm', 'm-1', 'outline', 'col', 'p-1');
-                if ((i >= firstDayOfMonth.getDay() || currentDay > 1) && currentDay <= lastDayOfMonth.getDate()) {
-                    const dayOfMonth = currentDay;
-                    dayCell.textContent = dayOfMonth;
-                    dayCell.classList.add('currentMonth');
-                    // Check if the day is before today
-                    const currentDateObject = new Date();
-                    if ((currentDate.getFullYear() < currentDateObject.getFullYear() ||
-                        (currentDate.getFullYear() === currentDateObject.getFullYear() &&
-                            currentDate.getMonth() < currentDateObject.getMonth())) ||
-                        (currentDate.getFullYear() === currentDateObject.getFullYear() &&
-                            currentDate.getMonth() === currentDateObject.getMonth() &&
-                            dayOfMonth < currentDateObject.getDate())) {
-                        dayCell.classList.add('disabled', 'prevDay');
-                        dayCell.classList.remove('btn-outline-secondary');
-                    }
-                    else {
-                        // Add click event listener to each day cell
-                        dayCell.addEventListener('click', () => {
-                            document.querySelectorAll('.day').forEach(button => {
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const lastDayOfPrevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+    monthYearElement.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getFullYear()}`;
+    // Clear previous calendar
+    calendarElement.innerHTML = '';
+    daysOfWeekElement.innerHTML = '';
+    // Add days of the week, starting from Monday
+    const daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+    daysOfWeek.forEach(day => {
+        const dayOfWeek = document.createElement('div');
+        dayOfWeek.textContent = day;
+        dayOfWeek.classList.add('font-weight-normal', 'text-center', 'small-font', 'ml-25', 'mr-25');
+        daysOfWeekElement.appendChild(dayOfWeek);
+    });
+    let currentDay = 1;
+    let currentMonthFinished = false;
+    let dayOffset = (firstDayOfMonth.getDay() - 1 + 7) % 7; // Adjusted calculation for Monday as start of week
+    // Iterate through the weeks
+    while (!currentMonthFinished) {
+        // Create a row for the week
+        const weekRow = document.createElement('div');
+        weekRow.classList.add('row', 'ml-1', 'mr-1');
+        // Populate the row with days
+        for (let i = 0; i < 7; i++) {
+            const dayCell = document.createElement('div');
+            dayCell.classList.add('day', 'text-center', 'btn', 'btn-outline-secondary', 'btn-sm', 'm-1', 'outline', 'col', 'p-1');
+            if ((i >= dayOffset || currentDay > 1) && currentDay <= lastDayOfMonth.getDate()) {
+                const dayOfMonth = currentDay;
+                dayCell.textContent = dayOfMonth;
+                dayCell.classList.add('currentMonth');
+                // Check if the day is before today
+                const currentDateObject = new Date();
+                if (i === 5 || i === 6) { // Saturday or Sunday
+                    dayCell.classList.add('disabled', 'weekend');
+                    dayCell.classList.remove('btn-outline-secondary');
+                }
+                else if ((currentDate.getFullYear() < currentDateObject.getFullYear() ||
+                    (currentDate.getFullYear() === currentDateObject.getFullYear() &&
+                        currentDate.getMonth() < currentDateObject.getMonth())) ||
+                    (currentDate.getFullYear() === currentDateObject.getFullYear() &&
+                        currentDate.getMonth() === currentDateObject.getMonth() &&
+                        dayOfMonth < currentDateObject.getDate())) {
+                    dayCell.classList.add('disabled', 'prevDay');
+                    dayCell.classList.remove('btn-outline-secondary');
+                }
+                else {
+                    // Add click event listener to each day cell
+                    dayCell.addEventListener('click', () => {
+                        document.querySelectorAll('.day').forEach(button => {
                             button.classList.remove('active');
                         });
                         selectedDate = null;
-                            openTimeMenuForDay(dayOfMonth);
-                        });
-                    }
-                    currentDay++;
+                        openTimeMenuForDay(dayOfMonth);
+                    });
                 }
-                else if (currentDay < firstDayOfMonth.getDay()) {
-                    // Day is part of the previous month
-                    // in case i wanna show the before month dates dayCell.textContent =  lastDayOfPrevMonth - (firstDayOfMonth.getDay() - i - 1);
-                    dayCell.textContent = '';
-                    dayCell.classList.add('prevMonth', 'disabled');
-                    dayCell.classList.remove('btn-outline-secondary');
-                }
-                else if (currentDay >= lastDayOfMonth.getDay()) {
-                    // Day is part of the next month
-                    dayCell.textContent = '';
-                    dayCell.classList.add('nextMonth', 'disabled');
-                    dayCell.classList.remove('btn-outline-secondary');
-                    currentDay++;
-                }
-                weekRow.appendChild(dayCell);
+                currentDay++;
             }
-            // Append the week row to the calendar
-            calendarElement.appendChild(weekRow);
-            // Check if we have finished rendering the current month
-            if (currentDay > lastDayOfMonth.getDate()) {
-                currentMonthFinished = true;
+            else if (currentDay < dayOffset) {
+                // Day is part of the previous month
+                dayCell.textContent = '';
+                dayCell.classList.add('prevMonth', 'disabled');
+                dayCell.classList.remove('btn-outline-secondary');
             }
+            else if (currentDay >= lastDayOfMonth.getDay()) {
+                // Day is part of the next month
+                dayCell.textContent = '';
+                dayCell.classList.add('nextMonth', 'disabled');
+                dayCell.classList.remove('btn-outline-secondary');
+                currentDay++;
+            }
+            weekRow.appendChild(dayCell);
+        }
+        // Append the week row to the calendar
+        calendarElement.appendChild(weekRow);
+        // Check if we have finished rendering the current month
+        if (currentDay > lastDayOfMonth.getDate()) {
+            currentMonthFinished = true;
         }
     }
+}
+
+
    
 
     function openTimeMenuForDay(day) {

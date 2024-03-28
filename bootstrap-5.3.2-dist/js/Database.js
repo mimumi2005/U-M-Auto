@@ -65,7 +65,7 @@ function loginUser(username, password, connection, res) {
     if (matchedUser) {
       // Passwords match, login successful
       const userid = matchedUser.idUser;
-      const instance_query = 'INSERT INTO user_instance (idInstance, idUsers, instanceStart)  VALUES (?,?,?)';
+      const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart)  VALUES (?,?,?)';
       connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
         if (err) {
           console.error('Error inserting data into the database:', err);
@@ -129,7 +129,6 @@ app.post("/make-appointment",(req,res)=>{
   const {idUser, StartDate, EndDateProjection, ProjectInfo} = req.body;
   console.log(req.body);
   //all kinds of checks
-
 
   //Continue with project creation
   const sql_query = 'INSERT INTO projects (idUser, StartDate, EndDateProjection, ProjectInfo) VALUES (?, ?, ?, ?)';
@@ -246,12 +245,12 @@ app.get("/disconnect", (req, res) => {
 });
 
 
-app.get("/user-info", (req, res) => {
+app.post("/user-info", (req, res) => {
   // Fetch user information based on the logged-in user
-  const loggedInUser = globals.LoggedInUser;
-  console.log(loggedInUser);
-  const query = 'SELECT idUser, name, email, username FROM users WHERE username = ?';
-  connection.query(query, [loggedInUser], (err, results) => {
+  const {UUID} = req.body;
+  console.log(UUID);
+  const query = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
+  connection.query(query, [UUID], (err, results) => {
     if (err) {
       console.error('Error fetching user information from the database:', err);
       return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
@@ -262,9 +261,25 @@ app.get("/user-info", (req, res) => {
       return res.status(404).json({ status: 'error', message: 'User not found' });
     }
 
-    const userInformation = results[0];
-    res.json({ status: 'success', user: userInformation });
+    const User = results[0].idUser;
+    console.log(User);
+    const query = 'SELECT * FROM users WHERE idUser = ?';
+    connection.query(query, [User], (err, results) => {
+      if (err) {
+        console.error('Error fetching user information from the database:', err);
+        return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
+
+      if (results.length === 0) {
+        // No user found
+        console.log('later Error', results)
+        return res.status(404).json({ status: 'error', message: 'User not found' });
+      }
+      const userInformation = results[0];
+      console.log(results[0]);
+      res.json({ status: 'success', user: userInformation });
   });
+});
 });
 
 

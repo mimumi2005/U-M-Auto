@@ -10420,3 +10420,8 @@ input:-webkit-autofill:active{
   background-color: #007bff; /* Change background color to blue */
   color: #fff; /* Change text color to white */
 }
+
+.weekend{
+  color: #000;
+  background-color:#e4606d!important;
+}
