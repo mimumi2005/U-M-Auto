@@ -25,20 +25,38 @@
             <div class="card-text row">
                 <div class="col">
                     <h3 class="text-center">Users</h3>
-                    <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewAllUsers()">View user by username</button>
-                    <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewAllUsers()">View all current users</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="findUserByID()">View user by ID</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewActiveUsers()">View all active users</button>
                     <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewAllUsers()">View all users</button>
                 </div>
                 <div class="col">
                     <h3 class="text-center" >Projects</h3>
-                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewAllProjects()">View projects by client</button>
-                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewAllProjects()">View delayed projects</button>
-                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewAllProjects()">View active projects</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="findProjectByUserID()">View projects by client</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewDelayedProjects()">View delayed projects</button>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewActiveProjects()">View active projects</button>
                 </div>
             </div>
         </div>
         
     </section>
+    
+    <div id="searchUser" class=" col-sm-3 m-auto text-center nodisplay">
+        <span id="InvalidID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid ID</b></span>
+        <br>
+        <input type="text" id="userIDInput" class="form-control" placeholder="Enter User ID" onkeypress="handleKeyPress(event)">
+        <button class="btn btn-outline-primary mt-2" onclick="searchUserByID(document.getElementById('userIDInput').value)">Search</button>
+    </div>
+
+
+
+    <div id="searchProject" class=" col-sm-3 m-auto text-center nodisplay">
+        <span id="InvalidProjectID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid ID</b></span>
+        <br>
+        <input type="text" id="ProjectUserIDInput" class="form-control" placeholder="Enter User ID" onkeypress="handleProjectKeyPress(event)">
+        <button class="btn btn-outline-primary mt-2" onclick="searchProjectByUserID(document.getElementById('ProjectUserIDInput').value)">Search</button>
+    </div>
+    
+    
 
     <div class=" nodisplay mt-4" id="userDataContainer">
         <!-- User data will be dynamically added here -->
@@ -57,7 +75,17 @@
             </div>
     </div>
 <script>
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        searchUserByID(document.getElementById('userIDInput').value);
+    }
+}
 
+function handleProjectKeyPress(event) {
+    if (event.key === 'Enter') {
+        searchProjectByUserID(document.getElementById('ProjectUserIDInput').value);
+    }
+}
 
 function deleteUser(userID) {
     // Make a fetch request to your backend to retrieve all user data
@@ -107,5 +135,6 @@ function deleteProject(ProjectID){
     })
     .catch(error => console.error('Error deleting project:', error))
 }
+
   </script>
   

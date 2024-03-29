@@ -146,31 +146,19 @@ app.post("/login", (req, res) => {
   loginUser(username, password, connection, res); // Call loginUser function with parameters
 });
 
+app.post("/log-out", async (req, res) => {
+  const { UUID } = req.body;
 
-app.post("/log-out", (req, res) => {
-  const {UUID} = req.body;
-  // Check if username or email and password match a user in the database
-  const query = 'SELECT * FROM user_instance WHERE idInstance = ?';
-  connection.query(query, [UUID], (err, results) => {
-    if (err) {
-      return res.status(500).json({ status: 'error', message:'Internal Server Error' });
-    }
+  try {
+    // Log out the user using the UUID
+    await logoutUser(UUID);
 
-    if (results.length === 0) {
-      // No user found with the provided UUID
-      return res.status(401).json({ status: '1', message: 'User not logged in' });
-    }
-    const delete_query ='DELETE FROM user_instance WHERE idInstance = ?';
-      // Passwords match, login successful
-        connection.query(delete_query, [UUID], (err, result) => {
-          if(err){
-            console.error('Error inserting data into the database:', err);
-            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-          }
-          console.log(`Instance: ${UUID} stopped`);
-          res.json({ status: 'success', message: 'Log out successful!' });
-        });
-  }); 
+    console.log(`Instance: ${UUID} stopped`);
+    res.json({ status: 'success', message: 'Log out successful!' });
+  } catch (error) {
+    console.error('Error logging out user:', error);
+    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
 });
 
 
@@ -220,20 +208,99 @@ app.get("/all-users", (req, res) => {
   const sql_query = 'SELECT * FROM users';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
+    res.send(result);
+  });
+});
+
+// Fetch all users
+app.post("/user-by-ID", (req, res) => {
+  const {idUser} = req.body;
+  const sql_query = 'SELECT * FROM users WHERE idUser = ?';
+  connection.query(sql_query,[idUser], (err, result) => {
+    if (err) throw err;
     console.log(result);
     res.send(result);
   });
 });
+
+// Fetch active users
+app.get("/active-users", (req, res) => {
+  // Query to fetch all active instances
+  const instance_query = 'SELECT * FROM user_instance';
+  connection.query(instance_query, (err, instances) => {
+    if (err) {
+      console.error('Error fetching active instances:', err);
+      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    }
+
+    const usersInfo = [];
+
+    // Iterate over each active instance to fetch user information
+    for (const instance of instances) {
+      const userId = instance.idUser;
+
+      // Query to fetch user information based on userId
+      const user_query = 'SELECT * FROM users WHERE idUser = ?';
+      connection.query(user_query, [userId], (err, userResult) => {
+        if (err) {
+          console.error('Error fetching user info:', err);
+          return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+        }
+
+        // Add user information to the usersInfo array
+        usersInfo.push(userResult[0]);
+
+        // If all users' information has been collected, send the response
+        if (usersInfo.length === instances.length) {
+          res.json(usersInfo);
+        }
+      });
+    }
+  });
+});
+
 
 // Fetch all projects
 app.get("/all-projects", (req, res) => {
   const sql_query = 'SELECT * FROM projects';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
+    res.send(result);
+  });
+});
+
+// Fetch active projects (endDate time is not yet reached)
+app.get("/active-projects", (req, res) => {
+  const sql_query = 'SELECT * FROM projects WHERE EndDateProjection > CURRENT_TIMESTAMP() OR `Delayed` IS NOT NULL';
+  connection.query(sql_query, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+// Fetch all users
+app.post("/project-by-ID", (req, res) => {
+  const {idUser} = req.body;
+  const sql_query = 'SELECT * FROM projects WHERE idUser = ?';
+  connection.query(sql_query,[idUser], (err, result) => {
+    if (err) throw err;
     console.log(result);
     res.send(result);
   });
 });
+
+
+// Fetch active projects (endDate time is not yet reached)
+app.get("/delayed-projects", (req, res) => {
+  const sql_query = 'SELECT * FROM projects WHERE `Delayed` IS NOT NULL';
+  connection.query(sql_query, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
 
 // Disconnect from the database
 app.get("/disconnect", (req, res) => {
@@ -272,31 +339,105 @@ app.post("/user-info", (req, res) => {
 
       if (results.length === 0) {
         // No user found
-        console.log('later Error', results)
         return res.status(404).json({ status: 'error', message: 'User not found' });
       }
       const userInformation = results[0];
-      console.log(results[0]);
       res.json({ status: 'success', user: userInformation });
   });
 });
 });
 
 
-app.delete('/user-delete/:userID', async (req, res) => {
-  const userID = req.params.userID;
-  console.log(userID);
-  const query = `DELETE FROM users WHERE idUser = ?`;
-  connection.query(query, [userID], (error, results) => {
-    if (error) {
-
-      console.error('Error deleting user:', error);
-      return res.status(500).json({ message: 'Error deleting user', error: error.message });
+app.post("/similar-users", (req, res) => {
+  const { emailPattern } = req.body;
+  console.log('emailpattern:', emailPattern);
+  const query = 'SELECT * FROM users WHERE Email LIKE ?';
+  connection.query(query, [emailPattern], (err, results) => {
+    if (err) {
+      console.error('Error fetching similar users from the database:', err);
+      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
-    console.log('User deleted successfully');
-    res.status(200).json({ message: 'User deleted successfully' });
+
+    if (results.length === 0) {
+      // No similar users found
+      return res.status(404).json({ status: 'error', message: 'No similar users found' });
+    }
+
+    res.send(results);
   });
 });
+
+
+// Function to log out the user based on UUID
+function logoutUser(UUID) {
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM user_instance WHERE idInstance = ?';
+    connection.query(query, [UUID], (err, result) => {
+      if (err) {
+        console.error('Error logging out user:', err);
+        reject(err);
+      } else {
+        console.log('User logged out successfully');
+        resolve();
+      }
+    });
+  });
+}
+
+// Function to delete all projects associated with a user
+function deleteProjects(userID) {
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM projects WHERE idUser = ?';
+    connection.query(query, [userID], (err, result) => {
+      if (err) {
+        console.error('Error deleting projects:', err);
+        reject(err);
+      } else {
+        console.log('Projects deleted successfully');
+        resolve();
+      }
+    });
+  });
+}
+
+// Route to delete a user and all associated projects
+app.delete('/user-delete/:userID', async (req, res) => {
+  const userID = req.params.userID;
+
+  try {
+    // Fetch the UUID associated with the user ID
+    const uuidQuery = 'SELECT idInstance FROM user_instance WHERE idUser = ?';
+    connection.query(uuidQuery, [userID], async (err, results) => {
+      if (err) {
+        console.error('Error fetching UUID:', err);
+        return res.status(500).json({ message: 'Error deleting user', error: err.message });
+      }
+
+      // Log out the user using the UUID if it exists
+      if (results.length > 0) {
+        await logoutUser(results[0].idInstance);
+      }
+
+      // Delete all projects associated with the user
+      await deleteProjects(userID);
+
+      // Proceed to delete the user from the users table
+      const deleteUserQuery = 'DELETE FROM users WHERE idUser = ?';
+      connection.query(deleteUserQuery, [userID], (error, deleteResult) => {
+        if (error) {
+          console.error('Error deleting user:', error);
+          return res.status(500).json({ message: 'Error deleting user', error: error.message });
+        }
+        console.log('User deleted successfully');
+        res.status(200).json({ message: 'User deleted successfully' });
+      });
+    });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return res.status(500).json({ message: 'Error deleting user', error: error.message });
+  }
+});
+
 
 app.delete('/project-delete/:ProjectID', async (req, res) => {
   const ProjectID = req.params.ProjectID;
