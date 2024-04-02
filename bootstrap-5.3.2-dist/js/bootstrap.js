@@ -4821,6 +4821,8 @@ function findUserByID() {
 }
     
 function searchUserByID(idUser){
+
+  document.getElementById('userIDInput').value = '';
   document.getElementById('InvalidID').classList.add('nodisplay');
   console.log("Viewing user by ID:",idUser);
   // Make a fetch request to your backend to retrieve all user data
@@ -4855,6 +4857,7 @@ function findProjectByID() {
 }
 
 function searchProjectByID(idProjects){
+  document.getElementById('ProjectIDInput').value = '';
   document.getElementById('InvalidProjectID').classList.add('nodisplay');
   console.log("Viewing project by ID:",idProjects);
   // Make a fetch request to your backend to retrieve all user data
