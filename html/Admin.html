@@ -18,20 +18,20 @@
    
 </head>
 <body>
-    <section class="container col-lg-4 mt-5 bg-light text-white " id="admin-view">
+    <section class="container col-lg-4 mt-5 bg-light text-white  " id="admin-view">
         
         <div class="card-body">
-            <h2 class="card-title text-center">View</h2>
+            <h2 class="card-title text-center">Admin panel</h2>
             <div class="card-text row">
-                <div class="col">
-                    <h3 class="text-center">Users</h3>
+                <div class="col ">
+                    <h3 class="text-center mr-4">Users</h3>
                     <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="findUserByID()">View user by ID</button>
                     <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewActiveUsers()">View all active users</button>
                     <button class="btn btn-outline-secondary ml-4 text-white mt-2" style="width:200px" onclick="viewAllUsers()">View all users</button>
                 </div>
-                <div class="col">
-                    <h3 class="text-center" >Projects</h3>
-                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="findProjectByUserID()">View projects by client</button>
+                <div class="col ">
+                    <h3 class="text-center mr-4" >Projects</h3>
+                    <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="findProjectByID()">View projects by ID</button>
                     <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewDelayedProjects()">View delayed projects</button>
                     <button class="btn btn-outline-secondary ml-4 text-white mt-2 "  style="width:200px" onclick="viewActiveProjects()">View active projects</button>
                 </div>
@@ -39,8 +39,14 @@
         </div>
         
     </section>
-    
-    <div id="searchUser" class=" col-sm-3 m-auto text-center nodisplay">
+    <div id="inputNewEndDate" class="col-sm-3 text-center nodisplay bg-light">
+        <h3 class=" text-white">Enter the new end date for project: <span id="project_id"></span> (if the project isnt yet tagged as "Delayed" it will after these changes) </h3>
+        <span id="InvalidDateTime" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid time, correct format [ MM/DD/YYYY, HH:MM:SS AM/PM ]</b></span>
+        <br>
+        <input type="text" id="dateinput" class="form-control" placeholder="Enter time formatted as: mm/dd/yyyy, hh:mm:ss AM/PM" onkeypress="handleEndDateKeyPress(event)">
+        <button class="btn btn-outline-primary mt-2" onclick="projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value)">Change</button>
+    </div>
+    <div id="searchUser" class=" col-sm-3 m-auto text-center nodisplay ">
         <span id="InvalidID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid ID</b></span>
         <br>
         <input type="text" id="userIDInput" class="form-control" placeholder="Enter User ID" onkeypress="handleKeyPress(event)">
@@ -52,12 +58,11 @@
     <div id="searchProject" class=" col-sm-3 m-auto text-center nodisplay">
         <span id="InvalidProjectID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid ID</b></span>
         <br>
-        <input type="text" id="ProjectUserIDInput" class="form-control" placeholder="Enter User ID" onkeypress="handleProjectKeyPress(event)">
-        <button class="btn btn-outline-primary mt-2" onclick="searchProjectByUserID(document.getElementById('ProjectUserIDInput').value)">Search</button>
+        <input type="text" id="ProjectIDInput" class="form-control" placeholder="Enter Project ID" onkeypress="handleProjectKeyPress(event)">
+        <button class="btn btn-outline-primary mt-2" onclick="searchProjectByID(document.getElementById('ProjectIDInput').value)">Search</button>
     </div>
     
     
-
     <div class=" nodisplay mt-4" id="userDataContainer">
         <!-- User data will be dynamically added here -->
         <div class="container mt-4">
@@ -66,14 +71,16 @@
             </div>
         </div>
     </div>
-
     <div class=" nodisplay mt-4" id="ProjectDataContainer">
         <!-- User data will be dynamically added here -->
         <div class="container mt-4">
             <div class="row row-cols-1 row-cols-md-3">
                 <!-- User cards will be dynamically added here -->
             </div>
+            
     </div>
+    </div>
+    
 <script>
 function handleKeyPress(event) {
     if (event.key === 'Enter') {
@@ -81,9 +88,15 @@ function handleKeyPress(event) {
     }
 }
 
+function handleEndDateKeyPress(event) {
+    if (event.key === 'Enter') {
+        projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
+    }
+}
+
 function handleProjectKeyPress(event) {
     if (event.key === 'Enter') {
-        searchProjectByUserID(document.getElementById('ProjectUserIDInput').value);
+        searchProjectByID(document.getElementById('ProjectIDInput').value);
     }
 }
 

@@ -4813,6 +4813,7 @@ function viewActiveUsers(){
     }
 
 function findUserByID() {
+    document.getElementById("inputNewEndDate").classList.add('nodisplay');
     document.getElementById("searchProject").classList.add('nodisplay');
     document.getElementById('ProjectDataContainer').classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.add('nodisplay');
@@ -4844,7 +4845,8 @@ function searchUserByID(idUser){
 }
 
 
-function findProjectByUserID() {
+function findProjectByID() {
+  document.getElementById("inputNewEndDate").classList.add('nodisplay');
   document.getElementById('InvalidProjectID').classList.add('nodisplay');
   document.getElementById("searchUser").classList.add('nodisplay');
   document.getElementById('ProjectDataContainer').classList.add('nodisplay');
@@ -4852,11 +4854,35 @@ function findProjectByUserID() {
   document.getElementById("searchProject").classList.remove('nodisplay');
 }
 
+function searchProjectByID(idProjects){
+  document.getElementById('InvalidProjectID').classList.add('nodisplay');
+  console.log("Viewing project by ID:",idProjects);
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/project-by-ID', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idProjects: idProjects })
+})
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          if(data[0]){
+            displayProjectData(data);
+          }
+          else{document.getElementById('InvalidProjectID').classList.remove('nodisplay');;}
+          
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+
+}
+
 function searchProjectByUserID(idUser){
   document.getElementById('InvalidProjectID').classList.add('nodisplay');
   console.log("Viewing user by ID:",idUser);
   // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin + ':5001'+ '/project-by-ID', {
+  fetch(window.location.origin + ':5001'+ '/project-by-user-ID', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
@@ -4875,8 +4901,77 @@ function searchProjectByUserID(idUser){
       .catch(error => console.error('Error fetching user data:', error));
 
 }
+
+
+function changeEndDate(idProjects){
+  const projectIDElement = document.getElementById('project_id');
+    if (projectIDElement) {
+        projectIDElement.textContent = idProjects;
+    }
+  searchProjectByID(idProjects);
+  document.getElementById('InvalidDateTime').classList.add('nodisplay');
+  document.getElementById('InvalidProjectID').classList.add('nodisplay');
+  document.getElementById("searchUser").classList.add('nodisplay');
+  document.getElementById('userDataContainer').classList.add('nodisplay');
+  document.getElementById("searchProject").classList.add('nodisplay');
+  document.getElementById("inputNewEndDate").classList.remove('nodisplay');
+}
+
+function projectChangeEndTime(idProjects, NewEndDateTime){
+  const EndDate = formatDateToISO(NewEndDateTime);
+  console.log(EndDate);
+  if(EndDate){
+  fetch(window.location.origin + ':5001'+ '/change-end-date', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        EndDate : EndDate,
+        idProjects : idProjects
+      }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Call a function to display the user data on the page
+    if(data[0]){
+      displayProjectData(data);
+      document.getElementById('InvalidDateTime').classList.add('nodisplay');
+    }
+})
+  .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('InvalidDateTime').classList.remove('nodisplay');
+
+  });
+}
+}
+
+function removeDelayed(idProjects){
+  fetch(window.location.origin + ':5001'+ '/remove-delayed', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idProjects : idProjects
+    }),
+})
+.then(response => response.json())
+.then(data => {
+  // Call a function to display the user data on the page
+  if(data[0]){
+    displayProjectData(data);
+  }
+})
+.catch(error => {
+    console.error('Error:', error);
+
+});
+}
 // Function to display user data on the page
 function displayUserData(users) {
+  document.getElementById("inputNewEndDate").classList.add('nodisplay');
   document.getElementById("searchProject").classList.add('nodisplay');
   document.getElementById("searchUser").classList.add('nodisplay');
   document.getElementById('ProjectDataContainer').classList.add('nodisplay');
@@ -4921,12 +5016,15 @@ function displayUserData(users) {
 
 // Function to show all Projects
 function viewAllProjects() {
+  
   // Make a fetch request to your backend to retrieve all user data
   fetch(window.location.origin +':5001'+ '/all-projects',)
       .then(response => response.json())
       .then(data => {
           // Call a function to display the user data on the page
+          
           displayProjectData(data);
+          
       })
       .catch(error => console.error('Error fetching user data:', error));
 }
@@ -4937,6 +5035,7 @@ function viewActiveProjects(){
       .then(response => response.json())
       .then(data => {
           // Call a function to display the user data on the page
+          document.getElementById("inputNewEndDate").classList.add('nodisplay');
           displayProjectData(data);
       })
       .catch(error => console.error('Error fetching user data:', error));
@@ -4948,13 +5047,16 @@ function viewDelayedProjects(){
       .then(response => response.json())
       .then(data => {
           // Call a function to display the user data on the page
+          document.getElementById("inputNewEndDate").classList.add('nodisplay');
           displayDelayedProjectData(data);
+          
       })
       .catch(error => console.error('Error fetching user data:', error));
 }
 
 // Function to display user data on the page
 function displayProjectData(projects) {
+  
   document.getElementById("searchProject").classList.add('nodisplay');
   document.getElementById("searchUser").classList.add('nodisplay');
   document.getElementById('userDataContainer').classList.add('nodisplay');
@@ -4968,12 +5070,12 @@ function displayProjectData(projects) {
             </div>
         </div>
   `;
-  // Loop through each project and create HTML elements to display their data
+  // Loop through each project and cretate HTML elemens to display their data
   projects.forEach((project, index) => {
-     // Create a column for the user card
+     // Create a column for the project card
      const column = document.createElement('div');
      column.classList.add('col-lg-4');
-     // Create the user card HTML
+     // Create the project card HTML
       column.innerHTML = `
           <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
               <div class="card-body text-white">
@@ -4981,7 +5083,7 @@ function displayProjectData(projects) {
                   <p class="card-text">User: ${project.idUser}</p>
                   <p class="card-text">Start date: ${project.StartDate ? new Date(project.StartDate).toLocaleString() : 'Invalid Date'}</p>
                   <p class="card-text">End date: ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleString() : 'Invalid Date'}</p>
-                  <p class="card-text">Delayed: ${project.Delayed}</p>
+                  <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
                   <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchUserByID(${project.idUser})">View project user info</button>
                   <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="changeEndDate(${project.idProjects})">Edit project end date</button>
                   <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteProject(${project.idProjects})">Delete project</button>
@@ -4989,7 +5091,7 @@ function displayProjectData(projects) {
           </div>
       `;
      
-     // Append the user card to the current row
+     // Append the project card to the current row
      document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
      
        });
@@ -5024,7 +5126,7 @@ function displayDelayedProjectData(projects) {
                   <p class="card-text">User: ${project.idUser}</p>
                   <p class="card-text">Start date: ${project.StartDate ? new Date(project.StartDate).toLocaleString() : 'Invalid Date'}</p>
                   <p class="card-text">End date: ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleString() : 'Invalid Date'}</p>
-                  <p class="card-text">Delayed: ${project.Delayed}</p>
+                  <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
                   <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="viewProjectUser(${project.idProjects})">View project user info</button>
                   <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="removeDelayed(${project.idProjects})">Finish project</button>
                   <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteProject(${project.idProjects})">Delete project</button>
@@ -5038,3 +5140,56 @@ function displayDelayedProjectData(projects) {
        });
 }
 
+// Function to format date to needed date formatting in backend
+function formatDateToISO(dateString) {
+  // Split the date string into components
+  const [datePart, timePart] = dateString.split(', ');
+  
+  // Check if datePart and timePart exist
+  if (!datePart || !timePart) {
+    // If either datePart or timePart is missing, return null
+    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
+    return null;
+  }
+
+  const [month, day, year] = datePart.split('/');
+  const [time, ampm] = timePart.split(' ');
+
+  // Check if month, day, year, time, and ampm exist
+  if (!month || !day || !year || !time || !ampm) {
+    // If any component is missing, return null
+    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
+    return null;
+  }
+
+  // Parse hours, minutes, and seconds from the time part
+  const [hours, minutes, seconds] = time.split(':').map(part => parseInt(part));
+  
+  // Check if hours, minutes, and seconds are valid numbers
+  if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+    // If any component is not a number, return null
+    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
+    return null;
+  }
+
+  // Convert hours to 24-hour format if necessary
+  let hourOfDay = hours % 12;
+  if (ampm === 'PM') {
+    hourOfDay += 12;
+  }
+
+  // Create a new Date object with the components
+  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), hourOfDay, minutes, seconds);
+  
+  // Check if the Date object is valid
+  if (isNaN(date.getTime())) {
+    // If the Date object is invalid, return null
+    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
+    return null;
+  }
+
+  // Convert the date to ISO 8601 format
+  const isoString = date.toISOString();
+
+  return isoString;
+}

@@ -271,16 +271,26 @@ app.get("/all-projects", (req, res) => {
 
 // Fetch active projects (endDate time is not yet reached)
 app.get("/active-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects WHERE EndDateProjection > CURRENT_TIMESTAMP() OR `Delayed` IS NOT NULL';
+  const sql_query = 'SELECT * FROM projects WHERE EndDateProjection > CURRENT_TIMESTAMP() OR `Delayed` = 1';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
+    res.send(result);
+  });
+});
+// Fetch all users
+app.post("/project-by-ID", (req, res) => {
+  const {idProjects} = req.body;
+  const sql_query = 'SELECT * FROM projects WHERE idProjects = ?';
+  connection.query(sql_query,[idProjects], (err, result) => {
+    if (err) throw err;
+    console.log(result);
     res.send(result);
   });
 });
 
 
 // Fetch all users
-app.post("/project-by-ID", (req, res) => {
+app.post("/project-by-user-ID", (req, res) => {
   const {idUser} = req.body;
   const sql_query = 'SELECT * FROM projects WHERE idUser = ?';
   connection.query(sql_query,[idUser], (err, result) => {
@@ -293,7 +303,7 @@ app.post("/project-by-ID", (req, res) => {
 
 // Fetch active projects (endDate time is not yet reached)
 app.get("/delayed-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects WHERE `Delayed` IS NOT NULL';
+  const sql_query = 'SELECT * FROM projects WHERE `Delayed` = 1';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -301,6 +311,51 @@ app.get("/delayed-projects", (req, res) => {
   });
 });
 
+app.post("/change-end-date", (req, res) => {
+  const { EndDate, idProjects } = req.body;
+  // Update the EndDate of the project in the database
+  const updateQuery = 'UPDATE projects SET EndDateProjection = ?, `Delayed`= true WHERE idProjects = ?';
+  connection.query(updateQuery, [EndDate, idProjects], (err, result) => {
+    if (err) {
+      console.error('Error updating end date:', err);
+      return res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
+    }
+      // Retrieve the updated project information
+      const selectQuery = 'SELECT * FROM projects WHERE idProjects = ?';
+      connection.query(selectQuery, [idProjects], (err, result) => {
+        if (err) {
+          console.error('Error fetching updated project:', err);
+          return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
+        }
+
+        // Send the updated project information back to the client
+        res.json(result);
+    });
+  });
+});
+
+app.post("/remove-delayed", (req, res) => {
+  const { idProjects } = req.body;
+  // Update the EndDate of the project in the database
+  const updateQuery = 'UPDATE projects SET  `Delayed`= false WHERE idProjects = ?';
+  connection.query(updateQuery, [idProjects], (err, result) => {
+    if (err) {
+      console.error('Error updating end date:', err);
+      return res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
+    }
+      // Retrieve the updated project information
+      const selectQuery = 'SELECT * FROM projects WHERE idProjects = ?';
+      connection.query(selectQuery, [idProjects], (err, result) => {
+        if (err) {
+          console.error('Error fetching updated project:', err);
+          return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
+        }
+
+        // Send the updated project information back to the client
+        res.json(result);
+    });
+  });
+});
 
 // Disconnect from the database
 app.get("/disconnect", (req, res) => {
