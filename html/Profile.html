@@ -142,7 +142,7 @@
         }));
 
     // Communication with API to change password
-    fetch(window.location.origin + '/change-password', {
+    fetch(window.location.origin + ':5001' + '/change-password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -185,7 +185,7 @@
     // Communication with API for getting information and showing it
     function fetchUserInfo() {
       // Fetch user information from the server
-      fetch('http://localhost:5001/user-info', {
+      fetch(window.location.origin + ':5001' + '/user-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
