@@ -18,7 +18,7 @@
    
 </head>
 <body>
-  <div id="customPasswordChangeAlert" class="custom-alert">
+  <div id="customPasswordChangeAlert" class="custom-alert nodisplay">
     <h2>Succesfully changed password!</h2>
   </div>
     <section class="container col-lg-3 col-md-6 mt-5 text-white bg-light" style="max-width:400px; max-height:350px">
@@ -29,18 +29,18 @@
             <p id="email" class="lead">Email: johndoe@example.com</p>
             <p class="lead"> Password: ********* <a type="button" class="btn btn-outline-secondary text-white ml-4" onclick="ShowPasswordReset()">Change Password</a></p>
         </div>
-                  <form id="change-password-form" style="display:none" >
+                  <form id="change-password-form" class="nodisplay">
                       <h3>Change your password<br></h1>  
                       <div class="form-group">
-                          <div id="current-password-red" class="row ml-0 mt-4 mb-1" for="password">Current password <span class="ml-1" id="WrongPassword" style="display:none; color:rgb(255, 0, 0)"><b>- Incorrect current password</b></span><span class="ml-1" id="EmptyOldPassword" style="display:none; color:rgb(255, 0, 0)"><b>- Enter your  current password</b></span></div>
+                          <div id="current-password-red" class="row ml-0 mt-4 mb-1" for="password">Current password <span class="ml-1 nodisplay" id="WrongPassword" style=" color:rgb(255, 0, 0)"><b>- Incorrect current password</b></span><span class="ml-1 nodisplay" id="EmptyOldPassword" style="color:rgb(255, 0, 0)"><b>- Enter your  current password</b></span></div>
                           <input type="password" class="form-control" id="current-password" placeholder="Enter your current password">
                       </div>
                       <div class="form-group">
-                          <div id="new-password-red" class="row ml-0 mb-1" for="password">New password<span class="ml-1" id="UnsafeNewPassword" style="display:none; color:rgb(255, 8, 8)"><b>- Enter a safe password</b></span><span class="ml-1" id="EmptyNewPassword" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
+                          <div id="new-password-red" class="row ml-0 mb-1" for="password">New password<span class="ml-1 nodisplay" id="UnsafeNewPassword" style=" color:rgb(255, 8, 8)"><b>- Enter a safe password</b></span><span class="ml-1 nodisplay" id="EmptyNewPassword" style="color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
                           <input type="password" class="form-control " id="new-password" placeholder="Enter your new password">
                       </div>
                       <div class="form-group">
-                        <div id="confirm-new-password-red" class="row ml-0  mb-1" for="password">Confirm new password<span class="ml-1" id="NoMatchPassword" style="display:none; color:rgb(255, 8, 8)"><b>- Passwords dont match</b></span><span class="ml-1" id="EmptyConfirmPassword" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
+                        <div id="confirm-new-password-red" class="row ml-0  mb-1" for="password">Confirm new password<span class="ml-1 nodisplay" id="NoMatchPassword" style=" color:rgb(255, 8, 8)"><b>- Passwords dont match</b></span><span class="ml-1 nodisplay" id="EmptyConfirmPassword" style="color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
                         <input type="password" class="form-control " id="confirm-new-password" placeholder="Enter your new password again">
                     </div>
                       <div class="row"><button id="submitbutton" type="submit" class="btn btn-outline-secondary text-white mb-3 ml-3">Change Password</button> <a class="btn btn-outline-danger mb-3  ml-auto mr-3" onclick="HidePasswordReset()">Cancel</a>
@@ -50,7 +50,7 @@
       </section>
     
 <script>
-    const loggedUserUUID= getCookie("LoggedUser");
+    const loggedUserUUID = getCookie("userData").UUID;
     const form = document.getElementById('change-password-form');
     const inputs = form.querySelectorAll('input');
 
@@ -65,7 +65,7 @@
             inputs[nextIndex].focus();
           }
           else{
-            document.getElementById('').focus();
+            document.getElementById('submitbutton').focus();
           }
         }
       });
@@ -75,21 +75,21 @@
     // Reset visuals for current password
       document.getElementById('current-password-red').style.color='rgb(255,255,255)';
       document.getElementById('current-password').classList.remove('form-control-incorrect');
-      document.getElementById('EmptyOldPassword').style.display='none';
-      document.getElementById('WrongPassword').style.display='none';
+      document.getElementById('EmptyOldPassword').classList.add('nodisplay');
+      document.getElementById('WrongPassword').classList.add('nodisplay');
 
     // Resets visuals for new password
       document.getElementById('new-password-red').style.color='rgb(255,255,255)';
       document.getElementById('new-password').classList.remove('form-control-incorrect');
-      document.getElementById('EmptyNewPassword').style.display='none';
-      document.getElementById('UnsafeNewPassword').style.display='none';
+      document.getElementById('EmptyNewPassword').classList.add('nodisplay');
+      document.getElementById('UnsafeNewPassword').classList.add('nodisplay');
 
     
     // Resets visuals for confirm new password
       document.getElementById('confirm-new-password-red').style.color='rgb(255,255,255)';
       document.getElementById('confirm-new-password').classList.remove('form-control-incorrect');
-      document.getElementById('EmptyConfirmPassword').style.display='none';
-      document.getElementById('NoMatchPassword').style.display='none';
+      document.getElementById('EmptyConfirmPassword').classList.add('nodisplay');
+      document.getElementById('NoMatchPassword').classList.add('nodisplay');
 
     // gets base values
     const currentPassword = document.getElementById('current-password').value.trim();
@@ -101,20 +101,20 @@
     if(currentPassword==''){
       document.getElementById('current-password-red').style.color='rgb(255,0,0)';
       document.getElementById('current-password').classList.add('form-control-incorrect');
-      document.getElementById('EmptyOldPassword').style.display='block';
+      document.getElementById('EmptyOldPassword').classList.remove('nodisplay');
       return
     }
     
     if(newPassword==''){
       document.getElementById('new-password-red').style.color='rgb(255,0,0)';
       document.getElementById('new-password').classList.add('form-control-incorrect');
-      document.getElementById('EmptyNewPassword').style.display='block';
+      document.getElementById('EmptyNewPassword').classList.remove('nodisplay');
       return
     }
     if(confirmNewPassword==''){
       document.getElementById('confirm-new-password-red').style.color='rgb(255,0,0)';
       document.getElementById('confirm-new-password').classList.add('form-control-incorrect');
-      document.getElementById('EmptyConfirmPassword').style.display='block';
+      document.getElementById('EmptyConfirmPassword').classList.remove('nodisplay');
       return
     }
 
@@ -124,7 +124,7 @@
     if (!passwordRegex.test(newPassword)) {
       document.getElementById('new-password-red').style.color='rgb(255,0,0)';
       document.getElementById('new-password').classList.add('form-control-incorrect');
-      document.getElementById('UnsafeNewPassword').style.display='block';
+      document.getElementById('UnsafeNewPassword').classList.remove('nodisplay');
       return
     }
 
@@ -132,10 +132,9 @@
     if(newPassword!=confirmNewPassword){
       document.getElementById('confirm-new-password-red').style.color='rgb(255,0,0)';
       document.getElementById('confirm-new-password').classList.add('form-control-incorrect');
-      document.getElementById('NoMatchPassword').style.display='block';
+      document.getElementById('NoMatchPassword').classList.remove('nodisplay');
       return
     }
-
     // Communication with API to change password
     fetch(window.location.origin + '/change-password', {
         method: 'POST',
@@ -145,7 +144,7 @@
         body: JSON.stringify({
             currentPassword: currentPassword,
             newPassword: newPassword,
-            UUID: loggedUserUUID,
+            UUID: loggedUserUUID
         }),
     })
     .then(response => response.json())
@@ -154,17 +153,17 @@
         // Handle the response from the server
         console.log(data);
         if (data.status === 'success'){
-          document.getElementById('customPasswordChangeAlert').style.display="block";
+          document.getElementById('customPasswordChangeAlert').classList.remove('nodisplay');
           setTimeout(function() {
-          document.getElementById('customPasswordChangeAlert').style.display="none";
+          document.getElementById('customPasswordChangeAlert').classList.add('nodisplay');
           }, 2000);
-          document.querySelector('form').reset();
+          document.querySelector('form').reset(); 
           HidePasswordReset();
         }
         else{
           document.getElementById('current-password-red').style.color='rgb(255,0,0)';
           document.getElementById('current-password').classList.add('form-control-incorrect');
-          document.getElementById('WrongPassword').style.display='block';
+          document.getElementById('WrongPassword').classList.remove('nodisplay');
         }
 
     })
@@ -209,32 +208,32 @@
     // Functions for showing password reset form
     function ShowPasswordReset(){
 
-      document.getElementById('change-password-form').style.display = 'block';
-      document.getElementById('profile-info').style.display ='none';
+      document.getElementById('change-password-form').classList.remove('nodisplay');
+      document.getElementById('profile-info').classList.add('nodisplay');
       
     } 
     function HidePasswordReset(){
       document.querySelector('form').reset();
-      document.getElementById('change-password-form').style.display = 'none';
-      document.getElementById('profile-info').style.display ='block';
+      document.getElementById('change-password-form').classList.add('nodisplay');
+      document.getElementById('profile-info').classList.remove('nodisplay');
       // Reset visuals for current password
       document.getElementById('current-password-red').style.color='rgb(255,255,255)';
       document.getElementById('current-password').classList.remove('form-control-incorrect');
-      document.getElementById('EmptyOldPassword').style.display='none';
-      document.getElementById('WrongPassword').style.display='none';
+      document.getElementById('EmptyOldPassword').classList.add('nodisplay');
+      document.getElementById('WrongPassword').classList.add('nodisplay');
 
     // Resets visuals for new password
       document.getElementById('new-password-red').style.color='rgb(255,255,255)';
       document.getElementById('new-password').classList.remove('form-control-incorrect');
-      document.getElementById('EmptyNewPassword').style.display='none';
-      document.getElementById('UnsafeNewPassword').style.display='none';
+      document.getElementById('EmptyNewPassword').classList.add('nodisplay');
+      document.getElementById('UnsafeNewPassword').classList.add('nodisplay');
 
     
     // Resets visuals for confirm new password
       document.getElementById('confirm-new-password-red').style.color='rgb(255,255,255)';
       document.getElementById('confirm-new-password').classList.remove('form-control-incorrect');
-      document.getElementById('EmptyConfirmPassword').style.display='none';
-      document.getElementById('NoMatchPassword').style.display='none';
+      document.getElementById('EmptyConfirmPassword').classList.add('nodisplay');
+      document.getElementById('NoMatchPassword').classList.add('nodisplay');
     }
 
     // Removes form red border when user clicks on set parts of form

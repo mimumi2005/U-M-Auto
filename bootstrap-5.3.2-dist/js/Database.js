@@ -65,17 +65,35 @@ function loginUser(username, password, connection, res) {
     if (matchedUser) {
       // Passwords match, login successful
       const userid = matchedUser.idUser;
-      const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart)  VALUES (?,?,?)';
-      connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
+
+      // Check if user is an admin
+      checkAdminStatus(userid, connection, (err, IsAdmin) => {
         if (err) {
-          console.error('Error inserting data into the database:', err);
+          console.error('Error checking admin status:', err);
           return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
         }
+
+        // Check if user is a worker
+        checkWorkerStatus(userid, connection, (err, IsWorker) => {
+          if (err) {
+            console.error('Error checking worker status:', err);
+            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+          }
+
+          // Insert login instance
+          const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart)  VALUES (?,?,?)';
+          connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
+            if (err) {
+              console.error('Error inserting data into the database:', err);
+              return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+            }
+
+            console.log(`\nUser-${username} \nPassword-${password} \nLogin instance-${UUID}\n Admin: ${IsAdmin}\n Worker: ${IsWorker}\n`);
+            res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
+          });
+        });
       });
-      console.log(`\nUser-${username} \nPassword-${password} \nLogin instance-${UUID}\n`);
-      res.json({ status: 'success', message: 'Login successful!', data: UUID });
-    }
-     else {
+    } else {
       // Passwords do not match
       res.status(401).json({ status: '2', message: 'Wrong password' });
     }
@@ -163,20 +181,27 @@ app.post("/log-out", async (req, res) => {
 
 
 
-
 app.post("/change-password", (req, res) => {
   const { currentPassword, newPassword, UUID } = req.body;
-
+  
+  // Check user based on UUID
   const checkUserQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
   connection.query(checkUserQuery, [UUID], (err, results) => {
     if (err) {
-      console.error('Error checking current password in the database:', err);
+      console.error('Error checking user in the database:', err);
       return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
-    const loggedInUser = results.idUser;
-    
+
+    // Check if UUID corresponds to a user
+    if (results.length === 0) {
+      return res.status(401).json({ status: 'error', message: 'Invalid UUID' });
+    }
+
+    // Retrieve the idUser from the results
+    const loggedInUser = results[0].idUser;
+
     // Check if the current password matches the user's current password
-    const checkCurrentPasswordQuery = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    const checkCurrentPasswordQuery = 'SELECT * FROM users WHERE idUser = ? AND password = ?';
     connection.query(checkCurrentPasswordQuery, [loggedInUser, currentPassword], (err, results) => {
       if (err) {
         console.error('Error checking current password in the database:', err);
@@ -189,7 +214,7 @@ app.post("/change-password", (req, res) => {
       }
 
       // Update the user's password with the new one
-      const updatePasswordQuery = 'UPDATE users SET password = ? WHERE username = ?';
+      const updatePasswordQuery = 'UPDATE users SET password = ? WHERE idUser = ?';
       connection.query(updatePasswordQuery, [newPassword, loggedInUser], (updateErr) => {
         if (updateErr) {
           console.error('Error updating password in the database:', updateErr);
@@ -199,8 +224,9 @@ app.post("/change-password", (req, res) => {
         res.json({ status: 'success', message: 'Password updated successfully!' });
       });
     });
+  });
 });
-});
+
 
 
 // Fetch all users
@@ -508,3 +534,38 @@ app.delete('/project-delete/:ProjectID', async (req, res) => {
     res.status(200).json({ message: 'Project deleted successfully' });
   });
 });
+
+function checkAdminStatus(userid, connection, callback) {
+  const query = 'SELECT * FROM administrators WHERE idUser = ?';
+  connection.query(query, [userid], (err, results) => {
+    if (err) {
+      console.error('Error querying admin table:', err);
+      return callback(err, false);
+    }
+
+    // If user is in admin table or has idUser = 1, treat as admin
+    if (results.length > 0 || userid === 1) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  });
+}
+
+// Function to check worker status
+function checkWorkerStatus(userid, connection, callback) {
+  const query = 'SELECT * FROM workers WHERE idUser = ?';
+  connection.query(query, [userid], (err, results) => {
+    if (err) {
+      console.error('Error querying workers table:', err);
+      return callback(err, false);
+    }
+
+    // If user is in workers table, treat as worker
+    if (results.length > 0 || userid === 1) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  });
+}

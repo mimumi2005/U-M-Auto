@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    <div id="customLoginAlert" class="custom-alert">
+    <div id="customLoginAlert" class="custom-alert nodisplay">
         <h2>Succesfully logged in</h2>
     </div>
 
@@ -31,11 +31,11 @@
                 <form id="loginForm">
                     <h1 class="text-center">Login</h1>  
                     <div class="form-group">
-                        <div id="username-red" class="row ml-0 mb-2" for="username">Username <span class="ml-1" id="WrongUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Invalid credentials</b></span><span class="ml-1" id="EmptyUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Enter your username</b></span></div>
+                        <div id="username-red" class="row ml-0 mb-2" for="username">Username <span class="ml-1 nodisplay" id="WrongUsername" style=" color:rgb(255, 0, 0)"><b>- Invalid credentials</b></span><span class="ml-1 nodisplay" id="EmptyUsername" style=" color:rgb(255, 0, 0)"><b>- Enter your username</b></span></div>
                         <input type="text" class="form-control" id="username" placeholder="Enter your username">
                     </div>
                     <div class="form-group">
-                        <div id="password-red" class="row ml-0 mb-2" for="password">Password<span class="ml-1" id="WrongPassword" style="display:none; color:rgb(255, 8, 8)"><b>- Incorrect password</b></span><span class="ml-1" id="EmptyPassword" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
+                        <div id="password-red" class="row ml-0 mb-2" for="password">Password<span class="ml-1 nodisplay" id="WrongPassword" style=" color:rgb(255, 8, 8)"><b>- Incorrect password</b></span><span class="ml-1 nodisplay" id="EmptyPassword" style=" color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
                         <input type="password" class="form-control " id="password" placeholder="Enter your password">
                     </div>
                     <button type="submit" class="btn btn-secondary btn-block">Login</button>
@@ -69,10 +69,10 @@
     });
     document.querySelector('form').addEventListener('submit', function (e) {
         // Resets visuals for all error messages/styles
-        document.getElementById('WrongUsername').style.display="none";
-        document.getElementById('WrongPassword').style.display="none";
-        document.getElementById('EmptyPassword').style.display="none";
-        document.getElementById('EmptyUsername').style.display="none";
+        document.getElementById('WrongUsername').classList.add('nodisplay');
+        document.getElementById('WrongPassword').classList.add('nodisplay');
+        document.getElementById('EmptyPassword').classList.add('nodisplay');
+        document.getElementById('EmptyUsername').classList.add('nodisplay');
         document.getElementById('username').classList.remove('form-control-incorrect');
         document.getElementById('password').classList.remove('form-control-incorrect');
         document.getElementById('username-red').style.color="rgb(255, 255, 255)";
@@ -88,14 +88,14 @@
         if(UsernameValue==''){
             document.getElementById('username-red').style.color="rgb(255, 0, 0)";
             document.getElementById('username').classList.add('form-control-incorrect')
-            document.getElementById('EmptyUsername').style.display="block";
+            document.getElementById('EmptyUsername').classlist.remove('nodisplay');
             document.getElementById('username').focus();
             return
         }
         if(PasswordValue==''){
             document.getElementById('password-red').style.color="rgb(255, 0, 0)";
             document.getElementById('password').classList.add('form-control-incorrect')
-            document.getElementById('EmptyPassword').style.display="block";
+            document.getElementById('EmptyPassword').classList.remove('nodisplay');
             return
         }
 
@@ -133,18 +133,18 @@
             console.error('Error:', response);
             
             if(response.status=='1'){
-                document.getElementById('WrongUsername').style.display="block";
+                document.getElementById('WrongUsername').classList.remove('nodisplay');
                 document.getElementById('username-red').style.color="rgb(255, 0, 0)";
                 document.getElementById('username').classList.add('form-control-incorrect');
 
-                document.getElementById('WrongPassword').style.display="none";
+                document.getElementById('WrongPassword').classList.add('nodisplay');
                 document.getElementById('password-red').style.color="white";
                 document.getElementById('password').classList.remove('form-control-incorrect');
                 document.getElementById('username').focus();
         
             }
             if(response.status=='2'){
-                document.getElementById('WrongPassword').style.display="block";
+                document.getElementById('WrongPassword').classlist.remove('nodisplay');
                 document.getElementById('password-red').style.color="rgb(255, 0, 0)";
                 document.getElementById('password').classList.add('form-control-incorrect');
                 

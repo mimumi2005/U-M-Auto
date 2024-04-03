@@ -10300,7 +10300,6 @@
 
 .custom-alert {
   z-index: 99;
-  display: none;
   position: fixed;
   top: 10%;
   left: 50%;

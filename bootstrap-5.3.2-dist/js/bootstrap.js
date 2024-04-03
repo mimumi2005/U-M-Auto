@@ -4554,8 +4554,11 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(response => response.text())
       .then(data => {
           document.body.insertAdjacentHTML("afterbegin", data);
-          const isLoggedInCookie = document.cookie.includes("LoggedUser");
-          isLoggedIn = isLoggedInCookie;  
+          const isLoggedInCookie = document.cookie.includes("userData");
+          const isAdminInCookies = (document.cookie.match('(^|;)\\s*userData\\s*=\\s*([^;]+)') || [])[2] && JSON.parse((document.cookie.match('(^|;)\\s*userData\\s*=\\s*([^;]+)') || [])[2]).IsAdmin;
+          console.log("CookieAdmin: ",isAdminInCookies);
+          isLoggedIn = isLoggedInCookie; 
+          isAdmin = isAdminInCookies;
           updateButtonVisibility();
       });
       
@@ -4564,85 +4567,79 @@ document.addEventListener("DOMContentLoaded", function() {
 function updateButtonVisibility() {
   // Your logic to show/hide buttons based on isLoggedIn
   if (isLoggedIn) {
-    //if(isAdmin){
-    //  document.getElementById('AdminMenu').style.display = 'block';
-    //}
-    //else{
-    //  document.getElementById('AdminMenu').style.display = 'block';
-    //}
-      // Show buttons for logged-in users
-      document.getElementById('timeTableButton').style.display = 'block';
-      document.getElementById('estimatorButton').style.display = 'block'; 
-      document.getElementById('LogOutButton').style.display = 'block';
-      document.getElementById('LoginButton').style.display = 'none';
-      document.getElementById('SignUpButton').style.display = 'none';
+    console.log(isLoggedIn);
+    if(isAdmin){
+      document.getElementById('AdminMenu').classList.remove('nodisplay');
+    }
+    else{
+      document.getElementById('AdminMenu').classList.add('nodisplay');
+    }
+  // Show buttons for logged-in users
+      document.getElementById('timeTableButton').classList.remove('nodisplay');
+      document.getElementById('estimatorButton').classList.remove('nodisplay');
+      document.getElementById('LogOutButton').classList.remove('nodisplay');
+      document.getElementById('LoginButton').classList.add('nodisplay');
+      document.getElementById('SignUpButton').classList.add('nodisplay');
       
       if(document.getElementById('LoginP')){
-        document.getElementById('LoginP').style.display = 'none';
+        document.getElementById('LoginP').classList.add('nodisplay');
       }
       if(document.getElementById('BookingP')){
-        document.getElementById('BookingP').style.display = 'block';
+        document.getElementById('BookingP').classList.remove('nodisplay');
       }
       if(document.getElementById('PriceEstimator')){
-        document.getElementById('PriceEstimator').style.display = 'block';
+        document.getElementById('PriceEstimator').classList.remove('nodisplay');
       }
       if(document.getElementById('PriceEstimatorGuest')){
-        document.getElementById('PriceEstimatorGuest').style.display = 'none';
+        document.getElementById('PriceEstimatorGuest').classList.add('nodisplay');
       }
       
   } 
   else {
       
       // Hide buttons for non-logged-in users
-      document.getElementById('timeTableButton').style.display = 'none';
-      document.getElementById('estimatorButton').style.display = 'none';
-      document.getElementById('LogOutButton').style.display = 'none';
-      document.getElementById('LoginButton').style.display = 'block';
-      document.getElementById('SignUpButton').style.display = 'block';
+      document.getElementById('timeTableButton').classList.add('nodisplay');
+      document.getElementById('estimatorButton').classList.add('nodisplay');
+      document.getElementById('LogOutButton').classList.add('nodisplay');
+      document.getElementById('LoginButton').classList.remove('nodisplay');
+      document.getElementById('SignUpButton').classList.remove('nodisplay');
       if(document.getElementById('LoginP')){
-        document.getElementById('LoginP').style.display = 'block';
+        document.getElementById('LoginP').classList.remove('nodisplay');
       }
       if(document.getElementById('BookingP')){
-        document.getElementById('BookingP').style.display = 'none';
+        document.getElementById('BookingP').classList.add('nodisplay');
       }
       if(document.getElementById('PriceEstimator')){
-        document.getElementById('PriceEstimator').style.display = 'none';
+        document.getElementById('PriceEstimator').classList.add('nodisplay');
       }
       if(document.getElementById('PriceEstimatorGuest')){
-        document.getElementById('PriceEstimatorGuest').style.display = 'block';
+        document.getElementById('PriceEstimatorGuest').classList.remove('nodisplay');
       }
   }
 }
-function getCookie(name) {
-  const cookieName = name + "=";
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    let cookie = cookies[i].trim();
-    if (cookie.startsWith(cookieName)) {
-      return cookie.substring(cookieName.length);
-    }
-  }
-  return null;
-}
 
-function loginUser(UUID) {
+
+function loginUser(response) {
   showCustomLoginAlert();
   setTimeout(function() {
-    document.cookie = `LoggedUser=${UUID}; path=/`;
-    isLoggedIn = true;
+    const userData = {
+      UUID: response.UUID,
+      IsAdmin: response.IsAdmin,
+      IsWorker: response.IsWorker
+    };
+    console.log('admin:', response.IsAdmin);
+    setCookie('userData', userData, 1); // Expires in 7 days
 
     // Log the document cookie after setting to verify
 
     updateButtonVisibility();
     window.location.href = 'Home.html?showSuccess=true';
   }, 650);
-  
-  
 }
 
 function LogOut(){
     
-    const loggedUser = getCookie("LoggedUser");
+    const loggedUser = getCookie("userData").UUID;
     console.log('Logged user:',loggedUser)
     fetch(window.location.origin + ':5001'+ '/log-out', {
       method: 'POST',
@@ -4670,12 +4667,11 @@ window.onscroll = function() {
 
 function toggleScrollToTopButton() {
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 700) {
-    document.getElementById("scroll-to-top-btn").style.display = 'block';
+    document.getElementById("scroll-to-top-btn").style.display = 'flex';
   } else {
-    document.getElementById("scroll-to-top-btn").style.display = 'none';
+    document.getElementById("scroll-to-top-btn").style.display = 'none'
   }
 }
-
 function scrollToTop() {
   const scrollToTopElement = document.documentElement || document.body;
 
@@ -4702,12 +4698,13 @@ function clearCookies() {
 function showCustomLoginAlert() {
   if(document.getElementById('customLoginAlert')){
   const alertBox = document.getElementById('customLoginAlert');
-  alertBox.style.display = 'block';
+  alertBox.classList.remove('nodisplay');
   } 
 }
+
 function showCustomSignUpAlert() {
   const alertBox = document.getElementById('customSignUpAlert');
-  alertBox.style.display = 'block';
+  alertBox.classList.remove('nodisplay');
 }
 
 
@@ -4718,7 +4715,7 @@ function showCustomAppointmentAlert() {
   }, 2000);
   if(document.getElementById('customAppointmentAlert')){
     const alertBox = document.getElementById('customAppointmentAlert');
-    alertBox.style.display = 'block';
+    alertBox.classList.remove('nodisplay');
     }
 }
 
@@ -4839,7 +4836,7 @@ function searchUserByID(idUser){
           if(data[0]){
             displayUserData(data);
           }
-          else{document.getElementById('InvalidID').classList.remove('nodisplay');;}
+          else{document.getElementById('InvalidID').classList.remove('nodisplay');}
           
       })
       .catch(error => console.error('Error fetching user data:', error));
@@ -4874,7 +4871,7 @@ function searchProjectByID(idProjects){
           if(data[0]){
             displayProjectData(data);
           }
-          else{document.getElementById('InvalidProjectID').classList.remove('nodisplay');;}
+          else{document.getElementById('InvalidProjectID').classList.remove('nodisplay');}
           
       })
       .catch(error => console.error('Error fetching user data:', error));
@@ -4898,7 +4895,7 @@ function searchProjectByUserID(idUser){
           if(data[0]){
             displayProjectData(data);
           }
-          else{document.getElementById('InvalidProjectID').classList.remove('nodisplay');;}
+          else{document.getElementById('InvalidProjectID').classList.remove('nodisplay');}
           
       })
       .catch(error => console.error('Error fetching user data:', error));
@@ -5195,4 +5192,17 @@ function formatDateToISO(dateString) {
   const isoString = date.toISOString();
 
   return isoString;
+}
+
+
+// Function to set cookie with JSON data
+function setCookie(name, value, days) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${JSON.stringify(value)};expires=${expires.toUTCString()};path=/`;
+}
+
+function getCookie(name) {
+  const cookieValue = document.cookie.match(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+  return cookieValue ? JSON.parse(cookieValue.pop()) : null;
 }

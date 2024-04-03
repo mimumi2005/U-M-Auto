@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <div id="customSignUpAlert" class="custom-alert">
+    <div id="customSignUpAlert" class="custom-alert nodisplay">
         <h2>Succesfully Signed up</h2>
     </div>
     <div class="container mx-80 mt-4">
@@ -27,19 +27,19 @@
                 <h1 class="text-center">Sign Up</h1>
                 <form id="signupForm" action="/signup" method="post">
                     <div class="form-group">
-                      <label class="row ml-0 mb-2" id='name-red' for="name">Name <span class="ml-1" id="EmptyName" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a name</b></label>
+                      <label class="row ml-0 mb-2" id='name-red' for="name">Name <span class="ml-1 nodisplay" id="EmptyName" style=" color:rgb(255, 0, 0)"><b>- Enter a name</b></label>
                       <input type="name" class="form-control" placeholder="Enter your name" id="name" name="name" >
                     </div>
                     <div class="form-group">
-                      <div id="email-red" class="row ml-0 mb-2" for="email">Email <span class="ml-1" id="BadEmail" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a valid email</b></span> <span class="ml-1" id="TakenEmail" style="display:none; color:rgb(255, 0, 0)"><b>- Email is taken</b></span><span class="ml-1" id="EmptyEmail" style="display:none; color:rgb(255, 0, 0)"><b>- Enter an email</b></div>
+                      <div id="email-red" class="row ml-0 mb-2" for="email">Email <span class="ml-1 nodisplay" id="BadEmail" style=" color:rgb(255, 0, 0)"><b>- Enter a valid email</b></span> <span class="ml-1 nodisplay" id="TakenEmail" style=" color:rgb(255, 0, 0)"><b>- Email is taken</b></span><span class="ml-1 nodisplay" id="EmptyEmail" style=" color:rgb(255, 0, 0)"><b>- Enter an email</b></div>
                       <input type="text" class="form-control" placeholder="Enter your email address" id="email" name="email" >
                     </div>
                     <div class="form-group">
-                      <div id="username-red" class="row ml-0 mb-2" for="username">Username <span class="ml-1" id="TakenUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Username is taken</b></span><span class="ml-1" id="EmptyUsername" style="display:none; color:rgb(255, 0, 0)"><b>- Enter a username</b></span></div>
+                      <div id="username-red" class="row ml-0 mb-2" for="username">Username <span class="ml-1 nodisplay" id="TakenUsername" style=" color:rgb(255, 0, 0)"><b>- Username is taken</b></span><span class="ml-1 nodisplay" id="EmptyUsername" style="color:rgb(255, 0, 0)"><b>- Enter a username</b></span></div>
                       <input type="text" class="form-control" placeholder="Choose a username" id="username" name="username" >
                     </div>
                     <div class="form-group">
-                      <div id="password-red" class="row ml-0 mb-2" for="password">Password <span class="ml-1" id="BadPassword" style="display:none; color:rgb(255, 0, 0)"><b>- enter a safe password</b></span></div>
+                      <div id="password-red" class="row ml-0 mb-2" for="password">Password <span class="ml-1 nodisplay" id="BadPassword" style=" color:rgb(255, 0, 0)"><b>- enter a safe password</b></span></div>
                       <input type="password" class="form-control" placeholder="Enter your desired password" id="password" name="password" >
                     </div>
                     <div class="form-check">
@@ -83,12 +83,12 @@
         document.getElementById('email-red').style.color="#fff";
         document.getElementById('password-red').style.color="#fff";
 
-        document.getElementById('EmptyName').style.display="none";
-        document.getElementById('EmptyUsername').style.display="none";
-        document.getElementById('BadEmail').style.display="none";
-        document.getElementById('BadPassword').style.display="none";
-        document.getElementById('TakenEmail').style.display="none";
-        document.getElementById('TakenUsername').style.display="none";
+        document.getElementById('EmptyName').classList.add('nodisplay');
+        document.getElementById('EmptyUsername').classList.add('nodisplay');
+        document.getElementById('BadEmail').classList.add('nodisplay');
+        document.getElementById('BadPassword').classList.add('nodisplay');
+        document.getElementById('TakenEmail').classList.add('nodisplay');
+        document.getElementById('TakenUsername').classList.add('nodisplay');
 
         document.getElementById('name').classList.remove('form-control-incorrect')
         document.getElementById('username').classList.remove('form-control-incorrect');
@@ -100,7 +100,7 @@
         if(NameValue==''){
             document.getElementById('name-red').style.color="rgb(255, 0, 0)";
             document.getElementById('name').classList.add('form-control-incorrect')
-            document.getElementById('EmptyName').style.display="block";
+            document.getElementById('EmptyName').classList.remove('nodisplay');
             return
         }
         
@@ -111,13 +111,13 @@
         const EmailValue = EmailInput.value.trim();
         if ((!EmailPattern.test(EmailValue))){
             document.getElementById('email').classList.add('form-control-incorrect');
-            document.getElementById('BadEmail').style.display="block";
+            document.getElementById('BadEmail').classList.remove('nodisplay');
             document.getElementById('email-red').style.color="rgb(255, 0, 0)";
             return;
         }
         if(EmailValue==''){
             document.getElementById('email').classList.add('form-control-incorrect');
-            document.getElementById('EmptyEmail').style.display="block";
+            document.getElementById('EmptyEmail').classList.remove('nodisplay');
             document.getElementById('email-red').style.color="rgb(255, 0, 0)";
             return;
         }     
@@ -126,7 +126,7 @@
         const UsernameValue = document.getElementById("username").value.trim();
         if (UsernameValue==''){
             document.getElementById('username').classList.add('form-control-incorrect');
-            document.getElementById('EmptyUsername').style.display="block";
+            document.getElementById('EmptyUsername').classList.remove('nodisplay');
             document.getElementById('username-red').style.color="rgb(255, 0, 0)";
             return;
         }
@@ -138,14 +138,14 @@
         
         if (!passwordRegex.test(passwordValue)) {
             document.getElementById('password').classList.add('form-control-incorrect');
-            document.getElementById('BadPassword').style.display="block";
+            document.getElementById('BadPassword').classList.remove('nodisplay');
             document.getElementById('password-red').style.color="rgb(255, 0, 0)";
             return;
         }
 
         if(passwordValue==''){
             document.getElementById('password').classList.add('form-control-incorrect');
-            document.getElementById('EmptyPassword').style.display="block";
+            document.getElementById('EmptyPassword').classList.remove('nodisplay');
             document.getElementById('password-red').style.color="rgb(255, 0, 0)";
             return;
         }     
@@ -192,7 +192,7 @@
 
         // Divides errors
         if(response.message=='Email is already taken'){
-                document.getElementById('TakenEmail').style.display="block";
+                document.getElementById('TakenEmail').classList.remove('nodisplay');
                 document.getElementById('email-red').style.color="rgb(255, 0, 0)";
                 document.getElementById('email').classList.add('form-control-incorrect');
 
@@ -200,7 +200,7 @@
         
             }
         if(response.message=='Username is already taken'){
-            document.getElementById('TakenUsername').style.display="block";
+            document.getElementById('TakenUsername').classList.remove('nodisplay');
             document.getElementById('username-red').style.color="rgb(255, 0, 0)";
             document.getElementById('username').classList.add('form-control-incorrect');
             
