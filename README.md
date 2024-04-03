@@ -23,6 +23,12 @@ Functions for admin:
   - While viewing projects ability to change end date, view user associated with the project and view delayed projects.
 
 
+## TO DO
+[x] Make the backend check if the user is actually admin, since in the frontend anyone can get to the admin.html page;
+[x] Give admins the ability to add workers and administrators;
+[x] Make a worker page where workers can see project information;
+[x] Possibly add light mode;
+[x] If i can be bothered add password reset through email, with that also notifications for users, about deals, sales and other reminders;
 
 ## Used technoligies
 

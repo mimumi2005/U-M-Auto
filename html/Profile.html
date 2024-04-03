@@ -135,6 +135,12 @@
       document.getElementById('NoMatchPassword').classList.remove('nodisplay');
       return
     }
+    console.log(JSON.stringify({
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            UUID: loggedUserUUID
+        }));
+
     // Communication with API to change password
     fetch(window.location.origin + '/change-password', {
         method: 'POST',
