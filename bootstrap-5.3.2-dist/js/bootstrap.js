@@ -4762,29 +4762,10 @@ function slowScrollTo(targetOffset, duration) {
   requestAnimationFrame(animation);
 }
 
-function searchSimilarUsers(email) {
-      const userEmail = email; 
-      const emailPattern = `${userEmail.substring(0, 4)}%`;
-      // Now send the emailPattern to the backend to search for similar users
-      fetch(window.location.origin + ':5001' + `/similar-users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ emailPattern })
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Process the response containing similar users
-          console.log(data);
-          displayUserData(data);
-          // Display similar users or take any other action as needed
-        })
-        .catch(error => console.error('Error searching similar users:', error));
+// Functions for viewing different account info (VIEW USERS)
 
-}
 
-// Function to show all users to admin
+// Function to show all users
 function viewAllUsers() {
   console.log("Viewing users");
   // Make a fetch request to your backend to retrieve all user data
@@ -4796,7 +4777,7 @@ function viewAllUsers() {
       })
       .catch(error => console.error('Error fetching user data:', error));
     }
-
+// Function to show all active users (currently online)
 function viewActiveUsers(){
   console.log("Viewing users");
   // Make a fetch request to your backend to retrieve all user data
@@ -4808,17 +4789,31 @@ function viewActiveUsers(){
       })
       .catch(error => console.error('Error fetching user data:', error));
     }
+// Function that searches for similar users, to have a defense for botting
+function searchSimilarUsers(email) {
+  const userEmail = email; 
+  const emailPattern = `${userEmail.substring(0, 4)}%`;
+  // Now send the emailPattern to the backend to search for similar users
+  fetch(window.location.origin + ':5001' + `/similar-users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ emailPattern })
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Process the response containing similar users
+      console.log(data);
+      displayUserData(data);
+      // Display similar users or take any other action as needed
+    })
+    .catch(error => console.error('Error searching similar users:', error));
 
-function findUserByID() {
-    document.getElementById("inputNewEndDate").classList.add('nodisplay');
-    document.getElementById("searchProject").classList.add('nodisplay');
-    document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-    document.getElementById('userDataContainer').classList.add('nodisplay');
-    document.getElementById("searchUser").classList.remove('nodisplay');
 }
-    
-function searchUserByID(idUser){
 
+// Function to show a singular account by account ID
+function searchUserByID(idUser){
   document.getElementById('userIDInput').value = '';
   document.getElementById('InvalidID').classList.add('nodisplay');
   console.log("Viewing user by ID:",idUser);
@@ -4840,19 +4835,152 @@ function searchUserByID(idUser){
           
       })
       .catch(error => console.error('Error fetching user data:', error));
+}
+// Function to show all workers accounts
+function viewWorkers(){
+  
+  console.log("Viewing workers");
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/all-workers',{
+    method: 'POST',
+  })
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          displayWorkerData(data);
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+    }
 
+// Function to show all admin accounts
+function viewAdmins(){
+  
+  console.log("Viewing admins");
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/all-admins',{
+    method: 'POST',
+  })
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          displayAdminData(data);
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+    }
+
+// Functions to work with account data, adding, removing (MANAGE ACCOUNTS)
+
+// Deleting accounts by ID
+function deleteUser(userID) {
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin +':5001'+ `/user-delete/${userID}`, {
+      method: 'DELETE', // Use the DELETE method to indicate deletion
+      headers: {
+          'Content-Type': 'application/json' // Specify that the request body is JSON
+      },
+  })  
+  .then(response => {
+      if(response.status == 200){
+          const card = document.getElementById(`Users_div${userID}`);
+          if(card){
+              card.remove();
+          }
+          card.remove();
+          viewAllUsers();
+      }
+  })
+  .then(data => {
+      // Process the response data
+      console.log(data);
+  })
+  .catch(error => console.error('Error deleting user:', error))
+}
+
+// Function to give a worker admin
+function giveAdmin(idUser){
+  console.log("Giving worker with id:",idUser, "admin permissions");
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/give-admin', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUser: idUser })
+})
+      .then(response => response.json())
+      .then(data => {
+          // TODO Announce properly that it was a success
+          console.log('successfully gave admin');
+      
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
+function removeAdmin(idUser){
+  console.log("Removing admin permissions from ID:",idUser);
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/remove-admin', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUser: idUser })
+})
+      .then(response => response.json())
+      .then(data => {
+          // TODO Announce properly that it was a success
+          console.log('successfully removed admin');
+          viewAdmins();
+      
+      })
+      .catch(error => console.error('Error fetching user data:', error));
 }
 
 
-function findProjectByID() {
-  document.getElementById("inputNewEndDate").classList.add('nodisplay');
-  document.getElementById('InvalidProjectID').classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById("searchProject").classList.remove('nodisplay');
+
+// Functions that display project information (PROJECT INFO)
+
+// Function to show all Projects
+function viewAllProjects() {
+  
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin +':5001'+ '/all-projects',)
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          
+          displayProjectData(data);
+          
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
+// Function that shows all active projects
+function viewActiveProjects(){
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin +':5001'+ '/active-projects',)
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          document.getElementById("inputNewEndDate").classList.add('nodisplay');
+          displayProjectData(data);
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
+// Function that shows all delayed projects
+function viewDelayedProjects(){
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin +':5001'+ '/delayed-projects',)
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          document.getElementById("inputNewEndDate").classList.add('nodisplay');
+          displayDelayedProjectData(data);
+          
+      })
+      .catch(error => console.error('Error fetching user data:', error));
 }
 
+
+// Function that displays projects by ID
 function searchProjectByID(idProjects){
   document.getElementById('ProjectIDInput').value = '';
   document.getElementById('InvalidProjectID').classList.add('nodisplay');
@@ -4875,9 +5003,9 @@ function searchProjectByID(idProjects){
           
       })
       .catch(error => console.error('Error fetching user data:', error));
-
 }
 
+// Function that displays all projects that have been made by one person (ID)
 function searchProjectByUserID(idUser){
   document.getElementById('InvalidProjectID').classList.add('nodisplay');
   console.log("Viewing user by ID:",idUser);
@@ -4902,21 +5030,9 @@ function searchProjectByUserID(idUser){
 
 }
 
+// Functions that manipulate with project info, data (MANAGE PROJECT INFO)
 
-function changeEndDate(idProjects){
-  const projectIDElement = document.getElementById('project_id');
-    if (projectIDElement) {
-        projectIDElement.textContent = idProjects;
-    }
-  searchProjectByID(idProjects);
-  document.getElementById('InvalidDateTime').classList.add('nodisplay');
-  document.getElementById('InvalidProjectID').classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.remove('nodisplay');
-}
-
+// Function that changes the end date of project to admin input
 function projectChangeEndTime(idProjects, NewEndDateTime){
   const EndDate = formatDateToISO(NewEndDateTime);
   console.log(EndDate);
@@ -4946,7 +5062,7 @@ function projectChangeEndTime(idProjects, NewEndDateTime){
   });
 }
 }
-
+// Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function removeDelayed(idProjects){
   fetch(window.location.origin + ':5001'+ '/remove-delayed', {
     method: 'POST',
@@ -4969,8 +5085,58 @@ function removeDelayed(idProjects){
 
 });
 }
+
+// Displaying functions (DISPLAY)
+
+
+//  Displaying search field for searching project by ID
+function findProjectByID() {
+  document.getElementById("registrationForm").classList.add('nodisplay');
+  document.getElementById("inputNewEndDate").classList.add('nodisplay');
+  document.getElementById('InvalidProjectID').classList.add('nodisplay');
+  document.getElementById("searchUser").classList.add('nodisplay');
+  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
+  document.getElementById('userDataContainer').classList.add('nodisplay');
+  document.getElementById("searchProject").classList.remove('nodisplay');
+}
+// Display input field for id
+function findUserByID() {
+  document.getElementById("registrationForm").classList.add('nodisplay');
+  document.getElementById("inputNewEndDate").classList.add('nodisplay');
+  document.getElementById("searchProject").classList.add('nodisplay');
+  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
+  document.getElementById('userDataContainer').classList.add('nodisplay');
+  document.getElementById("searchUser").classList.remove('nodisplay');
+}
+
+function addWorkerForum(){
+  document.getElementById("inputNewEndDate").classList.add('nodisplay');
+  document.getElementById("searchProject").classList.add('nodisplay');
+  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
+  document.getElementById('userDataContainer').classList.add('nodisplay');
+  document.getElementById("searchUser").classList.add('nodisplay');
+  document.getElementById("registrationForm").classList.remove('nodisplay');
+}
+
+// Function that displays fields needed to change project end date
+function changeEndDate(idProjects){
+  const projectIDElement = document.getElementById('project_id');
+    if (projectIDElement) {
+        projectIDElement.textContent = idProjects;
+    }
+  searchProjectByID(idProjects);
+  document.getElementById("registrationForm").classList.add('nodisplay');
+  document.getElementById('InvalidDateTime').classList.add('nodisplay');
+  document.getElementById('InvalidProjectID').classList.add('nodisplay');
+  document.getElementById("searchUser").classList.add('nodisplay');
+  document.getElementById('userDataContainer').classList.add('nodisplay');
+  document.getElementById("searchProject").classList.add('nodisplay');
+  document.getElementById("inputNewEndDate").classList.remove('nodisplay');
+}
+
 // Function to display user data on the page
 function displayUserData(users) {
+  document.getElementById("registrationForm").classList.add('nodisplay');
   document.getElementById("inputNewEndDate").classList.add('nodisplay');
   document.getElementById("searchProject").classList.add('nodisplay');
   document.getElementById("searchUser").classList.add('nodisplay');
@@ -5014,49 +5180,105 @@ function displayUserData(users) {
     });
 } 
 
-// Function to show all Projects
-function viewAllProjects() {
+// Function that displays the Worker info
+function displayWorkerData(users) {
+  document.getElementById("registrationForm").classList.add('nodisplay');
+  document.getElementById("inputNewEndDate").classList.add('nodisplay');
+  document.getElementById("searchProject").classList.add('nodisplay');
+  document.getElementById("searchUser").classList.add('nodisplay');
+  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
+  document.getElementById('userDataContainer').classList.remove('nodisplay');
+  document.getElementById('admin-view').classList.remove('nodisplay');
+  const userDataContainer = document.getElementById('userDataContainer');
+  userDataContainer.innerHTML = `
+  <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+        </div>
+  `;
+  // Loop through each user and create HTML elements to display their data
+  users.forEach((user, index) => {
+     // Create a new row for every third user
+     
+  // Create a column for the user card
+  const column = document.createElement('div');
+  column.classList.add('col-lg-4');
+      
+  // Create the user card HTML
+  column.innerHTML = `
+      <div id="Users_div${user.idUser}" class="card bg-light mb-3">
+          <div class="card-body text-white">
+              <h3 class="card-title">Worker: ${user.Username}</h3>
+              <p class="card-text">ID: ${user.idUser}</p>
+              <p class="card-text">Name: ${user.Name}</p>
+              <p class="card-text">Email: ${user.Email}</p>
+              <p class="card-text">Tenure: ${user.tenure} years</p>
+              <p class="card-text">Worker type: ${user.WorkerType}</p>
+
+              <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="giveAdmin('${user.idUser}')">Give administrator permissions</button>
+              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteUser(${user.idUser})">Remove worker</button>
+          </div>
+      </div>
+  `;
   
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin +':5001'+ '/all-projects',)
-      .then(response => response.json())
-      .then(data => {
-          // Call a function to display the user data on the page
-          
-          displayProjectData(data);
-          
-      })
-      .catch(error => console.error('Error fetching user data:', error));
-}
+  // Append the user card to the current row
+  document.querySelector('#userDataContainer .row:last-child').appendChild(column);
+  
+    });
+} 
 
-function viewActiveProjects(){
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin +':5001'+ '/active-projects',)
-      .then(response => response.json())
-      .then(data => {
-          // Call a function to display the user data on the page
-          document.getElementById("inputNewEndDate").classList.add('nodisplay');
-          displayProjectData(data);
-      })
-      .catch(error => console.error('Error fetching user data:', error));
-}
+// Function that displays admin info on the page
+function displayAdminData(users) {
+  document.getElementById("registrationForm").classList.add('nodisplay');
+  document.getElementById("inputNewEndDate").classList.add('nodisplay');
+  document.getElementById("searchProject").classList.add('nodisplay');
+  document.getElementById("searchUser").classList.add('nodisplay');
+  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
+  document.getElementById('userDataContainer').classList.remove('nodisplay');
+  document.getElementById('admin-view').classList.remove('nodisplay');
+  const userDataContainer = document.getElementById('userDataContainer');
+  userDataContainer.innerHTML = `
+  <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+        </div>
+  `;
+  // Loop through each user and create HTML elements to display their data
+  users.forEach((user, index) => {
+     // Create a new row for every third user
+     
+  // Create a column for the user card
+  const column = document.createElement('div');
+  column.classList.add('col-lg-4');
+      
+  // Create the user card HTML
+  column.innerHTML = `
+      <div id="Users_div${user.idUser}" class="card bg-light mb-3">
+          <div class="card-body text-white">
+              <h3 class="card-title">Admin: ${user.Username}</h3>
+              <p class="card-text">ID: ${user.idUser}</p>
+              <p class="card-text">Name: ${user.Name}</p>
+              <p class="card-text">Email: ${user.Email}</p>
+              <p class="card-text">Tenure: ${user.tenure} years</p>
+              <p class="card-text">Worker type: ${user.WorkerType}</p>
 
-function viewDelayedProjects(){
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin +':5001'+ '/delayed-projects',)
-      .then(response => response.json())
-      .then(data => {
-          // Call a function to display the user data on the page
-          document.getElementById("inputNewEndDate").classList.add('nodisplay');
-          displayDelayedProjectData(data);
-          
-      })
-      .catch(error => console.error('Error fetching user data:', error));
-}
+              <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="removeAdmin('${user.idUser}')">Remove administrator permissions</button>
+              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteUser(${user.idUser})">Remove worker</button>
+          </div>
+      </div>
+  `;
+  
+  // Append the user card to the current row
+  document.querySelector('#userDataContainer .row:last-child').appendChild(column);
+  
+    });
+} 
 
 // Function to display user data on the page
 function displayProjectData(projects) {
-  
+  document.getElementById("registrationForm").classList.add('nodisplay');
   document.getElementById("searchProject").classList.add('nodisplay');
   document.getElementById("searchUser").classList.add('nodisplay');
   document.getElementById('userDataContainer').classList.add('nodisplay');
@@ -5100,6 +5322,7 @@ function displayProjectData(projects) {
 
 // Function to display user data on the page
 function displayDelayedProjectData(projects) {
+  document.getElementById("registrationForm").classList.add('nodisplay');
   document.getElementById("searchProject").classList.add('nodisplay');
   document.getElementById("searchUser").classList.add('nodisplay');
   document.getElementById('userDataContainer').classList.add('nodisplay');

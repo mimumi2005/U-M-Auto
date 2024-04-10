@@ -44,6 +44,7 @@ app.listen(PORT, () => {
 
 
 // Function to handle login logic
+// Function to handle login logic
 function loginUser(username, password, connection, res) {
   const UUID = uuidv4();
 
@@ -80,16 +81,34 @@ function loginUser(username, password, connection, res) {
             return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
           }
 
-          // Insert login instance
-          const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart)  VALUES (?,?,?)';
-          connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
+          // Check if user instance already exists
+          const checkInstanceQuery = 'SELECT * FROM user_instance WHERE idUser = ?';
+          connection.query(checkInstanceQuery, [userid], (err, instanceResults) => {
             if (err) {
-              console.error('Error inserting data into the database:', err);
+              console.error('Error checking user instance:', err);
               return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
             }
 
-            console.log(`\nUser-${username} \nPassword-${password} \nLogin instance-${UUID}\n Admin: ${IsAdmin}\n Worker: ${IsWorker}\n`);
-            res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
+            // If instance exists, delete the previous instance
+            if (instanceResults.length > 0) {
+              const deleteInstanceQuery = 'DELETE FROM user_instance WHERE idUser = ?';
+              connection.query(deleteInstanceQuery, [userid], (err, deleteResult) => {
+                if (err) {
+                  console.error('Error deleting user instance:', err);
+                  return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+                }
+              });
+            } 
+            const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart) VALUES (?, ?, ?)';
+            connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
+              if (err) {
+                console.error('Error inserting data into the database:', err);
+                return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+              }
+            
+              console.log(`\nUser-${username} \nPassword-${password} \nLogin instance-${UUID}\n Admin: ${IsAdmin}\n Worker: ${IsWorker}\n`);
+              res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
+            });
           });
         });
       });
@@ -227,6 +246,74 @@ app.post("/change-password", (req, res) => {
   });
 });
 
+// Fetch all admin info
+app.post("/all-admins", (req, res) => {
+  // Query to fetch all idUser values from the administrators table
+  const adminQuery = 'SELECT idUser FROM administrators';
+  connection.query(adminQuery, (err, adminResults) => {
+    if (err) {
+      console.error('Error querying Workers table:', err);
+      return res.status(500).json({ message: 'Error fetching worker data' });
+    }
+
+    // Array to store combined user and worker information
+    const combinedData = [];
+
+    // Loop through each workerResult to fetch combined user and worker information
+    adminResults.forEach(admin => {
+      const idUser = admin.idUser;
+      // Query to fetch combined information for the current idUser
+      const combinedQuery = 'SELECT Users.*, Workers.* FROM Users INNER JOIN Workers ON Users.idUser = Workers.idUser WHERE Users.idUser = ?';
+      connection.query(combinedQuery, [idUser], (err, combinedResult) => {
+        if (err) {
+          console.error(`Error querying combined information for idUser ${idUser}:`, err);
+          return;
+        }
+        // Push combined information to the combinedData array
+        combinedData.push(...combinedResult);
+        // If all combined data is fetched, send the response
+        if (combinedData.length === adminResults.length) {
+          res.json(combinedData);
+        }
+      });
+    });
+  });
+});
+
+// Fetch all worker info
+app.post("/all-workers", (req, res) => {
+  // Query to fetch all idUser values from the Workers table
+  const workerQuery = 'SELECT idUser FROM Workers';
+  connection.query(workerQuery, (err, workerResults) => {
+    if (err) {
+      console.error('Error querying Workers table:', err);
+      return res.status(500).json({ message: 'Error fetching worker data' });
+    }
+
+    // Array to store combined user and worker information
+    const combinedData = [];
+
+    // Loop through each workerResult to fetch combined user and worker information
+    workerResults.forEach(worker => {
+      const idUser = worker.idUser;
+      // Query to fetch combined information for the current idUser
+      const combinedQuery = 'SELECT Users.*, Workers.* FROM Users INNER JOIN Workers ON Users.idUser = Workers.idUser WHERE Users.idUser = ?';
+      connection.query(combinedQuery, [idUser], (err, combinedResult) => {
+        if (err) {
+          console.error(`Error querying combined information for idUser ${idUser}:`, err);
+          return;
+        }
+        // Push combined information to the combinedData array
+        combinedData.push(...combinedResult);
+        // If all combined data is fetched, send the response
+        if (combinedData.length === workerResults.length) {
+          res.json(combinedData);
+        }
+      });
+    });
+  });
+});
+
 
 
 // Fetch all users
@@ -238,6 +325,29 @@ app.get("/all-users", (req, res) => {
   });
 });
 
+// Give admin to a user
+app.post("/give-admin", (req, res) => {
+  const {idUser} = req.body;
+  console.log("Giving admin to: ", idUser);
+  const sql_query = 'INSERT INTO administrators (idUser) VALUES (?)';
+  connection.query(sql_query,[idUser], (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
+// Remove admin to a user
+app.post("/remove-admin", (req, res) => {
+  const {idUser} = req.body;
+  console.log("Removing admin from: ", idUser);
+  const sql_query = 'DELETE FROM administrators WHERE idUser = ?';
+  connection.query(sql_query,[idUser], (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
 // Fetch all users
 app.post("/user-by-ID", (req, res) => {
   const {idUser} = req.body;
