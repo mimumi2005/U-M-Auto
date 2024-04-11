@@ -4915,6 +4915,7 @@ function giveAdmin(idUser){
       })
       .catch(error => console.error('Error fetching user data:', error));
 }
+
 function removeAdmin(idUser){
   console.log("Removing admin permissions from ID:",idUser);
   // Make a fetch request to your backend to retrieve all user data
@@ -4935,6 +4936,27 @@ function removeAdmin(idUser){
       .catch(error => console.error('Error fetching user data:', error));
 }
 
+
+
+function removeWorker(idUser){
+  console.log("Removing worker info from ID:",idUser);
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/remove-worker', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUser: idUser })
+})
+      .then(response => response.json())
+      .then(data => {
+          // TODO Announce properly that it was a success
+          console.log('successfully removed worker');
+          viewWorkers();
+      
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
 
 
 // Functions that display project information (PROJECT INFO)
@@ -5034,7 +5056,7 @@ function searchProjectByUserID(idUser){
 
 // Function that changes the end date of project to admin input
 function projectChangeEndTime(idProjects, NewEndDateTime){
-  const EndDate = formatDateToISO(NewEndDateTime);
+  const EndDate = formatDate(NewEndDateTime);
   console.log(EndDate);
   if(EndDate){
   fetch(window.location.origin + ':5001'+ '/change-end-date', {
@@ -5109,7 +5131,7 @@ function findUserByID() {
   document.getElementById("searchUser").classList.remove('nodisplay');
 }
 
-function addWorkerForum(){
+function addWorkerForm(){
   document.getElementById("inputNewEndDate").classList.add('nodisplay');
   document.getElementById("searchProject").classList.add('nodisplay');
   document.getElementById('ProjectDataContainer').classList.add('nodisplay');
@@ -5217,7 +5239,7 @@ function displayWorkerData(users) {
               <p class="card-text">Worker type: ${user.WorkerType}</p>
 
               <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="giveAdmin('${user.idUser}')">Give administrator permissions</button>
-              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteUser(${user.idUser})">Remove worker</button>
+              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="removeWorker(${user.idUser})">Remove worker</button>
           </div>
       </div>
   `;
@@ -5264,8 +5286,8 @@ function displayAdminData(users) {
               <p class="card-text">Tenure: ${user.tenure} years</p>
               <p class="card-text">Worker type: ${user.WorkerType}</p>
 
-              <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="removeAdmin('${user.idUser}')">Remove administrator permissions</button>
-              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteUser(${user.idUser})">Remove worker</button>
+              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="removeAdmin('${user.idUser}')">Remove administrator permissions</button>
+              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="removeWorker(${user.idUser})">Remove worker</button>
           </div>
       </div>
   `;
@@ -5364,57 +5386,15 @@ function displayDelayedProjectData(projects) {
 }
 
 // Function to format date to needed date formatting in backend
-function formatDateToISO(dateString) {
-  // Split the date string into components
-  const [datePart, timePart] = dateString.split(', ');
+function formatDate(date) {
+  // Convert date string to Date object
+  const selectedDate = new Date(date);
   
-  // Check if datePart and timePart exist
-  if (!datePart || !timePart) {
-    // If either datePart or timePart is missing, return null
-    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
-    return null;
-  }
-
-  const [month, day, year] = datePart.split('/');
-  const [time, ampm] = timePart.split(' ');
-
-  // Check if month, day, year, time, and ampm exist
-  if (!month || !day || !year || !time || !ampm) {
-    // If any component is missing, return null
-    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
-    return null;
-  }
-
-  // Parse hours, minutes, and seconds from the time part
-  const [hours, minutes, seconds] = time.split(':').map(part => parseInt(part));
+  // Format the date as YYYY-MM-DDTHH:MM:SS.000Z
+  const formattedDate = selectedDate.toISOString();
   
-  // Check if hours, minutes, and seconds are valid numbers
-  if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
-    // If any component is not a number, return null
-    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
-    return null;
-  }
-
-  // Convert hours to 24-hour format if necessary
-  let hourOfDay = hours % 12;
-  if (ampm === 'PM') {
-    hourOfDay += 12;
-  }
-
-  // Create a new Date object with the components
-  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), hourOfDay, minutes, seconds);
-  
-  // Check if the Date object is valid
-  if (isNaN(date.getTime())) {
-    // If the Date object is invalid, return null
-    document.getElementById('InvalidDateTime').classList.remove('nodisplay');
-    return null;
-  }
-
-  // Convert the date to ISO 8601 format
-  const isoString = date.toISOString();
-
-  return isoString;
+  // Return the formatted date
+  return formattedDate;
 }
 
 

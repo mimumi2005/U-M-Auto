@@ -16,10 +16,14 @@
     "msnodesqlv8": "^4.1.2",
     "mssql": "^10.0.2",
     "mysql2": "^3.9.1",
+    "node-cron": "^3.0.3",
     "session": "^0.1.0",
     "tedious": "^16.6.1",
     "uuid": "^9.0.1"
   },
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "esm": "^3.2.25"
+  }
 }

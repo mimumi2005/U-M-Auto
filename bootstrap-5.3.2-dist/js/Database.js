@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import cron from "node-cron";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -42,8 +42,39 @@ app.listen(PORT, () => {
   });
 });
 
+cron.schedule('0 0 * * *', () => {
+  // Logic to update tenure for all workers
+  updateTenureForAllWorkers();
+});
 
-// Function to handle login logic
+function updateTenureForAllWorkers() {
+  // Query all workers from the database
+  const getAllWorkersQuery = 'SELECT * FROM workers';
+  connection.query(getAllWorkersQuery, (err, workers) => {
+    if (err) {
+      console.error('Error fetching workers:', err);
+      return;
+    }
+    // Iterate through each worker
+    workers.forEach(worker => {
+      // Calculate tenure based on StartWorkDate
+      const startWorkDate = new Date(worker.StartWorkDate);
+      const currentDate = new Date();
+      const tenure = currentDate.getFullYear() - startWorkDate.getFullYear();
+      // Update tenure in the database
+      const updateTenureQuery = 'UPDATE workers SET tenure = ? WHERE idUser = ?';
+      connection.query(updateTenureQuery, [tenure, worker.idUser], (updateErr, updateResult) => {
+        if (updateErr) {
+          console.error('Error updating tenure:', updateErr);
+          return;
+        }
+        console.log(`Tenure updated for worker with idUser ${worker.idUser}`);
+      });
+    });
+  });
+}
+
+
 // Function to handle login logic
 function loginUser(username, password, connection, res) {
   const UUID = uuidv4();
@@ -337,6 +368,7 @@ app.post("/give-admin", (req, res) => {
   });
 });
 
+
 // Remove admin to a user
 app.post("/remove-admin", (req, res) => {
   const {idUser} = req.body;
@@ -348,6 +380,91 @@ app.post("/remove-admin", (req, res) => {
     res.send(result);
   });
 });
+
+
+// Remove worker status from a user
+app.post("/remove-worker", (req, res) => {
+  const {idUser} = req.body;
+  console.log("Removing worker: ", idUser);
+  const sql_query = 'DELETE FROM workers WHERE idUser = ?';
+  connection.query(sql_query,[idUser], (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+app.post("/register-worker", (req, res) => {
+  const { email, workerType, isAdmin } = req.body;
+  console.log("Making user:", email, "as worker");
+
+  // Query to retrieve idUser associated with the provided email
+  const getUserIdQuery = 'SELECT idUser FROM users WHERE email = ?';
+  connection.query(getUserIdQuery, [email], (err, userResult) => {
+    if (err) {
+      console.error('Error querying users table:', err);
+      return res.status(500).json({ message: 'Error fetching user data' });
+    }
+    if (userResult.length === 0) {
+      // If no user found with the provided email
+      return res.status(404).json({ type: '1', message: 'User not found' });
+    }
+
+    // Extract idUser from the query result
+    const idUser = userResult[0].idUser;
+
+    // Check if user already exists in the workers table
+    const checkWorkerQuery = 'SELECT * FROM workers WHERE idUser = ?';
+    connection.query(checkWorkerQuery, [idUser], (checkErr, checkResult) => {
+      if (checkErr) {
+        console.error('Error checking worker table:', checkErr);
+        return res.status(500).json({ message: 'Error checking worker data' });
+      }
+      if (checkResult.length > 0) {
+        // User already exists as a worker
+        return res.status(409).json({type: '2', message: 'User already registered as a worker' });
+      }
+
+      // Get the current date
+      const currentDate = new Date().toISOString().slice(0, 10);
+
+      // Calculate tenure (years between current date and StartWorkDate)
+      const startWorkDate = new Date(currentDate);
+      const tenure = new Date().getFullYear() - startWorkDate.getFullYear();
+
+      // Insert into workers table
+      const insertWorkerQuery = 'INSERT INTO workers (idUser, workerType, StartWorkDate, tenure) VALUES (?, ?, ?, ?)';
+      connection.query(insertWorkerQuery, [idUser, workerType, currentDate, tenure], (insertErr, insertResult) => {
+        if (insertErr) {
+          console.error('Error inserting worker data:', insertErr);
+          return res.status(500).json({ message: 'Error inserting worker data' });
+        }
+
+        // If isAdmin is true, insert the idUser into the Administrators table
+        if (isAdmin) {
+          const insertAdminQuery = 'INSERT INTO administrators (idUser) VALUES (?)';
+          connection.query(insertAdminQuery, [idUser], (adminErr, adminResult) => {
+            if (adminErr) {
+              console.error('Error inserting administrator data:', adminErr);
+              // Handle error if needed
+            }
+            console.log('User added to Administrators table');
+          });
+        }
+        res.json({
+          status: 'Success',
+          message: 'Worker registered successfully',
+          idUser: idUser,
+          workerType: workerType,
+          StartWorkDate: currentDate,
+          tenure: tenure
+        });
+      });
+    });
+  });
+});
+
+
+
 // Fetch all users
 app.post("/user-by-ID", (req, res) => {
   const {idUser} = req.body;
