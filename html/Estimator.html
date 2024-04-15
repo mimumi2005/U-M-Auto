@@ -17,13 +17,12 @@
 </head>
 <body>
 
-
         <div class="container text-white mt-5 bg-light mx-80 " style="display: flex; justify-content: space-between; ">
             <div>
                 <h2 class="mt-3">Select Car Areas to Paint</h2>
                 <div  class="mt-3 bg-dark" id="imageContainer">
-                    <img src="../images/car_template.png" alt="Your Image" id="carImage" usemap="#image-map" />
-                    <canvas id="overlayCanvas"></canvas>
+                    <img class="mt-3"src="../images/car_template.png" alt="Your Image" id="carImage" usemap="#image-map" />
+                    <canvas class="mt-3"id="overlayCanvas"></canvas>
                     <map name="image-map" id="image-map">
                     <area tag="area" class="pointer-cursor" alt="Hood" title="Hood" coords="128,172,250,172,243,199,243,215,241,236,243,256,241,275,242,297,250,327,229,326,198,327,162,327,128,325,126,304,124,287,120,279,120,236,121,221,126,199" shape="poly" onclick="toggleOverlay(0)">
                     <area tag="area" class="pointer-cursor" alt="Roof" title="Roof"  coords="304,251,302,209,306,189,329,190,345,190,397,191,417,190,436,190,453,190,448,213,448,233,446,263,448,286,451,313,403,310,362,309,323,311,307,311,304,289" shape="poly" onclick="toggleOverlay(1)">
@@ -47,7 +46,7 @@
 
         <div class="text-white mt-3" style="flex: 1; margin-left: 10%;">
             <h2>Choose services</h2>
-            <form id="repairForm">
+            <form id="repairForm" class="mt-3">
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="OverallCheckup" value="150" onchange="calculatePrice()">
                 <label class="form-check-label" for="OverallCheckup">Overall Checkup - $<span id="CheckupCost">150.00</span></label>
@@ -75,14 +74,6 @@
 </div>
 
 
-    <div class="footer">
-        <!-- Your footer content goes here -->
-        <div class="container">
-            <p>&copy; 2023 Your Website - Additional Information Here</p>
-            <p>Contact: velderis@gmail.com</p>
-            <p>Address: Odre, Laucienes pagasts, Talsu novads, LV-3285</p>
-        </div>
-    </div>
 
 <script>
     const flags = []; // Array of flags for each coordinate set

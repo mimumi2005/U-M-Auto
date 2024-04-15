@@ -18,14 +18,20 @@
    
 </head>
 <body>
-    <section class="container col-lg-5 mt-5 bg-light text-white  mb-4" id="admin-view">
+    <div id="customRegisterWorker" class="custom-alert nodisplay">
+        <h2>Succesfully registered worker</h2>
+    </div>
+    <div id="customAdminPerms" class="custom-alert nodisplay">
+        <h2>Succesfully gave administrator permissions</h2>
+    </div>
+    <section class="container col-lg-5 mt-5 bg-light text-white" id="admin-view">
         
         <div class="card-body">
-            <h2 class="card-title text-center"></h2>
+            <h2 class="card-title text-center">Admin pannel</h2>
             <div class="card-text row">
                 <div class="row-cols-md-3 m-auto">
                 <div class="col mt-2 ">
-                    <h3 class="text-center mb-3">Users</h3>
+                    <h3 class="text-center mb-3 mt-2">Users</h3>
                     <button class="btn btn-outline-secondary m-auto text-white mt-2" style="width:200px" onclick="findUserByID()">View user by ID</button>
                     <button class="btn btn-outline-secondary m-auto text-white mt-2" style="width:200px" onclick="viewActiveUsers()">View all active users</button>
                     <button class="btn btn-outline-secondary m-auto text-white mt-2" style="width:200px" onclick="viewAllUsers()">View all users</button>
@@ -33,11 +39,11 @@
                 <div class="col">
                     <button class="btn btn-outline-secondary  text-white mt-2" style="width:200px; " onclick="viewAdmins()">View admins</button>
                     <button class="btn btn-outline-secondary  text-white mt-2" style="width:200px; " onclick="viewWorkers()">View workers</button>
-                    <button class="btn btn-outline-secondary  text-white mt-2" style="width:200px; " onclick="addWorkerForum()">Add worker</button>
+                    <button class="btn btn-outline-secondary  text-white mt-2" style="width:200px; " onclick="addWorkerForm()">Add worker</button>
                     
                 </div>
-                <div class="col mt-4 ">
-                    <h3 class="text-center mb-3" >Projects</h3>
+                <div class="col mt-5 ">
+                    <h3 class="text-center mb-3 mt-5" >Projects</h3>
                     <button class="btn btn-outline-secondary m-auto text-white mt-2 "  style="width:200px" onclick="findProjectByID()">View projects by ID</button>
                     <button class="btn btn-outline-secondary m-auto text-white mt-2 "  style="width:200px" onclick="viewDelayedProjects()">View delayed projects</button>
                     <button class="btn btn-outline-secondary m-auto text-white mt-2 "  style="width:200px" onclick="viewActiveProjects()">View active projects</button>
@@ -47,12 +53,12 @@
         
     </section>
     <div id="inputNewEndDate" class="col-sm-3 text-center nodisplay bg-light">
-        <!-- TODO: CHANGE THIS TO FORM TYPE DATE-->
         <h3 class=" text-white">Enter the new end date for project: <span id="project_id"></span> (if the project isnt yet tagged as "Delayed" it will after these changes) </h3>
-        <span id="InvalidDateTime" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid time, correct format [ MM/DD/YYYY, HH:MM:SS AM/PM ]</b></span>
+        <span id="InvalidDateTime" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid end time</b></span>
         <br>
-        <input type="text" id="dateinput" class="form-control" placeholder="Enter time formatted as: mm/dd/yyyy, hh:mm:ss AM/PM" onkeypress="handleEndDateKeyPress(event)">
+        <input type="datetime-local" id="dateinput" class="form-control" onkeypress="handleEndDateKeyPress(event)">
         <button class="btn btn-outline-primary mt-2" onclick="projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value)">Change</button>
+        
     </div>
     <div id="searchUser" class=" col-sm-3 m-auto text-center nodisplay ">
         <span id="InvalidID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid ID</b></span>
@@ -70,9 +76,12 @@
         <button class="btn btn-outline-primary mt-2" onclick="searchProjectByID(document.getElementById('ProjectIDInput').value)">Search</button>
     </div>
 
-    <div class="col-md-5  bg-light text-white m-auto nodisplay " style="max-width:20%" id="registrationForm">
-        <form class=" mt-1">
-            <label for="email">Email:</label>
+    <div class="col-md-3  bg-light text-white m-auto nodisplay " style="max-width:20%" id="registrationForm">
+        <form class="mt-3">
+            
+            <label id="email-red" for="email">Email:</label>
+            <span class="ml-1 nodisplay" id="NoAccount" style=" color:rgb(255, 0, 0)"><b> - Account doesnt exsist</b></span>
+            <span class="ml-1 nodisplay" id="WorkerExsists" style=" color:rgb(255, 0, 0)"><b>- User is already a worker</b></span>
             <input class="form-control" type="email" id="email" name="email" required><br>
             
             <label for="workerType">Worker Type:</label>
@@ -81,19 +90,19 @@
             <input class="mt-3" type="checkbox" id="administrator" name="administrator">
             <label for="administrator">Administrator</label><br>
     
-            <button id="submitButton"  class="btn btn-secondary btn-block mt-2" type="submit">Register worker</button>
+            <button id="submitButton"  class="btn btn-secondary btn-block mt-2 mb-4" type="submit">Register worker</button>
         </form>
         </div>
 
-    <div class=" nodisplay mt-4" id="userDataContainer">
+    <div class=" selectable nodisplay mt-4" id="userDataContainer">
         <!-- User data will be dynamically added here -->
-        <div class="container mt-4">
+        <div class=" container mt-4">
             <div class="row row-cols-1 row-cols-md-3">
                 <!-- User cards will be dynamically added here -->
             </div>
         </div>
     </div>
-    <div class=" nodisplay mt-4" id="ProjectDataContainer">
+    <div class=" selectable nodisplay mt-4" id="ProjectDataContainer">
         <!-- User data will be dynamically added here -->
         <div class="container mt-4">
             <div class="row row-cols-1 row-cols-md-3">
@@ -119,49 +128,73 @@
 
     // Add event listener to form submission button
     document.getElementById('submitButton').addEventListener('click', function(event) {
+        document.getElementById('email-red').style.color="rgb(255, 255, 255)";
+        document.getElementById('NoAccount').classList.add('nodisplay');
+        document.getElementById('WorkerExsists').classList.add('nodisplay');
+        document.getElementById('email').classList.remove('form-control-incorrect');
         // Prevent default button behavior
         event.preventDefault();
 
-        // Get form data
-        const formData = new FormData(document.getElementById('registrationForm'));
-        const email = formData.get('email');
-        const workerType = formData.get('workerType');
-        const isAdmin = formData.get('administrator') === 'on'; // Convert checkbox value to boolean
-
         // Create JSON object
         const userData = {
-            email: email,
-            workerType: workerType,
-            administrator: isAdmin
+            email: document.getElementById('email').value,
+            workerType: document.getElementById('workerType').value,
+            administrator: document.getElementById('administrator').checked
         };
 
-        // Now you can use the userData object however you need
         console.log('User data:', userData);
 
-        // You can also send this data to your backend using fetch or any other method
-        // For example:
-        fetch('/register-worker', {
+        fetch(window.location.origin + ':5001'+ '/register-worker', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Registration successful:', data);
-            // Optionally, you can redirect the user or show a success message
-        })
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    })
+        .then(response => response.json())
+        .then(data => handleResponses(data))
         .catch(error => {
-            console.error('Error registering worker:', error);
-            // Handle the error (e.g., display an error message to the user)
+        alert(`Cannot connect to server :P ${error}`);
         });
     });
+
+    function handleResponses(response) {
+         // If succesful announces it and resets form
+        if (response.status === 'Success') {
+            console.log("Successfully made worker account for userID:",response.idUser);
+            if(document.getElementById('customRegisterWorker')){
+                document.getElementById('customRegisterWorker').classList.remove('nodisplay');
+            } 
+            setTimeout(function() {
+                    viewWorkers();
+                    document.getElementById('customRegisterWorker').classList.add('nodisplay');
+                    document.querySelector('form').reset();
+
+                    }, 2000);
+                    
+        
+        } 
+        else if(response.type == '2')
+        {
+            document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('NoAccount').classList.add('nodisplay');
+            document.getElementById('WorkerExsists').classList.remove('nodisplay');
+            document.getElementById('email').classList.add('form-control-incorrect');
+        }
+        else if(response.type == '1')
+        {
+            document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('NoAccount').classList.remove('nodisplay');
+            document.getElementById('WorkerExsists').classList.add('nodisplay');
+            document.getElementById('email').classList.add('form-control-incorrect');
+        }
+        else {
+            //Else divides errors to wrong username or wrong password
+            console.error('Error:', response);
+            
+        }
+}
+    
 function handleKeyPress(event) {
     if (event.key === 'Enter') {
         searchUserByID(document.getElementById('userIDInput').value);

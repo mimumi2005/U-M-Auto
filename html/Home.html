@@ -48,7 +48,7 @@
             </div>
             <!-- Right column for additional information -->
 
-            <div class="col-md-6 text-left">
+            <div class="col-md-6 text-left mb-4">
                 <!-- Add content to appear on the right side of the header -->
                 <ul class="list-unstyled">
                     <li><strong>Friday:</strong> 9:00 AM - 6:00 PM</li>
@@ -61,13 +61,16 @@
     </div>
 
     <!-- Additional Content Section -->
-    <div class="bg-light p-4 mt-4 rounded" style="min-width: 300px ">
-        <h2 class="text-center">Online appointment booking</h2>
+    <div class="bg-light p-4 mt-5 rounded" style="min-width: 300px ">
+        <h2 class="text-center ">Online appointment booking</h2>
         <p class="text-center">Logged in users can use our online booking system to choose a repair time that works best for them <span id="LoginP"><a href="Login.html">Log-in</a> to make an appoitment for personalized assistance.</span>
             <span id="BookingP"><a href="Appointment.html">Book an appointment</a></span></p>
     </div>
 </div>
-<br><br><br><br><br><br>
+<div id="scrollIndicator">
+    <span>↓ Services ↓</span>
+  </div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <div id="Services" class=" container-xxl text-white">
   <div class="container bg-light" style="max-width: 80%">
       <div class="text-center mx-auto mb-4"  style="max-width: 75%; min-width:300;">
@@ -324,30 +327,42 @@
 
         </div>
     </div>
-    <script>
-        // JavaScript to handle smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                var targetElement = document.querySelector(this.getAttribute('href'));
-                var targetOffset = targetElement.getBoundingClientRect().top + window.pageYOffset -100;
-                var duration = 1500; // Adjust duration as needed (in milliseconds)
-                slowScrollTo(targetOffset, duration);
-            });
+<script>
+window.addEventListener('scroll', function() {
+    var scrollIndicator = document.getElementById('scrollIndicator');
+    var servicesSection = document.getElementById('Services');
+    if (servicesSection) {
+      var servicesRect = servicesSection.getBoundingClientRect();
+      if (servicesRect.top >= window.innerHeight) {
+        scrollIndicator.style.display = 'block';
+      } else {
+        scrollIndicator.style.display = 'none';
+      }
+    }
+  });
+
+    
+    // JavaScript to handle smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            var targetElement = document.querySelector(this.getAttribute('href'));
+            var targetOffset = targetElement.getBoundingClientRect().top + window.pageYOffset -100;
+            var duration = 1500; // Adjust duration as needed (in milliseconds)
+            slowScrollTo(targetOffset, duration);
         });
-
-
-        // Scroll event
-        // Function to check if an element is in the viewport
-        function isInViewport(element) {
-          var rect = element.getBoundingClientRect();
-          var threshold = 0.7; // Adjust this value to set the trigger threshold
-            return (
-              rect.bottom >= 0 &&
-              rect.right >= 0 &&
-              rect.top <= (window.innerHeight || document.documentElement.clientHeight) * threshold &&
-              rect.left <= (window.innerWidth || document.documentElement.clientWidth) * threshold
-            );
+    });
+    // Scroll event
+    // Function to check if an element is in the viewport
+    function isInViewport(element) {
+      var rect = element.getBoundingClientRect();
+      var threshold = 0.7; // Adjust this value to set the trigger threshold
+        return (
+          rect.bottom >= 0 &&
+          rect.right >= 0 &&
+          rect.top <= (window.innerHeight || document.documentElement.clientHeight) * threshold &&
+          rect.left <= (window.innerWidth || document.documentElement.clientWidth) * threshold
+        );
   }
 
 

@@ -66,8 +66,19 @@
     color: #212529;
     text-align: left;
     background-color: #fff;
+    user-select: none; /* Standard syntax */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
   }
-  
+ 
+  .selectable {
+    -webkit-user-select: text; /* Safari */
+    -moz-user-select: text; /* Firefox */
+    -ms-user-select: text; /* Internet Explorer/Edge */
+    user-select: text; /* Standard syntax */
+}
+
   [tabindex="-1"]:focus {
     outline: 0 !important;
   }
@@ -445,6 +456,7 @@
   }
   
   .list-unstyled {
+    font-size: 1.3em;
     padding-left: 0;
     list-style: none;
   }
@@ -10430,4 +10442,31 @@ input:-webkit-autofill:active{
   top: 50%; /* Adjust the top position as needed */
   left: 50%; /* Adjust the left position as needed */
   transform: translate(-30%, 20%); /* Center the div horizontally and vertically */
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%); /* Change the color here */
+}
+
+#scrollIndicator {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  opacity: 0.5;
+}
+
+#repairForm  {
+  font-size: 1.1em; /* Adjust the font size as needed */
+}
+
+
+
+#repairForm .form-check-input[type="checkbox"] {
+    transform: scale(1.5); /* Adjust the scale as needed */
+    margin-right: 10px; /* Adjust the margin as needed */
+    
 }

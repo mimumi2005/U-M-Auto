@@ -15,9 +15,9 @@
         <h2>Appointment registered successfully</h2>
     </div>
     <div class="container">
-        <div class="row justify-content-center text-white mt-5">
+        <div class="row justify-content-center text-white mt-4">
             <div class="col-md-6 bg-light p-4 rounded">
-                <h1 class="text-center mb-4">Appointment Booking</h1>
+                <h1 class="text-center mb-3">Appointment Booking</h1>
                 <form id="appointmentForm">
                     <div class="form-group">
                         <label for="repairType">Type of Repair</label>
@@ -51,12 +51,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="" id="time-container">
+                    <div class="selectable" id="time-container">
                         <!-- Choices for time will dynamically appear here-->
                     </div>  
                     <div class="form-group mt-2">
                         <label class="form-label" for="additionalInfo">Additional Information</label>
-                        <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="4" placeholder="Enter any additional information about the appointment"></textarea>
+                        <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="1" placeholder="Enter any additional information about the appointment"></textarea>
                     </div>
                     <div class="">
                     <button type="submit" class="btn btn-outline-secondary ">Make Appointment</button>
@@ -362,7 +362,7 @@
                 const endDate = new Date(selectedDate);
                 endDate.setDate(endDate.getDate() + 5); // Add 5 days
                 selectedDateRangeInfo.innerHTML = `
-                        <div class="mt-4">
+                        <div class="mt-4 ">
                             Selected Date Range: ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}
                         </div>
                             `;
