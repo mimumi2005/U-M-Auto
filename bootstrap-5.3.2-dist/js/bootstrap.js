@@ -4554,10 +4554,13 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(response => response.text())
       .then(data => {
           document.body.insertAdjacentHTML("afterbegin", data);
+          const UserCookie = JSON.parse(getCookie('userData'));
           const isLoggedInCookie = document.cookie.includes("userData");
-          const isAdminInCookies = (document.cookie.match('(^|;)\\s*userData\\s*=\\s*([^;]+)') || [])[2] && JSON.parse((document.cookie.match('(^|;)\\s*userData\\s*=\\s*([^;]+)') || [])[2]).IsAdmin;
+          const isAdminInCookies = UserCookie.IsAdmin;
+          const isWorkerInCookies = UserCookie.IsWorker
           isLoggedIn = isLoggedInCookie; 
           isAdmin = isAdminInCookies;
+          isWorker = isWorkerInCookies;
           updateButtonVisibility();
       });
       
@@ -4573,8 +4576,12 @@ function updateButtonVisibility() {
     else{
       document.getElementById('AdminMenu').classList.add('nodisplay');
     }
-  // Show buttons for logged-in users
-      document.getElementById('timeTableButton').classList.remove('nodisplay');
+    // Show buttons for logged-in users
+    // But workers see a different button instead of Make Appointments
+      if (isWorker){
+        document.getElementById('workerButton').classList.remove('nodisplay');
+      }
+      else{document.getElementById('timeTableButton').classList.remove('nodisplay');}
       document.getElementById('estimatorButton').classList.remove('nodisplay');
       document.getElementById('LogOutButton').classList.remove('nodisplay');
       document.getElementById('LoginButton').classList.add('nodisplay');
@@ -4999,6 +5006,19 @@ function viewDelayedProjects(){
       .catch(error => console.error('Error fetching user data:', error));
 }
 
+// Function that shows workers todays projects
+function WorkerviewTodaysProjects(){
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin +':5001'+ '/todays-projects',)
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          displayProjectDataForWorker(data);
+          
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
+
 
 // Function that displays projects by ID
 function searchProjectByID(idProjects){
@@ -5382,6 +5402,56 @@ function displayDelayedProjectData(projects) {
      
        });
 }
+
+
+// Function to display user data on the page
+function displayProjectDataForWorker(projects) {
+  const currentDate = new Date();
+  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');  
+  console.log(projects);
+  const userDataContainer = document.getElementById('ProjectDataContainer');
+  userDataContainer.innerHTML = `
+  <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+        </div>
+  `;
+  // Loop through each project and cretate HTML elemens to display their data
+  projects.forEach((project, index) => {
+     // Create a column for the project card
+     const column = document.createElement('div');
+     column.classList.add('col-lg-4');
+     // Create the project card HTML
+     const currentDate = new Date();
+     const startDate = project.StartDate ? new Date(project.StartDate) : null;
+     const isStartDateToday = startDate && startDate.toDateString() === currentDate.toDateString();
+     
+     column.innerHTML = `
+         <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
+             <div class="card-body text-white">
+                 <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
+                 <p class="card-text">Date ${project.StartDate ? new Date(project.StartDate).toLocaleDateString() : 'Invalid Date'} - ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleDateString() : 'Invalid Date'} </p>
+                 
+                 ${isStartDateToday ? `<p class="card-text">Start Time: ${startDate.toLocaleTimeString()}</p>` : ''}
+                 ${project.EndDateProjection ? `<p class="card-text">End Time: ${new Date(project.EndDateProjection).toLocaleTimeString()}</p>` : ''}
+                 
+                 <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
+                 <p class="card-text">Info: ${project.ProjectInfo}</p>
+                 <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchUserByID(${project.idUser})">View project user info</button>
+                 <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="changeEndDate(${project.idProjects})">Edit project end date</button>
+                 <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteProject(${project.idProjects})">Delete project</button>
+             </div>
+         </div>
+     `;
+     
+     
+     // Append the project card to the current row
+     document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
+     
+       });
+}
+
 
 // Function to format date to needed date formatting in backend
 function formatDate(date) {
