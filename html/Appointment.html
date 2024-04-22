@@ -71,7 +71,8 @@
     let selectedDateTime = null; // Variable to store the selected datetime
     let selectedDate = null; // Variable to store the selected date
     let user = null;
-    const loggedUserUUID = getCookie("LoggedUser")
+    const loggedUser = JSON.parse(getCookie("userData"));
+    console.log("Logged: ",loggedUser);
     document.getElementById('appointmentForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
         // Retrieve form data
@@ -83,7 +84,7 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            UUID: loggedUserUUID
+            UUID: loggedUser.UUID
         }),
         })
         .then(response => response.json())

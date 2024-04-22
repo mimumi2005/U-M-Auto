@@ -125,7 +125,7 @@
                 console.log('Server response:', response);
                 loginUser(response.data);
                 setTimeout(function() {
-                    document.querySelector('form').reset();
+                    document.querySelector('form').reset(); 
                     }, 3000);
             
         } else {
@@ -144,7 +144,7 @@
         
             }
             if(response.status=='2'){
-                document.getElementById('WrongPassword').classlist.remove('nodisplay');
+                document.getElementById('WrongPassword').classList.remove('nodisplay');
                 document.getElementById('password-red').style.color="rgb(255, 0, 0)";
                 document.getElementById('password').classList.add('form-control-incorrect');
                 

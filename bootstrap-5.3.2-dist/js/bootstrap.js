@@ -4556,7 +4556,6 @@ document.addEventListener("DOMContentLoaded", function() {
           document.body.insertAdjacentHTML("afterbegin", data);
           const isLoggedInCookie = document.cookie.includes("userData");
           const isAdminInCookies = (document.cookie.match('(^|;)\\s*userData\\s*=\\s*([^;]+)') || [])[2] && JSON.parse((document.cookie.match('(^|;)\\s*userData\\s*=\\s*([^;]+)') || [])[2]).IsAdmin;
-          console.log("CookieAdmin: ",isAdminInCookies);
           isLoggedIn = isLoggedInCookie; 
           isAdmin = isAdminInCookies;
           updateButtonVisibility();
@@ -4638,15 +4637,14 @@ function loginUser(response) {
 }
 
 function LogOut(){
-    
-    const loggedUser = getCookie("userData").UUID;
+    const loggedUser = JSON.parse(getCookie("userData"));
     console.log('Logged user:',loggedUser)
     fetch(window.location.origin + ':5001'+ '/log-out', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ UUID: loggedUser })
+      body: JSON.stringify({ UUID: loggedUser.UUID })
   })
       .then(response => console.log('log out:',response.json()))
       .then(data => console.log(data))
@@ -5405,8 +5403,7 @@ function setCookie(name, value, days) {
   document.cookie = `${name}=${JSON.stringify(value)};expires=${expires.toUTCString()};path=/`;
 }
 
-function getCookie(name) {
-  const cookieValue = document.cookie.match(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
-  return cookieValue ? JSON.parse(cookieValue.pop()) : null;
+const getCookie = (name) => {
+  const cookieValue = (document.cookie.match('(^|;\\s*)' + name + '=([^;]*)') || [])[2];
+  return cookieValue ? decodeURIComponent(cookieValue) : null;
 }
-

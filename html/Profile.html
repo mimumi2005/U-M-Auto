@@ -50,10 +50,10 @@
       </section>
     
 <script>
-    const loggedUserUUID = getCookie("userData").UUID;
+    const loggedUser = JSON.parse(getCookie("userData"));
     const form = document.getElementById('change-password-form');
     const inputs = form.querySelectorAll('input');
-
+    console.log(loggedUser);
     // Add event listener to each input field
     inputs.forEach(function(input, index) {
       input.addEventListener('keydown', function(event) {
@@ -138,7 +138,7 @@
     console.log(JSON.stringify({
             currentPassword: currentPassword,
             newPassword: newPassword,
-            UUID: loggedUserUUID
+            UUID: loggedUser.UUID
         }));
 
     // Communication with API to change password
@@ -150,7 +150,7 @@
         body: JSON.stringify({
             currentPassword: currentPassword,
             newPassword: newPassword,
-            UUID: loggedUserUUID
+            UUID: loggedUser.UUID
         }),
     })
     .then(response => response.json())
@@ -191,7 +191,7 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            UUID: loggedUserUUID
+            UUID: loggedUser.UUID
         }),
         
       })

@@ -93,6 +93,7 @@ function loginUser(username, password, connection, res) {
 
     // Filter results for a match with the provided password
     const matchedUser = results.find(user => user.password === password);
+    console.log(matchedUser);
 
     if (matchedUser) {
       // Passwords match, login successful
@@ -143,9 +144,10 @@ function loginUser(username, password, connection, res) {
           });
         });
       });
-    } else {
+    } 
+    else {
       // Passwords do not match
-      res.status(401).json({ status: '2', message: 'Wrong password' });
+      return res.status(401).json({ status: '2', message: 'Wrong password' });
     }
   });
 }
