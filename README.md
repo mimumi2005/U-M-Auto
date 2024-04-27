@@ -25,8 +25,8 @@ Functions for admin:
 
 ## TO DO
 - [ ] Make the backend check if the user is actually admin, since in the frontend anyone can get to the admin.html page;
-- [ ] Give admins the ability to add workers and administrators;
-- [ ] Make a worker page where workers can see project information;
+- [x] Give admins the ability to add workers and administrators;
+- [x] Make a worker page where workers can see project information;
 - [ ] Possibly add light mode;
 - [ ] If i can be bothered add password reset through email, with that also notifications for users, about deals, sales and other reminders;
 
