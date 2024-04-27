@@ -10441,7 +10441,7 @@ input:-webkit-autofill:active{
   position: absolute;
   top: 50%; /* Adjust the top position as needed */
   left: 50%; /* Adjust the left position as needed */
-  transform: translate(-30%, 20%); /* Center the div horizontally and vertically */
+  transform: translate(-30%, 30%); /* Center the div horizontally and vertically */
 }
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   filter: invert(100%); /* Change the color here */

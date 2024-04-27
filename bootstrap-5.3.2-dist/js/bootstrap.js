@@ -5019,6 +5019,30 @@ function WorkerviewTodaysProjects(){
       .catch(error => console.error('Error fetching user data:', error));
 }
 
+// Function that shows workers todays projects
+function WorkerviewActiveProjects(){
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin +':5001'+ '/active-projects',)
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          displayProjectDataForWorker(data);
+          
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
+// Function that shows all delayed projects
+function WorkerviewDelayedProjects(){
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin +':5001'+ '/delayed-projects',)
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          displayDelayedProjectDataForWorker(data);
+          
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
 
 // Function that displays projects by ID
 function searchProjectByID(idProjects){
@@ -5439,14 +5463,50 @@ function displayProjectDataForWorker(projects) {
                  <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
                  <p class="card-text">Info: ${project.ProjectInfo}</p>
                  <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchUserByID(${project.idUser})">View project user info</button>
-                 <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="changeEndDate(${project.idProjects})">Edit project end date</button>
-                 <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteProject(${project.idProjects})">Delete project</button>
+                 <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="changeEndDate(${project.idProjects})">Edit project end date</button>
              </div>
          </div>
      `;
      
      
      // Append the project card to the current row
+     document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
+     
+       });
+}
+
+// Function to display user data on the page
+function displayDelayedProjectDataForWorker(projects) {
+  const currentDate = new Date();
+  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');  
+  const userDataContainer = document.getElementById('ProjectDataContainer');
+  userDataContainer.innerHTML = `
+  <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+        </div>
+  `;
+  // Loop through each project and create HTML elements to display their data
+  projects.forEach((project, index) => {
+     // Create a column for the user card
+     const column = document.createElement('div');
+     column.classList.add('col-lg-4');
+     // Create the user card HTML
+      column.innerHTML = `
+          <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
+              <div class="card-body text-white">
+                <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
+                  <p class="card-text">User: ${project.idUser}</p>
+                  <p class="card-text">Start date: ${project.StartDate ? new Date(project.StartDate).toLocaleString() : 'Invalid Date'}</p>
+                  <p class="card-text">End date: ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleString() : 'Invalid Date'}</p>
+                  <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
+                  <button class="btn btn-outline-success text-white mb-2" style="width:100%" onclick="removeDelayed(${project.idProjects})">Finish project</button>
+              </div>
+          </div>
+      `;
+     
+     // Append the user card to the current row
      document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
      
        });

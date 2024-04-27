@@ -524,7 +524,7 @@ app.get("/all-projects", (req, res) => {
   });
 });
 
-app.get("/todays-projects", (req, res) => {
+app.get("/active-projects", (req, res) => {
   const curdate = new Date();
   const isoStringDate = curdate.toISOString();
   const sql_query = `SELECT * FROM projects WHERE '${isoStringDate}' BETWEEN StartDate AND EndDateProjection`;
@@ -532,11 +532,21 @@ app.get("/todays-projects", (req, res) => {
     if (err) throw err;
     res.send(result);
   });
+});
+
+app.get("/todays-projects", (req, res) => {
+  const curdate = new Date();
+  const isoStringDate = curdate.toISOString();
+  const sql_query = `SELECT * FROM projects WHERE  EndDateProjection = '${isoStringDate}'`;
+  connection.query(sql_query, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
 }); 
+
 
 // Fetch active projects (endDate time is not yet reached)
 app.get("/active-projects", (req, res) => {
-
   const sql_query = 'SELECT * FROM projects WHERE EndDateProjection > CURRENT_TIMESTAMP() OR `Delayed` = 1';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
