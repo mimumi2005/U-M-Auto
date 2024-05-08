@@ -749,18 +749,38 @@ app.delete('/user-delete/:userID', async (req, res) => {
         await logoutUser(results[0].idInstance);
       }
 
-      // Delete all projects associated with the user
-      await deleteProjects(userID);
-
-      // Proceed to delete the user from the users table
-      const deleteUserQuery = 'DELETE FROM users WHERE idUser = ?';
-      connection.query(deleteUserQuery, [userID], (error, deleteResult) => {
-        if (error) {
-          console.error('Error deleting user:', error);
-          return res.status(500).json({ message: 'Error deleting user', error: error.message });
+      // Delete user from worker table if exists
+      const deleteWorkerQuery = 'DELETE FROM workers WHERE idUser = ?';
+      connection.query(deleteWorkerQuery, [userID], async (workerError, workerResult) => {
+        if (workerError) {
+          console.error('Error deleting user from worker table:', workerError);
+          return res.status(500).json({ message: 'Error deleting user', error: workerError.message });
         }
-        console.log('User deleted successfully');
-        res.status(200).json({ message: 'User deleted successfully' });
+        console.log('User deleted from worker table successfully');
+        
+        // Delete user from administrator table if exists
+        const deleteAdminQuery = 'DELETE FROM administrators WHERE idUser = ?';
+        connection.query(deleteAdminQuery, [userID], async (adminError, adminResult) => {
+          if (adminError) {
+            console.error('Error deleting user from administrator table:', adminError);
+            return res.status(500).json({ message: 'Error deleting user', error: adminError.message });
+          }
+          console.log('User deleted from administrator table successfully');
+
+          // Delete all projects associated with the user
+          await deleteProjects(userID);
+
+          // Proceed to delete the user from the users table
+          const deleteUserQuery = 'DELETE FROM users WHERE idUser = ?';
+          connection.query(deleteUserQuery, [userID], (error, deleteResult) => {
+            if (error) {
+              console.error('Error deleting user:', error);
+              return res.status(500).json({ message: 'Error deleting user', error: error.message });
+            }
+            console.log('User deleted successfully');
+            res.status(200).json({ message: 'User deleted successfully' });
+          });
+        });
       });
     });
   } catch (error) {

@@ -4572,9 +4572,11 @@ function updateButtonVisibility() {
     console.log(isLoggedIn);
     if(isAdmin){
       document.getElementById('AdminMenu').classList.remove('nodisplay');
+      document.getElementById('Statistics').classList.remove('nodisplay');
     }
     else{
       document.getElementById('AdminMenu').classList.add('nodisplay');
+      ocument.getElementById('Statistics').classList.add('nodisplay');
     }
     // Show buttons for logged-in users
     // But workers see a different button instead of Make Appointments

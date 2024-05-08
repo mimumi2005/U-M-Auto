@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this line to the <head> section of your HTML file -->
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+    <!-- Local bootstrap.js-->
+    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+    <!-- Vector library for car painting UI-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script> 
+
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   
+</head>
+<body>
+    <div id="customRegisterWorker" class="custom-alert nodisplay">
+        <h2>Succesfully registered worker</h2>
+    </div>
+    <div id="customAdminPerms" class="custom-alert nodisplay">
+        <h2>Succesfully gave administrator permissions</h2>
+    </div>
+    <section class="container col-md-3 mt-5 bg-light text-white" id="statistic-view">
+        
+        <div class="card-body">
+            <h2 class="card-title text-center">Statistics</h2>
+            <div class="card-text row">
+                <div class="row-cols-md-5 m-auto">
+                    
+                <div class="col mt-2 ">
+                    <button class="btn btn-outline-secondary  text-white mt-3 " style="width:95%" onclick="ProjectStatistics()">Project statistics</button>
+                    <button class="btn btn-outline-secondary  text-white mt-3 " style="width:95%" onclick="UserStatistics()">User statistics</button>
+                </div>
+
+            
+        </div>
+        
+    </section>
+
+    <div class=" selectable nodisplay mt-4" id="userDataContainer">
+        <!-- User data will be dynamically added here -->
+        <div class=" container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    <div class=" selectable nodisplay mt-4" id="ProjectDataContainer">
+        <!-- User data will be dynamically added here -->
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+            
+    </div>
+    </div>
+    
+<script>
+
+  </script>
+  
