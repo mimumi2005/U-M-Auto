@@ -4576,7 +4576,7 @@ function updateButtonVisibility() {
     }
     else{
       document.getElementById('AdminMenu').classList.add('nodisplay');
-      ocument.getElementById('Statistics').classList.add('nodisplay');
+      document.getElementById('Statistics').classList.add('nodisplay');
     }
     // Show buttons for logged-in users
     // But workers see a different button instead of Make Appointments
@@ -4818,6 +4818,19 @@ function searchSimilarUsers(email) {
     .catch(error => console.error('Error searching similar users:', error));
 
 }
+
+// Function to show statistics about projects
+function ViewProjectStatistics(){
+  console.log("Viewing Project statistics");
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/project-statistics')
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          displayProjectStatistics(data);
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+    }
 
 // Function to show a singular account by account ID
 function searchUserByID(idUser){
@@ -5513,6 +5526,50 @@ function displayDelayedProjectDataForWorker(projects) {
      
        });
 }
+
+
+
+// Function to display user data on the page
+function displayProjectStatistics(projects) {
+  const currentDate = new Date();
+  document.getElementById('ProjectStatisticsContainer').classList.remove('nodisplay');  
+  console.log(projects);
+  const userDataContainer = document.getElementById('ProjectStatisticsContainer');
+  userDataContainer.innerHTML = `
+  <div class="container mt-4 ">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- Project cards will be dynamically added here -->
+            </div>
+        </div>
+  `;
+  // Loop through each project and cretate HTML elemens to display their data
+  projects.forEach((project, index) => {
+     // Create a column for the project card
+     const column = document.createElement('div');
+     column.classList.add('col-lg-4');
+     // Create the project card HTML
+     const currentDate = new Date();
+     const startDate = project.StartDate ? new Date(project.StartDate) : null;
+     const isStartDateToday = startDate && startDate.toDateString() === currentDate.toDateString();
+     
+     column.innerHTML = `
+    <div id="Project_div${project.idProjects}" class="card bg-light mb-3 text-white">
+      <div class="project-statistics">
+        <h5>${project.TimeRange}</h5>
+        <ul>
+          <li><strong>Projects Count:</strong> ${project.ProjectsCount}</li>
+        </ul>
+      </div>
+    </div>
+`;
+     
+     
+     // Append the project card to the current row
+     document.querySelector('#ProjectStatisticsContainer .row:last-child').appendChild(column);
+     
+       });
+}
+
 
 
 // Function to format date to needed date formatting in backend

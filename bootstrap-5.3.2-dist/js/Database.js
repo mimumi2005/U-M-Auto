@@ -534,6 +534,30 @@ app.get("/active-projects", (req, res) => {
   });
 });
 
+
+app.get("/project-statistics", (req, res) => {
+  const sql_query = `
+    SELECT 
+      CASE
+        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 1 THEN 'Oil change/project discussion'
+        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 4 THEN 'Overall checkup/tuning/custom parts'
+        WHEN TIMESTAMPDIFF(DAY, StartDate, EndDateProjection) >= 5 THEN 'Paint job'
+        ELSE 'Other'
+      END AS TimeRange,
+      COUNT(*) AS ProjectsCount
+    FROM projects
+    GROUP BY TimeRange;
+  `;
+  connection.query(sql_query, (err, result) => {
+    if (err) {
+      console.error("Error retrieving project statistics:", err);
+      return res.status(500).json({ message: "Error retrieving project statistics", error: err.message });
+    }
+    console.log(result);
+    res.json(result);
+  });
+});
+
 app.get("/todays-projects", (req, res) => {
   const curdate = new Date();
   const isoStringDate = curdate.toISOString();
