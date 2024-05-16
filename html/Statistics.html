@@ -15,8 +15,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
    
 </head>
+<style>
+    /* Center the text inside the chart */
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  </style>
 <body>
     <div id="customRegisterWorker" class="custom-alert nodisplay">
         <h2>Succesfully registered worker</h2>
@@ -40,26 +51,24 @@
         </div>
         
     </section>
-
-    <div class=" selectable nodisplay mt-4" id="ProjectStatisticsContainer">
+    <div id="UserStatisticsContainer" class="container col-lg-6 mt-4 bg-light nodisplay">
         <!-- User data will be dynamically added here -->
-        <div class=" container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
+        <div id="UserStatisticsContainer">
+        <div class="chart-container">
+            <canvas id="userStatisticsChart"></canvas>
+            <!-- User cards will be dynamically added here -->
             </div>
         </div>
-    </div>
-    <div class=" selectable nodisplay mt-4" id="UserStatisticsContainer">
-        <!-- User data will be dynamically added here -->
-        <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
-            </div>
-            
-    </div>
-    </div>
-    
-<script>
+      </div>
 
-  </script>
-  
+    
+      <div id="ProjectStatisticsContainer" class=" container col-lg-6 mt-4 bg-light nodisplay">
+        <div id="ProjectStatisticsContainer">
+          <div class="chart-container">
+            <canvas id="projectStatisticsChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <script src="path/to/your/javascript/file.js"></script>
+      </body>
+      </html>

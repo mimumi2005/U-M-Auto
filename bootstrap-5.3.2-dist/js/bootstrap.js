@@ -4856,6 +4856,45 @@ function searchUserByID(idUser){
       })
       .catch(error => console.error('Error fetching user data:', error));
 }
+
+
+// Function to show statistics about projects
+function ViewUserStatistics(){
+  console.log("Viewing Project statistics");
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/user-statistics')
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          displayUserStatistics(data);
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+    }
+
+// Function to show a singular account by account ID
+function searchUserByID(idUser){
+  document.getElementById('userIDInput').value = '';
+  document.getElementById('InvalidID').classList.add('nodisplay');
+  console.log("Viewing user by ID:",idUser);
+  // Make a fetch request to your backend to retrieve all user data
+  fetch(window.location.origin + ':5001'+ '/user-by-ID', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUser: idUser })
+})
+      .then(response => response.json())
+      .then(data => {
+          // Call a function to display the user data on the page
+          if(data[0]){
+            displayUserData(data);
+          }
+          else{document.getElementById('InvalidID').classList.remove('nodisplay');}
+          
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+}
 // Function to show all workers accounts
 function viewWorkers(){
   
@@ -5528,46 +5567,216 @@ function displayDelayedProjectDataForWorker(projects) {
 }
 
 
-
-// Function to display user data on the page
+// Function to display project statistics on the page
 function displayProjectStatistics(projects) {
-  const currentDate = new Date();
+  document.getElementById('UserStatisticsContainer').classList.add('nodisplay');  
   document.getElementById('ProjectStatisticsContainer').classList.remove('nodisplay');  
   console.log(projects);
-  const userDataContainer = document.getElementById('ProjectStatisticsContainer');
-  userDataContainer.innerHTML = `
-  <div class="container mt-4 ">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- Project cards will be dynamically added here -->
-            </div>
-        </div>
-  `;
-  // Loop through each project and cretate HTML elemens to display their data
-  projects.forEach((project, index) => {
-     // Create a column for the project card
-     const column = document.createElement('div');
-     column.classList.add('col-lg-4');
-     // Create the project card HTML
-     const currentDate = new Date();
-     const startDate = project.StartDate ? new Date(project.StartDate) : null;
-     const isStartDateToday = startDate && startDate.toDateString() === currentDate.toDateString();
-     
-     column.innerHTML = `
-    <div id="Project_div${project.idProjects}" class="card bg-light mb-3 text-white">
-      <div class="project-statistics">
-        <h5>${project.TimeRange}</h5>
-        <ul>
-          <li><strong>Projects Count:</strong> ${project.ProjectsCount}</li>
-        </ul>
-      </div>
-    </div>
-`;
-     
-     
-     // Append the project card to the current row
-     document.querySelector('#ProjectStatisticsContainer .row:last-child').appendChild(column);
-     
-       });
+
+  // Sort the projects by ProjectsCount in ascending order
+  projects.sort((b, a) => b.ProjectsCount - a.ProjectsCount);
+
+  const ctx = document.getElementById('projectStatisticsChart').getContext('2d');
+
+  const labels = [];
+  const data = [];
+
+  // Uses the data from database to display correct graph data
+  projects.forEach(project => {
+    labels.push(project.TimeRange);
+    data.push(project.ProjectsCount);
+  });
+  // Formats how the data looks when displayed
+  const chartData = {
+    labels: labels,
+    datasets: [{
+      label: 'Number of Projects',
+      data: data,
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+    }]
+  };
+
+  // Configuration of the graph itself, text format etc.
+  const config = {
+    type: 'bar',
+    data: chartData,
+    options: {
+      plugins: {
+        legend: {
+          labels: {
+            color: 'white',
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: 'white',
+            font: {
+              size: 14,
+              weight: 'bold' 
+            }
+          },
+          title: {
+            display: true,
+            text: 'Number of Users',
+            color: 'white',
+            font: {
+              size: 16, 
+              weight: 'bold' 
+            }
+          },
+          grid: {
+            color: 'white'
+          }
+        },
+        x: {
+          ticks: {
+            color: 'white',
+            font: {
+              size: 14,
+              weight: 'bold' 
+            }
+          },
+          title: {
+            display: true,
+            text: 'Number of Projects',
+            color: 'white',
+            font: {
+              size: 16, 
+              weight: 'bold'
+            }
+          },
+          grid: {
+            color: 'white'
+          }
+        }
+      },
+      layout: {
+        padding: {
+          top: 20,
+          bottom: 20
+        }
+      }
+    }
+  };
+  
+
+  new Chart(ctx, config);
+}
+
+
+
+
+// Function to display user statistics on the page
+function displayUserStatistics(userStats) {
+  document.getElementById('ProjectStatisticsContainer').classList.add('nodisplay');  
+  document.getElementById('UserStatisticsContainer').classList.remove('nodisplay');  
+  console.log(userStats);
+
+  // Sort the user statistics by ProjectsCount in ascending order
+  userStats.sort((b, a) => b.ProjectsCount - a.ProjectsCount);
+
+  const ctx = document.getElementById('userStatisticsChart').getContext('2d');
+
+  const labels = [];
+  const data = [];
+  // Uses the data from database to display correct graph data
+  userStats.forEach(stat => {
+    labels.push(stat.ProjectsCount);
+    data.push(stat.UsersCount);
+  });
+
+  // Formats how the data looks when displayed
+  const chartData = {
+    labels: labels,
+    datasets: [{
+      label: 'Number of Users',
+      data: data,
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+    }]
+  };
+  // Configuration of the graph itself, text format etc.
+  const config = {
+    type: 'bar',
+    data: chartData,
+    options: {
+      plugins: {
+        legend: {
+          labels: {
+            color: 'white',
+            font: {
+              size: 16,
+              weight: 'bold' 
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: 'white',
+            font: {
+              size: 14, 
+              weight: 'bold'
+            }
+          },
+          title: {
+            display: true,
+            text: 'Number of Users',
+            color: 'white',
+            font: {
+              size: 16, 
+              weight: 'bold' 
+            }
+          },
+          grid: {
+            color: 'white'
+          }
+        },
+        x: {
+          ticks: {
+            color: 'white',
+            font: {
+              size: 14, 
+              weight: 'bold' 
+            }
+          },
+          title: {
+            display: true,
+            text: 'Number of Projects',
+            color: 'white',
+            font: {
+              size: 16, 
+              weight: 'bold' 
+            }
+          },
+          grid: {
+            color: 'white'
+          }
+        }
+      },
+      layout: {
+        padding: {
+          top: 20,
+          bottom: 20
+        }
+      }
+    }
+  };
+  
+
+  new Chart(ctx, config);
 }
 
 

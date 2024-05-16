@@ -569,6 +569,41 @@ app.get("/todays-projects", (req, res) => {
 }); 
 
 
+app.get("/user-statistics", (req, res) => {
+  const sql_query = `
+    SELECT 
+      ProjectsCount,
+      COUNT(*) AS UsersCount
+    FROM (
+      SELECT 
+        idUser,
+        COUNT(*) AS ProjectsCount
+      FROM projects
+      GROUP BY idUser
+    ) AS UserProjects
+    GROUP BY ProjectsCount;
+  `;
+  connection.query(sql_query, (err, result) => {
+    if (err) {
+      console.error("Error retrieving user statistics:", err);
+      return res.status(500).json({ message: "Error retrieving user statistics", error: err.message });
+    }
+    console.log(result);
+    res.json(result);
+  });
+});
+
+app.get("/todays-projects", (req, res) => {
+  const curdate = new Date();
+  const isoStringDate = curdate.toISOString();
+  const sql_query = `SELECT * FROM projects WHERE  EndDateProjection = '${isoStringDate}'`;
+  connection.query(sql_query, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+}); 
+
+
 // Fetch active projects (endDate time is not yet reached)
 app.get("/active-projects", (req, res) => {
   const sql_query = 'SELECT * FROM projects WHERE EndDateProjection > CURRENT_TIMESTAMP() OR `Delayed` = 1';
