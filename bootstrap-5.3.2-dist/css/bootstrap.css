@@ -564,6 +564,8 @@
   }
   
   .container {
+    min-width:250px;
+    max-width: 75%;
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
@@ -10470,3 +10472,4 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     margin-right: 10px; /* Adjust the margin as needed */
     
 }
+
