@@ -10,7 +10,6 @@ How to run the project:
     1. MySQL 8.0 database;
     2. Visual studio code, with the Live Server extention;
     3. Node.js
-    4. 
 ```
 ```
 2. Download the repository as zip;
@@ -64,14 +63,6 @@ Functions for admin:
   - While viewing users ability to delete them, view projects associated with them or view similar users in case of botting;
   - While viewing projects ability to change end date, view user associated with the project and view delayed projects.
 
-
-## TO DO
-- [ ] Make the backend check if the user is actually admin, since in the frontend anyone can get to the admin.html page;
-- [x] Give admins the ability to add workers and administrators;
-- [x] Make a worker page where workers can see project information;
-- [ ] Possibly add light mode;
-- [ ] If i can be bothered add password reset through email, with that also notifications for users, about deals, sales and other reminders;
-
 ## Used technoligies
 
 - MySQL 8.0 database
@@ -81,4 +72,10 @@ Functions for admin:
 
 ## 🛠 Skills
 Javascript, HTML, CSS...
+
+## TO DO
+- [x] Give admins the ability to add workers and administrators;
+- [x] Make a worker page where workers can see project information;
+- [ ] Possibly add light mode;
+- [ ] If i can be bothered add password reset through email, with that also notifications for users, about deals, sales and other reminders;
 
