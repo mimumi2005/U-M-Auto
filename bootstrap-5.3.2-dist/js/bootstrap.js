@@ -5022,7 +5022,7 @@ function removeWorker(idUser){
 
 // Function to show all Projects
 function viewAllProjects() {
-  
+  document.getElementById('inputNewEndDate').classList.add('nodisplay');
   // Make a fetch request to your backend to retrieve all user data
   fetch(window.location.origin +':5001'+ '/all-projects',)
       .then(response => response.json())
@@ -5400,7 +5400,8 @@ function displayProjectData(projects) {
   document.getElementById("searchProject").classList.add('nodisplay');
   document.getElementById("searchUser").classList.add('nodisplay');
   document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');  
+ 
+  document.getElementById('ProjectDataContainer').classList.remove('nodisplay'); 
 
   const userDataContainer = document.getElementById('ProjectDataContainer');
   userDataContainer.innerHTML = `
@@ -5574,7 +5575,7 @@ function displayProjectStatistics(projects) {
   console.log(projects);
 
   // Sort the projects by ProjectsCount in ascending order
-  projects.sort((b, a) => b.ProjectsCount - a.ProjectsCount);
+  projects.sort((a, b) => b.ProjectsCount - a.ProjectsCount);
 
   const ctx = document.getElementById('projectStatisticsChart').getContext('2d');
 
@@ -5626,7 +5627,7 @@ function displayProjectStatistics(projects) {
           },
           title: {
             display: true,
-            text: 'Number of Users',
+            text: 'Number of Projects',
             color: 'white',
             font: {
               size: 16, 
@@ -5647,7 +5648,7 @@ function displayProjectStatistics(projects) {
           },
           title: {
             display: true,
-            text: 'Number of Projects',
+            text: 'Type of project',
             color: 'white',
             font: {
               size: 16, 

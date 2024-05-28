@@ -35,7 +35,6 @@ CREATE TABLE `administrators` (
 
 LOCK TABLES `administrators` WRITE;
 /*!40000 ALTER TABLE `administrators` DISABLE KEYS */;
-INSERT INTO `administrators` VALUES (1,NULL);
 /*!40000 ALTER TABLE `administrators` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,7 +55,7 @@ CREATE TABLE `projects` (
   PRIMARY KEY (`idProjects`),
   KEY `idUser_idx` (`idUser`),
   CONSTRAINT `user` FOREIGN KEY (`idUser`) REFERENCES `users` (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +64,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (1,1,'2024-04-22T07:00:00.000Z','2024-04-30T19:20:00.000Z',0,'Just an oil change'),(2,1,'2024-04-22T06:00:00.000Z','2024-10-29T12:00:00.000Z',0,'I want my whole car repainted in red.'),(3,1,'2024-04-11T06:00:00.000Z','2024-04-30T18:32:00.000Z',0,'Need this specific part 40094200'),(4,1,'2024-04-17T06:00:00.000Z','2024-04-17T07:00:00.000Z',NULL,'Have a car project that i want made.'),(5,1,'2024-04-16T13:00:00.000Z','2024-04-16T14:00:00.000Z',NULL,''),(7,1,'2024-04-25T07:00:00.000Z','1871-07-14T23:29:26.000Z',0,'asd'),(8,1,'2024-04-25T06:00:00.000Z','2024-04-25T07:00:00.000Z',0,'asd'),(15,7,'2024-05-09T07:00:00.000Z','2024-05-09T08:00:00.000Z',0,'aa'),(16,7,'2024-05-16T07:00:00.000Z','2024-05-16T08:00:00.000Z',0,'asd');
+INSERT INTO `projects` VALUES (1,9,'2024-06-03T06:00:00.000Z','2024-06-03T07:00:00.000Z',0,'Quick oil change'),(2,10,'2024-06-04T06:00:00.000Z','2024-06-04T07:00:00.000Z',0,''),(3,11,'2024-06-03T12:00:00.000Z','2024-06-03T13:00:00.000Z',0,''),(4,12,'2024-06-10T06:00:00.000Z','2024-06-15T12:00:00.000Z',0,'PINK!!!!'),(5,13,'2024-05-28T06:00:00.000Z','2024-05-28T07:00:00.000Z',0,''),(6,13,'2024-06-07T06:00:00.000Z','2024-06-07T11:00:00.000Z',1,''),(7,14,'2024-06-10T15:00:00.000Z','2024-06-10T16:00:00.000Z',0,''),(8,15,'2024-06-03T06:00:00.000Z','2024-06-08T12:00:00.000Z',0,'Red paint job'),(9,16,'2024-05-28T13:00:00.000Z','2024-05-28T14:00:00.000Z',0,''),(10,16,'2024-05-31T10:00:00.000Z','2024-05-31T11:00:00.000Z',0,''),(11,16,'2024-06-21T11:00:00.000Z','2024-06-21T15:00:00.000Z',0,''),(12,17,'2024-05-28T11:00:00.000Z','2024-05-28T12:00:00.000Z',0,''),(13,17,'2024-06-17T06:00:00.000Z','2024-06-18T11:00:00.000Z',1,''),(14,17,'2024-05-30T15:00:00.000Z','2024-06-30T05:00:00.000Z',1,''),(15,17,'2024-06-28T06:00:00.000Z','2024-06-28T10:00:00.000Z',0,''),(16,6,'2024-06-17T06:00:00.000Z','2024-06-23T12:00:00.000Z',0,'Purple car paint job'),(17,6,'2024-07-01T06:00:00.000Z','2024-07-01T07:00:00.000Z',0,''),(18,3,'2024-05-30T11:00:00.000Z','2024-05-30T15:00:00.000Z',0,''),(19,3,'2024-06-10T13:00:00.000Z','2024-06-10T14:00:00.000Z',0,''),(20,7,'2024-05-30T14:00:00.000Z','2024-05-30T15:00:00.000Z',0,''),(21,7,'2024-07-03T15:00:00.000Z','2024-07-03T16:00:00.000Z',0,'');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +91,6 @@ CREATE TABLE `user_instance` (
 
 LOCK TABLES `user_instance` WRITE;
 /*!40000 ALTER TABLE `user_instance` DISABLE KEYS */;
-INSERT INTO `user_instance` VALUES ('b04c183b-c004-4191-94a4-98dee3f3238c',1,'2024-05-07 13:30:39');
 /*!40000 ALTER TABLE `user_instance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,7 +108,7 @@ CREATE TABLE `users` (
   `Email` varchar(45) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,7 +117,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'janis','Mim05','janiskrisjanis.g@gmail.com','abols1234'),(4,'Aigars','MyScreenIsOff','Cirulis05@gmail.com','league4life'),(7,'Jana','MazaNarina','Mazanarina2@gmail.com','mazanarina1'),(10,'JohnDOe2','Meagainhello','johndoee2e@gmail.com','‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎12345'),(11,'JohnDOe3','Meagainhello2','johndoee23e@gmail.com','???????????????12'),(12,';DROP * `users`','<h1>epic</h1>','email123@gmail.com','123123123123'),(13,'JohnDOe4','JohnDoereal','johndoeee4@gmail.com','JohnDoe12345');
+INSERT INTO `users` VALUES (1,'janis','Mim05','janiskrisjanis.g@gmail.com','abols123'),(2,'janis','Mimumi2005','janiskrijanis.g@gmail.com','Abols1234'),(3,'PumaLV','PumaLV','Baltins@gmail.com','baltins1'),(4,'Matiss','Matq','Matisins@gmail.com','25565'),(5,'Aigars','MyScreenIsOff','Homielover123@gmail.com','dariusGaming'),(6,'Jana','MazaNarina','Mazanarina2@gmail.com','mazanarina2'),(7,'Sidnijs','Kehren','Sidnijs05@gmail.com','BlackMen'),(8,'Edijs','Sentience','Edijs229@gmail.com','qw12345'),(9,'John Smith','johnsmith','john.smith@example.com','J!h2#K9m'),(10,'Mary Johnson','maryjohnson','mary.johnson@example.com','M@r7$N2p'),(11,'James Williams','jameswilliams','james.williams@example.com','J!m5&Y7r'),(12,'Patricia Brown','patriciabrown','patricia.brown@example.com','P@t8^R3s'),(13,'Robert Jones','robertjones','robert.jones@example.com','R!o2#S6t'),(14,'Jennifer Garcia','jennifergarcia','jennifer.garcia@example.com','J@e7$V2p'),(15,'Michael Miller','michaelmiller','michael.miller@example.com','M!c5&L8r'),(16,'Linda Martinez','lindamartinez','linda.martinez@example.com','L@d9^N3s'),(17,'William Hernand','williamhernandez','william.hernandez@example.com','W!l2#P7m');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +143,7 @@ CREATE TABLE `workers` (
 
 LOCK TABLES `workers` WRITE;
 /*!40000 ALTER TABLE `workers` DISABLE KEYS */;
-INSERT INTO `workers` VALUES (1,2,'2022-04-22','Main admin');
+INSERT INTO `workers` VALUES (1,0,'2024-05-28','Admin'),(2,0,'2024-05-28','Worker_test'),(4,0,'2024-05-28','Mechanic'),(6,0,'2024-05-28','Bookkeeper');
 /*!40000 ALTER TABLE `workers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -158,4 +156,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-08  8:39:13
+-- Dump completed on 2024-05-28 11:47:59

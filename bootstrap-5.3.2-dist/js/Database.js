@@ -540,9 +540,9 @@ app.get("/project-statistics", (req, res) => {
     SELECT 
       CASE
         WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 1 THEN 'Oil change/project discussion'
-        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 4 THEN 'Overall checkup/tuning/custom parts'
+        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 4 THEN 'Overall checkup/tuning'
         WHEN TIMESTAMPDIFF(DAY, StartDate, EndDateProjection) >= 5 THEN 'Paint job'
-        ELSE 'Other'
+        ELSE 'Projects'
       END AS TimeRange,
       COUNT(*) AS ProjectsCount
     FROM projects
