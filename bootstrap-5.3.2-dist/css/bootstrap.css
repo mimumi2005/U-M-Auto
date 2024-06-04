@@ -10151,8 +10151,8 @@
 
 
 .polygon-overlay {
-    background-color: red; /* Set the desired color */
-    opacity: 0.5; /* Adjust the opacity as needed */
+    background-color: red;
+    opacity: 0.5; 
     pointer-events: none; /* Overlay is not clickable */
   }
   
@@ -10227,7 +10227,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    height: 100px; /* Set a fixed height or adjust as needed */
+    height: 100px; 
 }
 
 .footer {
@@ -10239,14 +10239,6 @@
 .navbar-nav .nav-link:hover {
     color: #ffffff; /* Change the text color on hover */
 }
-
-
-
-/* Style the validation popup message */
-
-
-/* Style the validation popup */
-
 
 /* Style the validation popup message */
 #password:invalid::after {
@@ -10295,8 +10287,8 @@
 }
 
 .custom-divider {
-  background-color: #888; /* Your desired background color */
-  height: 1px; /* Adjust the height as needed */
+  background-color: #888; 
+  height: 1px; 
   position:relative;
   top:50%;
 }
@@ -10403,7 +10395,7 @@ input:-webkit-autofill:active{
 
 .menu {
   position: absolute;
-  top: 50px; /* Adjust this value as needed */
+  top: 50px; 
   left: 0;
   width: 200px;
   background-color: #fff;
@@ -10468,8 +10460,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 
 #repairForm .form-check-input[type="checkbox"] {
-    transform: scale(1.5); /* Adjust the scale as needed */
-    margin-right: 10px; /* Adjust the margin as needed */
+    transform: scale(1.5); /* Adjust the scale as needed here */
+    margin-right: 10px; /* Adjust the margin as needed here */
     
 }
 

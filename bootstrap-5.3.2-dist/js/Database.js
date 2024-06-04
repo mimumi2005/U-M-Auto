@@ -47,6 +47,7 @@ cron.schedule('0 0 * * *', () => {
   updateTenureForAllWorkers();
 });
 
+// Function for updating tenure automatically
 function updateTenureForAllWorkers() {
   // Query all workers from the database
   const getAllWorkersQuery = 'SELECT * FROM workers';
@@ -152,6 +153,8 @@ function loginUser(username, password, connection, res) {
   });
 }
 
+
+// Function for creating a new account
 app.post("/signup", (req, res) => {
   const { name, email, username, password } = req.body;
 
@@ -194,13 +197,10 @@ app.post("/signup", (req, res) => {
 });
 });
 
-
+// Function for making new appointments
 app.post("/make-appointment",(req,res)=>{
   const {idUser, StartDate, EndDateProjection, ProjectInfo} = req.body;
   console.log(req.body);
-  //all kinds of checks
-
-  //Continue with project creation
   const sql_query = 'INSERT INTO projects (idUser, StartDate, EndDateProjection, ProjectInfo) VALUES (?, ?, ?, ?)';
   connection.query(sql_query, [idUser, StartDate, EndDateProjection, ProjectInfo], (err, result) => {
     if(err){
@@ -211,11 +211,14 @@ app.post("/make-appointment",(req,res)=>{
   })
 });
 
+// Post for logging in function
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   loginUser(username, password, connection, res); // Call loginUser function with parameters
 });
 
+
+// Post for logging out function
 app.post("/log-out", async (req, res) => {
   const { UUID } = req.body;
 
@@ -232,7 +235,7 @@ app.post("/log-out", async (req, res) => {
 });
 
 
-
+// Function for users to change their password
 app.post("/change-password", (req, res) => {
   const { currentPassword, newPassword, UUID } = req.body;
   
@@ -371,7 +374,7 @@ app.post("/give-admin", (req, res) => {
 });
 
 
-// Remove admin to a user
+// Remove admin from a user
 app.post("/remove-admin", (req, res) => {
   const {idUser} = req.body;
   console.log("Removing admin from: ", idUser);
@@ -395,6 +398,8 @@ app.post("/remove-worker", (req, res) => {
     res.send(result);
   });
 });
+
+// Function to add a new worker
 app.post("/register-worker", (req, res) => {
   const { email, workerType, isAdmin } = req.body;
   console.log("Making user:", email, "as worker");
@@ -447,7 +452,7 @@ app.post("/register-worker", (req, res) => {
           connection.query(insertAdminQuery, [idUser], (adminErr, adminResult) => {
             if (adminErr) {
               console.error('Error inserting administrator data:', adminErr);
-              // Handle error if needed
+              
             }
             console.log('User added to Administrators table');
           });
@@ -477,6 +482,7 @@ app.post("/user-by-ID", (req, res) => {
     res.send(result);
   });
 });
+
 
 // Fetch active users
 app.get("/active-users", (req, res) => {
@@ -515,25 +521,9 @@ app.get("/active-users", (req, res) => {
 });
 
 
-// Fetch all projects
-app.get("/all-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects';
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
 
-app.get("/active-projects", (req, res) => {
-  const curdate = new Date();
-  const isoStringDate = curdate.toISOString();
-  const sql_query = `SELECT * FROM projects WHERE '${isoStringDate}' BETWEEN StartDate AND EndDateProjection`;
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
 
+// Function to retrieve project statistics
 
 app.get("/project-statistics", (req, res) => {
   const sql_query = `
@@ -558,17 +548,9 @@ app.get("/project-statistics", (req, res) => {
   });
 });
 
-app.get("/todays-projects", (req, res) => {
-  const curdate = new Date();
-  const isoStringDate = curdate.toISOString();
-  const sql_query = `SELECT * FROM projects WHERE  EndDateProjection = '${isoStringDate}'`;
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-}); 
 
 
+// Function to retrieve statistics for users
 app.get("/user-statistics", (req, res) => {
   const sql_query = `
     SELECT 
@@ -593,6 +575,7 @@ app.get("/user-statistics", (req, res) => {
   });
 });
 
+// Function to get projects to be finished today
 app.get("/todays-projects", (req, res) => {
   const curdate = new Date();
   const isoStringDate = curdate.toISOString();
@@ -604,14 +587,39 @@ app.get("/todays-projects", (req, res) => {
 }); 
 
 
-// Fetch active projects (endDate time is not yet reached)
-app.get("/active-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects WHERE EndDateProjection > CURRENT_TIMESTAMP() OR `Delayed` = 1';
+// Fetch all projects
+app.get("/all-projects", (req, res) => {
+  const sql_query = 'SELECT * FROM projects';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     res.send(result);
   });
 });
+
+// Fetch active projects (endDate time is not yet reached)
+app.get("/active-projects", (req, res) => {
+  const curdate = new Date();
+  const isoStringDate = curdate.toISOString();
+  const sql_query = `SELECT * FROM projects WHERE '${isoStringDate}' BETWEEN StartDate AND EndDateProjection`;
+  connection.query(sql_query, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+
+// Fetch delayed projects 
+app.get("/delayed-projects", (req, res) => {
+  const sql_query = 'SELECT * FROM projects WHERE `Delayed` = 1';
+  connection.query(sql_query, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
+
 // Fetch all users
 app.post("/project-by-ID", (req, res) => {
   const {idProjects} = req.body;
@@ -636,16 +644,8 @@ app.post("/project-by-user-ID", (req, res) => {
 });
 
 
-// Fetch active projects (endDate time is not yet reached)
-app.get("/delayed-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects WHERE `Delayed` = 1';
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send(result);
-  });
-});
 
+// Function to change the end date of project (also adds delayed to it)
 app.post("/change-end-date", (req, res) => {
   const { EndDate, idProjects } = req.body;
   // Update the EndDate of the project in the database
@@ -669,6 +669,7 @@ app.post("/change-end-date", (req, res) => {
   });
 });
 
+// Function to remove project from being delayed (finish the project)
 app.post("/remove-delayed", (req, res) => {
   const { idProjects } = req.body;
   // Update the EndDate of the project in the database
@@ -692,16 +693,8 @@ app.post("/remove-delayed", (req, res) => {
   });
 });
 
-// Disconnect from the database
-app.get("/disconnect", (req, res) => {
-  connection.end((err) => {
-    if (err) throw err;
-    console.log("DATABASE DISCONNECTED");
-    res.send("Database disconnected");
-  });
-});
 
-
+// Function to check user information
 app.post("/user-info", (req, res) => {
   // Fetch user information based on the logged-in user
   const {UUID} = req.body;
@@ -738,6 +731,7 @@ app.post("/user-info", (req, res) => {
 });
 
 
+// Function to find similar users
 app.post("/similar-users", (req, res) => {
   const { emailPattern } = req.body;
   console.log('emailpattern:', emailPattern);
@@ -898,3 +892,12 @@ function checkWorkerStatus(userid, connection, callback) {
     }
   });
 }
+
+// Disconnect from the database
+app.get("/disconnect", (req, res) => {
+  connection.end((err) => {
+    if (err) throw err;
+    console.log("DATABASE DISCONNECTED");
+    res.send("Database disconnected");
+  });
+});

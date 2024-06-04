@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Add this line to the <head> section of your HTML file -->
     <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
     <!-- Local bootstrap.js-->
     <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
     <!-- Vector library for car painting UI-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script> 
-
     <!-- Global bootstrap js-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -156,7 +154,7 @@
             }
         }
     
-        // Function to toggle all overlays
+        // Function to activate all overlays
         window.ActivateAllOverlays = function() {
                     for (let i = 0; i < flags.length; i++) {
                         if (i >= 0 && i < flags.length) {
@@ -167,7 +165,7 @@
                     }
                 }
             
-                // Function to toggle all overlays
+        // Function to deactivate all overlays
         window.DeactivateAllOverlays = function() {
                     for (let i = 0; i < flags.length; i++) {
                         if (i >= 0 && i < flags.length) {
@@ -181,8 +179,8 @@
         drawOverlay();
     }
     // Store the original image dimensions
-    const originalWidth = 707; // Set this to the actual width of your image
-    const originalHeight = 500; // Set this to the actual height of your image
+    const originalWidth = 707; // actual width of your image
+    const originalHeight = 500; // actual height of your image
 
     // Get the image and map elements
     const image = document.getElementById('carImage');
@@ -236,26 +234,6 @@
     }
 }
 
-// Attach mouseover event listener to each area
-const areaTags = map.getElementsByTagName('area');
-for (let i = 0; i < areaTags.length; i++) {
-    areaTags[i].addEventListener('mouseover', function() {
-        handleAreaMouseOver(i);
-    });
-}
-
-// Function to handle mouseout event and reset overlay
-function handleAreaMouseOut() {
-    const areaElements = document.querySelectorAll('area');
-    areaElements.forEach((area) => {
-        area.style.fill = ''; // Reset all areas on mouseout
-    });
-}
-
-// Attach mouseout event listener to each area
-for (let i = 0; i < areaTags.length; i++) {
-    areaTags[i].addEventListener('mouseout', handleAreaMouseOut);
-}
 </script>
 </body>
 </html>

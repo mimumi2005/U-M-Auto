@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Add this line to the <head> section of your HTML file -->
     <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
     <!-- Local bootstrap.js-->
     <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
@@ -137,13 +136,11 @@
         })
         .then(data => {
             console.log('Appointment created successfully:', data);
-            // Optionally, you can display a success message to the user
             showCustomAppointmentAlert();
 
         })
         .catch(error => {
             console.error('Error creating appointment:', error);
-            // Optionally, you can display an error message to the user
         });
           } else {
             console.error('Error fetching user information:', data.message);
@@ -237,10 +234,6 @@
             // Logic to handle time selection
             console.log('Selected time:', time);
         }
-
-        // Add your calendar rendering logic here
-
-
 
     /* Scripts for calendar */
     const daysOfWeekElement = document.getElementById('daysOfWeek');
@@ -336,8 +329,6 @@
    
 
     function openTimeMenuForDay(day) {
-        
-        // Replace this function with your logic to open a menu of times for the selected day
             // Add the active class to the clicked button
             event.target.classList.add('active');
             
@@ -372,9 +363,6 @@
     }
 
     /* Scripts for showing time choosing options */
-
-
-    
     function selectTime(hour) {
         if (selectedDate === null) {
             // If no date is selected, show an alert
