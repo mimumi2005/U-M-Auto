@@ -20,13 +20,13 @@
                 <form id="appointmentForm">
                     <div class="form-group">
                         <label for="repairType">Type of Repair</label>
-                        <select class="form-control" id="repairType" name="repairType" required onchange="changeTimeContainer()">
-                            <option value="1">Oil change</option>
-                            <option value="120">Paint job</option>
-                            <option value="4">Overall checkup or tuning</option>
-                            <option value="4">Custom parts</option>
-                            <option value="1">Project discussion</option>
-                        </select>
+                            <select class="form-control" id="repairType" name="repairType" required onchange="changeTimeContainer()">
+                                <option tabindex="1" value="1">Oil change</option>
+                                <option tabindex="2" value="120">Paint job</option>
+                                <option tabindex="3" value="4">Overall checkup or tuning</option>
+                                <option tabindex="4" value="4">Custom parts</option>
+                                <option tabindex="5" value="1">Project discussion</option>
+                            </select>
                     </div>
                     <label for="repairType" class="text-white">Choose a day</label>
                     <div class="container text-dark">
@@ -35,7 +35,7 @@
                                 <div class="card">
                                     <div class="card-header row">
                                         <button id="prevMonth" class="btn btn-outline-secondary m-auto">&lt;</button>
-                                        <h3 id="monthYear" class="m-auto"></h3>
+                                        <h3 tabindex=0 id="monthYear" class="m-auto"></h3>
                                         <button id="nextMonth" class="btn btn-outline-secondary m-auto">&gt;</button>
                                     </div>
                                     <div class="card-body">
@@ -298,6 +298,18 @@
                         selectedDate = null;
                         openTimeMenuForDay(dayOfMonth);
                     });
+                    // Add enter event listener to each day cell
+                    dayCell.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter') {
+                        // Check if the selected day is in the past
+                        document.querySelectorAll('.day').forEach(button => {
+                            button.classList.remove('active');
+                        });
+                        
+                        selectedDate = null;
+                        openTimeMenuForDay(dayOfMonth);
+                }});
+                    dayCell.setAttribute('tabindex', '0');
                 }
                 currentDay++;
             }
@@ -354,7 +366,7 @@
                 const endDate = new Date(selectedDate);
                 endDate.setDate(endDate.getDate() + 5); // Add 5 days
                 selectedDateRangeInfo.innerHTML = `
-                        <div class="mt-4 ">
+                        <div tabindex="0" class="mt-4  ">
                             Selected Date Range: ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}
                         </div>
                             `;
@@ -382,7 +394,7 @@
         });
 
         // Construct the HTML string for the selected time paragraph
-        const selectedTimeHTML = `<p class="mt-2 selected-time">Selected Date & Time: ${selectedDate.toLocaleDateString()} ${selectedDateTime.getHours().toString().padStart(2, '0')}:${selectedDateTime.getMinutes().toString().padStart(2, '0')}</p>`;
+        const selectedTimeHTML = `<p tabindex="0"  class="mt-2 selected-time">Selected Date & Time: ${selectedDate.toLocaleDateString()} ${selectedDateTime.getHours().toString().padStart(2, '0')}:${selectedDateTime.getMinutes().toString().padStart(2, '0')}</p>`;
         
         // Add the selected time paragraph to the timeContainer
         timeContainer.insertAdjacentHTML('beforeend', selectedTimeHTML);
@@ -402,6 +414,14 @@
         renderCalendar();
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const repairTypeSelect = document.getElementById("repairType");
+
+        repairTypeSelect.addEventListener("focus", function () {
+            // Open the options
+            this.click();
+        });
+    });
 
     // Initial render
     renderCalendar();

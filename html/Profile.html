@@ -19,11 +19,11 @@
   </div>
     <section class="container col-lg-3 col-md-6 mt-5 text-white bg-light" >
         <div id="profile-info" class="mb-4 m-2" >
-          <h2 class="mb-3 ">User Profile</h2>
-            <p id="name" class="lead">Name: John Doe</p>
-            <p id="username" class="lead">Username: johndoe</p>
-            <p id="email" class="lead">Email: johndoe@example.com</p>
-            <p class="lead"> Password: ********* <a type="button" class="btn btn-outline-secondary text-white " onclick="ShowPasswordReset()">Change Password</a></p>
+          <h2 tabindex="0" class="mb-3 ">User Profile</h2>
+            <p tabindex="0" id="name" class="lead">Name: John Doe</p>
+            <p tabindex="0" id="username" class="lead">Username: johndoe</p>
+            <p tabindex="0" id="email" class="lead">Email: johndoe@example.com</p>
+            <p class="lead"> Password: ********* <a type="button" class="btn btn-outline-secondary text-white " onclick="ShowPasswordReset()" tabindex="0" id="change-password-button">Change Password</a></p>
         </div>
                   <form id="change-password-form" class="nodisplay">
                       <h3>Change your password<br></h1>  
@@ -39,7 +39,7 @@
                         <div id="confirm-new-password-red" class="row ml-0  mb-1" for="password">Confirm new password<span class="ml-1 nodisplay" id="NoMatchPassword" style=" color:rgb(255, 8, 8)"><b>- Passwords dont match</b></span><span class="ml-1 nodisplay" id="EmptyConfirmPassword" style="color:rgb(255, 0, 0)"><b>- Enter a password</b></span></div>
                         <input type="password" class="form-control " id="confirm-new-password" placeholder="Enter your new password again">
                     </div>
-                      <div class="row"><button id="submitbutton" type="submit" class="btn btn-outline-secondary text-white mb-3 ml-3">Change Password</button> <a class="btn btn-outline-danger mb-3  ml-auto mr-3" onclick="HidePasswordReset()">Cancel</a>
+                      <div class="row"><button id="submitbutton" type="submit" class="btn btn-outline-secondary text-white mb-3 ml-3">Change Password</button> <a class="btn btn-outline-danger mb-3  ml-auto mr-3" onclick="HidePasswordReset()" id="cancel-password-reset-button" tabindex="0">Cancel</a>
                       <br>
                   </form>
 
@@ -251,5 +251,20 @@
       document.getElementById('confirm-new-password').classList.remove('form-control-incorrect');
     });
 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const cancelchangePasswordButton = document.getElementById("cancel-password-reset-button");
+        const changePasswordButton = document.getElementById("change-password-button");
+        cancelchangePasswordButton.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+              HidePasswordReset();
+            }
+        });
+        changePasswordButton.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                ShowPasswordReset();
+            }
+        });
+    });
   </script>
   
