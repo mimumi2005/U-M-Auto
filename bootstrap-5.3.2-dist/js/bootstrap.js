@@ -4873,8 +4873,12 @@ function ViewUserStatistics(){
 
 // Function to show a singular account by account ID
 function searchUserByID(idUser){
-  document.getElementById('userIDInput').value = '';
-  document.getElementById('InvalidID').classList.add('nodisplay');
+  if(document.getElementById('userIDInput')){
+    document.getElementById('userIDInput').value = '';
+  }
+  if(document.getElementById('InvalidID')){
+    document.getElementById('InvalidID').classList.add('nodisplay');
+  }
   console.log("Viewing user by ID:",idUser);
   // Make a fetch request to your backend to retrieve all user data
   fetch(window.location.origin + ':5001'+ '/user-by-ID', {
@@ -5100,8 +5104,12 @@ function WorkerviewDelayedProjects(){
 
 // Function that displays projects by ID
 function searchProjectByID(idProjects){
-  document.getElementById('ProjectIDInput').value = '';
-  document.getElementById('InvalidProjectID').classList.add('nodisplay');
+  if(document.getElementById('ProjectIDInput')){
+    document.getElementById('ProjectIDInput').value = '';
+  }
+  if(document.getElementById('InvalidProjectID')){
+    document.getElementById('InvalidProjectID').classList.add('nodisplay');
+  }
   console.log("Viewing project by ID:",idProjects);
   // Make a fetch request to your backend to retrieve all user data
   fetch(window.location.origin + ':5001'+ '/project-by-ID', {
