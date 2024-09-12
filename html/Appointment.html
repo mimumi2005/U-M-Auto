@@ -73,6 +73,9 @@
         let selectedDateTime = null; // Variable to store the selected datetime
         let selectedDate = null; // Variable to store the selected date
         let user = null;
+        let previousSelectedButtons = []; // To keep track of the previously selected buttons
+        let previousButtonStates = []; // To keep track of the original classes of the previously selected buttons
+
         const loggedUser = JSON.parse(getCookie("userData"));
         console.log("Logged: ", loggedUser);
         document.getElementById('appointmentForm').addEventListener('submit', function (event) {
@@ -158,18 +161,16 @@
         });
 
         // Function to generate buttons based on availability
-        function generateTimeButtons(hours,FreeHoursArray, RepairType4 = false) {
+        function generateTimeButtons(hours, FreeHoursArray, RepairType4 = false) {
             FreeHours = FreeHoursArray;
             return hours.map((hour, index) => {
                 const hourIndex = hour - 9; // Calculate index in freeHoursArray
-                console.log(hourIndex);
-                console.log(FreeHours);
                 if (FreeHours[hourIndex]) { // Check if hour is available
-                    if(RepairType4){
-                        return `<button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour+4}:00</button>`;
+                    if (RepairType4) {
+                        return `<button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour + 4}:00</button>`;
                     }
-                    else{
-                        return `<button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour+1}:00</button>`;
+                    else {
+                        return `<button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour + 1}:00</button>`;
                     }
                 } else {
                     return ''; // Return empty string if hour is not available
@@ -180,7 +181,6 @@
         function changeTimeContainer(Array) {
             GetCalendarInfo();
             let FreeHours = Array;
-            selectedDate = null;
             const repairType = document.getElementById('repairType').value;
             let timeContainerHTML = '';
             switch (repairType) {
@@ -208,7 +208,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="m-auto">
-                                        ${generateTimeButtons([9, 14], FreeHours,true)}
+                                        ${generateTimeButtons([9, 14], FreeHours, true)}
                                     </div>
                                 </div>
                             </div>
@@ -412,25 +412,35 @@
                         else {
                             // Add click event listener to each day cell
                             dayCell.addEventListener('click', () => {
+                                // Remove active from previously selected
                                 document.querySelectorAll('.day').forEach(button => {
+                                    const repairTypeSelect = document.getElementById('repairType');
+                                    const repairTypeValue = repairTypeSelect.value;
+                                    if ((repairTypeValue == '1230')) {
+                                        GetCalendarInfo();
+                                    }
                                     button.classList.remove('active');
                                 });
+                                console.log(document.getElementById('time-container'));
                                 selectedDate = null;
                                 const FreeHourArray = getAvailableHourlySlots(dayOfMonth, TakenDateTimes);
-                                console.log(FreeHourArray);
-                                openTimeMenuForDay(dayOfMonth, FreeHourArray);
+                                openTimeMenuForDay(event, dayOfMonth, FreeHourArray);
+
                             });
                             // Add enter event listener to each day cell
                             dayCell.addEventListener('keydown', function (event) {
                                 if (event.key === 'Enter') {
-                                    // Check if the selected day is in the past
+                                    // Remove active from previously selected
                                     document.querySelectorAll('.day').forEach(button => {
+
                                         button.classList.remove('active');
+
+
                                     });
 
                                     selectedDate = null;
                                     const FreeHourArray = getAvailableHourlySlots(dayOfMonth, takenDateTimes);
-                                    openTimeMenuForDay(dayOfMonth, FreeHourArray);
+                                    openTimeMenuForDay(event, dayOfMonth, FreeHourArray);
                                 }
                             });
                             dayCell.setAttribute('tabindex', '0');
@@ -464,24 +474,62 @@
 
 
 
-        function openTimeMenuForDay(day, array) {
+        function openTimeMenuForDay(event, day, array) {
+            const clickedButton = event.target; // Store the clicked button
             // Add the active class to the clicked button
-            event.target.classList.add('active');
-            availableTime = array;
+
+            let availableTime = array;
             // Store the selected date
             selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
             console.log('Selected date:', selectedDate);
+
+
+            // Revert the state of previously selected buttons
+            if (previousSelectedButtons.length > 0) {
+                previousSelectedButtons.forEach((button, index) => {
+                    button.className = previousButtonStates[index].join(' '); // Revert to original classes
+                });
+            }
+
+
+            // Clear the previous selections
+            previousSelectedButtons = [];
+            previousButtonStates = [];
+
+            // Add the current button to the selection list
+            previousSelectedButtons.push(clickedButton);
+            previousButtonStates.push(Array.from(clickedButton.classList)); // Store original classes
+
+            // Add the active class to the clicked button
+            clickedButton.classList.add('active');
+
+
+
+            // Store the selected date
+            selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            console.log('Selected date:', selectedDate);
+
             // If repair type is '120', select the next five days too
             const repairTypeSelect = document.getElementById('repairType');
             const repairTypeValue = repairTypeSelect.value;
             if (repairTypeValue === '120') {
                 // Get the index of the clicked day button
                 const dayButtons = document.querySelectorAll('.day');
-                const clickedDayIndex = Array.from(dayButtons).indexOf(event.target);
+                // Get the index of the clicked day button
+                const clickedDayIndex = Array.from(dayButtons).indexOf(clickedButton);
+
                 // Select the next five days
-                for (let i = 0; i < 5; i++) {
+                for (let i = 1; i < 5; i++) {
                     if (clickedDayIndex + i < dayButtons.length) {
-                        dayButtons[clickedDayIndex + i].classList.add('active');
+                        const nextButton = dayButtons[clickedDayIndex + i];
+
+                        // Store the original state of the next button
+                        previousSelectedButtons.push(nextButton);
+                        previousButtonStates.push(Array.from(nextButton.classList));
+
+                        // Update the state of the next button
+                        nextButton.classList.remove('disabled', 'weekend', 'prevday');
+                        nextButton.classList.add('active', 'btn-outline-secondary');
                     }
                 }
                 // Show information about the selected date range
@@ -490,13 +538,17 @@
                     const endDate = new Date(selectedDate);
                     endDate.setDate(endDate.getDate() + 5); // Add 5 days
                     selectedDateRangeInfo.innerHTML = `
-                        <div tabindex="0" class="mt-4  ">
-                            Selected Date Range: ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}
-                        </div>
-                            `;
+                <div tabindex="0" class="mt-4">
+                    Selected Date Range: ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}
+                </div>
+            `;
                 }
             }
-            changeTimeContainer(availableTime);
+            else {
+                clickedButton.classList.add( 'btn-outline-secondary');
+                changeTimeContainer(availableTime);
+            }
+
         }
 
         /* Scripts for showing time choosing options */
@@ -553,7 +605,7 @@
 
         // Initial render
         GetCalendarInfo();
-        changeTimeContainer([false]*9); // Initial run of TimeContainer creation
+        changeTimeContainer([false] * 9); // Initial run of TimeContainer creation
     </script>
 
 </body>
