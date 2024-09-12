@@ -350,7 +350,17 @@ app.post("/all-workers", (req, res) => {
   });
 });
 
-
+// Fetch all projects
+app.post("/all-project-dates", (req, res) => {
+  const MonthSelected = req.body.MonthDisplay;
+  console.log("Month:", MonthSelected);
+  const sql_query = 'SELECT StartDate, EndDateProjection FROM projects WHERE month(StartDate) = ? OR month(EndDateProjection) = ?';
+  connection.query(sql_query, [MonthSelected, MonthSelected],(err, result) => {
+    console.log('Outcome', result);
+    if (err) throw err;
+    res.send(result);
+  });
+});
 
 // Fetch all users
 app.get("/all-users", (req, res) => {

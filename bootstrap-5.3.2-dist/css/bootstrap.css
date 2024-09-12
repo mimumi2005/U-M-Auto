@@ -10389,6 +10389,10 @@ input:-webkit-autofill:active{
   background-color:#bababa
 }
 
+.takenDay{
+  background-color:#bababa
+}
+
 .outline {
   border: 2px solid #000;
 }
