@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label for="repairType">Type of Repair</label>
                         <select class="form-control" id="repairType" name="repairType" required
-                            onchange="changeTimeContainer([false]*9)">
+                            onchange=" changeTimeContainer(new Array(9).fill(false));">
                             <option tabindex="1" value="1">Oil change</option>
                             <option tabindex="2" value="120">Paint job</option>
                             <option tabindex="3" value="4">Overall checkup or tuning</option>
@@ -161,19 +161,31 @@
         });
 
         // Function to generate buttons based on availability
-        function generateTimeButtons(hours, FreeHoursArray, RepairType4 = false) {
+        function generateTimeButtons(hours, FreeHoursArray, repairtype) {
+            RepairType = repairtype
             FreeHours = FreeHoursArray;
+
+            // Check if all values in FreeHours are false
+            const allHoursTaken = FreeHours.every(hour => !hour); // True if all are false
+
+            if (allHoursTaken) {
+                return ''; // Return empty string if all hours are taken
+            }
+
             return hours.map((hour, index) => {
                 const hourIndex = hour - 9; // Calculate index in freeHoursArray
                 if (FreeHours[hourIndex]) { // Check if hour is available
-                    if (RepairType4) {
-                        return `<button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour + 4}:00</button>`;
-                    }
-                    else {
-                        return `<button type="button" class="btn-sm btn-outline-secondary time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour + 1}:00</button>`;
+                    if (RepairType == "long") {
+                        return `<button type="button" class="btn-sm btn-outline-light time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour + 4}:00</button>`;
+                    }else {
+                        return `<button type="button" class="btn-sm btn-outline-light time-button mb-1" id="${hour}" onclick="selectTime('${hour}')">${hour}:00-${hour + 1}:00</button>`;
                     }
                 } else {
-                    return ''; // Return empty string if hour is not available
+                    if (FreeHours.every(hour => true)) {
+                        return `<button type="button" class="btn-sm disabled btn-outline-dark  mb-1">UNAVAILABLE</button>`;
+                    }
+
+                    else { return '' }// Return empty string if hour is not available
                 }
             }).join('');
         }
@@ -191,7 +203,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="m-auto">
-                                        ${generateTimeButtons([9, 10, 11, 12, 13, 14, 15, 16, 17], FreeHours)}
+                                        ${generateTimeButtons([9, 10, 11, 12, 13, 14, 15, 16, 17], FreeHours, "short")}
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +220,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="m-auto">
-                                        ${generateTimeButtons([9, 14], FreeHours, true)}
+                                        ${generateTimeButtons([9, 14], FreeHours, "long")}
                                     </div>
                                 </div>
                             </div>
@@ -545,7 +557,7 @@
                 }
             }
             else {
-                clickedButton.classList.add( 'btn-outline-secondary');
+                clickedButton.classList.add('btn-outline-secondary');
                 changeTimeContainer(availableTime);
             }
 
@@ -605,7 +617,7 @@
 
         // Initial render
         GetCalendarInfo();
-        changeTimeContainer([false] * 9); // Initial run of TimeContainer creation
+        changeTimeContainer(new Array(9).fill(false)); // Initial run of TimeContainer creation with an array filled with "false", to not show any time choices until user clicks on a day
     </script>
 
 </body>
