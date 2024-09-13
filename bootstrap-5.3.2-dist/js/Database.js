@@ -589,8 +589,8 @@ app.get("/user-statistics", (req, res) => {
 
  //Function to get active projects
 app.get("/active-projects", (req, res) => {
-  const curdate = new Date().getDay();
-  const sql_query = `SELECT * FROM projects WHERE  'Delayed' != '1'`;
+  const curdate = new Date().toISOString();
+  const sql_query = `SELECT * FROM projects WHERE '${curdate}' < StartDate OR \`Delayed\` = true `;
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     res.send(result);
@@ -598,14 +598,6 @@ app.get("/active-projects", (req, res) => {
 }); 
 
 
-// Fetch all projects
-app.get("/all-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects';
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
 
 // Fetch todays (has started, hasnt ended) projects
 app.get("/todays-projects", (req, res) => {
@@ -630,11 +622,22 @@ app.get("/todays-projects", (req, res) => {
   });
 });
 
+// Fetch delayed projects 
+app.get("/finished-projects", (req, res) => {
+  const currentDate = new Date();
+  const isoCurrentDate = currentDate.toISOString();
+  const sql_query = `SELECT * FROM projects WHERE \`Delayed\` = false AND  '${isoCurrentDate}' > EndDateProjection`;
+  connection.query(sql_query, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
 
 
 // Fetch delayed projects 
 app.get("/delayed-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects WHERE `Delayed` = 1';
+  const sql_query = 'SELECT * FROM projects WHERE \`Delayed\` = true';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -672,7 +675,7 @@ app.post("/project-by-user-ID", (req, res) => {
 app.post("/change-end-date", (req, res) => {
   const { EndDate, idProjects } = req.body;
   // Update the EndDate of the project in the database
-  const updateQuery = 'UPDATE projects SET EndDateProjection = ?, `Delayed`= true WHERE idProjects = ?';
+  const updateQuery = 'UPDATE projects SET EndDateProjection = ?, \`Delayed\`= true WHERE idProjects = ?';
   connection.query(updateQuery, [EndDate, idProjects], (err, result) => {
     if (err) {
       console.error('Error updating end date:', err);
@@ -696,7 +699,7 @@ app.post("/change-end-date", (req, res) => {
 app.post("/remove-delayed", (req, res) => {
   const { idProjects } = req.body;
   // Update the EndDate of the project in the database
-  const updateQuery = 'UPDATE projects SET  `Delayed`= false WHERE idProjects = ?';
+  const updateQuery = 'UPDATE projects SET  \`Delayed\`= false WHERE idProjects = ?';
   connection.query(updateQuery, [idProjects], (err, result) => {
     if (err) {
       console.error('Error updating end date:', err);
@@ -880,6 +883,31 @@ app.delete('/project-delete/:ProjectID', async (req, res) => {
     res.status(200).json({ message: 'Project deleted successfully' });
   });
 });
+
+app.delete('/delete-old-projects', (req, res) => {
+  // Calculate the date for "7 days ago"
+  const oneDayAgo = new Date();
+  oneDayAgo.setDate(oneDayAgo.getDate() - 7);
+
+  // Format the date to match MySQL's date format (YYYY-MM-DD)
+  const formattedDate = oneDayAgo.toISOString().slice(0, 19).replace('T', ' ');
+
+  // SQL query to delete projects where EndDateProjection is more than 1 day ago
+  const sqlQuery = `DELETE FROM projects WHERE EndDateProjection < ? AND \`Delayed\` = false `;
+
+  // Execute the SQL query
+  connection.query(sqlQuery, [formattedDate], (err, result) => {
+    if (err) {
+      console.error('Error deleting old projects:', err);
+      res.status(500).send('Error deleting old projects.');
+      return;
+    }
+
+    console.log('Number of projects deleted:', result.affectedRows);
+    res.send(`Deleted ${result.affectedRows} projects with EndDateProjection more than 1 day ago.`);
+  });
+});
+
 
 function checkAdminStatus(userid, connection, callback) {
   const query = 'SELECT * FROM administrators WHERE idUser = ?';

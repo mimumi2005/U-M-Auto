@@ -2,69 +2,67 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
-    <!-- Local bootstrap.js-->
-    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
-    <!-- Global bootstrap js-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Statistics display js-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+  <!-- Local bootstrap.js-->
+  <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+  <!-- Global bootstrap js-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Statistics display js-->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <style>
-    /* Center the text inside the chart */
-    .chart-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-    }
-  </style>
+  /* Center the text inside the chart */
+  .chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+</style>
+
 <body>
-    <div id="customRegisterWorker" class="custom-alert nodisplay">
-        <h2>Succesfully registered worker</h2>
-    </div>
-    <div id="customAdminPerms" class="custom-alert nodisplay">
-        <h2>Succesfully gave administrator permissions</h2>
-    </div>
-    <section class="container col-md-3 mt-5 bg-light text-white" id="statistic-view">
-        
-        <div class="card-body">
-            <h2 class="card-title text-center">Statistics</h2>
-            <div class="card-text row">
-                <div class="row-cols-md-5 m-auto">
-                    
-                <div class="col mt-2 ">
-                    <button class="btn btn-outline-secondary  text-white mt-3 " style="width:95%" onclick="ViewProjectStatistics()">Project statistics</button>
-                    <button class="btn btn-outline-secondary  text-white mt-3 " style="width:95%" onclick="ViewUserStatistics()">User statistics</button>
-                </div>
+  <div id="customRegisterWorker" class="custom-alert nodisplay">
+    <h2>Succesfully registered worker</h2>
+  </div>
+  <div id="customAdminPerms" class="custom-alert nodisplay">
+    <h2>Succesfully gave administrator permissions</h2>
+  </div>
 
-            
-        </div>
-        
-    </section>
-    <div id="UserStatisticsContainer" class="container col-lg-6 mt-4 bg-light nodisplay">
+  <div class="container-fluid">
+    <div class="row justify-content-center mt-5" style="gap: 20px;"> <!-- Added 'justify-content-center' and 'gap' for better alignment and spacing -->
+      <!-- User Statistics Container -->
+      <div id="UserStatisticsContainer" class="col-lg-5 bg-light p-4" style="min-width: 300px;">
         <!-- User data will be dynamically added here -->
-        <div id="UserStatisticsContainer">
         <div class="chart-container">
-            <canvas id="userStatisticsChart"></canvas>
-            <!-- User cards will be dynamically added here -->
-            </div>
+          <canvas id="userStatisticsChart"></canvas>
+          <!-- User cards will be dynamically added here -->
         </div>
       </div>
+  
+      <!-- Project Statistics Container -->
+      <div id="ProjectStatisticsContainer" class="col-lg-5 bg-light p-4" style="min-width: 300px;">
+        <div class="chart-container">
+          <canvas id="projectStatisticsChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
 
-    
-      <div id="ProjectStatisticsContainer" class=" container col-lg-6 mt-4 bg-light nodisplay">
-        <div id="ProjectStatisticsContainer">
-          <div class="chart-container">
-            <canvas id="projectStatisticsChart"></canvas>
-          </div>
-        </div>
-      </div>
-      <script src="path/to/your/javascript/file.js"></script>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    ViewProjectStatistics();
+    ViewUserStatistics();
+  });
+
+</script>
+
 </html>
