@@ -353,9 +353,11 @@ app.post("/all-workers", (req, res) => {
 // Fetch all projects
 app.post("/all-project-dates", (req, res) => {
   const MonthSelected = req.body.MonthDisplay;
+  const YearSelected = req.body.YearDisplay;
   console.log("Month:", MonthSelected);
-  const sql_query = 'SELECT StartDate, EndDateProjection FROM projects WHERE month(StartDate) = ? OR month(EndDateProjection) = ?';
-  connection.query(sql_query, [MonthSelected, MonthSelected],(err, result) => {
+  console.log("Year:", YearSelected);
+  const sql_query = 'SELECT StartDate, EndDateProjection FROM projects WHERE (month(StartDate) = ? OR month(EndDateProjection) = ?) AND (year(StartDate) = ? OR year(EndDateProjection) = ?)';
+  connection.query(sql_query, [MonthSelected, MonthSelected, YearSelected, YearSelected],(err, result) => {
     console.log('Outcome', result);
     if (err) throw err;
     res.send(result);
@@ -585,11 +587,10 @@ app.get("/user-statistics", (req, res) => {
   });
 });
 
-// Function to get projects to be finished today
-app.get("/todays-projects", (req, res) => {
-  const curdate = new Date();
-  const isoStringDate = curdate.toISOString();
-  const sql_query = `SELECT * FROM projects WHERE  EndDateProjection = '${isoStringDate}'`;
+ //Function to get active projects
+app.get("/active-projects", (req, res) => {
+  const curdate = new Date().getDay();
+  const sql_query = `SELECT * FROM projects WHERE  'Delayed' != '1'`;
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     res.send(result);
@@ -606,11 +607,23 @@ app.get("/all-projects", (req, res) => {
   });
 });
 
-// Fetch active projects (endDate time is not yet reached)
-app.get("/active-projects", (req, res) => {
-  const curdate = new Date();
-  const isoStringDate = curdate.toISOString();
-  const sql_query = `SELECT * FROM projects WHERE '${isoStringDate}' BETWEEN StartDate AND EndDateProjection`;
+// Fetch todays (has started, hasnt ended) projects
+app.get("/todays-projects", (req, res) => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; // Months are 0-based in JavaScript
+  const currentDay = currentDate.getDate();
+
+  console.log("Current date:", currentDate);
+
+  const sql_query = `
+    SELECT * FROM projects 
+    WHERE 
+      YEAR(StartDate) = ${currentYear} AND MONTH(StartDate) = ${currentMonth} AND DAY(StartDate) <= ${currentDay}
+      AND 
+      YEAR(EndDateProjection) = ${currentYear} AND MONTH(EndDateProjection) = ${currentMonth} AND DAY(EndDateProjection) >= ${currentDay}
+  `;
+
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     res.send(result);

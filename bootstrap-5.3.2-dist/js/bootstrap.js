@@ -4582,6 +4582,7 @@ function updateButtonVisibility() {
     // But workers see a different button instead of Make Appointments
       if (isWorker){
         document.getElementById('workerButton').classList.remove('nodisplay');
+        document.getElementById('WorkerButtonDropDown').classList.remove('nodisplay');
       }
       else{document.getElementById('timeTableButton').classList.remove('nodisplay');}
       document.getElementById('estimatorButton').classList.remove('nodisplay');

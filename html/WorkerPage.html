@@ -14,19 +14,6 @@
    
 </head>
 <body>
-    
-    <section class="container col-md-3 mt-5 bg-light text-white" id="worker-view">
-        <div class="card-body">
-          <h2 class="card-title text-center">Worker panel</h2>
-          <div class="d-flex flex-column align-items-center">
-            <button class="btn btn-outline-secondary text-white mb-4" style="width:200px" onclick="WorkerviewTodaysProjects()">View projects to be finished today</button>
-            <button class="btn btn-outline-secondary text-white mb-4" style="width:200px" onclick="WorkerviewDelayedProjects()">View delayed projects</button>
-            <button class="btn btn-outline-secondary text-white mb-4" style="width:200px" onclick="WorkerviewActiveProjects()">View all active projects</button>
-          </div>
-        </div>
-      </section>
-      
-
     <div class=" selectable nodisplay mt-4" id="ProjectDataContainer">
         <!-- User data will be dynamically added here -->
         <div class="container mt-4">
@@ -38,7 +25,20 @@
     </div>
     
 <script>
+// Function to call the appropriate function based on the hash
+function handleHashChange() {
+    const hash = window.location.hash.substring(1); // Remove the '#' from the hash
 
+    if (hash && typeof window[hash] === 'function') {
+        window[hash](); // Dynamically call the function
+    }
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', handleHashChange);
+
+// Optionally, handle the hash change event (if the hash changes while the page is loaded)
+window.addEventListener('hashchange', handleHashChange);
 
 function deleteProject(ProjectID){
     fetch(window.location.origin +':5001'+ `/project-delete/${ProjectID}`, {
