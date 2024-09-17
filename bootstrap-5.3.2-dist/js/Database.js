@@ -646,7 +646,7 @@ app.get("/delayed-projects", (req, res) => {
 });
 
 
-// Fetch all users
+// Fetch one project by ID
 app.post("/project-by-ID", (req, res) => {
   const {idProjects} = req.body;
   const sql_query = 'SELECT * FROM projects WHERE idProjects = ?';
@@ -658,9 +658,10 @@ app.post("/project-by-ID", (req, res) => {
 });
 
 
-// Fetch all users
+// Fetch all projects that relate to a set user by ID
 app.post("/project-by-user-ID", (req, res) => {
   const {idUser} = req.body;
+  console.log(idUser);
   const sql_query = 'SELECT * FROM projects WHERE idUser = ?';
   connection.query(sql_query,[idUser], (err, result) => {
     if (err) throw err;
@@ -668,6 +669,45 @@ app.post("/project-by-user-ID", (req, res) => {
     res.send(result);
   });
 });
+
+// Fetch projects by user UUID
+app.post("/project-by-user-UUID", (req, res) => {
+  const UUID = req.body.UUID;
+  console.log(UUID);
+
+  // Query to get the user ID from the UUID
+  const getUserIDQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
+  
+  connection.query(getUserIDQuery, [UUID], (err, results) => {
+    if (err) {
+      console.error('Error fetching user ID from UUID:', err);
+      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    }
+
+    if (results.length === 0) {
+      // No user found for the given UUID
+      return res.status(404).json({ status: 'error', message: 'User not found' });
+    }
+
+    // Get the idUser from the query result
+    const idUser = results[0].idUser;
+    console.log(`User ID for UUID ${UUID}: ${idUser}`);
+
+    // Now query the projects table with the idUser
+    const getProjectsQuery = 'SELECT * FROM projects WHERE idUser = ?';
+    
+    connection.query(getProjectsQuery, [idUser], (err, projects) => {
+      if (err) {
+        console.error('Error fetching projects for user:', err);
+        return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
+
+      // Return the projects to the client
+      res.json(projects);
+    });
+  });
+});
+
 
 
 

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+    <!-- Local bootstrap.js-->
+    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="container my-4 bg-light">
+        <h2 class="text-center mb-4 text-white">Your Appointments</h2>
+
+        <!-- Table to display appointment data -->
+        <div id="appointment-data" class="table-responsive text-white">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Project ID</th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">Projected End Date</th>
+                        <th scope="col">Project Info</th>
+                        <th scope="col">Delay Status</th>
+                    </tr>
+                </thead>
+                <tbody id="appointment-table-body">
+                    <!-- Appointment data will be injected here -->
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            const UserID = JSON.parse(getCookie("userData"))
+            function UserAppointment(UserID) {
+                const UserUUID = UserID.UUID;
+                fetch(window.location.origin + ':5001' + '/project-by-user-UUID', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ UUID: UserUUID })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Call a function to display the user data on the page
+                            displayAppointmentData(data);
+
+                    })
+                    .catch(error => console.error('Error fetching user data:', error));
+            }
+            // Function to display the fetched appointment data in a table format
+            function displayAppointmentData(data) {
+                console.log(data);
+                const tableBody = document.getElementById('appointment-table-body');
+                tableBody.innerHTML = ''; // Clear any previous content
+
+                data.forEach(appointment => {
+                    // Create a new row for each appointment
+                    const row = document.createElement('tr');
+
+                    // Project ID
+                    const idProjectsCell = document.createElement('td');
+                    idProjectsCell.textContent = appointment.idProjects;
+                    idProjectsCell.classList.add('text-white');
+                    row.appendChild(idProjectsCell);
+
+                    // User ID
+                    const idUserCell = document.createElement('td');
+                    idUserCell.textContent = appointment.idUser;
+                    idUserCell.classList.add('text-white');
+                    row.appendChild(idUserCell);
+
+                    // Start Date
+                    const startDateCell = document.createElement('td');
+                    startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString();
+                    startDateCell.classList.add('text-white');
+                    row.appendChild(startDateCell);
+
+                    // Projected End Date
+                    const endDateCell = document.createElement('td');
+                    endDateCell.textContent = new Date(appointment.EndDateProjection).toLocaleDateString();
+                    endDateCell.classList.add('text-white');
+                    row.appendChild(endDateCell);
+
+                    // Project Info
+                    const projectInfoCell = document.createElement('td');
+                    projectInfoCell.textContent = appointment.ProjectInfo;
+                    projectInfoCell.classList.add('text-white');
+                    row.appendChild(projectInfoCell);
+
+                    // Delay Status
+                    const delayedCell = document.createElement('td');
+                    if (appointment.Delayed === 1) {
+                        delayedCell.innerHTML = '<span class="badge bg-danger">Project end date has changed due to delay</span>';
+                    } else {
+                        delayedCell.textContent = ''; // No display if no delay
+                    }
+                    row.appendChild(delayedCell);
+
+                    // Append the row to the table body
+                    tableBody.appendChild(row);
+                });
+            }
+            // Call the UserAppointment function on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                UserAppointment(UserID);
+            });
+        </script>
+</body>
