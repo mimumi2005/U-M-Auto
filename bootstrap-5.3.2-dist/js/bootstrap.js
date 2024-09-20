@@ -5456,38 +5456,55 @@ function displayUserData(users) {
 
 // WORKER function to display user data on the page
 function displayUserDataForWorker(users) {
+  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
   document.getElementById('userDataContainer').classList.remove('nodisplay');
   const userDataContainer = document.getElementById('userDataContainer');
-  userDataContainer.innerHTML = `
-  <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
-            </div>
-        </div>
-  `;
-  // Loop through each user and create HTML elements to display their data
-  users.forEach((user, index) => {
-    // Create a new row for every third user
+  console.log(users);
+  const tableBody = document.getElementById('user-table-body');
+  tableBody.innerHTML = ''; // Clear any previous content
 
-    // Create a column for the user card
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
+  users.forEach(users => {
+    // Create a new row for each user
+    const row = document.createElement('tr');
 
-    // Create the user card HTML
-    column.innerHTML = `
-      <div id="Users_div${user.idUser}" class="card bg-light mb-3">
-          <div class="card-body text-white">
-              <h3 class="card-title">User: ${user.Username}</h3>
-              <p class="card-text">Name: ${user.Name}</p>
-              <p class="card-text">Email: ${user.Email}</p>
-              <p class="card-text">UserID: ${user.idUser}</p>
-          </div>
-      </div>
-  `;
+    // Name
+    const NameCell = document.createElement('td');
+    NameCell.textContent = (users.Name);
+    NameCell.classList.add('text-white');
+    row.appendChild(NameCell);
 
-    // Append the user card to the current row
-    document.querySelector('#userDataContainer .row:last-child').appendChild(column);
+    // Username
+    const UserNameCell = document.createElement('td');
+    UserNameCell.textContent = users.Username;
+    UserNameCell.classList.add('text-white');
+    row.appendChild(UserNameCell);
 
+    // Email
+    const EmailCell = document.createElement('td');
+    EmailCell.textContent = users.Email;
+    EmailCell.classList.add('text-white');
+    row.appendChild(EmailCell);
+
+
+    // Check projects button
+    const ProjectCell = document.createElement('td');
+
+    // Create the anchor element
+    const ProjectLink = document.createElement('a');
+    ProjectLink.innerHTML = 'Check users appointments'; // Set the link text
+    ProjectLink.href = '#'; // Set href to '#' to make it behave like a link (you can adjust this if you want an actual URL)
+    ProjectLink.style.textDecoration = 'underline'; // Underline text
+    ProjectLink.style.color = 'blue'; // Make text blue
+    // Add the onclick event to the link
+    ProjectLink.onclick = function () {
+      searchProjectByUserID(users.idUser); // Call the function with the user ID
+    };
+    ProjectCell.classList.add('text-white');
+    ProjectCell.appendChild(ProjectLink);
+    row.appendChild(ProjectCell);
+
+    // Append the row to the table body
+    tableBody.appendChild(row);
   });
 }
 
@@ -5678,89 +5695,252 @@ function displayDelayedProjectData(projects) {
 
 
 // WORKER function to display project data on the page
-function displayProjectDataForWorker(projects) {
-  const currentDate = new Date();
-  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
-  console.log(projects);
-  const userDataContainer = document.getElementById('ProjectDataContainer');
-  userDataContainer.innerHTML = `
-  <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
-            </div>
-        </div>
-  `;
-  // Loop through each project and cretate HTML elemens to display their data
-  projects.forEach((project, index) => {
-    // Create a column for the project card
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
-    // Create the project card HTML
-    const currentDate = new Date();
-    const startDate = project.StartDate ? new Date(project.StartDate) : null;
-    const isStartDateToday = startDate && startDate.toDateString() === currentDate.toDateString();
+//function displayProjectDataForWorkers(projects) {
+//  const currentDate = new Date();
+//  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
+//  console.log(projects);
+//  const userDataContainer = document.getElementById('ProjectDataContainer');
+//  userDataContainer.innerHTML = `
+//  <div class="container mt-4">
+//            <div class="row row-cols-1 row-cols-md-3">
+//                <!-- User cards will be dynamically added here -->
+//            </div>
+//        </div>
+//  `;
+//  // Loop through each project and cretate HTML elemens to display their data
+//  projects.forEach((project, index) => {
+//    // Create a column for the project card
+//    const column = document.createElement('div');
+//    column.classList.add('col-lg-4');
+//    // Create the project card HTML
+//    const currentDate = new Date();
+//    const startDate = project.StartDate ? new Date(project.StartDate) : null;
+//    const isStartDateToday = startDate && startDate.toDateString() === currentDate.toDateString();
+//
+//    column.innerHTML = `
+//         <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
+//             <div class="card-body text-white">
+//                 <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
+//                 <p class="card-text">Date ${project.StartDate ? new Date(project.StartDate).toLocaleDateString() : 'Invalid Date'} - ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleDateString() : 'Invalid Date'} </p>
+//                 
+//                 ${isStartDateToday ? `<p class="card-text">Start Time: ${startDate.toLocaleTimeString()}</p>` : ''}
+//                 ${project.EndDateProjection ? `<p class="card-text">End Time: ${new Date(project.EndDateProjection).toLocaleTimeString()}</p>` : ''}
+//                 
+//                 <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
+//                 <p class="card-text">Info: ${project.ProjectInfo}</p>
+//                 <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchUserByWorkerByID(${project.idUser})">View project user info</button>
+//                 <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="changeEndDateByWorker(${project.idProjects})">Edit project end date</button>
+//             </div>
+//         </div>
+//     `;
+//
+//
+//    // Append the project card to the current row
+//    document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
+//
+//  });
+//}
 
-    column.innerHTML = `
-         <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
-             <div class="card-body text-white">
-                 <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
-                 <p class="card-text">Date ${project.StartDate ? new Date(project.StartDate).toLocaleDateString() : 'Invalid Date'} - ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleDateString() : 'Invalid Date'} </p>
-                 
-                 ${isStartDateToday ? `<p class="card-text">Start Time: ${startDate.toLocaleTimeString()}</p>` : ''}
-                 ${project.EndDateProjection ? `<p class="card-text">End Time: ${new Date(project.EndDateProjection).toLocaleTimeString()}</p>` : ''}
-                 
-                 <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
-                 <p class="card-text">Info: ${project.ProjectInfo}</p>
-                 <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchUserByWorkerByID(${project.idUser})">View project user info</button>
-                 <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="changeEndDateByWorker(${project.idProjects})">Edit project end date</button>
-             </div>
-         </div>
-     `;
-
-
-    // Append the project card to the current row
-    document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
-
-  });
-}
+// Function to display the fetched appointment data in a table formatfunction displayProjectDataForWorker(data) {
+  function displayProjectDataForWorker(data) {
+    document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
+    console.log(data);
+  
+    let isAscending = true; // Flag to track ascending/descending order
+    let currentColumn = ''; // Track current sorting column
+    
+    const tableBody = document.getElementById('project-table-body');
+    
+    function renderTable(sortedData) {
+      tableBody.innerHTML = ''; // Clear any previous content
+  
+      sortedData.forEach(appointment => {
+        // Create a new row for each appointment
+        const row = document.createElement('tr');
+  
+        // User ID
+        const userIDcell = document.createElement('td');
+        const userLink = document.createElement('a');
+        userLink.textContent = appointment.idUser; // Set the link text
+        userLink.href = '#'; // Set href to '#' to make it behave like a link (you can adjust this if you want an actual URL)
+        userLink.style.textDecoration = 'underline'; // Underline text
+        userLink.style.color = 'blue'; // Make text blue
+  
+        // Add the onclick event to the link
+        userLink.onclick = function () {
+          searchUserByWorkerByID(appointment.idUser); // Call the function with the user ID
+        };
+        userIDcell.appendChild(userLink);
+        userIDcell.classList.add('text-white');
+        row.appendChild(userIDcell);
+  
+        // Start Date
+        const startDateCell = document.createElement('td');
+        startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString();
+        startDateCell.classList.add('text-white');
+        row.appendChild(startDateCell);
+  
+        // Projected End Date
+        const endDateCell = document.createElement('td');
+        const DateLink = document.createElement('a');
+        DateLink.textContent = new Date(appointment.EndDateProjection).toLocaleDateString(); // Set the link text
+        DateLink.innerHTML = DateLink.textContent + '\n(Click to delay)';
+        DateLink.href = '#'; // Set href to '#' to make it behave like a link (you can adjust this if you want an actual URL)
+        DateLink.style.textDecoration = 'underline'; // Underline text
+        DateLink.style.color = 'red'; // Make text blue
+  
+        // Add the onclick event to the link
+        DateLink.onclick = function () {
+          changeEndDateByWorker(appointment.idProjects); // Call the function with the project ID
+        };
+        endDateCell.appendChild(DateLink);
+        endDateCell.classList.add('text-white');
+        row.appendChild(endDateCell);
+  
+        // Project Info
+        const projectInfoCell = document.createElement('td');
+        projectInfoCell.textContent = appointment.ProjectInfo;
+        projectInfoCell.classList.add('text-white');
+        row.appendChild(projectInfoCell);
+  
+        // Delay Status
+        const delayedCell = document.createElement('td');
+        if (appointment.Delayed === 1) {
+          delayedCell.innerHTML = '<span class="badge bg-danger">Project end date has changed due to delay</span>';
+        } else {
+          delayedCell.innerHTML = '<span class="badge bg-success">Project has no delays</span>';
+        }
+        row.appendChild(delayedCell);
+  
+        // Append the row to the table body
+        tableBody.appendChild(row);
+      });
+    }
+  
+    function sortData(column) {
+      if (column === currentColumn) {
+        isAscending = !isAscending; // Toggle ascending/descending if same column
+      } else {
+        isAscending = true; // Default to ascending for a new column
+      }
+      currentColumn = column;
+  
+      data.sort((a, b) => {
+        let aValue, bValue;
+        
+        switch (column) {
+          case 'idUser':
+            aValue = a.idUser;
+            bValue = b.idUser;
+            break;
+          case 'StartDate':
+            aValue = new Date(a.StartDate);
+            bValue = new Date(b.StartDate);
+            break;
+          case 'EndDateProjection':
+            aValue = new Date(a.EndDateProjection);
+            bValue = new Date(b.EndDateProjection);
+            break;
+          case 'ProjectInfo':
+            aValue = a.ProjectInfo.toLowerCase();
+            bValue = b.ProjectInfo.toLowerCase();
+            break;
+          case 'Delayed':
+            aValue = a.Delayed;
+            bValue = b.Delayed;
+            break;
+        }
+  
+        if (aValue < bValue) return isAscending ? -1 : 1;
+        if (aValue > bValue) return isAscending ? 1 : -1;
+        return 0;
+      });
+  
+      renderTable(data); // Re-render sorted data
+    }
+  
+    // Attach event listeners to the table headers for sorting
+    document.querySelector('[data-column="idUser"]').onclick = () => sortData('idUser');
+    document.querySelector('[data-column="StartDate"]').onclick = () => sortData('StartDate');
+    document.querySelector('[data-column="EndDateProjection"]').onclick = () => sortData('EndDateProjection');
+    document.querySelector('[data-column="ProjectInfo"]').onclick = () => sortData('ProjectInfo');
+    document.querySelector('[data-column="Delayed"]').onclick = () => sortData('Delayed');
+  
+    // Initial rendering of the table
+    renderTable(data);
+  }
 
 // WORKER function to display delayed project data on the page
-function displayDelayedProjectDataForWorker(projects) {
-  const currentDate = new Date();
+function displayDelayedProjectDataForWorker(data) {
   document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
-  const userDataContainer = document.getElementById('ProjectDataContainer');
-  userDataContainer.innerHTML = `
-  <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
-            </div>
-        </div>
-  `;
-  // Loop through each project and create HTML elements to display their data
-  projects.forEach((project, index) => {
-    // Create a column for the user card
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
-    // Create the user card HTML
-    column.innerHTML = `
-          <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
-              <div class="card-body text-white">
-                <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
-                  <p class="card-text">User: ${project.idUser}</p>
-                  <p class="card-text">Start date: ${project.StartDate ? new Date(project.StartDate).toLocaleString() : 'Invalid Date'}</p>
-                  <p class="card-text">End date: ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleString() : 'Invalid Date'}</p>
-                  <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
-                  <button class="btn btn-outline-success text-white mb-2" style="width:100%" onclick="WorkerRemoveDelayed(${project.idProjects})">Finish project</button>
-              </div>
-          </div>
-      `;
+  console.log(data);
+  const tableBody = document.getElementById('project-table-body');
+  tableBody.innerHTML = ''; // Clear any previous content
 
-    // Append the user card to the current row
-    document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
+  data.forEach(appointment => {
+    // Create a new row for each appointment
+    const row = document.createElement('tr');
 
+    // User ID
+    const userIDcell = document.createElement('td');
+    const userLink = document.createElement('a');
+    userLink.textContent = appointment.idUser; // Set the link text
+    userLink.href = '#'; // Set href to '#' to make it behave like a link (you can adjust this if you want an actual URL)
+    userLink.style.textDecoration = 'underline'; // Underline text
+    userLink.style.color = 'blue'; // Make text blue
+
+
+    // Add the onclick event to the link
+    userLink.onclick = function () {
+      searchUserByWorkerByID(appointment.idUser); // Call the function with the user ID
+    };
+    userIDcell.appendChild(userLink);
+    userIDcell.classList.add('text-white');
+    row.appendChild(userIDcell);
+
+    // Start Date
+    const startDateCell = document.createElement('td');
+    startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString();
+    startDateCell.classList.add('text-white');
+    row.appendChild(startDateCell);
+
+    // Projected End Date
+
+    const endDateCell = document.createElement('td');
+    const DateLink = document.createElement('a');
+    DateLink.textContent = new Date(appointment.EndDateProjection).toLocaleDateString(); // Set the link text
+    DateLink.innerHTML =  DateLink.textContent +'\n(Click to delay)';
+    DateLink.href = '#'; // Set href to '#' to make it behave like a link (you can adjust this if you want an actual URL)
+    DateLink.style.textDecoration = 'underline'; // Underline text
+    DateLink.style.color = 'red'; // Make text blue
+
+    // Add the onclick event to the link
+    DateLink.onclick = function () {
+      changeEndDateByWorker(appointment.idProjects); // Call the function with the project ID
+    };
+    endDateCell.appendChild(DateLink);
+    endDateCell.classList.add('text-white');
+    row.appendChild(endDateCell);
+
+    // Project Info
+    const projectInfoCell = document.createElement('td');
+    projectInfoCell.textContent = appointment.ProjectInfo;
+    projectInfoCell.classList.add('text-white');
+    row.appendChild(projectInfoCell);
+
+    // Delay Status
+    const delayedCell = document.createElement('td');
+    if (appointment.Delayed === 1) {
+      delayedCell.innerHTML = '<span class="badge bg-danger">Project end date has changed due to delay</span>';
+    } else {
+      delayedCell.innerHTML = '<span class="badge bg-success">Project has no delays</span>'; // No display if no delay
+    }
+    row.appendChild(delayedCell);
+
+    // Append the row to the table body
+    tableBody.appendChild(row);
   });
 }
-
 
 // Function to display project statistics on the page
 function displayProjectStatistics(projects) {

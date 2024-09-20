@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.css">
+    <!-- Local bootstrap.js-->
+    <script src="../bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   
+</head>
+<body>
+ 
+    <div class=" selectable nodisplay mt-4" id="userDataContainer">
+        <!-- User data will be dynamically added here -->
+        <div class=" container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    <div class=" selectable nodisplay mt-4" id="ProjectDataContainer">
+        <!-- User data will be dynamically added here -->
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3">
+                <!-- User cards will be dynamically added here -->
+            </div>
+            
+        </div>
+    </div>
+
+    <div id="inputNewEndDate"class=" col-sm-3 bg-light nodisplay" style="margin-top: -20%">
+    <div  class="col-sm-3 text-center nodisplay  bg-light"></div>
+    <h3 class=" text-white">Enter the new end date for project: <span id="project_id"></span> (if the project isnt
+        yet tagged as "Delayed" it will after these changes) </h3>
+    <span id="InvalidDateTime" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid end time</b></span>
+    <br>
+    <input type="datetime-local" id="dateinput" class="form-control" onkeypress="handleEndDateKeyPress(event)">
+    <button class="btn btn-outline-primary mt-2"
+        onclick="projectChangeEndTimeByWorker(document.getElementById('project_id').textContent, document.getElementById('dateinput').value)">Change</button>
+    </div>
+    <div>
+<script>
+// Function to call the appropriate function based on the hash
+function handleHashChange() {
+    const hash = window.location.hash.substring(1); // Remove the '#' from the hash
+
+    if (hash && typeof window[hash] === 'function') {
+        window[hash](); // Dynamically call the function
+    }
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', handleHashChange);
+
+// Optionally, handle the hash change event (if the hash changes while the page is loaded)
+window.addEventListener('hashchange', handleHashChange);
+
+function deleteProject(ProjectID){
+    fetch(window.location.origin +':5001'+ `/project-delete/${ProjectID}`, {
+        method: 'DELETE', // Use the DELETE method to indicate deletion
+        headers: {
+            'Content-Type': 'application/json' // Specify that the request body is JSON
+        },
+    })  
+    .then(response => {
+        if(response.status == 200){
+            const card = document.getElementById(`Project_div${ProjectID}`);
+            if(card){
+                card.remove();
+            }
+            card.remove();
+            viewAllProjects();
+        }
+    })
+    .then(data => {
+        // Process the response data
+        console.log(data);
+    })
+    .catch(error => console.error('Error deleting project:', error))
+}
+
+  </script>
+  

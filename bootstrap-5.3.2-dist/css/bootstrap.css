@@ -10469,3 +10469,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     
 }
 
+
+td {
+  word-wrap: break-word;
+  white-space: pre-wrap; /* Ensures that long text wraps properly */
+  max-width: 500px; /* Adjust width as needed */
+}

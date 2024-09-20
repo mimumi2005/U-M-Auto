@@ -24,12 +24,10 @@
             <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">Project ID</th>
-                        <th scope="col">User ID</th>
-                        <th scope="col">Start Date</th>
-                        <th scope="col">Projected End Date</th>
-                        <th scope="col">Project Info</th>
-                        <th scope="col">Delay Status</th>
+                        <th class="align-middle"scope="col">Start Date</th>
+                        <th  class="align-middle" scope="col">Projected End Date</th>
+                        <th  class="align-middle" scope="col">Project Info</th>
+                        <th  class="align-middle" scope="col">Delay Status</th>
                     </tr>
                 </thead>
                 <tbody id="appointment-table-body">
@@ -67,18 +65,6 @@
                     // Create a new row for each appointment
                     const row = document.createElement('tr');
 
-                    // Project ID
-                    const idProjectsCell = document.createElement('td');
-                    idProjectsCell.textContent = appointment.idProjects;
-                    idProjectsCell.classList.add('text-white');
-                    row.appendChild(idProjectsCell);
-
-                    // User ID
-                    const idUserCell = document.createElement('td');
-                    idUserCell.textContent = appointment.idUser;
-                    idUserCell.classList.add('text-white');
-                    row.appendChild(idUserCell);
-
                     // Start Date
                     const startDateCell = document.createElement('td');
                     startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString();
@@ -102,7 +88,7 @@
                     if (appointment.Delayed === 1) {
                         delayedCell.innerHTML = '<span class="badge bg-danger">Project end date has changed due to delay</span>';
                     } else {
-                        delayedCell.textContent = ''; // No display if no delay
+                        delayedCell.innerHTML = '<span class="badge bg-success">Project has no delays</span>'; // No display if no delay
                     }
                     row.appendChild(delayedCell);
 
