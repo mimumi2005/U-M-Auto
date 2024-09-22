@@ -599,7 +599,7 @@ app.get("/active-projects", (req, res) => {
 
 
 
-// Fetch todays (has started, hasnt ended) projects
+// Fetch todays (has started, ends today) projects
 app.get("/todays-projects", (req, res) => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -613,7 +613,7 @@ app.get("/todays-projects", (req, res) => {
     WHERE 
       YEAR(StartDate) = ${currentYear} AND MONTH(StartDate) = ${currentMonth} AND DAY(StartDate) <= ${currentDay}
       AND 
-      YEAR(EndDateProjection) = ${currentYear} AND MONTH(EndDateProjection) = ${currentMonth} AND DAY(EndDateProjection) >= ${currentDay}
+      YEAR(EndDateProjection) = ${currentYear} AND MONTH(EndDateProjection) = ${currentMonth} AND DAY(EndDateProjection) = ${currentDay}
   `;
 
   connection.query(sql_query, (err, result) => {
