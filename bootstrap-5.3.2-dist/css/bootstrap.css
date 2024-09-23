@@ -10470,3 +10470,29 @@ td {
   white-space: pre-wrap; /* Ensures that long text wraps properly */
   max-width: 500px; /* Adjust width as needed */
 }
+
+#sidebar {
+  height: 90vh; /* Full height */
+  position: fixed; /* Sticky to the left */
+  top:15%;
+  left: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  
+  background-color: #343a40; /* Dark background */
+  max-width:15%;
+}
+#sidebar h3, #sidebar h5 {
+  color: #ffffff;
+}
+#sidebar .btn-outline-secondary {
+  border-color: #ffffff;
+}
+#sidebar .btn-outline-secondary:hover {
+  background-color: #6c757d; /* Lighter background on hover */
+}
+.d-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Spacing between buttons */
+}

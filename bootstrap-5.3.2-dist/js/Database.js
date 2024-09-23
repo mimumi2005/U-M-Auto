@@ -131,21 +131,21 @@ function loginUser(username, password, connection, res) {
                   return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
                 }
               });
-            } 
+            }
             const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart) VALUES (?, ?, ?)';
             connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
               if (err) {
                 console.error('Error inserting data into the database:', err);
                 return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
               }
-            
+
               console.log(`\nUser-${username} \nPassword-${password} \nLogin instance-${UUID}\n Admin: ${IsAdmin}\n Worker: ${IsWorker}\n`);
               res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
             });
           });
         });
       });
-    } 
+    }
     else {
       // Passwords do not match
       return res.status(401).json({ status: '2', message: 'Wrong password' });
@@ -193,17 +193,17 @@ app.post("/signup", (req, res) => {
         }
         loginUser(username, password, connection, res);
       });
+    });
   });
-});
 });
 
 // Function for making new appointments
-app.post("/make-appointment",(req,res)=>{
-  const {idUser, StartDate, EndDateProjection, ProjectInfo} = req.body;
+app.post("/make-appointment", (req, res) => {
+  const { idUser, StartDate, EndDateProjection, ProjectInfo } = req.body;
   console.log(req.body);
   const sql_query = 'INSERT INTO projects (idUser, StartDate, EndDateProjection, ProjectInfo) VALUES (?, ?, ?, ?)';
   connection.query(sql_query, [idUser, StartDate, EndDateProjection, ProjectInfo], (err, result) => {
-    if(err){
+    if (err) {
       console.error('Error inserting data into the database:', err);
       return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
@@ -238,7 +238,7 @@ app.post("/log-out", async (req, res) => {
 // Function for users to change their password
 app.post("/change-password", (req, res) => {
   const { currentPassword, newPassword, UUID } = req.body;
-  
+
   // Check user based on UUID
   const checkUserQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
   connection.query(checkUserQuery, [UUID], (err, results) => {
@@ -357,7 +357,7 @@ app.post("/all-project-dates", (req, res) => {
   console.log("Month:", MonthSelected);
   console.log("Year:", YearSelected);
   const sql_query = 'SELECT StartDate, EndDateProjection FROM projects WHERE (month(StartDate) = ? OR month(EndDateProjection) = ?) AND (year(StartDate) = ? OR year(EndDateProjection) = ?)';
-  connection.query(sql_query, [MonthSelected, MonthSelected, YearSelected, YearSelected],(err, result) => {
+  connection.query(sql_query, [MonthSelected, MonthSelected, YearSelected, YearSelected], (err, result) => {
     console.log('Outcome', result);
     if (err) throw err;
     res.send(result);
@@ -375,10 +375,10 @@ app.get("/all-users", (req, res) => {
 
 // Give admin to a user
 app.post("/give-admin", (req, res) => {
-  const {idUser} = req.body;
+  const { idUser } = req.body;
   console.log("Giving admin to: ", idUser);
   const sql_query = 'INSERT INTO administrators (idUser) VALUES (?)';
-  connection.query(sql_query,[idUser], (err, result) => {
+  connection.query(sql_query, [idUser], (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
@@ -388,10 +388,10 @@ app.post("/give-admin", (req, res) => {
 
 // Remove admin from a user
 app.post("/remove-admin", (req, res) => {
-  const {idUser} = req.body;
+  const { idUser } = req.body;
   console.log("Removing admin from: ", idUser);
   const sql_query = 'DELETE FROM administrators WHERE idUser = ?';
-  connection.query(sql_query,[idUser], (err, result) => {
+  connection.query(sql_query, [idUser], (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
@@ -401,10 +401,10 @@ app.post("/remove-admin", (req, res) => {
 
 // Remove worker status from a user
 app.post("/remove-worker", (req, res) => {
-  const {idUser} = req.body;
+  const { idUser } = req.body;
   console.log("Removing worker: ", idUser);
   const sql_query = 'DELETE FROM workers WHERE idUser = ?';
-  connection.query(sql_query,[idUser], (err, result) => {
+  connection.query(sql_query, [idUser], (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
@@ -440,7 +440,7 @@ app.post("/register-worker", (req, res) => {
       }
       if (checkResult.length > 0) {
         // User already exists as a worker
-        return res.status(409).json({type: '2', message: 'User already registered as a worker' });
+        return res.status(409).json({ type: '2', message: 'User already registered as a worker' });
       }
 
       // Get the current date
@@ -464,7 +464,7 @@ app.post("/register-worker", (req, res) => {
           connection.query(insertAdminQuery, [idUser], (adminErr, adminResult) => {
             if (adminErr) {
               console.error('Error inserting administrator data:', adminErr);
-              
+
             }
             console.log('User added to Administrators table');
           });
@@ -486,9 +486,9 @@ app.post("/register-worker", (req, res) => {
 
 // Fetch all users
 app.post("/user-by-ID", (req, res) => {
-  const {idUser} = req.body;
+  const { idUser } = req.body;
   const sql_query = 'SELECT * FROM users WHERE idUser = ?';
-  connection.query(sql_query,[idUser], (err, result) => {
+  connection.query(sql_query, [idUser], (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
@@ -587,15 +587,19 @@ app.get("/user-statistics", (req, res) => {
   });
 });
 
- //Function to get active projects
+//Function to get active projects
 app.get("/active-projects", (req, res) => {
   const curdate = new Date().toISOString();
-  const sql_query = `SELECT * FROM projects WHERE '${curdate}' < StartDate OR \`Delayed\` = true `;
+  const sql_query = `SELECT projects.*, users.UserName
+                    FROM projects
+                    JOIN users ON projects.idUser = users.idUser
+                    WHERE '${curdate}' < projects.StartDate OR projects.Delayed = true`;
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
+    console.log(result);
     res.send(result);
   });
-}); 
+});
 
 
 
@@ -609,7 +613,9 @@ app.get("/todays-projects", (req, res) => {
   console.log("Current date:", currentDate);
 
   const sql_query = `
-    SELECT * FROM projects 
+    SELECT projects.*, users.UserName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser
     WHERE 
       YEAR(StartDate) = ${currentYear} AND MONTH(StartDate) = ${currentMonth} AND DAY(StartDate) <= ${currentDay}
       AND 
@@ -622,11 +628,13 @@ app.get("/todays-projects", (req, res) => {
   });
 });
 
-// Fetch delayed projects 
+// Fetch finished projects 
 app.get("/finished-projects", (req, res) => {
   const currentDate = new Date();
   const isoCurrentDate = currentDate.toISOString();
-  const sql_query = `SELECT * FROM projects WHERE \`Delayed\` = false AND  '${isoCurrentDate}' > EndDateProjection`;
+  const sql_query = `SELECT projects.*, users.UserName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser WHERE \`Delayed\` = false AND  '${isoCurrentDate}' > EndDateProjection`;
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -637,7 +645,7 @@ app.get("/finished-projects", (req, res) => {
 
 // Fetch delayed projects 
 app.get("/delayed-projects", (req, res) => {
-  const sql_query = 'SELECT * FROM projects WHERE \`Delayed\` = true';
+  const sql_query = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE \`Delayed\` = true';
   connection.query(sql_query, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -648,9 +656,9 @@ app.get("/delayed-projects", (req, res) => {
 
 // Fetch one project by ID
 app.post("/project-by-ID", (req, res) => {
-  const {idProjects} = req.body;
-  const sql_query = 'SELECT * FROM projects WHERE idProjects = ?';
-  connection.query(sql_query,[idProjects], (err, result) => {
+  const { idProjects } = req.body;
+  const sql_query = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
+  connection.query(sql_query, [idProjects], (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
@@ -660,10 +668,10 @@ app.post("/project-by-ID", (req, res) => {
 
 // Fetch all projects that relate to a set user by ID
 app.post("/project-by-user-ID", (req, res) => {
-  const {idUser} = req.body;
+  const { idUser } = req.body;
   console.log(idUser);
-  const sql_query = 'SELECT * FROM projects WHERE idUser = ?';
-  connection.query(sql_query,[idUser], (err, result) => {
+  const sql_query = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idUser = ?';
+  connection.query(sql_query, [idUser], (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
@@ -677,7 +685,7 @@ app.post("/project-by-user-UUID", (req, res) => {
 
   // Query to get the user ID from the UUID
   const getUserIDQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
-  
+
   connection.query(getUserIDQuery, [UUID], (err, results) => {
     if (err) {
       console.error('Error fetching user ID from UUID:', err);
@@ -694,8 +702,8 @@ app.post("/project-by-user-UUID", (req, res) => {
     console.log(`User ID for UUID ${UUID}: ${idUser}`);
 
     // Now query the projects table with the idUser
-    const getProjectsQuery = 'SELECT * FROM projects WHERE idUser = ?';
-    
+    const getProjectsQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idUser = ?';
+
     connection.query(getProjectsQuery, [idUser], (err, projects) => {
       if (err) {
         console.error('Error fetching projects for user:', err);
@@ -721,16 +729,16 @@ app.post("/change-end-date", (req, res) => {
       console.error('Error updating end date:', err);
       return res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
     }
-      // Retrieve the updated project information
-      const selectQuery = 'SELECT * FROM projects WHERE idProjects = ?';
-      connection.query(selectQuery, [idProjects], (err, result) => {
-        if (err) {
-          console.error('Error fetching updated project:', err);
-          return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
-        }
+    // Retrieve the updated project information
+    const selectQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
+    connection.query(selectQuery, [idProjects], (err, result) => {
+      if (err) {
+        console.error('Error fetching updated project:', err);
+        return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
+      }
 
-        // Send the updated project information back to the client
-        res.json(result);
+      // Send the updated project information back to the client
+      res.json(result);
     });
   });
 });
@@ -745,16 +753,16 @@ app.post("/remove-delayed", (req, res) => {
       console.error('Error updating end date:', err);
       return res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
     }
-      // Retrieve the updated project information
-      const selectQuery = 'SELECT * FROM projects WHERE idProjects = ?';
-      connection.query(selectQuery, [idProjects], (err, result) => {
-        if (err) {
-          console.error('Error fetching updated project:', err);
-          return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
-        }
+    // Retrieve the updated project information
+    const selectQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
+    connection.query(selectQuery, [idProjects], (err, result) => {
+      if (err) {
+        console.error('Error fetching updated project:', err);
+        return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
+      }
 
-        // Send the updated project information back to the client
-        res.json(result);
+      // Send the updated project information back to the client
+      res.json(result);
     });
   });
 });
@@ -763,7 +771,7 @@ app.post("/remove-delayed", (req, res) => {
 // Function to check user information
 app.post("/user-info", (req, res) => {
   // Fetch user information based on the logged-in user
-  const {UUID} = req.body;
+  const { UUID } = req.body;
   console.log(UUID);
   const query = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
   connection.query(query, [UUID], (err, results) => {
@@ -792,8 +800,8 @@ app.post("/user-info", (req, res) => {
       }
       const userInformation = results[0];
       res.json({ status: 'success', user: userInformation });
+    });
   });
-});
 });
 
 
@@ -876,7 +884,7 @@ app.delete('/user-delete/:userID', async (req, res) => {
           return res.status(500).json({ message: 'Error deleting user', error: workerError.message });
         }
         console.log('User deleted from worker table successfully');
-        
+
         // Delete user from administrator table if exists
         const deleteAdminQuery = 'DELETE FROM administrators WHERE idUser = ?';
         connection.query(deleteAdminQuery, [userID], async (adminError, adminResult) => {

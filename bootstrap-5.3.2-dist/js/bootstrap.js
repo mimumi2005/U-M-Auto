@@ -4825,31 +4825,6 @@ function searchSimilarUsers(email) {
 
 }
 
-// Function to show a singular account by account ID
-function searchUserByID(idUser) {
-  document.getElementById('userIDInput').value = '';
-  document.getElementById('InvalidID').classList.add('nodisplay');
-  console.log("Viewing user by ID:", idUser);
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin + ':5001' + '/user-by-ID', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ idUser: idUser })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      if (data[0]) {
-        displayUserData(data);
-      }
-      else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
 
 
 
@@ -4900,21 +4875,6 @@ function viewWorkers() {
     .catch(error => console.error('Error fetching user data:', error));
 }
 
-// Function to show all admin accounts
-function viewAdmins() {
-
-  console.log("Viewing admins");
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin + ':5001' + '/all-admins', {
-    method: 'POST',
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      displayAdminData(data);
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
 
 
 // Functions for statistics (VIEW STATISTICS)
@@ -5037,75 +4997,6 @@ function removeWorker(idUser) {
     .catch(error => console.error('Error fetching user data:', error));
 }
 
-
-// Functions that display project information (PROJECT INFO)
-
-// Function to show all Projects
-function viewFinishedProjects() {
-  document.getElementById('inputNewEndDate').classList.add('nodisplay');
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin + ':5001' + '/finished-projects',)
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-
-      displayProjectData(data);
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-// Function that shows all active projects
-function viewActiveProjects() {
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin + ':5001' + '/active-projects',)
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      document.getElementById("inputNewEndDate").classList.add('nodisplay');
-      displayProjectData(data);
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
-// Function that shows all delayed projects
-function viewDelayedProjects() {
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin + ':5001' + '/delayed-projects',)
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-
-      document.getElementById("inputNewEndDate").classList.add('nodisplay');
-      displayDelayedProjectData(data);
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
-// Function that displays all projects that have been made by one person (ID)
-function searchProjectByUserID(idUser) {
-  document.getElementById('InvalidProjectID').classList.add('nodisplay');
-  console.log("Viewing user by ID:", idUser);
-  // Make a fetch request to your backend to retrieve all user data
-  fetch(window.location.origin + ':5001' + '/project-by-user-ID', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ idUser: idUser })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      if (data[0]) {
-        displayProjectData(data);
-      }
-      else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-
-}
 
 // Function that displays projects by ID
 function searchProjectByID(idProjects) {
@@ -5342,52 +5233,6 @@ function changeEndDateByWorker(idProjects) {
   document.getElementById("inputNewEndDate").classList.remove('nodisplay');
 }
 
-// Function to display user data on the page
-function displayUserData(users) {
-  document.getElementById("registrationForm").classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.remove('nodisplay');
-  document.getElementById('admin-view').classList.remove('nodisplay');
-  const userDataContainer = document.getElementById('userDataContainer');
-  userDataContainer.innerHTML = `
-  <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
-            </div>
-        </div>
-  `;
-  // Loop through each user and create HTML elements to display their data
-  users.forEach((user, index) => {
-    // Create a new row for every third user
-
-    // Create a column for the user card
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
-
-    // Create the user card HTML
-    column.innerHTML = `
-      <div id="Users_div${user.idUser}" class="card bg-light mb-3">
-          <div class="card-body text-white">
-              <h3 class="card-title">User: ${user.Username}</h3>
-              <p class="card-text">Name: ${user.Name}</p>
-              <p class="card-text">Email: ${user.Email}</p>
-              <p class="card-text">UserID: ${user.idUser}</p>
-              <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchProjectByUserID(${user.idUser})">View users projects</button>
-              <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchSimilarUsers('${user.Email}')">Search similar users</button>
-              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteUser(${user.idUser})">Delete user</button>
-          </div>
-      </div>
-  `;
-
-    // Append the user card to the current row
-    document.querySelector('#userDataContainer .row:last-child').appendChild(column);
-
-  });
-}
-
 
 
 // Function that displays the Worker info
@@ -5438,53 +5283,6 @@ function displayWorkerData(users) {
   });
 }
 
-// Function that displays admin info on the page
-function displayAdminData(users) {
-  document.getElementById("registrationForm").classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.remove('nodisplay');
-  document.getElementById('admin-view').classList.remove('nodisplay');
-  const userDataContainer = document.getElementById('userDataContainer');
-  userDataContainer.innerHTML = `
-  <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
-            </div>
-        </div>
-  `;
-  // Loop through each user and create HTML elements to display their data
-  users.forEach((user, index) => {
-    // Create a new row for every third user
-
-    // Create a column for the user card
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
-
-    // Create the user card HTML
-    column.innerHTML = `
-      <div id="Users_div${user.idUser}" class="card bg-light mb-3">
-          <div class="card-body text-white">
-              <h3 class="card-title">Admin: ${user.Username}</h3>
-              <p class="card-text">ID: ${user.idUser}</p>
-              <p class="card-text">Name: ${user.Name}</p>
-              <p class="card-text">Email: ${user.Email}</p>
-              <p class="card-text">Tenure: ${user.tenure} years</p>
-              <p class="card-text">Worker type: ${user.WorkerType}</p>
-
-              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="removeAdmin('${user.idUser}')">Remove administrator permissions</button>
-              <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="removeWorker(${user.idUser})">Remove worker</button>
-          </div>
-      </div>
-  `;
-
-    // Append the user card to the current row
-    document.querySelector('#userDataContainer .row:last-child').appendChild(column);
-
-  });
-}
 
 // Function to display project data on the page
 function displayProjectData(projects) {
