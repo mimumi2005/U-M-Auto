@@ -10476,11 +10476,11 @@ td {
   position: fixed; /* Sticky to the left */
   top:15%;
   left: 0;
-  z-index: 1000;
   overflow-y: auto;
   
   background-color: #343a40; /* Dark background */
   max-width:15%;
+
 }
 #sidebar h3, #sidebar h5 {
   color: #ffffff;
@@ -10495,4 +10495,14 @@ td {
   display: flex;
   flex-direction: column;
   gap: 1rem; /* Spacing between buttons */
+}
+
+@media (max-width: 768px) { /* Adjust the max-width as needed */
+  #sidebar {
+      max-width: 100%; /* Make it full width on mobile */
+      width: 100%; /* Ensure it takes full width */
+      position: relative; /* Change to relative for mobile view */
+      top: 0; /* Reset top position */
+      height: auto; /* Let it grow with content */
+  }
 }

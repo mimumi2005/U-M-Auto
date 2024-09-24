@@ -111,4 +111,3 @@ CREATE TABLE `workers` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2024-05-03 11:47:54
-

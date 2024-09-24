@@ -5,7 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import cron from "node-cron";
 import { v4 as uuidv4 } from 'uuid';
-
+import bcrypt from "bcrypt";
 
 
 const connection = mysql2.createConnection({
@@ -75,14 +75,27 @@ function updateTenureForAllWorkers() {
   });
 }
 
+// Function to hash password
+async function hashPassword(password) {
+  const saltRounds = 10; //Security value, the higher the safer, but slower
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
+}
 
-// Function to handle login logic
-function loginUser(username, password, connection, res) {
+// Function to compare input password with hashed
+async function verifyPassword(password, hashedPassword) {
+  const match = await bcrypt.compare(password, hashedPassword);
+  return match;
+}
+
+
+// Function to handle login logic, async because the bcrypt encryption function is also async
+async function loginUser(username, password, connection, res) {
   const UUID = uuidv4();
 
-  // Check if username or email and password match a user in the database
+  // Query to check if username or email matches a user in the database
   const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
-  connection.query(query, [username, username], (err, results) => {
+  connection.query(query, [username, username], async (err, results) => {
     if (err) {
       return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
@@ -92,13 +105,19 @@ function loginUser(username, password, connection, res) {
       return res.status(401).json({ status: '1', message: 'Invalid credentials' });
     }
 
-    // Filter results for a match with the provided password
-    const matchedUser = results.find(user => user.password === password);
-    console.log(matchedUser);
+    const user = results[0]; // Assuming only one user record matches the username/email
 
-    if (matchedUser) {
+    try {
+      // Verify the password using bcrypt (verifyPassword is async)
+      const isMatch = await verifyPassword(password, user.password);
+
+      if (!isMatch) {
+        // Passwords do not match
+        return res.status(401).json({ status: '2', message: 'Wrong password' });
+      }
+
       // Passwords match, login successful
-      const userid = matchedUser.idUser;
+      const userid = user.idUser;
 
       // Check if user is an admin
       checkAdminStatus(userid, connection, (err, IsAdmin) => {
@@ -125,77 +144,92 @@ function loginUser(username, password, connection, res) {
             // If instance exists, delete the previous instance
             if (instanceResults.length > 0) {
               const deleteInstanceQuery = 'DELETE FROM user_instance WHERE idUser = ?';
-              connection.query(deleteInstanceQuery, [userid], (err, deleteResult) => {
+              connection.query(deleteInstanceQuery, [userid], (err) => {
                 if (err) {
                   console.error('Error deleting user instance:', err);
                   return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
                 }
               });
             }
+
+            // Insert new login instance
             const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart) VALUES (?, ?, ?)';
-            connection.query(instance_query, [UUID, userid, new Date()], (err, result) => {
+            connection.query(instance_query, [UUID, userid, new Date()], (err) => {
               if (err) {
                 console.error('Error inserting data into the database:', err);
                 return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
               }
 
-              console.log(`\nUser-${username} \nPassword-${password} \nLogin instance-${UUID}\n Admin: ${IsAdmin}\n Worker: ${IsWorker}\n`);
+              console.log(`\nUser-${username} \nPassword-verified \nLogin instance-${UUID}\n Admin: ${IsAdmin}\n Worker: ${IsWorker}\n`);
               res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
             });
           });
         });
       });
-    }
-    else {
-      // Passwords do not match
-      return res.status(401).json({ status: '2', message: 'Wrong password' });
+
+    } catch (error) {
+      console.error('Error during login process:', error);
+      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
   });
 }
 
 
-// Function for creating a new account
-app.post("/signup", (req, res) => {
+
+// Function for creating a new account, async because of bcrypt again// Function for creating a new account
+app.post("/signup", async (req, res) => {
   const { name, email, username, password } = req.body;
 
-  // Check if the email is already taken
-  const emailCheckQuery = 'SELECT * FROM users WHERE email = ?';
-  connection.query(emailCheckQuery, [email], (emailErr, emailResults) => {
-    if (emailErr) {
-      console.error('Error checking email in the database:', emailErr);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-    }
+  try {
+    // Hash the password
+    const HashedPassword = await hashPassword(password); // await the hashPassword result
+    console.log(`HashedPassword: ${HashedPassword}`);
 
-    if (emailResults.length > 0) {
-      // Email is already taken
-      return res.status(409).json({ status: 'error', message: 'Email is already taken' });
-    }
-
-    // Check if the username is already taken
-    const usernameCheckQuery = 'SELECT * FROM users WHERE username = ?';
-    connection.query(usernameCheckQuery, [username], (usernameErr, usernameResults) => {
-      if (usernameErr) {
-        console.error('Error checking username in the database:', usernameErr);
+    // Check if the email is already taken
+    const emailCheckQuery = 'SELECT * FROM users WHERE email = ?';
+    connection.query(emailCheckQuery, [email], (emailErr, emailResults) => {
+      if (emailErr) {
+        console.error('Error checking email in the database:', emailErr);
         return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
       }
 
-      if (usernameResults.length > 0) {
-        // Username is already taken
-        return res.status(409).json({ status: 'error', message: 'Username is already taken' });
+      if (emailResults.length > 0) {
+        // Email is already taken
+        return res.status(409).json({ status: 'error', message: 'Email is already taken' });
       }
 
-      // Continue with the signup process
-      const sql_query = 'INSERT INTO users (name, email, username, password) VALUES (?, ?, ?, ?)';
-      connection.query(sql_query, [name, email, username, password], (err, result) => {
-        if (err) {
-          console.error('Error inserting data into the database:', err);
+      // Check if the username is already taken
+      const usernameCheckQuery = 'SELECT * FROM users WHERE username = ?';
+      connection.query(usernameCheckQuery, [username], (usernameErr, usernameResults) => {
+        if (usernameErr) {
+          console.error('Error checking username in the database:', usernameErr);
           return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
         }
-        loginUser(username, password, connection, res);
+
+        if (usernameResults.length > 0) {
+          // Username is already taken
+          return res.status(409).json({ status: 'error', message: 'Username is already taken' });
+        }
+
+        // Continue with the signup process after checks
+        const sql_query = 'INSERT INTO users (name, email, username, password) VALUES (?, ?, ?, ?)';
+        connection.query(sql_query, [name, email, username, HashedPassword], (err, result) => {
+          if (err) {
+            console.error('Error inserting data into the database:', err);
+            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+          }
+
+          // Login the user after successful signup
+          loginUser(username, password, connection, res);
+        });
       });
     });
-  });
+  } catch (error) {
+    console.error('Error during password hashing or signup process:', error);
+    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
 });
+
 
 // Function for making new appointments
 app.post("/make-appointment", (req, res) => {
@@ -235,52 +269,68 @@ app.post("/log-out", async (req, res) => {
 });
 
 
-// Function for users to change their password
-app.post("/change-password", (req, res) => {
+// Function for users to change their password, also async for encryption function cuz its async
+app.post("/change-password", async (req, res) => {
   const { currentPassword, newPassword, UUID } = req.body;
 
-  // Check user based on UUID
-  const checkUserQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
-  connection.query(checkUserQuery, [UUID], (err, results) => {
-    if (err) {
-      console.error('Error checking user in the database:', err);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-    }
-
-    // Check if UUID corresponds to a user
-    if (results.length === 0) {
-      return res.status(401).json({ status: 'error', message: 'Invalid UUID' });
-    }
-
-    // Retrieve the idUser from the results
-    const loggedInUser = results[0].idUser;
-
-    // Check if the current password matches the user's current password
-    const checkCurrentPasswordQuery = 'SELECT * FROM users WHERE idUser = ? AND password = ?';
-    connection.query(checkCurrentPasswordQuery, [loggedInUser, currentPassword], (err, results) => {
+  try {
+    // Check user based on UUID
+    const checkUserQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
+    connection.query(checkUserQuery, [UUID], async (err, results) => {
       if (err) {
-        console.error('Error checking current password in the database:', err);
+        console.error('Error checking user in the database:', err);
         return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
       }
 
+      // Check if UUID corresponds to a user
       if (results.length === 0) {
-        // Incorrect current password
-        return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
+        return res.status(401).json({ status: 'error', message: 'Invalid UUID' });
       }
 
-      // Update the user's password with the new one
-      const updatePasswordQuery = 'UPDATE users SET password = ? WHERE idUser = ?';
-      connection.query(updatePasswordQuery, [newPassword, loggedInUser], (updateErr) => {
-        if (updateErr) {
-          console.error('Error updating password in the database:', updateErr);
+      // Retrieve the idUser from the results
+      const loggedInUser = results[0].idUser;
+
+      // Retrieve the user's current hashed password from the database
+      const checkCurrentPasswordQuery = 'SELECT password FROM users WHERE idUser = ?';
+      connection.query(checkCurrentPasswordQuery, [loggedInUser], async (err, results) => {
+        if (err) {
+          console.error('Error retrieving current password from the database:', err);
           return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
         }
 
-        res.json({ status: 'success', message: 'Password updated successfully!' });
+        if (results.length === 0) {
+          return res.status(401).json({ status: 'error', message: 'User not found' });
+        }
+
+        const hashedPassword = results[0].password;
+
+        // Verify if the current password matches the one in the database
+        const isMatch = await verifyPassword(currentPassword, hashedPassword);
+        if (!isMatch) {
+          return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
+        }
+
+        // Hash the new password
+        const hashedNewPassword = await hashPassword(newPassword);
+
+        // Update the user's password in the database
+        const updatePasswordQuery = 'UPDATE users SET password = ? WHERE idUser = ?';
+        connection.query(updatePasswordQuery, [hashedNewPassword, loggedInUser], (updateErr) => {
+          if (updateErr) {
+            console.error('Error updating password in the database:', updateErr);
+            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+          }
+
+          res.json({ status: 'success', message: 'Password updated successfully!' });
+        });
       });
     });
-  });
+  } catch (error) {
+    console.error('Error during password change process:', error);
+    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
 });
+
 
 // Fetch all admin info
 app.post("/all-admins", (req, res) => {
