@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="manifest" href="/js/manifest.json">
+    <!-- Local bootstrap.js-->
+    <script src="/js/bootstrap.js"></script>
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head> <style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        scroll-behavior: smooth;
+    }
+</style>
+<body>
+<div style="width: 40%" class="container text-white mt-5" >
+    <div tabindex=0 class="bg-light p-4 rounded " style="min-width: 250px ">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">Our Work Hours<br></h2>
+                <p class="text-center">We are open for service during the following hours:</p>
+            </div>
+        </div>
+        <div class="row text-white">
+            <div class="col-md-6 text-left">
+                <ul class="list-unstyled ">
+                    <li><strong>Monday:</strong> 9:00 AM - 6:00 PM</li>
+                    <li><strong>Tuesday:</strong> 9:00 AM - 6:00 PM</li>
+                    <li><strong>Wednesday:</strong> 9:00 AM - 6:00 PM</li>
+                    <li><strong>Thursday:</strong> 9:00 AM - 6:00 PM</li>
+                </ul>
+
+            </div>
+            <div class="col-md-6 text-left mb-4">
+                <ul class="list-unstyled">
+                    <li><strong>Friday:</strong> 9:00 AM - 6:00 PM</li>
+                    <li><strong class="text-red"><b>Saturday:</b></strong> 10:00 AM - 3:00 PM</li>
+                    <li><strong class="text-red"><b>Sunday:</b></strong> Closed</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Additional Content Section -->
+    <div tabindex=0 class="bg-light p-4 mt-5 rounded" style="min-width: 250px ">
+        <h2 class="text-center ">Online appointment booking</h2>
+        <p class="text-center">Logged in users can use our online booking system to choose a repair time that works best for them <span id="LoginP"><a href="Login.html">Log-in</a> to make an appoitment for personalized assistance.</span>
+            <span id="BookingP" class="nodisplay"><a href="Appointment.html">Book an appointment</a></span></p>
+    </div>
+</div>
+<div id="scrollIndicator">
+    <span>↓ Services ↓</span>
+  </div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<div tabindex=0  id="Services" class=" container-xxl text-white">
+  <div class="container bg-light" style="max-width: 80%">
+      <div class="text-center mx-auto mb-4"  style="max-width: 75%;">
+          <h1>We offer top tier car repairs</h1>
+      </div>
+      <div class="row g-4 justify-content-end">
+          <div class="col-md-6 col-lg-4 " >
+              <div class="service-item rounded overflow-hidden">
+                <a class="text-light" href="#Overall_Checkup">
+                  <img class="img-fluid ml-4" src="/images/Overall_Checkup.png" alt="Overall checkup image">
+                  <div class="position-relative p-4">
+                      <div class="service-icon">
+                          <i class="fa fa-solar-panel fa-3x"></i>
+                      </div>
+                      <h4 class="mb-3 text-light">Overall checkups</h4>
+                      </a>
+                      <p>A car's overall checkup, often called a car inspection or service, is like a health check for your car.</p>
+                  </div>
+                
+              </div>
+          </div>
+          <div class="col-md-6 col-lg-4 " >
+              <div class="service-item rounded overflow-hidden">
+                <a class="text-light" href="#Car_Painting">
+                  <img class="img-fluid ml-4" src="/images/Car_Painting.png" alt="Car painting image">
+                  <div class="position-relative p-4 pt-0">
+                      <div class="service-icon">
+                          <i class="fa fa-wind fa-3x"></i>
+                      </div>
+                      <h4 class="mb-3 text-light">Car Painting</h4>
+                      </a>
+                      <p>At our company, we take pride in offering professional car painting services that will not only enhance the aesthetic appeal...</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-6 col-lg-4 ">
+              <div class="service-item rounded overflow-hidden">
+                <a class="text-light" href="#Rust_Removal">
+                  <img class="img-fluid ml-4" src="/images/Rust_Removal.webp" alt="Rust Removal image">
+                  <div class="position-relative p-4 pt-0">
+                      <div class="service-icon">
+                          <i class="fa fa-lightbulb fa-3x"></i>
+                      </div>
+                      <h4 class="mb-3 text-light">Rust removal</h4>
+                      </a>
+                      <p>Is unsightly rust taking away from the beauty and integrity of your vehicle?</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+              <div class="service-item rounded overflow-hidden">
+                <a class="text-light" href="#Tuning">
+                  <img class="img-fluid ml-4" src="/images/Tuning.png" alt="Tuning image">
+                  <div class="position-relative p-4 pt-0">
+                      <div class="service-icon">
+                          <i class="fa fa-solar-panel fa-3x"></i>
+                      </div>
+                      <h4 class="mb-3 text-light">Tuning</h4>
+                      </a>
+                      <p >Unlock the full potential of your vehicle with the expert tuning services offered with us.</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+              <div class="service-item rounded overflow-hidden">
+                <a class="text-light" href="#Custom_Part_Insertion">
+                  <img class="img-fluid ml-4" src="/images/Custom_Part_Insertion.png" alt="Custom part insertion image">
+                  <div class="position-relative p-4 pt-0">
+                      <div class="service-icon">
+                          <i class="fa fa-wind fa-3x"></i>
+                      </div>
+                      <h4 class="mb-3 text-light">Custom part insertion</h4>
+                      </a>
+                      <p >Transform your vehicle into a one-of-a-kind masterpiece with the expert custom part insertion services offered at our company.</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-6 col-lg-4 wow fadeInUp " data-wow-delay="0.5s" id="EstimatorInfo">
+              <div class="service-item rounded overflow-hidden nodisplay" id="PriceEstimator" >
+                <a class="text-light" href="Estimator.html">
+                  <img class="img-fluid ml-4" src="/images/Price_Calculation.webp" alt="Automatic price estimator image">
+                  <div class="position-relative p-4 pt-0">
+                      <div class="service-icon">
+                          <i class="fa fa-lightbulb fa-3x"></i>
+                      </div>
+                      <h4 class="mb-3 text-light">Automatic price estimator</h4>
+                </a>
+                      <p >Use our automatic price estimator, to know the cost of repairs before anything gets done.</p>
+                  </div>
+              </div>
+              <div class="service-item rounded overflow-hidden" id="PriceEstimatorGuest" >
+                <a class="text-light">
+                  <img class="img-fluid ml-4" src="/images/Price_Calculation_Guest.webp" alt="Log in to access this function image"> 
+                  <div class="position-relative p-4 pt-0">
+                      <div class="service-icon">
+                          <i class="fa fa-lightbulb fa-3x"></i>
+                      </div>
+                      <h4 class="mb-3 text-light">Requires log-in</h4>
+                </a>
+                      <p >Make an account and use our online price estimator, to get the fairest deals.</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden" >
+    <!-- Section 1: Overall Checkup -->
+    <section id="Overall_Checkup" >
+        <div class="text-center ">
+        <h1>Overall Checkup</h1>
+        </div>
+        <div class="paragraph mt-4 fade-in-hidden">
+        <p class="lead">A car's overall checkup, often called a car inspection or service, is like a health check for your car. It involves a mechanic looking at different parts of your car to make sure everything is working well and safe to drive. Here's what they typically do:<br>
+        <br>1. <b>Engine</b>: They check the engine to make sure it's running smoothly and not making any strange noises.<br>
+        2. <b>Brakes</b>: They test the brakes to ensure they can stop the car safely.<br>
+        3. <b>Tires</b>: They inspect the tires for wear and tear and check if they have enough air.<br>
+        4. <b>Fluids</b>: They look at various fluids like oil, coolant, and brake fluid to ensure they're at the right levels.<br>
+        5. <b>Lights</b>: They check all the lights on the car, including headlights, taillights, and turn signals, to make sure they work.<br>
+        6. <b>Battery</b>: They inspect the battery to ensure it can start the car reliably.<br>
+        7. <b>Exhaust</b>: They check for any leaks in the exhaust system that could be harmful.<br>
+        8. <b>Suspension</b>: They examine the suspension and steering to ensure a comfortable and safe ride.<br>
+        9. <b>Safety</b>: They make sure safety features like seatbelts and airbags are in good working order.<br>
+        10. <b>Overall Condition</b>: They assess the general condition of the car, including the body and interior.<br>
+        <h2 class="mt-4 fade-in-hidden"><br><b>Why Choose Our Car Checkup Services?</b><br> </h2>
+        <ul class="fade-in-hidden">
+            
+            <li><b>Comprehensive Expertise: </b>Our services offer a comprehensive inspection by skilled mechanics, covering every aspect of your vehicle's health, ensuring nothing is overlooked.<br></li>
+            <li><b>Emphasis on Safety: </b>We prioritize safety, conducting thorough brake tests, inspecting lights, and verifying safety features to provide a secure driving experience.<br></li>
+            <li><b> Reliable Engine Assessment: </b> Our experienced technicians go beyond routine checks, assessing the engine for smooth operation and identifying potential issues early on.<br></li>
+            <li><b> Attention to Tires: </b> We pay special attention to tires, checking for wear and tear and ensuring proper air pressure, contributing to both safety and fuel efficiency.<br></li>
+            <li><b>Fluid Management: </b>Our meticulous examination of essential fluids guarantees that oil, coolant, and brake fluid are at optimal levels for peak performance.<br></li>
+        </ul>
+        </div>
+      </div>
+    </section>  
+  </main>
+</div>
+</div>
+
+<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
+    <section id="Car_Painting">
+        <div class="text-center mt-5 ">
+            <h1>Car Painting</h1>
+        </div>
+        <div class="paragraph mt-4 fade-in-hidden ">
+            <p class="lead">At our company, we take pride in offering professional car painting services that will
+                not only enhance the aesthetic appeal of your vehicle but also provide protection against the
+                elements. Whether your car needs a fresh coat of paint to restore its original shine or you want to
+                explore custom paint options to express your unique style, we've got you covered.</p>
+
+            <h2 class="mt-4 fade-in-hidden">Why Choose Our Car Painting Services?</h2>
+
+            <ul class="fade-in-hidden">
+                <li><b>Quality Materials:</b> We use high-quality automotive paint that is known for its
+                    durability and longevity. Our team ensures that your car's finish not only looks stunning but
+                    also stands the test of time.</li>
+                <li><b>Skilled Painters:</b> Our experienced and skilled painters have a keen eye for detail. They
+                    take the time to prepare the surface properly, apply the paint meticulously, and finish with
+                    precision to achieve a flawless result.</li>
+                <li><b>Customization Options:</b> We offer a wide range of colors and finishes to choose from,
+                    allowing you to personalize your vehicle and make it uniquely yours. Whether you're looking for
+                    a classic finish, a bold new color, or a custom design, our team can bring your vision to
+                    life.</li>
+                <li><b>Restoration and Repairs:</b> In addition to cosmetic enhancements, we can also address minor
+                    scratches, chips, or dents on your car's surface during the painting process. Your vehicle will
+                    not only look fantastic but also be in top-notch condition.</li>
+                <li><b>Protective Coatings:</b> Our car painting services include protective coatings that shield
+                    your car from harsh weather conditions, UV rays, and environmental pollutants, helping to
+                    maintain the brilliance of your car's finish.</li>
+            </ul>
+        </div>
+    </section>
+</main>
+<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
+    <!-- Section: Rust Removal -->
+    <section id="Rust_Removal">
+        <div class="text-center mt-5">
+            <h1>Rust Removal</h1>
+        </div>
+        <div class="paragraph mt-4 fade-in-hidden">
+            <p class="lead">
+                Is unsightly rust taking away from the beauty and integrity of your vehicle? At our company, we offer professional rust removal services to restore your car's appearance and protect it from further corrosion. Our team of experts is dedicated to bringing back the shine and strength of your vehicle's surfaces.
+            </p>
+
+            <h2 class="mt-4 fade-in-hidden">Why Choose Our Rust Removal Services?</h2>
+
+            <ul class="fade-in-hidden">
+                <li><b>Comprehensive Rust Removal:</b> Rust can wreak havoc on your vehicle, affecting not only its appearance but also its structural integrity. Our rust removal services are thorough, targeting rust at its source and preventing further damage.</li>
+                <li><b>Skilled Technicians:</b> Our technicians are highly skilled and experienced in rust removal techniques. They employ the latest tools and technologies to ensure that your vehicle receives the best treatment possible.</li>
+                <li><b>Surface Restoration:</b> After rust removal, we don't stop there. We take the extra step to restore the affected surfaces, leaving them looking as good as new. Our goal is to make your car's bodywork appear flawless.</li>
+                <li><b>Protective Coatings:</b> To prevent future rusting, we offer protective coatings that act as a barrier against moisture and corrosive elements. These coatings help prolong the life of your vehicle's surfaces.</li>
+                <li><b>Environmentally Friendly:</b> We care about the environment and use eco-friendly rust removal products and processes that are safe for you and the planet.</li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden" > 
+    <!-- Section: Tuning -->
+    <section id="Tuning">
+        <div class="text-center mt-5 ">
+            <h1>Tuning</h1>
+        </div>
+        <div class="paragraph mt-4">
+            <p class="lead fade-in-hidden">
+                Unlock the full potential of your vehicle with the expert tuning services offered with us. Our team of experienced technicians specializes in fine-tuning and optimizing your car's performance to deliver a thrilling driving experience.
+            </p>
+
+            <h2 class="mt-4 fade-in-hidden">Why Choose Our Tuning Services?</h2>
+
+            <ul class="fade-in-hidden">
+                <li><b>Performance Enhancement:</b> Our tuning services are designed to boost the performance of your vehicle. Experience increased horsepower, torque, and acceleration that will take your driving to the next level.</li>
+                <li><b>Customized Solutions:</b> Every driver has unique preferences. We offer customized tuning solutions that cater to your specific needs and driving style, ensuring a personalized driving experience.</li>
+                <li><b>Advanced Diagnostics:</b> Our technicians use state-of-the-art diagnostic tools and software to analyze your vehicle's engine performance. We fine-tune engine parameters, including air-fuel ratios and ignition timing, to maximize power and efficiency.</li>
+                <li><b>Improved Fuel Efficiency:</b> Tuning can also lead to improved fuel efficiency, saving you money at the pump while reducing emissions and your carbon footprint.</li>
+                <li><b>Safety First:</b> We prioritize safety in our tuning process. Rest assured that our expert team will ensure that your vehicle operates optimally and safely after tuning.</li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
+    <!-- Section: Custom Part Insertion -->
+    <section id="Custom_Part_Insertion">
+        <div class="text-center mt-5">
+            <h1>Custom Part Insertion</h1>
+        </div>
+        <div class="paragraph mt-4 fade-in-hidden">
+            <p class="lead">
+                Transform your vehicle into a one-of-a-kind masterpiece with the expert custom part insertion services offered at our company. Our team of skilled technicians specializes in enhancing your vehicle's performance and appearance by seamlessly integrating custom parts and accessories.
+            </p>
+
+            <h2 class="mt-4 fade-in-hidden">Why Choose Our Custom Part Insertion Services?</h2>
+
+            <ul class="fade-in-hidden">
+                <li><b>Precision Workmanship:</b> From performance-enhancing components to exterior and interior upgrades, we offer a wide range of custom parts and accessories to suit your preferences and goals.</li>
+                <li><b>Wide Range of Customization:</b> From performance-enhancing components to exterior and interior upgrades, we offer a wide range of custom parts and accessories to suit your preferences and goals.</li>
+                <li><b>Bespoke Solutions:</b> We understand that every vehicle owner has unique desires. Our custom part insertion services are tailored to your specific requirements, ensuring a personalized and exceptional outcome.</li>
+                <li><b>Enhanced Performance:</b> Whether you're seeking more horsepower, improved handling, or better fuel efficiency, our custom parts are selected and installed to enhance your vehicle's performance.</li>
+                <li><b>Stylish Aesthetics:</b> Elevate your vehicle's appearance with custom styling elements. We offer a variety of options to make your vehicle stand out on the road.</li>
+                <li><b>Quality Assurance:</b> We source high-quality custom parts and accessories to ensure longevity, reliability, and customer satisfaction.</li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+    <div class="footer" style="max-width: 95%;">
+        <div class="container">
+            <p>&copy; 2023 Your Website - Additional Information Here</p>
+            <p>Contact: velderis@gmail.com</p>
+
+        </div>
+    </div>
+<script>
+window.addEventListener('scroll', function() {
+    var scrollIndicator = document.getElementById('scrollIndicator');
+    var servicesSection = document.getElementById('Services');
+    if (servicesSection) {
+      var servicesRect = servicesSection.getBoundingClientRect();
+      if (servicesRect.top >= window.innerHeight) {
+        scrollIndicator.style.display = 'block';
+      } else {
+        scrollIndicator.style.display = 'none';
+      }
+    }
+  });
+
+    
+    // JavaScript to handle smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            var targetElement = document.querySelector(this.getAttribute('href'));
+            var targetOffset = targetElement.getBoundingClientRect().top + window.pageYOffset -100;
+            var duration = 1500; // Adjust duration as needed (in milliseconds)
+            slowScrollTo(targetOffset, duration);
+        });
+    });
+    // Scroll event
+    // Function to check if an element is in the viewport
+    function isInViewport(element) {
+      var rect = element.getBoundingClientRect();
+      var threshold = 0.7; // Adjust this value to set the trigger threshold
+        return (
+          rect.bottom >= 0 &&
+          rect.right >= 0 &&
+          rect.top <= (window.innerHeight || document.documentElement.clientHeight) * threshold &&
+          rect.left <= (window.innerWidth || document.documentElement.clientWidth) * threshold
+        );
+  }
+
+
+  // Function to handle the scroll event
+  function handleScroll() {
+    var elements = document.querySelectorAll('.fade-in-hidden');
+    elements.forEach(function(element) {
+      if (isInViewport(element)) {
+        element.classList.add('fade-in');
+        element.classList.remove('fade-in-hidden');
+      }
+    });
+  }
+
+  // Add scroll event listener
+  document.addEventListener('scroll', handleScroll);
+    </script>
+</body>
+</html>
+
+
+

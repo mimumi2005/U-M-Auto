@@ -1,0 +1,33 @@
+{
+  "name": "js",
+  "version": "1.0.0",
+  "main": "database.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "express-session": "^1.18.0",
+    "msnodesqlv8": "^4.1.2",
+    "mssql": "^10.0.2",
+    "mysql2": "^3.9.1",
+    "node-cron": "^3.0.3",
+    "package.json": "^2.0.1",
+    "session": "^0.1.0",
+    "tedious": "^16.6.1",
+    "uuid": "^9.0.1"
+  },
+  "keywords": [],
+  "description": "",
+  "devDependencies": {
+    "esm": "^3.2.25"
+  }
+}

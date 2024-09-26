@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "start": "node -r esm your_script.js"
-  },
-  "dependencies": {
-    "node-cron": "^3.0.3",
-    "uuid": "^9.0.1"
-  }
-}
