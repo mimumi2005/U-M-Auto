@@ -1,5 +1,6 @@
 
 import express from "express";
+import session from 'express-session';
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -9,6 +10,9 @@ import bcrypt from "bcrypt";
 import csrf from "csurf";
 import path from "path";
 import { fileURLToPath } from 'url';
+
+import { attachUser } from './middleware/attachUser.js';
+
 import db from './config/db.js';  // Import MySQL configuration
 import dotenv from "dotenv";
 import connection from './config/db.js'; // Importing connection
@@ -16,15 +20,26 @@ import connection from './config/db.js'; // Importing connection
 import routes from './routes/index.js';  // Import your routes
 dotenv.config();
 
+const app = express();
+
+// Session middleware setup
+app.use(session({
+  secret: '072637e0cbb770e4e60efc963fbfbdc1a93da3efeb5945491257bae9db01b5c2718c87a1300934b07562a19a4418a4e3537324661c90f384b747f11237d25e5f', // Replace with your secret
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Set 'true' if using HTTPS
+}));
+
+app.use(attachUser);
 
 // Replicating __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 5001;
 
-let isLoggedIn = false;
-const app = express();
+
+
+
 
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies
@@ -37,6 +52,9 @@ app.use(cookieParser());
 // Use the routes
 app.use('/', routes);  // This will now include all your defined routes
 
+const PORT = process.env.PORT || 80;
+
+let isLoggedIn = false;
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
@@ -52,17 +70,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// Example route that connects to MySQL
-app.get('/api/users', (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
-      if (err) {
-          console.error(err.message);
-          return res.status(500).send('Server error');
-      }
-      res.json(results);
-  });
-});
-
 
 cron.schedule('0 0 * * *', () => {
   // Logic to update tenure for all workers
@@ -77,6 +84,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/home.html'));
 });
 
+
+app.get('/api/getUserSession', (req, res) => {
+  if (req.session && req.session.userId) {
+      res.json({
+          isLoggedIn: true,
+          isAdmin: req.session.isAdmin,
+          isWorker: req.session.isWorker
+      });
+  } else {
+      res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
+  }
+});
 
 // Function for updating tenure automatically
 function updateTenureForAllWorkers() {

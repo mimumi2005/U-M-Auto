@@ -6,8 +6,7 @@ const router = express.Router();
 
 // POST route for logging in
 router.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    loginUser(username, password, res);
+    loginUser(req, res);
 });
 
 

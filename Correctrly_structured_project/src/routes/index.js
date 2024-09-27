@@ -1,5 +1,5 @@
 import express from 'express';
-import { getHomePage } from '../controllers/homeController.js';
+import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage } from '../controllers/pageController.js';
 
 // routes/index.js
 import secureRoutes from './secureRoutes.js';
@@ -10,8 +10,11 @@ import adminRoutes from './adminRoutes.js';
 
 const router = express.Router();
 
-// Route for home page
+// Route for basic pages
 router.get('/', getHomePage);
+router.get('/Estimator', getEstimatorPage);
+router.get('/AboutUs', getAboutUsPage);
+router.get('/Login', getLoginPage);
 
 // Use the route files
 router.use('/auth', secureRoutes);
