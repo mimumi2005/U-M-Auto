@@ -4,6 +4,7 @@
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 
+
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@popperjs/core')) :
     typeof define === 'function' && define.amd ? define(['@popperjs/core'], factory) :
@@ -4652,7 +4653,7 @@ function loginUser(response) {
     // Log the document cookie after setting to verify
 
     updateButtonVisibility();
-    window.location.href = 'Home.html?showSuccess=true';
+    window.location.href = '/';
   }, 650);
 }
 
@@ -4665,8 +4666,7 @@ function LogOut() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ UUID: loggedUser.UUID })
+    }
   })
   .then(response => {
     if (!response.ok) {

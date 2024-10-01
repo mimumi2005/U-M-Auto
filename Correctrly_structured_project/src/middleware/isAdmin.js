@@ -1,9 +1,8 @@
 import connection from '../config/db.js'; // Import your DB connection
-import { checkAdminStatus } from '../models/secureModels.js'; // Assuming you have this function in your model
+import { checkAdminStatus } from '../models/adminModels.js'; // Assuming you have this function in your model
 
 export function isAdmin(req, res, next) {
     const userId = req.user.id; // Assuming you have user info stored in req.user from session or JWT
-
     // Query the database to check if the user is an admin
     checkAdminStatus(userId, connection, (err, callback) => {
         if (err) {

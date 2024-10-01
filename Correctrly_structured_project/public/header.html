@@ -6,12 +6,7 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="manifest" href="/js/manifest.json">
     <!-- Local bootstrap.js-->
-    <script src="/js/bootstrap.js"></script>
-    <!-- Global bootstrap js-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
     <link rel="icon" type="image/png" href="/images/icon.png">
     <style>
          body {
@@ -60,9 +55,9 @@
     <div class="position-relative">
         <!-- Header navigation -->
         <nav id="main-nav" class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="Home.html"><img src="/images/Icon_gradiant.png" alt="Auto Repair Service icon" width="150" height="75"></a>
+            <a class="navbar-brand" href="/"><img src="/images/Icon_gradiant.png" alt="Auto Repair Service icon" width="150" height="75"></a>
             
-            <button class="navbar-toggler navbar-dark bg-gray" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler navbar-dark bg-gray" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -85,13 +80,13 @@
 
                     <li class="nav-item nodisplay" id="workerButton" >
                         <li class="nav-item dropdown  dropdown-hover nodisplay" id="WorkerButtonDropDown" >
-                            <a class="nav-link h3 mr-2 text-light dropdown-toggle" alt="Click or press enter to expand" href="WorkerPage.html#WorkerviewTodaysProjects" id="accountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link h3 mr-2 text-light dropdown-toggle" alt="Click or press enter to expand" href="/worker/WorkerPage#searchTodaysProjects" id="accountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Check Appointments
                             </a>
                             <div class="dropup dropdown-menu "  aria-labelledby="accountDropdown">
-                                <a class="dropdown-item text-white" href="/WorkerPage#searchTodaysProjects">View projects to be finished today</a>
-                                <a class="bg-gray dropdown-item text-white" href="/WorkerPage#searchDelayedProjects">View delayed projects</a>
-                                <a class="bg-gray dropdown-item text-white" href="/WorkerPage#searchActiveProjects">View active projects</a>
+                                <a class="dropdown-item text-white" href="/worker/WorkerPage#searchTodaysProjects">View projects to be finished today</a>
+                                <a class="bg-gray dropdown-item text-white" href="/worker/WorkerPage#searchDelayedProjects">View delayed projects</a>
+                                <a class="bg-gray dropdown-item text-white" href="/worker/WorkerPage#searchActiveProjects">View active projects</a>
                             </div>
                         </li>
                     </li>   
@@ -105,11 +100,11 @@
                             Profile
                         </a>
                         <div class="dropup dropdown-menu "  aria-labelledby="accountDropdown">
-                            <a class=" dropdown-item text-white" href="/Profile">Account Info</a>
-                            <a class=" bg-gray dropdown-item text-white " href="/UserAppointment">Appointments</a>
-                            <a class=" bg-gray dropdown-item text-white " href="/Settings">Settings</a>
+                            <a class=" dropdown-item text-white" href="/auth/Profile">Account Info</a>
+                            <a class=" bg-gray dropdown-item text-white " href="/auth/UserAppointment">Appointments</a>
+                            <a class=" bg-gray dropdown-item text-white " href="/auth/Settings">Settings</a>
                             <a id="AdminMenu"class=" bg-gray dropdown-item text-white nodisplay " href="/admin/admin-dashboard">Admin panel</a>
-                            <a id="Statistics"class=" bg-gray dropdown-item text-white nodisplay " href="/Statistics">Statistics</a>
+                            <a id="Statistics"class=" bg-gray dropdown-item text-white nodisplay " href="/admin/Statistics">Statistics</a>
                             <div class="bg-gray" style="height:20px"><div class=" custom-divider"></div></div>
                             <a tabindex=0 class=" bg-gray dropdown-item-logout text-red " style="cursor: pointer;" id="Log-out-button" onclick="LogOut()">Log Out</a>
                         </div>
@@ -125,7 +120,7 @@
 </div>
 <div id="scroll-to-top-btn"  style="z-index:1000; display:none" onclick="scrollToTop()">↑</div>
 </body>
-<script>
+<script nonce="<%= nonce %>">
 
     document.getElementById('LoggedSuccess').textcontent = LoggeInUser;
     document.addEventListener('DOMContentLoaded', function () {

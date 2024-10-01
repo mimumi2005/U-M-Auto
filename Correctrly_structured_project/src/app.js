@@ -10,47 +10,80 @@ import bcrypt from "bcrypt";
 import csrf from "csurf";
 import path from "path";
 import { fileURLToPath } from 'url';
-
+import ejs from 'ejs';
 import { attachUser } from './middleware/attachUser.js';
+import { generateNonce } from './middleware/nonceGen.js'; // Adjust path if needed
 
+import helmet from "helmet";
 import db from './config/db.js';  // Import MySQL configuration
 import dotenv from "dotenv";
 import connection from './config/db.js'; // Importing connection
 
 import routes from './routes/index.js';  // Import your routes
+
+// Replicating __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../public'));
+
 
 // Session middleware setup
 app.use(session({
   secret: '072637e0cbb770e4e60efc963fbfbdc1a93da3efeb5945491257bae9db01b5c2718c87a1300934b07562a19a4418a4e3537324661c90f384b747f11237d25e5f', // Replace with your secret
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Set 'true' if using HTTPS
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Set to true in production
+    maxAge: 1 * 30 * 60 * 1000 // Session expires after 30 minutes
+  }
 }));
+
+// Use the nonce middleware
+app.use(generateNonce);
 
 app.use(attachUser);
 
-// Replicating __dirname in ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 
 
+app.use((req, res, next) => {
+  console.log(`Generated nonce: ${res.locals.nonce}`);
+  next();
+});
+// Use helmet to secure your Express app
+// Configure Helmet with CSP
+app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+            "'self'",
+            // Include your trusted external sources explicitly
+            // Nonce for inline scripts
+            (req, res) => `'nonce-${res.locals.nonce}'`
+        ],
+        // Other directives
+    },
+    reportOnly: false, // Change to true for testing
+}));
 
+// Middleware to parse JSON request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../public'))); // Serve static files
 
-
-app.use(express.json()); // Middleware to parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies
-app.use(express.static(path.join(__dirname, '../public')));// Middleware to serve static files from 'public'
+// Use your routes
+app.use('/', routes);  
 
 
 app.use(cookieParser());
 
-
-// Use the routes
-app.use('/', routes);  // This will now include all your defined routes
 
 const PORT = process.env.PORT || 80;
 
@@ -60,11 +93,7 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-app.use(cors({
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-}));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,9 +108,11 @@ cron.schedule('0 0 * * *', () => {
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set the home route to serve the homepage
+
+
+// Example route to render an EJS template
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/home.html'));
+  res.render('index'); // Render your EJS template
 });
 
 
@@ -125,133 +156,9 @@ function updateTenureForAllWorkers() {
   });
 }
 
-// Function to hash password
-async function hashPassword(password) {
-  const saltRounds = 10; //Security value, the higher the safer, but slower
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  return hashedPassword;
-}
-
-// Function to compare input password with hashed
-async function verifyPassword(password, hashedPassword) {
-  const match = await bcrypt.compare(password, hashedPassword);
-  return match;
-}
 
 
 
-
-// Function for making new appointments
-app.post("/make-appointment", (req, res) => {
-  const { idUser, StartDate, EndDateProjection, ProjectInfo } = req.body;
-  console.log(req.body);
-  const sql_query = 'INSERT INTO projects (idUser, StartDate, EndDateProjection, ProjectInfo) VALUES (?, ?, ?, ?)';
-  connection.query(sql_query, [idUser, StartDate, EndDateProjection, ProjectInfo], (err, result) => {
-    if (err) {
-      console.error('Error inserting data into the database:', err);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-    }
-    res.status(201).json({ status: 'success', message: "Project registered successfully!" });
-  })
-});
-
-
-// Function for users to change their password, also async for encryption function cuz its async
-app.post("/change-password", async (req, res) => {
-  const { currentPassword, newPassword, UUID } = req.body;
-
-  try {
-    // Check user based on UUID
-    const checkUserQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
-    connection.query(checkUserQuery, [UUID], async (err, results) => {
-      if (err) {
-        console.error('Error checking user in the database:', err);
-        return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-      }
-
-      // Check if UUID corresponds to a user
-      if (results.length === 0) {
-        return res.status(401).json({ status: 'error', message: 'Invalid UUID' });
-      }
-
-      // Retrieve the idUser from the results
-      const loggedInUser = results[0].idUser;
-
-      // Retrieve the user's current hashed password from the database
-      const checkCurrentPasswordQuery = 'SELECT password FROM users WHERE idUser = ?';
-      connection.query(checkCurrentPasswordQuery, [loggedInUser], async (err, results) => {
-        if (err) {
-          console.error('Error retrieving current password from the database:', err);
-          return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-        }
-
-        if (results.length === 0) {
-          return res.status(401).json({ status: 'error', message: 'User not found' });
-        }
-
-        const hashedPassword = results[0].password;
-
-        // Verify if the current password matches the one in the database
-        const isMatch = await verifyPassword(currentPassword, hashedPassword);
-        if (!isMatch) {
-          return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
-        }
-
-        // Hash the new password
-        const hashedNewPassword = await hashPassword(newPassword);
-
-        // Update the user's password in the database
-        const updatePasswordQuery = 'UPDATE users SET password = ? WHERE idUser = ?';
-        connection.query(updatePasswordQuery, [hashedNewPassword, loggedInUser], (updateErr) => {
-          if (updateErr) {
-            console.error('Error updating password in the database:', updateErr);
-            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-          }
-
-          res.json({ status: 'success', message: 'Password updated successfully!' });
-        });
-      });
-    });
-  } catch (error) {
-    console.error('Error during password change process:', error);
-    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-  }
-});
-
-
-// Fetch all admin info
-app.post("/all-admins", (req, res) => {
-  // Query to fetch all idUser values from the administrators table
-  const adminQuery = 'SELECT idUser FROM administrators';
-  connection.query(adminQuery, (err, adminResults) => {
-    if (err) {
-      console.error('Error querying Workers table:', err);
-      return res.status(500).json({ message: 'Error fetching worker data' });
-    }
-
-    // Array to store combined user and worker information
-    const combinedData = [];
-
-    // Loop through each workerResult to fetch combined user and worker information
-    adminResults.forEach(admin => {
-      const idUser = admin.idUser;
-      // Query to fetch combined information for the current idUser
-      const combinedQuery = 'SELECT Users.*, Workers.* FROM Users INNER JOIN Workers ON Users.idUser = Workers.idUser WHERE Users.idUser = ?';
-      connection.query(combinedQuery, [idUser], (err, combinedResult) => {
-        if (err) {
-          console.error(`Error querying combined information for idUser ${idUser}:`, err);
-          return;
-        }
-        // Push combined information to the combinedData array
-        combinedData.push(...combinedResult);
-        // If all combined data is fetched, send the response
-        if (combinedData.length === adminResults.length) {
-          res.json(combinedData);
-        }
-      });
-    });
-  });
-});
 
 // Fetch all worker info
 app.post("/all-workers", (req, res) => {
@@ -602,18 +509,6 @@ app.post("/project-by-ID", (req, res) => {
   });
 });
 
-
-// Fetch all projects that relate to a set user by ID
-app.post("/project-by-user-ID", (req, res) => {
-  const { idUser } = req.body;
-  console.log(idUser);
-  const sql_query = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idUser = ?';
-  connection.query(sql_query, [idUser], (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send(result);
-  });
-});
 
 
 // Function to change the end date of project (also adds delayed to it)

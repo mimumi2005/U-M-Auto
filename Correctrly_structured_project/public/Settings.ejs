@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="manifest" href="/js/manifest.json">
+    <!-- Local bootstrap.js-->
+    <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
+    <!-- Global bootstrap js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" nonce="<%= nonce %>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js" nonce="<%= nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" nonce="<%= nonce %>"></script>
+
+</head>
+<body>
+    <div class="container col-lg-3 mt-5 text-white bg-light">
+        <h1 class="m-2 text-center">Settings</h1>
+        <div class="container m-auto mx-80 mix-40 m-2">
+            <div class="form-group text-white">
+                <label for="Notifications">Notification settings</label>
+                <select class="form-control" id="Notifications" name="Notifications" required>
+                    <option value="None">No notifications</option>
+                    <option value="Offers">Special deals/offers</option>
+                    <option value="OilChange">Oil change reminders</option>
+                    <option value="ALL">All notifications</option>
+                </select>
+            </div>
+            <label for="Dark/Light">Choose display mode</label>
+                <select class="form-control" id="repairType" name="repairType" required>
+                    <option value="Dark">Dark mode</option>
+                    <option value="Light">Light mode</option>
+                </select>
+                <button type="submit" class="btn btn-secondary btn-block mt-3 mb-3">Save settings</button>
+        </div>
+    </div>
+        
+</body>

@@ -1,10 +1,11 @@
 import express from 'express';
-import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage } from '../controllers/pageController.js';
+import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage } from '../controllers/pageController.js';
 
 // routes/index.js
-import secureRoutes from './secureRoutes.js';
+import authRoutes from './authRoutes.js';
 import defaultRoutes from './userRoutes.js';
 import adminRoutes from './adminRoutes.js';
+import workerRoutes from './workerRoutes.js';
 
 
 
@@ -15,11 +16,13 @@ router.get('/', getHomePage);
 router.get('/Estimator', getEstimatorPage);
 router.get('/AboutUs', getAboutUsPage);
 router.get('/Login', getLoginPage);
+router.get('/SignUp', getSignUpPage);
 
 // Use the route files
-router.use('/auth', secureRoutes);
+router.use('/auth', authRoutes);
 router.use('/user', defaultRoutes);
 router.use('/admin', adminRoutes);
+router.use('/worker', workerRoutes);
 
 
 

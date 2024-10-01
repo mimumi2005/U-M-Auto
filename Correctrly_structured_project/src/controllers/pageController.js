@@ -1,15 +1,19 @@
 export const getHomePage = (req, res) => {
-    res.sendFile('home.html', { root: '../public' });
+    res.render('home', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 
 export const getEstimatorPage = (req, res) => {
-    res.sendFile('Estimator.html', { root: '../public' });
+    res.render('Estimator', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 
 export const getAboutUsPage = (req, res) => {
-    res.sendFile('AboutUs.html', { root: '../public' });
+    res.render('home', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 
 export const getLoginPage = (req, res) => {
-    res.sendFile('Login.html', { root: '../public' });
+    res.render('Login', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+};
+
+export const getSignUpPage = (req, res) => {
+    res.render('SignUp', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };

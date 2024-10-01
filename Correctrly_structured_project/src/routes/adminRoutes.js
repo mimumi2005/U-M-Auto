@@ -1,12 +1,14 @@
 // routes/userRoutes.js
 import express from 'express';
 import { isAdmin } from '../middleware/isAdmin.js';
-import { adminDashboard } from '../controllers/adminController.js';
+import { adminDashboard, adminStatistics } from '../controllers/adminController.js';
 
 const router = express.Router();
 
 
 router.get('/admin-dashboard', isAdmin, adminDashboard);
+
+router.get('/Statistics', isAdmin, adminStatistics);
 
 
 
