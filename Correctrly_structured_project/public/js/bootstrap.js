@@ -4499,6 +4499,55 @@
 
 // CORE PROJECT JS
 
+// WHEN LOADED, inject header
+document.addEventListener("DOMContentLoaded", function () {
+  // Fetch and insert the header HTML into the current page
+  fetch("/header.ejs")
+    .then(response => response.text())
+    .then(data => {
+      document.body.insertAdjacentHTML("afterbegin", data);
+
+      // Load the header.js script dynamically
+      const script = document.createElement('script');
+      script.src = '/js/header.js'; // Adjust the path as necessary
+      script.onload = () => {
+        window.onscroll = function () {
+          toggleScrollToTopButton();
+        };
+        document.getElementById('scroll-to-top-btn').addEventListener('click', scrollToTop);
+        const LogOutButton = document.getElementById("Log-out-button");
+        LogOutButton.addEventListener('click', LogOut);
+        LogOutButton.addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            LogOut();
+          }
+        });
+      };
+
+      document.body.appendChild(script); // Append the script to the body
+
+      // Fetch user session data
+      return fetch('/api/getUserSession'); // Assuming you have a route to get user session data
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to fetch user session data');
+      return response.json();
+    })
+    .then(userSessionData => {
+      const isLoggedIn = userSessionData.isLoggedIn;
+      const isAdmin = userSessionData.isAdmin;
+      const isWorker = userSessionData.isWorker;
+
+      updateButtonVisibility(isLoggedIn, isAdmin, isWorker);
+    })
+    .catch(error => {
+      console.error('Error fetching user session data:', error);
+      // Handle error (e.g., user is not logged in, or fetch failed)
+      updateButtonVisibility(false, false, false);
+    });
+});
+
+
 // Initialize the map
 
 function initMap() {
@@ -4530,8 +4579,6 @@ function initMap() {
   console.log(map)
 }
 
-let selectAllActive = false;
-
 
 // Price estimator
 function calculatePrice() {
@@ -4546,36 +4593,7 @@ function calculatePrice() {
   totalPriceElement.textContent = `Estimated Price: $${totalPrice.toFixed(2)}`;
 }
 
-let isLoggedIn = false;
-let isAdmin = false;
-let isWorker = false;
-document.addEventListener("DOMContentLoaded", function () {
-  // Fetch and insert the header HTML into the current page
-  fetch("/header.html")
-    .then(response => response.text())
-    .then(data => {
-      document.body.insertAdjacentHTML("afterbegin", data);
 
-      // Fetch user session data
-      fetch('/api/getUserSession') // Assuming you have a route to get user session data
-        .then(response => {
-          if (!response.ok) throw new Error('Failed to fetch user session data');
-          return response.json();
-        })
-        .then(userSessionData => {
-          const isLoggedIn = userSessionData.isLoggedIn;
-          const isAdmin = userSessionData.isAdmin;
-          const isWorker = userSessionData.isWorker;
-
-          updateButtonVisibility(isLoggedIn, isAdmin, isWorker);
-        })
-        .catch(error => {
-          console.error('Error fetching user session data:', error);
-          // Handle error (e.g., user is not logged in, or fetch failed)
-          updateButtonVisibility(false, false, false);
-        });
-    });
-});
 
 
 // Function to update button visibility depending of login status
@@ -4668,29 +4686,25 @@ function LogOut() {
       'Content-Type': 'application/json',
     }
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json(); // Await here
-  })
-  .then(data => {
-    console.log('log out:', data); // Log the parsed response data
-    isLoggedIn = false;
-    updateButtonVisibility();
-    clearCookies();
-    window.location.href = '/';
-  })
-  .catch(error => {
-    alert(`Cannot connect to server: ${error}`);
-  });
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // Await here
+    })
+    .then(data => {
+      console.log('log out:', data); // Log the parsed response data
+      isLoggedIn = false;
+      updateButtonVisibility();
+      clearCookies();
+      window.location.href = '/';
+    })
+    .catch(error => {
+      alert(`Cannot connect to server: ${error}`);
+    });
 }
 
-// Makes sure to update the scroll to top button visibility every time the user scrolls
-// Could be a problem for running smoothly, but since most of the pages dont allow scrolling its ok
-window.onscroll = function () {
-  toggleScrollToTopButton();
-};
+
 
 function toggleScrollToTopButton() {
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 700) {
@@ -4856,7 +4870,7 @@ function searchUserByID(idUser) {
   console.log("Viewing user by ID:", idUser);
   // Make a fetch request to your backend to retrieve all user data
 
-  fetch( '/user-by-ID', {
+  fetch('/user-by-ID', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -4882,8 +4896,8 @@ function viewWorkers() {
 
   console.log("Viewing workers");
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/all-workers', {
+
+  fetch('/all-workers', {
     method: 'POST',
   })
     .then(response => response.json())
@@ -4902,8 +4916,8 @@ function viewWorkers() {
 function ViewUserStatistics() {
   console.log("Viewing Project statistics");
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/user-statistics')
+
+  fetch('/user-statistics')
     .then(response => response.json())
     .then(data => {
       // Call a function to display the user data on the page
@@ -4918,8 +4932,8 @@ function ViewUserStatistics() {
 function ViewProjectStatistics() {
   console.log("Viewing Project statistics");
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/project-statistics')
+
+  fetch('/project-statistics')
     .then(response => response.json())
     .then(data => {
       // Call a function to display the user data on the page
@@ -4934,8 +4948,8 @@ function ViewProjectStatistics() {
 // Deleting accounts by ID
 function deleteUser(userID) {
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( `/user-delete/${userID}`, {
+
+  fetch(`/user-delete/${userID}`, {
     method: 'DELETE', // Use the DELETE method to indicate deletion
     headers: {
       'Content-Type': 'application/json' // Specify that the request body is JSON
@@ -4962,8 +4976,8 @@ function deleteUser(userID) {
 function giveAdmin(idUser) {
   console.log("Giving worker with id:", idUser, "admin permissions");
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/give-admin', {
+
+  fetch('/give-admin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -4982,8 +4996,8 @@ function giveAdmin(idUser) {
 function removeAdmin(idUser) {
   console.log("Removing admin permissions from ID:", idUser);
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/remove-admin', {
+
+  fetch('/remove-admin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -5004,8 +5018,8 @@ function removeAdmin(idUser) {
 function removeWorker(idUser) {
   console.log("Removing worker info from ID:", idUser);
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/remove-worker', {
+
+  fetch('/remove-worker', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -5033,8 +5047,8 @@ function searchProjectByID(idProjects) {
   }
   console.log("Viewing project by ID:", idProjects);
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/project-by-ID', {
+
+  fetch('/project-by-ID', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -5064,8 +5078,8 @@ function searchProjectByIDByWorker(idProjects) {
   }
   console.log("Viewing project by ID:", idProjects);
   // Make a fetch request to your backend to retrieve all user data
-  
-  fetch( '/project-by-ID', {
+
+  fetch('/project-by-ID', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -5093,9 +5107,9 @@ function projectChangeEndTime(idProjects, NewEndDateTime) {
   NewDate = new Date(NewEndDateTime);
   const EndDate = NewDate.toISOString();
   console.log(EndDate);
-  
+
   if (EndDate) {
-    fetch( '/change-end-date', {
+    fetch('/change-end-date', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -5126,9 +5140,9 @@ function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
   NewDate = new Date(NewEndDateTime);
   const EndDate = NewDate.toISOString();
   console.log(EndDate);
-  
+
   if (EndDate) {
-    fetch( '/change-end-date', {
+    fetch('/change-end-date', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -5156,8 +5170,8 @@ function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
 
 // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function removeDelayed(idProjects) {
-  
-  fetch( '/remove-delayed', {
+
+  fetch('/remove-delayed', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -5182,8 +5196,8 @@ function removeDelayed(idProjects) {
 
 // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function WorkerRemoveDelayed(idProjects) {
-  
-  fetch( '/remove-delayed', {
+
+  fetch('/remove-delayed', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

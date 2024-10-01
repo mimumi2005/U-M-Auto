@@ -1,5 +1,5 @@
 import express from 'express';
-import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage } from '../controllers/pageController.js';
+import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage, getAppointmentPage,  } from '../controllers/pageController.js';
 
 // routes/index.js
 import authRoutes from './authRoutes.js';
@@ -13,10 +13,12 @@ const router = express.Router();
 
 // Route for basic pages
 router.get('/', getHomePage);
+router.get('/Appointments', getAppointmentPage);
 router.get('/Estimator', getEstimatorPage);
 router.get('/AboutUs', getAboutUsPage);
 router.get('/Login', getLoginPage);
 router.get('/SignUp', getSignUpPage);
+
 
 // Use the route files
 router.use('/auth', authRoutes);

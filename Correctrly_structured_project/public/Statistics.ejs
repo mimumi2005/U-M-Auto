@@ -9,7 +9,7 @@
   <!-- Local bootstrap.js-->
   <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
   <!-- Global bootstrap js-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" nonce="<%= nonce %>"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js" nonce="<%= nonce %>"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" nonce="<%= nonce %>"></script>
   <!-- Statistics display js-->
@@ -58,12 +58,6 @@
   
 
 </body>
-<script nonce="<%= nonce %>">
-  document.addEventListener('DOMContentLoaded', function () {
-    ViewProjectStatistics();
-    ViewUserStatistics();
-  });
-
-</script>
+<script src="/js/Statistics.js" nonce="<%= nonce %>"></script>
 
 </html>

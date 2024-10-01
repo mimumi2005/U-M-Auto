@@ -2,23 +2,30 @@
 import express from "express";
 import session from 'express-session';
 import bodyParser from "body-parser";
-import cors from "cors";
 import cookieParser from "cookie-parser";
 import cron from "node-cron";
+
+
 import { v4 as uuidv4 } from 'uuid';
-import bcrypt from "bcrypt";
+
 import csrf from "csurf";
 import path from "path";
 import { fileURLToPath } from 'url';
 import ejs from 'ejs';
+
+// Middleware
+import {cacheControlMiddleware} from './middleware/preventCaching.js';
 import { attachUser } from './middleware/attachUser.js';
 import { generateNonce } from './middleware/nonceGen.js'; // Adjust path if needed
 
 import helmet from "helmet";
 import db from './config/db.js';  // Import MySQL configuration
 import dotenv from "dotenv";
-import connection from './config/db.js'; // Importing connection
 
+
+
+
+import connection from './config/db.js'; // Importing connection
 import routes from './routes/index.js';  // Import your routes
 
 // Replicating __dirname in ES Modules
@@ -29,6 +36,7 @@ dotenv.config();
 
 const app = express();
 
+// EJS setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../public'));
 
@@ -43,34 +51,26 @@ app.use(session({
     maxAge: 1 * 30 * 60 * 1000 // Session expires after 30 minutes
   }
 }));
-
+app.use(attachUser);
+app.use(cacheControlMiddleware);
 // Use the nonce middleware
 app.use(generateNonce);
 
-app.use(attachUser);
 
-
-
-
-app.use((req, res, next) => {
-  console.log(`Generated nonce: ${res.locals.nonce}`);
-  next();
-});
-// Use helmet to secure your Express app
-// Configure Helmet with CSP
+// Helmet configuration with strict CSP
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
     directives: {
-        defaultSrc: ["'self'"],
+        defaultSrc: ["'self'"], // Only allow content from the same origin
         scriptSrc: [
-            "'self'",
-            // Include your trusted external sources explicitly
-            // Nonce for inline scripts
+            "'self'", // Allow scripts from the same origin
+            "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
+            "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+            // Allow inline scripts only with a nonce
             (req, res) => `'nonce-${res.locals.nonce}'`
         ],
-        // Other directives
     },
-    reportOnly: false, // Change to true for testing
+    reportOnly: false, // Enforce the policy
 }));
 
 // Middleware to parse JSON request bodies
@@ -81,13 +81,10 @@ app.use(express.static(path.join(__dirname, '../public'))); // Serve static file
 // Use your routes
 app.use('/', routes);  
 
-
 app.use(cookieParser());
 
 
 const PORT = process.env.PORT || 80;
-
-let isLoggedIn = false;
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
@@ -103,29 +100,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 cron.schedule('0 0 * * *', () => {
   // Logic to update tenure for all workers
   updateTenureForAllWorkers();
-});
-
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-
-// Example route to render an EJS template
-app.get('/', (req, res) => {
-  res.render('index'); // Render your EJS template
-});
-
-
-app.get('/api/getUserSession', (req, res) => {
-  if (req.session && req.session.userId) {
-      res.json({
-          isLoggedIn: true,
-          isAdmin: req.session.isAdmin,
-          isWorker: req.session.isWorker
-      });
-  } else {
-      res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
-  }
 });
 
 // Function for updating tenure automatically
@@ -156,43 +130,21 @@ function updateTenureForAllWorkers() {
   });
 }
 
-
-
-
-
-// Fetch all worker info
-app.post("/all-workers", (req, res) => {
-  // Query to fetch all idUser values from the Workers table
-  const workerQuery = 'SELECT idUser FROM Workers';
-  connection.query(workerQuery, (err, workerResults) => {
-    if (err) {
-      console.error('Error querying Workers table:', err);
-      return res.status(500).json({ message: 'Error fetching worker data' });
-    }
-
-    // Array to store combined user and worker information
-    const combinedData = [];
-
-    // Loop through each workerResult to fetch combined user and worker information
-    workerResults.forEach(worker => {
-      const idUser = worker.idUser;
-      // Query to fetch combined information for the current idUser
-      const combinedQuery = 'SELECT Users.*, Workers.* FROM Users INNER JOIN Workers ON Users.idUser = Workers.idUser WHERE Users.idUser = ?';
-      connection.query(combinedQuery, [idUser], (err, combinedResult) => {
-        if (err) {
-          console.error(`Error querying combined information for idUser ${idUser}:`, err);
-          return;
-        }
-        // Push combined information to the combinedData array
-        combinedData.push(...combinedResult);
-        // If all combined data is fetched, send the response
-        if (combinedData.length === workerResults.length) {
-          res.json(combinedData);
-        }
+// Saving session info
+app.get('/api/getUserSession', (req, res) => {
+  if (req.session && req.session.userId) {
+      res.json({
+          isLoggedIn: true,
+          isAdmin: req.session.isAdmin,
+          isWorker: req.session.isWorker
       });
-    });
-  });
+  } else {
+      res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
+  }
 });
+
+
+
 
 // Fetch all projects
 app.post("/all-project-dates", (req, res) => {

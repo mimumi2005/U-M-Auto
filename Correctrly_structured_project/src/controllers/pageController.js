@@ -7,7 +7,7 @@ export const getEstimatorPage = (req, res) => {
 };
 
 export const getAboutUsPage = (req, res) => {
-    res.render('home', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+    res.render('AboutUs', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 
 export const getLoginPage = (req, res) => {
@@ -17,3 +17,8 @@ export const getLoginPage = (req, res) => {
 export const getSignUpPage = (req, res) => {
     res.render('SignUp', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
+
+export const getAppointmentPage = (req, res) => {
+    res.render('Appointment', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+};
+

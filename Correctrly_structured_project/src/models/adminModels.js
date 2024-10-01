@@ -16,3 +16,13 @@ export function checkAdminStatus(userid, connection, callback) {
         }
     });
 }
+
+export const getAllWorkerIds = (callback) => {
+    const workerQuery = 'SELECT idUser FROM Workers';
+    connection.query(workerQuery, callback);
+  };
+  
+  export const getCombinedWorkerInfo = (idUser, callback) => {
+    const combinedQuery = 'SELECT Users.*, Workers.* FROM Users INNER JOIN Workers ON Users.idUser = Workers.idUser WHERE Users.idUser = ?';
+    connection.query(combinedQuery, [idUser], callback);
+  };

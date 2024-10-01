@@ -6,14 +6,10 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="manifest" href="/js/manifest.json">
     
-     <script nonce="<%= nonce %>">
-        // Log the nonce to the console
-        console.log("Nonce:", "<%= nonce %>");
-    </script>
+
     <!-- Local bootstrap.js-->
     <script src="/js/bootstrap.js" nonce="<%= nonce %>"> </script>
     <!-- Global bootstrap js-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" nonce="<%= nonce %>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js" nonce="<%= nonce %>"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" nonce="<%= nonce %>"></script>
 
@@ -57,8 +53,8 @@
     <!-- Additional Content Section -->
     <div tabindex=0 class="bg-light p-4 mt-5 rounded" style="min-width: 250px ">
         <h2 class="text-center ">Online appointment booking</h2>
-        <p class="text-center">Logged in users can use our online booking system to choose a repair time that works best for them <span id="LoginP"><a href="Login.html">Log-in</a> to make an appoitment for personalized assistance.</span>
-            <span id="BookingP" class="nodisplay"><a href="Appointment.html">Book an appointment</a></span></p>
+        <p class="text-center">Logged in users can use our online booking system to choose a repair time that works best for them <span id="LoginP"><a href="/Login">Log-in</a> to make an appoitment for personalized assistance.</span>
+            <span id="BookingP" class="nodisplay"><a href="/Appointments">Book an appointment</a></span></p>
     </div>
 </div>
 <div id="scrollIndicator">
@@ -144,7 +140,7 @@
           </div>
           <div class="col-md-6 col-lg-4 wow fadeInUp " data-wow-delay="0.5s" id="EstimatorInfo">
               <div class="service-item rounded overflow-hidden nodisplay" id="PriceEstimator" >
-                <a class="text-light" href="Estimator.html">
+                <a class="text-light" href="/Estimator">
                   <img class="img-fluid ml-4" src="/images/Price_Calculation.webp" alt="Automatic price estimator image">
                   <div class="position-relative p-4 pt-0">
                       <div class="service-icon">
@@ -320,59 +316,7 @@
 
         </div>
     </div>
-<script nonce="<%= nonce %>">
-window.addEventListener('scroll', function() {
-    var scrollIndicator = document.getElementById('scrollIndicator');
-    var servicesSection = document.getElementById('Services');
-    if (servicesSection) {
-      var servicesRect = servicesSection.getBoundingClientRect();
-      if (servicesRect.top >= window.innerHeight) {
-        scrollIndicator.style.display = 'block';
-      } else {
-        scrollIndicator.style.display = 'none';
-      }
-    }
-  });
-
-    
-    // JavaScript to handle smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            var targetElement = document.querySelector(this.getAttribute('href'));
-            var targetOffset = targetElement.getBoundingClientRect().top + window.pageYOffset -100;
-            var duration = 1500; // Adjust duration as needed (in milliseconds)
-            slowScrollTo(targetOffset, duration);
-        });
-    });
-    // Scroll event
-    // Function to check if an element is in the viewport
-    function isInViewport(element) {
-      var rect = element.getBoundingClientRect();
-      var threshold = 0.7; // Adjust this value to set the trigger threshold
-        return (
-          rect.bottom >= 0 &&
-          rect.right >= 0 &&
-          rect.top <= (window.innerHeight || document.documentElement.clientHeight) * threshold &&
-          rect.left <= (window.innerWidth || document.documentElement.clientWidth) * threshold
-        );
-  }
-
-
-  // Function to handle the scroll event
-  function handleScroll() {
-    var elements = document.querySelectorAll('.fade-in-hidden');
-    elements.forEach(function(element) {
-      if (isInViewport(element)) {
-        element.classList.add('fade-in');
-        element.classList.remove('fade-in-hidden');
-      }
-    });
-  }
-
-  // Add scroll event listener
-  document.addEventListener('scroll', handleScroll);
-    </script>
+    <script src="/js/home.js" nonce="<%= nonce %>"></script>
 </body>
 </html>
 

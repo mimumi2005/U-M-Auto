@@ -109,7 +109,7 @@ export const handleSignUp = async (req, res) => {
     await authModel.signupUser(name, email, username, password);
 
     // Login the user after successful signup
-    loginUser(username, password, res); // Adjusted to use the response object directly
+    loginUser(req, res); // Adjusted to use the response object directly
   } catch (error) {
     if (error.message === 'Email is already taken') {
       return res.status(409).json({ status: 'error', message: 'Email is already taken' });
@@ -161,18 +161,6 @@ export const handleCreateAppointment = async (req, res) => {
   }
 };
 
-// Function for user to make appointments
-export const makeAppointment = async (req, res) => {
-  const { idUser, StartDate, EndDateProjection, ProjectInfo } = req.body;
-  
-  try {
-      const result = await authModel.createProject(idUser, StartDate, EndDateProjection, ProjectInfo);
-      res.status(201).json({ status: 'success', message: "Project registered successfully!" });
-  } catch (error) {
-      console.error('Error inserting project:', error);
-      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-  }
-};
 
 
 export const changePassword = async (req, res) => {
