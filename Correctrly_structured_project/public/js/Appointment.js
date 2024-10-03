@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to check if a day is full based on date ranges
     function GetCalendarInfo() {
-        fetch('/all-project-dates', {
+        fetch('user/all-project-dates', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,4 +1,15 @@
 
+// WORKER Function that displays fields needed to change project end date 
+function changeEndDateByWorker(idProjects) {
+    const projectIDElement = document.getElementById('project_id');
+    if (projectIDElement) {
+        projectIDElement.textContent = idProjects;
+    }
+    searchProjectByIDByWorker(idProjects);
+    document.getElementById('userDataContainer').classList.add('nodisplay');
+    document.getElementById("inputNewEndDate").classList.remove('nodisplay');
+}
+
 
 // Function to call the appropriate function based on the hash
 function handleHashChange() {
@@ -36,6 +47,71 @@ function deleteProject(ProjectID) {
         })
         .catch(error => console.error('Error deleting project:', error))
 }
+
+// Function that changes the end date of project to worker input
+function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
+    NewDate = new Date(NewEndDateTime);
+    const EndDate = NewDate.toISOString();
+    console.log(EndDate);
+
+    if (EndDate) {
+        fetch('/change-end-date', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                EndDate: EndDate,
+                idProjects: idProjects
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Call a function to display the user data on the page
+                if (data[0]) {
+                    displayProjectDataForWorker(data);
+                    document.getElementById('InvalidDateTime').classList.add('nodisplay');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('InvalidDateTime').classList.remove('nodisplay');
+
+            });
+    }
+}
+
+
+// Function that displays projects by ID By Worker
+function searchProjectByIDByWorker(idProjects) {
+    if (document.getElementById('ProjectIDInput')) {
+        document.getElementById('ProjectIDInput').value = '';
+    }
+    if (document.getElementById('InvalidProjectID')) {
+        document.getElementById('InvalidProjectID').classList.add('nodisplay');
+    }
+    console.log("Viewing project by ID:", idProjects);
+    // Make a fetch request to your backend to retrieve all user data
+
+    fetch('/project-by-ID', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idProjects: idProjects })
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Call a function to display the user data on the page
+            if (data[0]) {
+                displayProjectDataForWorker(data);
+            }
+            else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
+
+        })
+        .catch(error => console.error('Error fetching user data:', error));
+}
+
 
 // Function to display the fetched appointment data in a table formatfunction displayProjectDataForWorker(data) {
 function displayProjectDataForWorker(data) {
@@ -383,7 +459,7 @@ function handleEndDateKeyPress(event) {
 }
 
 // Add event listener to the button
-document.getElementById('changeEndTimeButton').addEventListener('click', function() {
+document.getElementById('changeEndTimeButton').addEventListener('click', function () {
     projectChangeEndTimeByWorker(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
 });
 

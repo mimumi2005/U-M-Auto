@@ -35,3 +35,9 @@ export const getUserAppointments = (UUID) => {
         });
       });
     };
+
+    export const getProjectDates = (MonthSelected, YearSelected, callback) => {
+      const sql_query = 'SELECT StartDate, EndDateProjection FROM projects WHERE (month(StartDate) = ? OR month(EndDateProjection) = ?) AND (year(StartDate) = ? OR year(EndDateProjection) = ?)';
+      connection.query(sql_query, [MonthSelected, MonthSelected, YearSelected, YearSelected], callback);
+    };
+    

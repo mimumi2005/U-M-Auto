@@ -66,6 +66,9 @@ app.use(helmet.contentSecurityPolicy({
             "'self'", // Allow scripts from the same origin
             "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
             "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+             'https://maps.googleapis.com/maps/api/mapsjs',
+             "https://maps.googleapis.com/$rpc/google.internal.maps",
+             
             // Allow inline scripts only with a nonce
             (req, res) => `'nonce-${res.locals.nonce}'`
         ],
@@ -143,22 +146,6 @@ app.get('/api/getUserSession', (req, res) => {
   }
 });
 
-
-
-
-// Fetch all projects
-app.post("/all-project-dates", (req, res) => {
-  const MonthSelected = req.body.MonthDisplay;
-  const YearSelected = req.body.YearDisplay;
-  console.log("Month:", MonthSelected);
-  console.log("Year:", YearSelected);
-  const sql_query = 'SELECT StartDate, EndDateProjection FROM projects WHERE (month(StartDate) = ? OR month(EndDateProjection) = ?) AND (year(StartDate) = ? OR year(EndDateProjection) = ?)';
-  connection.query(sql_query, [MonthSelected, MonthSelected, YearSelected, YearSelected], (err, result) => {
-    console.log('Outcome', result);
-    if (err) throw err;
-    res.send(result);
-  });
-});
 
 // Fetch all users
 app.get("/all-users", (req, res) => {
@@ -279,58 +266,6 @@ app.post("/register-worker", (req, res) => {
 });
 
 
-
-// Fetch all users
-app.post("/user-by-ID", (req, res) => {
-  const { idUser } = req.body;
-  const sql_query = 'SELECT * FROM users WHERE idUser = ?';
-  connection.query(sql_query, [idUser], (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send(result);
-  });
-});
-
-
-// Fetch active users
-app.get("/active-users", (req, res) => {
-  // Query to fetch all active instances
-  const instance_query = 'SELECT * FROM user_instance';
-  connection.query(instance_query, (err, instances) => {
-    if (err) {
-      console.error('Error fetching active instances:', err);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-    }
-
-    const usersInfo = [];
-
-    // Iterate over each active instance to fetch user information
-    for (const instance of instances) {
-      const userId = instance.idUser;
-
-      // Query to fetch user information based on userId
-      const user_query = 'SELECT * FROM users WHERE idUser = ?';
-      connection.query(user_query, [userId], (err, userResult) => {
-        if (err) {
-          console.error('Error fetching user info:', err);
-          return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-        }
-
-        // Add user information to the usersInfo array
-        usersInfo.push(userResult[0]);
-
-        // If all users' information has been collected, send the response
-        if (usersInfo.length === instances.length) {
-          res.json(usersInfo);
-        }
-      });
-    }
-  });
-});
-
-
-
-
 // Function to retrieve project statistics
 
 app.get("/project-statistics", (req, res) => {
@@ -383,133 +318,7 @@ app.get("/user-statistics", (req, res) => {
   });
 });
 
-//Function to get active projects
-app.get("/active-projects", (req, res) => {
-  const curdate = new Date().toISOString();
-  const sql_query = `SELECT projects.*, users.UserName
-                    FROM projects
-                    JOIN users ON projects.idUser = users.idUser
-                    WHERE '${curdate}' < projects.StartDate OR projects.Delayed = true`;
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send(result);
-  });
-});
 
-
-
-// Fetch todays (has started, ends today) projects
-app.get("/todays-projects", (req, res) => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1; // Months are 0-based in JavaScript
-  const currentDay = currentDate.getDate();
-
-  console.log("Current date:", currentDate);
-
-  const sql_query = `
-    SELECT projects.*, users.UserName
-    FROM projects
-    JOIN users ON projects.idUser = users.idUser
-    WHERE 
-      YEAR(StartDate) = ${currentYear} AND MONTH(StartDate) = ${currentMonth} AND DAY(StartDate) <= ${currentDay}
-      AND 
-      YEAR(EndDateProjection) = ${currentYear} AND MONTH(EndDateProjection) = ${currentMonth} AND DAY(EndDateProjection) = ${currentDay}
-  `;
-
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
-
-// Fetch finished projects 
-app.get("/finished-projects", (req, res) => {
-  const currentDate = new Date();
-  const isoCurrentDate = currentDate.toISOString();
-  const sql_query = `SELECT projects.*, users.UserName
-    FROM projects
-    JOIN users ON projects.idUser = users.idUser WHERE \`Delayed\` = false AND  '${isoCurrentDate}' > EndDateProjection`;
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send(result);
-  });
-});
-
-
-// Fetch delayed projects 
-app.get("/delayed-projects", (req, res) => {
-  const sql_query = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE \`Delayed\` = true';
-  connection.query(sql_query, (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send(result);
-  });
-});
-
-
-// Fetch one project by ID
-app.post("/project-by-ID", (req, res) => {
-  const { idProjects } = req.body;
-  const sql_query = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
-  connection.query(sql_query, [idProjects], (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send(result);
-  });
-});
-
-
-
-// Function to change the end date of project (also adds delayed to it)
-app.post("/change-end-date", (req, res) => {
-  const { EndDate, idProjects } = req.body;
-  // Update the EndDate of the project in the database
-  const updateQuery = 'UPDATE projects SET EndDateProjection = ?, \`Delayed\`= true WHERE idProjects = ?';
-  connection.query(updateQuery, [EndDate, idProjects], (err, result) => {
-    if (err) {
-      console.error('Error updating end date:', err);
-      return res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
-    }
-    // Retrieve the updated project information
-    const selectQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
-    connection.query(selectQuery, [idProjects], (err, result) => {
-      if (err) {
-        console.error('Error fetching updated project:', err);
-        return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
-      }
-
-      // Send the updated project information back to the client
-      res.json(result);
-    });
-  });
-});
-
-// Function to remove project from being delayed (finish the project)
-app.post("/remove-delayed", (req, res) => {
-  const { idProjects } = req.body;
-  // Update the EndDate of the project in the database
-  const updateQuery = 'UPDATE projects SET  \`Delayed\`= false WHERE idProjects = ?';
-  connection.query(updateQuery, [idProjects], (err, result) => {
-    if (err) {
-      console.error('Error updating end date:', err);
-      return res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
-    }
-    // Retrieve the updated project information
-    const selectQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
-    connection.query(selectQuery, [idProjects], (err, result) => {
-      if (err) {
-        console.error('Error fetching updated project:', err);
-        return res.status(500).json({ status: 'error', message: 'Error fetching updated project', error: err.message });
-      }
-
-      // Send the updated project information back to the client
-      res.json(result);
-    });
-  });
-});
 
 
 

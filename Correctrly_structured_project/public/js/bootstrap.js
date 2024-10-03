@@ -4805,109 +4805,6 @@ function slowScrollTo(targetOffset, duration) {
 // Functions for viewing different account info (VIEW USERS)
 
 
-// Function to show all users
-function viewAllUsers() {
-  console.log("Viewing users");
-  // Make a fetch request to your backend to retrieve all user data
-  fetch('/all-users')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      displayUserData(data);
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
-// Function to show all active users (currently online)
-function viewActiveUsers() {
-  console.log("Viewing users");
-  // Make a fetch request to your backend to retrieve all user data
-
-  fetch('/active-users')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      displayUserData(data);
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
-// Function that searches for similar users, to have a defense for botting
-function searchSimilarUsers(email) {
-  const userEmail = email;
-  const emailPattern = `${userEmail.substring(0, 4)}%`;
-  // Now send the emailPattern to the backend to search for similar users
-
-  fetch(`/similar-users`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ emailPattern })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Process the response containing similar users
-      console.log(data);
-      displayUserData(data);
-      // Display similar users or take any other action as needed
-    })
-    .catch(error => console.error('Error searching similar users:', error));
-
-}
-
-
-
-
-// Function to show a singular account by account ID
-function searchUserByID(idUser) {
-  if (document.getElementById('userIDInput')) {
-    document.getElementById('userIDInput').value = '';
-  }
-  if (document.getElementById('InvalidID')) {
-    document.getElementById('InvalidID').classList.add('nodisplay');
-  }
-  console.log("Viewing user by ID:", idUser);
-  // Make a fetch request to your backend to retrieve all user data
-
-  fetch('/user-by-ID', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ idUser: idUser })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      if (data[0]) {
-        displayUserData(data);
-      }
-      else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
-// HIGHER IMPORTANCE USER VIEW
-
-// Function to show all workers accounts
-function viewWorkers() {
-
-  console.log("Viewing workers");
-  // Make a fetch request to your backend to retrieve all user data
-
-  fetch('/all-workers', {
-    method: 'POST',
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      displayWorkerData(data);
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
 
 
 // Functions for statistics (VIEW STATISTICS)
@@ -5037,136 +4934,15 @@ function removeWorker(idUser) {
 }
 
 
-// Function that displays projects by ID
-function searchProjectByID(idProjects) {
-  if (document.getElementById('ProjectIDInput')) {
-    document.getElementById('ProjectIDInput').value = '';
-  }
-  if (document.getElementById('InvalidProjectID')) {
-    document.getElementById('InvalidProjectID').classList.add('nodisplay');
-  }
-  console.log("Viewing project by ID:", idProjects);
-  // Make a fetch request to your backend to retrieve all user data
-
-  fetch('/project-by-ID', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ idProjects: idProjects })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      if (data[0]) {
-        displayProjectData(data);
-      }
-      else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
 
 // WORKER functions for PROJECT viewing
-// Function that displays projects by ID By Worker
-function searchProjectByIDByWorker(idProjects) {
-  if (document.getElementById('ProjectIDInput')) {
-    document.getElementById('ProjectIDInput').value = '';
-  }
-  if (document.getElementById('InvalidProjectID')) {
-    document.getElementById('InvalidProjectID').classList.add('nodisplay');
-  }
-  console.log("Viewing project by ID:", idProjects);
-  // Make a fetch request to your backend to retrieve all user data
-
-  fetch('/project-by-ID', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ idProjects: idProjects })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      if (data[0]) {
-        displayProjectDataForWorker(data);
-      }
-      else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
 
 
 
 // Functions that manipulate with project info, data (MANAGE PROJECT INFO)
 
-// Function that changes the end date of project to admin input
-function projectChangeEndTime(idProjects, NewEndDateTime) {
-  NewDate = new Date(NewEndDateTime);
-  const EndDate = NewDate.toISOString();
-  console.log(EndDate);
 
-  if (EndDate) {
-    fetch('/change-end-date', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        EndDate: EndDate,
-        idProjects: idProjects
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Call a function to display the user data on the page
-        if (data[0]) {
-          displayProjectData(data);
-          document.getElementById('InvalidDateTime').classList.add('nodisplay');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('InvalidDateTime').classList.remove('nodisplay');
 
-      });
-  }
-}
-
-// Function that changes the end date of project to worker input
-function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
-  NewDate = new Date(NewEndDateTime);
-  const EndDate = NewDate.toISOString();
-  console.log(EndDate);
-
-  if (EndDate) {
-    fetch('/change-end-date', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        EndDate: EndDate,
-        idProjects: idProjects
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Call a function to display the user data on the page
-        if (data[0]) {
-          displayProjectDataForWorker(data);
-          document.getElementById('InvalidDateTime').classList.add('nodisplay');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('InvalidDateTime').classList.remove('nodisplay');
-
-      });
-  }
-}
 
 // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function removeDelayed(idProjects) {
@@ -5222,61 +4998,9 @@ function WorkerRemoveDelayed(idProjects) {
 // Displaying functions (DISPLAY)
 
 
-//  Displaying search field for searching project by ID
-function findProjectByID() {
-  document.getElementById("registrationForm").classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.add('nodisplay');
-  document.getElementById('InvalidProjectID').classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById("searchProject").classList.remove('nodisplay');
-}
-// Display input field for id
-function findUserByID() {
-  document.getElementById("registrationForm").classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById("searchUser").classList.remove('nodisplay');
-}
-// Display input field for adding a new worker
-function addWorkerForm() {
-  document.getElementById("inputNewEndDate").classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById("registrationForm").classList.remove('nodisplay');
-}
 
-// Function that displays fields needed to change project end date
-function changeEndDate(idProjects) {
-  const projectIDElement = document.getElementById('project_id');
-  if (projectIDElement) {
-    projectIDElement.textContent = idProjects;
-  }
-  searchProjectByID(idProjects);
-  document.getElementById("registrationForm").classList.add('nodisplay');
-  document.getElementById('InvalidDateTime').classList.add('nodisplay');
-  document.getElementById('InvalidProjectID').classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.remove('nodisplay');
-}
 
-// WORKER Function that displays fields needed to change project end date 
-function changeEndDateByWorker(idProjects) {
-  const projectIDElement = document.getElementById('project_id');
-  if (projectIDElement) {
-    projectIDElement.textContent = idProjects;
-  }
-  searchProjectByIDByWorker(idProjects);
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.remove('nodisplay');
-}
+
 
 
 
@@ -5328,51 +5052,6 @@ function displayWorkerData(users) {
   });
 }
 
-
-// Function to display project data on the page
-function displayProjectData(projects) {
-
-  if (document.getElementById("registrationForm")) { document.getElementById("registrationForm").classList.add('nodisplay') };
-  if (document.getElementById("searchProject")) { document.getElementById("searchProject").classList.add('nodisplay') };
-  if (document.getElementById("searchUser")) { document.getElementById("searchUser").classList.add('nodisplay') };
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-
-  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
-
-  const userDataContainer = document.getElementById('ProjectDataContainer');
-  userDataContainer.innerHTML = `
-  <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-3">
-                <!-- User cards will be dynamically added here -->
-            </div>
-        </div>
-  `;
-  // Loop through each project and cretate HTML elemens to display their data
-  projects.forEach((project, index) => {
-    // Create a column for the project card
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
-    // Create the project card HTML
-    column.innerHTML = `
-          <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
-              <div class="card-body text-white">
-                <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
-                  <p class="card-text">User: ${project.idUser}</p>
-                  <p class="card-text">Start date: ${project.StartDate ? new Date(project.StartDate).toLocaleString() : 'Invalid Date'}</p>
-                  <p class="card-text">End date: ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleString() : 'Invalid Date'}</p>
-                  <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
-                  <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchUserByID(${project.idUser})">View project user info</button>
-                  <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="changeEndDate(${project.idProjects})">Edit project end date</button>
-                  <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteProject(${project.idProjects})">Delete project</button>
-              </div>
-          </div>
-      `;
-
-    // Append the project card to the current row
-    document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
-
-  });
-}
 
 
 // Function to display delayed project data on the page

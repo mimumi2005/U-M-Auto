@@ -52,3 +52,22 @@ export const handlegetUserAppointments = async (req, res) => {
     return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };
+
+// Fetch all projects
+export const fetchAllProjectDATES = (req, res) => {
+  const MonthSelected = req.body.MonthDisplay;
+  const YearSelected = req.body.YearDisplay;
+  
+  console.log("Month:", MonthSelected);
+  console.log("Year:", YearSelected);
+
+  userModel.getProjectDates(MonthSelected, YearSelected, (err, result) => {
+    if (err) {
+      console.error("Error fetching project dates:", err);
+      return res.status(500).send("An error occurred while fetching project dates.");
+    }
+    
+    // Send the result after the query is complete
+    res.send(result);
+  });
+};
