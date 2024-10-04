@@ -1,7 +1,23 @@
 
+
+
 # Website for car repair shop
 
 Creating a unique car repair shop website, where users can neately move between information and functions that we offer.
+
+# Home page
+![image](https://github.com/user-attachments/assets/c22de027-7ed9-42b3-9a4e-8a1a29de95a8)
+
+# Price estimator page
+![image](https://github.com/user-attachments/assets/5f9b21fa-87fd-4c00-bcbb-e1c13840bdaf)
+
+
+# Booking appointments page
+![image](https://github.com/user-attachments/assets/ad9176f4-797a-49dd-a322-6149601589c5)
+
+# Admin pannel
+![image](https://github.com/user-attachments/assets/47b1e5d6-9713-4a3e-a3c3-f09c7fd3d50a)
+
 
 How to run the project:
 - 
@@ -16,9 +32,8 @@ How to run the project:
 
 3. Uzip the folder;
 
-4. Run the folder with visual studio code;
+4. Run the folder with visual studio code or other;
 
-5. Open Home.html with live server;
 ```
 That finishes the frontend setup, now you need to set up the database.
 ```
@@ -34,11 +49,11 @@ replace the code in the query with that and run it again;
 
 10. Now make sure your local database instance is running and check the password you have for it;
 
-11. Go back to visual studio code and open Database.js (its in ./botstrap-5.3.2-dist./js folder)
+11. Go back to visual studio code, or other and open .env  (its in ./Correctly_structured_project folder)
 find where it says password: "root", and change "root" to your instance password
 leave empty if you dont have a paswword for it;
 
-12. Then open a terminal in visual studio code, write 'cd ./bootstrap-5.3.2-dist/js' and then 'node Database.js'
+12. Then open a terminal in visual studio code, write 'cd ./correctly_structured_project/src' and then 'node app.js'
 ````
 Now go back to the web page and the database should be up and running.
 
@@ -79,4 +94,6 @@ Javascript, HTML, CSS...
 - [x] Make a worker page where workers can see project information;
 - [ ] Possibly add light mode;
 - [ ] If i can be bothered add password reset through email, with that also notifications for users, about deals, sales and other reminders;
+- [ ] Add notification settings in database (so we can easily see if the user is opted in or out of notifs and send email reminders, etc. to only opted in users instantly, with just a simple query)
+- [ ] Fix database and documentation
 
