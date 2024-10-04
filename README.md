@@ -79,4 +79,6 @@ Javascript, HTML, CSS...
 - [x] Make a worker page where workers can see project information;
 - [ ] Possibly add light mode;
 - [ ] If i can be bothered add password reset through email, with that also notifications for users, about deals, sales and other reminders;
+- [ ] Add notification settings in database (so we can easily see if the user is opted in or out of notifs and send email reminders, etc. to only opted in users instantly, with just a simple query)
+- [ ] Fix database and documentation
 
