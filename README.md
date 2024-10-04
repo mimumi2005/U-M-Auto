@@ -1,7 +1,23 @@
+![image](https://github.com/user-attachments/assets/6309b2bb-ac5c-4e2d-a0cc-ffca51c8da85)
+
 
 # Website for car repair shop
 
 Creating a unique car repair shop website, where users can neately move between information and functions that we offer.
+
+# Home page
+![image](https://github.com/user-attachments/assets/c22de027-7ed9-42b3-9a4e-8a1a29de95a8)
+
+# Price estimator page
+![image](https://github.com/user-attachments/assets/5f9b21fa-87fd-4c00-bcbb-e1c13840bdaf)
+
+
+# Booking appointments page
+![image](https://github.com/user-attachments/assets/ad9176f4-797a-49dd-a322-6149601589c5)
+
+# Admin pannel
+![image](https://github.com/user-attachments/assets/47b1e5d6-9713-4a3e-a3c3-f09c7fd3d50a)
+
 
 How to run the project:
 - 
