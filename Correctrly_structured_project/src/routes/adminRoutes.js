@@ -3,7 +3,7 @@ import express from 'express';
 import { isAdmin } from '../middleware/isAdmin.js';
 import {
     adminDashboard, adminStatistics, fetchAllWorkers, fetchAllAdmins, fetchActiveProjects,
-    fetchProjectById, fetchUserById, fetchActiveUsers, fetchTodaysProjects, fetchFinishedProjects, fetchDelayedProjects, changeEndDate, removeDelayedProject, fetchAllUsers, registerWorker
+    fetchProjectById, fetchUserById, fetchActiveUsers, fetchTodaysProjects, fetchFinishedProjects, fetchDelayedProjects, changeEndDate, removeDelayedProject, fetchAllUsers, registerWorker, fetchProjectByUserId, fetchUserByEmail
 } from '../controllers/adminController.js';
 
 const router = express.Router();
@@ -24,7 +24,8 @@ router.get('/active-users', isAdmin, fetchActiveUsers);
 router.get('/todays-projects', isAdmin, fetchTodaysProjects);
 router.get('/finished-projects', isAdmin, fetchFinishedProjects);
 router.get('/delayed-projects', isAdmin, fetchDelayedProjects);
-
+router.post('/project-by-user-id', isAdmin, fetchProjectByUserId);
+router.post('/user-by-email', isAdmin, fetchUserByEmail);
 
 router.get('/all-users', isAdmin, fetchAllUsers);
 router.post('/remove-delayed', isAdmin, removeDelayedProject);

@@ -273,3 +273,33 @@ export const registerWorker = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+  // Controller function to remove the delayed status from a project
+  export const fetchProjectByUserId = (req, res) => {
+    const { idUser } = req.body;
+  
+    adminModel.getProjectsByUserId(idUser, (err, result) => {
+      if (err) {
+        console.error('Error updating project status:', err);
+        return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
+      }
+  
+      res.json(result);
+    });
+  };
+
+
+    // Controller function to remove the delayed status from a project
+    export const fetchUserByEmail = (req, res) => {
+      const { email } = req.body;
+    
+      adminModel.getUserByEmail(email, (err, result) => {
+        if (err) {
+          console.error('Error updating project status:', err);
+          return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
+        }
+    
+        res.json(result);
+      });
+    };
+  

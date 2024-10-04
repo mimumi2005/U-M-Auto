@@ -4,7 +4,7 @@ import session from 'express-session';
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cron from "node-cron";
-
+import { createRequire } from 'module';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,6 +28,7 @@ import dotenv from "dotenv";
 import connection from './config/db.js'; // Importing connection
 import routes from './routes/index.js';  // Import your routes
 
+
 // Replicating __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,21 +37,26 @@ dotenv.config();
 
 const app = express();
 
+
+
+// Session middleware setup
+app.use(session({
+  secret: '072637e0cbb770e4e60efc963fbfbdc1a93da3efeb5945491257bae9db01b5c2718c87a1300934b07562a19a4418a4e3537324661c90f384b747f11237d25e5f', // Keep it secret
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Set to true in production
+    maxAge: 1*60*30*1000 // Session expires after 30 minutes
+  }
+}));
+
 // EJS setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../public'));
 
 
-// Session middleware setup
-app.use(session({
-  secret: '072637e0cbb770e4e60efc963fbfbdc1a93da3efeb5945491257bae9db01b5c2718c87a1300934b07562a19a4418a4e3537324661c90f384b747f11237d25e5f', // Replace with your secret
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production', // Set to true in production
-    maxAge: 1 * 30 * 60 * 1000 // Session expires after 30 minutes
-  }
-}));
+
+
 app.use(attachUser);
 app.use(cacheControlMiddleware);
 // Use the nonce middleware
@@ -99,7 +105,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-
 cron.schedule('0 0 * * *', () => {
   // Logic to update tenure for all workers
   updateTenureForAllWorkers();
@@ -145,6 +150,9 @@ app.get('/api/getUserSession', (req, res) => {
       res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
   }
 });
+
+
+
 
 
 // Fetch all users

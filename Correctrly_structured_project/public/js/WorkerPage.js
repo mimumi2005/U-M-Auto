@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', handleHashChange);
 window.addEventListener('hashchange', handleHashChange);
 
 function deleteProject(ProjectID) {
-    fetch(window.location.origin + `/project-delete/${ProjectID}`, {
+    fetch(`/worker/project-delete/${ProjectID}`, {
         method: 'DELETE', // Use the DELETE method to indicate deletion
         headers: {
             'Content-Type': 'application/json' // Specify that the request body is JSON
@@ -55,7 +55,7 @@ function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
     console.log(EndDate);
 
     if (EndDate) {
-        fetch('/change-end-date', {
+        fetch('/worker/change-end-date', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ function searchProjectByIDByWorker(idProjects) {
     console.log("Viewing project by ID:", idProjects);
     // Make a fetch request to your backend to retrieve all user data
 
-    fetch('/project-by-ID', {
+    fetch('/worker/project-by-ID', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -332,7 +332,7 @@ function searchTodaysProjects() {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.add('nodisplay');
     // Make a fetch request to your backend to retrieve all user data
-    fetch(window.location.origin + '/todays-projects',)
+    fetch('/worker/todays-projects',)
         .then(response => response.json())
         .then(data => {
             // Call a function to display the user data on the page
@@ -349,7 +349,7 @@ function searchActiveProjects() {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.add('nodisplay');
     // Make a fetch request to your backend to retrieve all user data
-    fetch(window.location.origin + '/active-projects',)
+    fetch('/worker/active-projects',)
         .then(response => response.json())
         .then(data => {
             // Call a function to display the user data on the page
@@ -365,7 +365,7 @@ function searchDelayedProjects() {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.add('nodisplay');
     // Make a fetch request to your backend to retrieve all user data
-    fetch(window.location.origin + '/delayed-projects',)
+    fetch('/worker/delayed-projects',)
         .then(response => response.json())
         .then(data => {
             // Call a function to display the user data on the page
@@ -382,7 +382,7 @@ function searchUserByID(idUser) {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     console.log("Viewing user by ID:", idUser);
     // Make a fetch request to your backend to retrieve all user data
-    fetch(window.location.origin + '/user-by-ID', {
+    fetch('/worker/user-by-ID', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -408,7 +408,7 @@ function searchProjectsByUserID(idUser) {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.add('nodisplay');
     // Make a fetch request to your backend to retrieve all user data
-    fetch(window.location.origin + '/project-by-user-ID', {
+    fetch('/worker/project-by-user-ID', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -430,7 +430,7 @@ function searchProjectsByUserID(idUser) {
 
 // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function removeDelayed(idProjects) {
-    fetch(window.location.origin + '/remove-delayed', {
+    fetch( '/worker/remove-delayed', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

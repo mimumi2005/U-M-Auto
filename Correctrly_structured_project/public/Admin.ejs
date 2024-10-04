@@ -37,6 +37,8 @@
                         <!-- Users Section -->
                         <h5 class="text-white text-center">Users</h5>
                         <div class="d-grid gap-3 mb-4">
+                            <button id="findUserByEmail" class="btn btn-outline-secondary text-white">View user by
+                                Email</button>
                             <button id="findUserByID" class="btn btn-outline-secondary text-white">View user by
                                 ID</button>
                             <button id="viewActiveUsers" class="btn btn-outline-secondary text-white">View all active
@@ -180,20 +182,24 @@
 
                     <div id="searchUser" class="col-sm-3 m-auto text-center nodisplay">
                         <span id="InvalidID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid ID</b></span>
-                        <br>
-                        <input type="text" id="userIDInput" class="form-control" placeholder="Enter User ID"
-                            onkeypress="handleKeyPress(event)">
+                        <input type="text" id="userIDInput" class="form-control" placeholder="Enter User ID">
                         <button class="btn btn-outline-primary mt-2" id="searchUserButton">Search</button>
+                    </div>
+
+                    <div id="searchUserByEmail" class="col-sm-4 m-auto text-center nodisplay">
+                        <span id="InvalidEmail" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid Email</b></span>
+                        <input type="text" id="userEmailInput" class="form-control" placeholder="Enter User's email">
+                        <button class="btn btn-outline-primary mt-2" id="searchUserByEmailButton">Search</button>
                     </div>
 
                     <div id="searchProject" class="col-sm-3 m-auto text-center nodisplay">
                         <span id="InvalidProjectID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid
                                 ID</b></span>
-                        <br>
-                        <input type="text" id="ProjectIDInput" class="form-control" placeholder="Enter Project ID"
-                            onkeypress="handleProjectKeyPress(event)">
+
+                        <input type="text" id="ProjectIDInput" class="form-control" placeholder="Enter Project ID">
                         <button class="btn btn-outline-primary mt-2" id="searchProjectButton">Search</button>
                     </div>
+
 
                     <div class="col-md-3  bg-light text-white m-auto nodisplay " style="max-width:20%"
                         id="registrationForm">

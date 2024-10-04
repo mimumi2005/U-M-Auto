@@ -83,6 +83,12 @@ export const getUserById = (idUser, callback) => {
   connection.query(user_query, [idUser], callback);
 };
 
+// Model function to fetch user information by user ID
+export const getUserByEmail = (email, callback) => {
+  const user_query = 'SELECT * FROM users WHERE Email = ?';
+  connection.query(user_query, [email], callback);
+};
+
 export const getTodaysProjects = (year, month, day, callback) => {
   const sql_query = `
     SELECT projects.*, users.UserName
@@ -196,4 +202,16 @@ export const insertAdmin = (idUser) => {
       resolve(result);
     });
   });
+};
+
+export const getProjectsByUserId = (idUser, callback) => {
+  const sql_query = `
+    SELECT projects.*, users.UserName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser
+    WHERE projects.idUser = ?
+  `;
+
+  // Execute the query
+  connection.query(sql_query, [idUser], callback);
 };

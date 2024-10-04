@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Adding event listeners 
     // Users Section
     document.getElementById('findUserByID').addEventListener('click', findUserByID);
+    document.getElementById('findUserByEmail').addEventListener('click', findUserByEmail);
     document.getElementById('viewActiveUsers').addEventListener('click', viewActiveUsers);
     document.getElementById('viewAllUsers').addEventListener('click', viewAllUsers);
     document.getElementById('viewAdmins').addEventListener('click', viewAdmins);
@@ -17,6 +18,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('viewActiveProjects').addEventListener('click', viewActiveProjects);
     document.getElementById('viewFinishedProjects').addEventListener('click', viewFinishedProjects);
 
+    // Add event listener for the user ID input
+    document.getElementById('userIDInput').addEventListener('keypress', handleKeyPress);
+
+    // Add event listener for the user email input
+    document.getElementById('userEmailInput').addEventListener('keypress', handleEmailKeyPress);
+
+    // Add event listener for the project ID input
+    document.getElementById('ProjectIDInput').addEventListener('keypress', handleProjectKeyPress);
+
     // Change End Time Button
     document.getElementById('changeEndTimeButton').addEventListener('click', function () {
         projectChangeEndTime(
@@ -28,6 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Search User Button
     document.getElementById('searchUserButton').addEventListener('click', function () {
         searchUserByID(document.getElementById('userIDInput').value);
+    });
+
+     // Search User by email Button
+     document.getElementById('searchUserByEmailButton').addEventListener('click', function () {
+        searchUserByEmail(document.getElementById('userEmailInput').value);
     });
 
     // Search Project Button
@@ -119,6 +134,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function handleEmailKeyPress(event) {
+        if (event.key === 'Enter') {
+            searchUserByEmail(document.getElementById('userIDInput').value);
+        }
+    }
+
     function handleEndDateKeyPress(event) {
         if (event.key === 'Enter') {
             projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
@@ -139,8 +160,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    // Function to display the fetched appointment data in a table formatfunction displayProjectDataForWorker(data) {
+    // Function to display the fetched appointment data in a table formatfunction(data) {
     function displayProjectData(data) {
+        document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById('registrationForm').classList.add('nodisplay');
         document.getElementById('searchProject').classList.add('nodisplay');
         document.getElementById('searchUser').classList.add('nodisplay');
@@ -302,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display user data on the page
     function displayUserData(users) {
+        document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById('registrationForm').classList.add('nodisplay');
         document.getElementById('searchProject').classList.add('nodisplay');
         document.getElementById('searchUser').classList.add('nodisplay');
@@ -355,6 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display user data on the page
     function displayWorkerData(users) {
+        document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById('registrationForm').classList.add('nodisplay');
         document.getElementById('searchProject').classList.add('nodisplay');
         document.getElementById('searchUser').classList.add('nodisplay');
@@ -424,6 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display user data on the page
     function displayAdminData(users) {
+        document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById('registrationForm').classList.add('nodisplay');
         document.getElementById('searchProject').classList.add('nodisplay');
         document.getElementById('searchUser').classList.add('nodisplay');
@@ -585,6 +610,35 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching user data:', error));
     }
 
+    
+    // Function to show a singular account by account ID
+    function searchUserByEmail(email) {
+        document.getElementById('userEmailInput').value = '';
+        document.getElementById('InvalidEmail').classList.add('nodisplay');
+        console.log("Viewing user by email:", email);
+        // Make a fetch request to your backend to retrieve all user data
+        fetch('/admin/user-by-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email })
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Call a function to display the user data on the page
+                if (data[0]) {
+                    const title = document.getElementById('TitleHeader');
+                    title.innerHTML = `Email- ${email}`;
+                    displayUserData(data);
+                }
+                else { document.getElementById('InvalidEmail').classList.remove('nodisplay'); }
+
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    }
+
+
 
     // Function that shows all active projects
     function viewActiveProjects() {
@@ -726,6 +780,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/admin/all-users')
             .then(response => response.json())
             .then(data => {
+                const title = document.getElementById('TitleHeader');
+                title.innerHTML = `All users`;
                 // Call a function to display the user data on the page
                 displayUserData(data);
             })
@@ -740,6 +796,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/admin/active-users')
             .then(response => response.json())
             .then(data => {
+                const title = document.getElementById('TitleHeader');
+                title.innerHTML = `Users currently logged in`;
                 // Call a function to display the user data on the page
                 displayUserData(data);
             })
@@ -762,7 +820,10 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => response.json())
             .then(data => {
+                const title = document.getElementById('TitleHeader');
+                title.innerHTML = `Users with similar credentials (suspected bot accounts)`;
                 // Process the response containing similar users
+
                 console.log(data);
                 displayUserData(data);
                 // Display similar users or take any other action as needed
@@ -796,6 +857,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // Call a function to display the user data on the page
                 if (data[0]) {
+                    const title = document.getElementById('TitleHeader');
+                    title.innerHTML = `User-${data[0].idUser}`;
                     displayUserData(data);
                 }
                 else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
@@ -817,12 +880,40 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => response.json())
             .then(data => {
+                const title = document.getElementById('TitleHeader');
+                title.innerHTML = `All workers`;
                 // Call a function to display the user data on the page
                 displayWorkerData(data);
             })
             .catch(error => console.error('Error fetching user data:', error));
     }
 
+
+    // Function that displays all projects that have been made by one person (ID)
+    function searchProjectsByUserID(idUser) {
+        console.log("Viewing user by ID:", idUser);
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
+        document.getElementById('userDataContainer').classList.add('nodisplay');
+        // Make a fetch request to your backend to retrieve all user data
+        fetch('/admin/project-by-user-ID', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ idUser: idUser })
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Call a function to display the user data on the page
+                if (data[0]) {
+                    const title = document.getElementById('TitleHeader');
+                    title.innerHTML = `Users Projects`;
+                    displayProjectData(data);
+                }
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+
+    }
 
     // Function that displays fields needed to change project end date
     function changeEndDate(idProjects) {
@@ -850,7 +941,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("searchUser").classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
-        
+        document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById("searchProject").classList.remove('nodisplay');
         const title = document.getElementById('TitleHeader');
         title.innerHTML = `Search project by ID`;
@@ -863,11 +954,26 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
         document.getElementById("searchUser").classList.remove('nodisplay');
+        document.getElementById("searchUserByEmail").classList.add('nodisplay');
+        const title = document.getElementById('TitleHeader');
+        title.innerHTML = `Search user by ID`;
+    }
+
+    // Display input field for email
+    function findUserByEmail() {
+        document.getElementById("registrationForm").classList.add('nodisplay');
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
+        document.getElementById("searchProject").classList.add('nodisplay');
+        document.getElementById('ProjectDataContainer').classList.add('nodisplay');
+        document.getElementById('userDataContainer').classList.add('nodisplay');
+        document.getElementById("searchUser").classList.add('nodisplay');
+        document.getElementById("searchUserByEmail").classList.remove('nodisplay');
         const title = document.getElementById('TitleHeader');
         title.innerHTML = `Search user by ID`;
     }
     // Display input field for adding a new worker
     function addWorkerForm() {
+        document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
         document.getElementById("searchProject").classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
