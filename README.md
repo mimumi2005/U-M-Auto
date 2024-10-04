@@ -82,7 +82,7 @@ Functions for admin:
 
 - MySQL 8.0 database
 - NodeJS, Express
-- HTML/NodeJS
+- HTML/NodeJS/EJS
 - Bootstrap
 
 
