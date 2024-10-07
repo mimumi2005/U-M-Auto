@@ -2,7 +2,8 @@
 import express from 'express';
 import {sanitizeInputProjects} from '../middleware/escapeHTMLproject.js';
 import {sanitizeInputUsers} from '../middleware/escapeHTMLusers.js';
-import { loginUser, handleLogout, handleSignUp, handleCreateAppointment, changePassword, profile, getUserAppointments, getUserSettings } from '../controllers/authController.js';
+import {checkSession} from '../middleware/checkSession.js';
+import { loginUser, handleLogout, handleSignUp, handleCreateAppointment, changePassword, getProfilePage, getUserAppointments, getUserSettings, getUserProfileInfo } from '../controllers/authController.js';
 
 
 
@@ -16,20 +17,24 @@ router.post('/login', (req, res) => {
 
 
 // POST route for logging out a user
-router.post('/log-out', handleLogout);
+router.post('/log-out',checkSession, handleLogout);
 
-router.post('/sign-up', sanitizeInputUsers, handleSignUp);
+router.post('/sign-up',checkSession, sanitizeInputUsers, handleSignUp);
 
-router.post('/createAppointment', sanitizeInputProjects, handleCreateAppointment);
-
-
-router.post('/change-password', sanitizeInputUsers, changePassword);
+router.post('/createAppointment',checkSession, sanitizeInputProjects, handleCreateAppointment);
 
 
-router.get('/Profile', profile);
+router.post('/change-password',checkSession, sanitizeInputUsers, changePassword);
 
-router.get('/UserAppointment', getUserAppointments)
 
-router.get('/Settings', getUserSettings)
+router.get('/ProfilePage',checkSession, getProfilePage);
+
+router.get('/ProfileInfo',checkSession, getUserProfileInfo)
+
+router.get('/UserAppointment',checkSession, getUserAppointments)
+
+
+
+router.get('/Settings',checkSession, getUserSettings)
 
 export default router;

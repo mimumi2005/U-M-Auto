@@ -48,7 +48,15 @@ window.addEventListener('scroll', function() {
     });
   }
 
+   // Check for the 'sessionEnded' query parameter
+   const urlParams = new URLSearchParams(window.location.search);
+   const sessionEnded = urlParams.get('sessionEnded');
+
+   if (sessionEnded) {
+       document.getElementById('session-message').classList.remove('nodisplay');
+   }
   // Add scroll event listener
   document.addEventListener('scroll', handleScroll);
 
   });
+

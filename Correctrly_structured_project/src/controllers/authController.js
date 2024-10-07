@@ -3,9 +3,44 @@ import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as authModel from '../models/authModels.js'; // Importing model
 
-export const profile = (req, res) => {
-  res.render('Profile', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+export const getProfilePage = (req, res) => {
+  res.render('pages/Profile', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
+
+export const getUserProfileInfo =  (req, res) => {
+  // Fetch user information based on the logged-in user
+  const  UUID  = req.user.UUID; // Change from req.body to req.query
+  console.log(UUID);
+
+  const query = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
+  connection.query(query, [UUID], (err, results) => {
+    if (err) {
+      console.error('Error fetching user information from the database:', err);
+      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ status: 'error', message: 'User not found' });
+    }
+
+    const User = results[0].idUser;
+    console.log(User);
+    const query = 'SELECT * FROM users WHERE idUser = ?';
+    connection.query(query, [User], (err, results) => {
+      if (err) {
+        console.error('Error fetching user information from the database:', err);
+        return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ status: 'error', message: 'User not found' });
+      }
+      const userInformation = results[0];
+      res.json({ status: 'success', user: userInformation });
+    });
+  });
+};
+
 
 // controllers/authController.js
 export const loginUser = (req, res) => {
@@ -211,12 +246,12 @@ export const getUserAppointments = async (req, res) => {
     const projects = await authModel.getProjectsByUserId(idUser);
 
     // If you need to return the HTML page
-    res.render('UserAppointment', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+    res.render('pages/UserAppointment', { nonce: res.locals.nonce }); // Pass nonce to EJS template
   } catch (error) {
     console.error('Error fetching projects:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 export const getUserSettings = (req, res) => {
-  res.render('Settings', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+  res.render('pages/Settings', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };

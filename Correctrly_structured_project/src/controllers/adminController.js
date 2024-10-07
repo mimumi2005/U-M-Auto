@@ -4,11 +4,11 @@ import * as adminModel from '../models/adminModels.js'
 
 export const adminDashboard = (req, res) => {
     // Render the admin dashboard or serve a file
-    res.render('Admin', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+    res.render('pages/Admin', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 export const adminStatistics = (req, res) => {
     // Render the admin dashboard or serve a file
-    res.render('Statistics', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+    res.render('pages/Statistics', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 
 
@@ -303,3 +303,4 @@ export const registerWorker = async (req, res) => {
       });
     };
   
+    

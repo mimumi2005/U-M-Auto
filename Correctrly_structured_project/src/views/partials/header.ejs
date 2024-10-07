@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="manifest" href="/js/manifest.json">
     <!-- Local bootstrap.js-->
-    <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
     <link rel="icon" type="image/png" href="/images/icon.png">
     <style>
         body {
@@ -114,7 +113,7 @@
                             Profile
                         </a>
                         <div class="dropup dropdown-menu " aria-labelledby="accountDropdown">
-                            <a class=" dropdown-item text-white" href="/auth/Profile">Account Info</a>
+                            <a class=" dropdown-item text-white" href="/auth/ProfilePage">Account Info</a>
                             <a class=" bg-gray dropdown-item text-white " href="/auth/UserAppointment">Appointments</a>
                             <a class=" bg-gray dropdown-item text-white " href="/auth/Settings">Settings</a>
                             <a id="AdminMenu" class=" bg-gray dropdown-item text-white nodisplay "
@@ -139,6 +138,5 @@
     </div>
     <div id="scroll-to-top-btn" style="z-index:1000; display:none">↑</div>
 </body>
-<script src="/js/header.js" nonce="<%= nonce %>"></script>
 
 </html>

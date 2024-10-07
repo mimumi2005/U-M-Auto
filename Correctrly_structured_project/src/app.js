@@ -12,7 +12,7 @@ import csrf from "csurf";
 import path from "path";
 import { fileURLToPath } from 'url';
 import ejs from 'ejs';
-
+import expressLayouts from 'express-ejs-layouts';
 // Middleware
 import {cacheControlMiddleware} from './middleware/preventCaching.js';
 import { attachUser } from './middleware/attachUser.js';
@@ -50,14 +50,19 @@ app.use(session({
   }
 }));
 
-// EJS setup
+
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../public'));
+app.set('views', path.join(__dirname, './views')); // Pointing to the views folder in src
 
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the public folder outside src
 
+// Use express-ejs-layouts
+app.use(expressLayouts);
 
 
 app.use(attachUser);
+
 app.use(cacheControlMiddleware);
 // Use the nonce middleware
 app.use(generateNonce);
@@ -85,7 +90,7 @@ app.use(helmet.contentSecurityPolicy({
 // Middleware to parse JSON request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../public'))); // Serve static files
+
 
 // Use your routes
 app.use('/', routes);  

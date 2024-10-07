@@ -4499,36 +4499,30 @@
 
 // CORE PROJECT JS
 
-// WHEN LOADED, inject header
+// WHEN LOADED, inject header// WHEN LOADED, inject header
 document.addEventListener("DOMContentLoaded", function () {
-  // Fetch and insert the header HTML into the current page
-  fetch("/header.ejs")
-    .then(response => response.text())
-    .then(data => {
-      document.body.insertAdjacentHTML("afterbegin", data);
+  // Set up event listeners for scroll to top button
+  window.onscroll = function () {
+    toggleScrollToTopButton();
+  };
+  
+  const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+  if (scrollToTopBtn) {
+    scrollToTopBtn.addEventListener('click', scrollToTop);
+  }
 
-      // Load the header.js script dynamically
-      const script = document.createElement('script');
-      script.src = '/js/header.js'; // Adjust the path as necessary
-      script.onload = () => {
-        window.onscroll = function () {
-          toggleScrollToTopButton();
-        };
-        document.getElementById('scroll-to-top-btn').addEventListener('click', scrollToTop);
-        const LogOutButton = document.getElementById("Log-out-button");
-        LogOutButton.addEventListener('click', LogOut);
-        LogOutButton.addEventListener("keydown", function (event) {
-          if (event.key === "Enter") {
-            LogOut();
-          }
-        });
-      };
+  const LogOutButton = document.getElementById("Log-out-button");
+  if (LogOutButton) {
+    LogOutButton.addEventListener('click', LogOut);
+    LogOutButton.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        LogOut();
+      }
+    });
+  }
 
-      document.body.appendChild(script); // Append the script to the body
-
-      // Fetch user session data
-      return fetch('/api/getUserSession'); // Assuming you have a route to get user session data
-    })
+  // Fetch user session data
+  fetch('/api/getUserSession') // Assuming you have a route to get user session data
     .then(response => {
       if (!response.ok) throw new Error('Failed to fetch user session data');
       return response.json();
@@ -4546,6 +4540,7 @@ document.addEventListener("DOMContentLoaded", function () {
       updateButtonVisibility(false, false, false);
     });
 });
+
 
 
 // Initialize the map
@@ -4678,6 +4673,16 @@ function loginUser(response) {
 
 // LogOut main function
 function LogOut() {
+  fetch('/dashboard-data')
+    .then(response => response.json())
+    .then(data => {
+      if (data.userId) {
+        console.log('User ID:', data.userId);
+        // Use the userId in your frontend code as needed
+      }
+    })
+
+    .catch(error => console.error('Error fetching user data:', error));
   const loggedUser = JSON.parse(getCookie("userData"));
   console.log('Logged user:', loggedUser);
   fetch('/auth/log-out', {
@@ -4760,22 +4765,22 @@ function showCustomAppointmentAlert() {
 }
 
 
-// Adding icon to browser
-const link = document.createElement('link');
-link.rel = 'icon';
-link.type = 'image/png';
-console.log(window.matchMedia);
-console.log(window.matchMedia('(prefers-color-scheme: dark)'));
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  // Dark mode is enabled
-  link.href = '../images/Icon.png';
+document.addEventListener('DOMContentLoaded', () => {
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.type = 'image/png';
+  
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      // Dark mode is enabled
+      link.href = '/images/Icon.png'; // Use absolute path
+  } else {
+      // Dark mode is not enabled
+      link.href = '/images/Icon2.png'; // Use absolute path
+  }
+  
+  document.head.appendChild(link);
+});
 
-} else {
-  // Dark mode is not enabled
-  link.href = '../images/Icon2.png';
-}
-
-document.head.appendChild(link)
 
 
 // Custom scroll function, used for services page

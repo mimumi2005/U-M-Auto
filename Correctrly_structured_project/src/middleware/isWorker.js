@@ -3,7 +3,11 @@ import { checkWorkerStatus } from '../models/workerModels.js'; // Assuming you h
 
 export function isWorker(req, res, next) {
     const userId = req.user.id; // Assuming you have user info stored in req.user from session or JWT
-    // Query the database to check if the user is an admin
+    if (!req.user) {
+        // Redirect to homepage with a 'sessionEnded' query parameter
+        return res.redirect('/?sessionEnded=true');
+    }
+
     checkWorkerStatus(userId, connection, (err, callback) => {
         if (err) {
             console.error('Error checking admin status:', err);

@@ -1,6 +1,5 @@
 
 
-
 document.addEventListener('DOMContentLoaded', function () {
     // Adding event listeners 
     // Users Section
@@ -40,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
         searchUserByID(document.getElementById('userIDInput').value);
     });
 
-     // Search User by email Button
-     document.getElementById('searchUserByEmailButton').addEventListener('click', function () {
+    // Search User by email Button
+    document.getElementById('searchUserByEmailButton').addEventListener('click', function () {
         searchUserByEmail(document.getElementById('userEmailInput').value);
     });
 
@@ -136,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleEmailKeyPress(event) {
         if (event.key === 'Enter') {
-            searchUserByEmail(document.getElementById('userIDInput').value);
+            searchUserByEmail(document.getElementById('userEmailInput').value);
         }
     }
 
@@ -171,10 +170,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
         document.getElementById('workerDataContainer').classList.add('nodisplay');
         let isAscending = true; // Flag to track ascending/descending order
-        let currentColumn = 'idUser'; // Default to sorting by 'User ID'
+        let currentColumn = 'idProject'; // Default to sorting by 'User ID'
 
         const tableBody = document.getElementById('project-table-body');
         const headers = {
+            idProject: document.querySelector('[data-column="idProject"]'),
             idUser: document.querySelector('[data-column="idUser"]'),
             StartDate: document.querySelector('[data-column="StartDate"]'),
             EndDateProjection: document.querySelector('[data-column="EndDateProjection"]'),
@@ -184,7 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Original header text for each column
         const headerText = {
-            idUser: 'Username',
+            idProject: 'Project ID',
+            idUser: 'User info',
             StartDate: 'Start Date',
             EndDateProjection: 'End Date Projection',
             ProjectInfo: 'Project Info',
@@ -212,11 +213,23 @@ document.addEventListener('DOMContentLoaded', function () {
             sortedData.forEach(appointment => {
                 const row = document.createElement('tr');
 
+
+                // Project ID
+                const IDCell = document.createElement('td');
+                IDCell.textContent = appointment.idProjects;
+                IDCell.classList.add('text-white'); // By default, since the table is dark mode the text is gray, changing to white
+                IDCell.classList.add('text-center'); // Center the ID's so it looks nicer
+                IDCell.style.fontSize = "1.3rem"; // Make ID's font bigger so the number fills more of the space
+                IDCell.style.width = "9%";  // Clarify width so when sorting by any of the values it doesnt change column width (since it adds the arrow and that increases size)
+                row.appendChild(IDCell);
+
+
                 // User ID
                 const userIDcell = document.createElement('td');
                 const userLink = document.createElement('a');
                 userLink.textContent = appointment.UserName + ` (${appointment.idUser})`;
                 userLink.href = '#';
+                userLink.style.width = "15%"; 
                 userLink.style.color = 'blue';
 
 
@@ -231,23 +244,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 const startDateCell = document.createElement('td');
                 startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString() + `\n${new Date(appointment.StartDate).toLocaleTimeString()}`;
                 startDateCell.classList.add('text-white');
+                startDateCell.style.width = "11%"; 
                 row.appendChild(startDateCell);
 
                 // Projected End Date
                 const endDateCell = document.createElement('td');
                 endDateCell.textContent = new Date(appointment.EndDateProjection).toLocaleDateString() + `\n${new Date(appointment.EndDateProjection).toLocaleTimeString()}`;
                 endDateCell.classList.add('text-white');
+                endDateCell.style.width = "15%"; 
                 row.appendChild(endDateCell);
 
                 // Project Info
                 const projectInfoCell = document.createElement('td');
                 projectInfoCell.textContent = appointment.ProjectInfo;
+                projectInfoCell.style.width = "30%"; 
                 projectInfoCell.classList.add('text-white');
                 row.appendChild(projectInfoCell);
 
                 // Delay Status
                 const delayedCell = document.createElement('td');
                 const DelayLink = document.createElement('a');
+                delayedCell.style.width = "15%"; 
 
                 if (appointment.Delayed === 1) {
                     DelayLink.innerHTML = delayedCell.innerHTML + '<br><a class="text-light" href="#">(Click to finish project)</a>';
@@ -281,6 +298,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 let aValue, bValue;
 
                 switch (column) {
+                    case 'idProject':
+                        aValue = a.idProjects;
+                        bValue = b.idProjects;
+                        break;
                     case 'idUser':
                         aValue = a.idUser;
                         bValue = b.idUser;
@@ -313,13 +334,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Attach event listeners to the table headers for sorting
+        headers.idProject.onclick = () => sortData('idProject');
         headers.idUser.onclick = () => sortData('idUser');
         headers.StartDate.onclick = () => sortData('StartDate');
         headers.EndDateProjection.onclick = () => sortData('EndDateProjection');
         headers.ProjectInfo.onclick = () => sortData('ProjectInfo');
         headers.Delayed.onclick = () => sortData('Delayed');
 
-        sortData('idUser'); // Initial sort by 'User ID'
+        sortData('idProject'); // Initial sort by 'User ID'
     }
 
     // Function to display user data on the page
@@ -338,6 +360,13 @@ document.addEventListener('DOMContentLoaded', function () {
         users.forEach(user => {
             // Create a new row for each user
             const row = document.createElement('tr');
+
+            // User ID
+            const IDCell = document.createElement('td');
+            IDCell.textContent = user.idUser;
+            IDCell.classList.add('text-white');
+            row.appendChild(IDCell);
+
 
             // Name
             const NameCell = document.createElement('td');
@@ -610,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching user data:', error));
     }
 
-    
+
     // Function to show a singular account by account ID
     function searchUserByEmail(email) {
         document.getElementById('userEmailInput').value = '';

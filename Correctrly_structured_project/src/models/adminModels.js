@@ -18,7 +18,8 @@ export function checkAdminStatus(userid, connection, callback) {
 }
 
 export const getAllWorkerIds = (callback) => {
-    const workerQuery = 'SELECT idUser FROM Workers';
+  const workerQuery = `SELECT W.idUser FROM Workers W LEFT JOIN administrators A ON W.idUser = A.idUser WHERE A.idUser IS NULL
+  `;  
     connection.query(workerQuery, callback);
   };
 

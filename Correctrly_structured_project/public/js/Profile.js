@@ -194,10 +194,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Communication with API for getting information and showing it
 function fetchUserInfo() {
-    UUID = loggedUser.UUID;
-    console.log(UUID);
     // Fetch user information from the server
-    fetch(`/user/profile?UUID=${UUID}`, {
+    fetch(`/auth/ProfileInfo`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

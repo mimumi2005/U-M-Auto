@@ -4,7 +4,7 @@ import * as workerModel from '../models/workerModels.js'
 
 export const workerDashboard = (req, res) => {
     // Render the admin dashboard or serve a file
-    res.render('WorkerPage', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+    res.render('pages/WorkerPage', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 
 // Controller function to fetch today's projects
