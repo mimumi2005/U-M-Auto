@@ -19,7 +19,7 @@ router.post('/login', (req, res) => {
 // POST route for logging out a user
 router.post('/log-out',checkSession, handleLogout);
 
-router.post('/sign-up',checkSession, sanitizeInputUsers, handleSignUp);
+router.post('/sign-up', sanitizeInputUsers, handleSignUp);
 
 router.post('/createAppointment',checkSession, sanitizeInputProjects, handleCreateAppointment);
 

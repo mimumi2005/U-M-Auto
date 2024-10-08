@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Sending Data:', JSON.stringify(formData));
 
 
-        fetch(window.location.origin + '/auth/sign-up', {
+        fetch('/auth/sign-up', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

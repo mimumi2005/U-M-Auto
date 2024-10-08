@@ -20,7 +20,7 @@ export function isAdmin(req, res, next) {
         if (callback) {
             return next(); // User is an admin, proceed to the next middleware or route handler
         } else {
-            return res.status(403).json({ message: 'Unauthorized access: Admins only' });
+            return res.redirect('/?unauthorizedAccess=true');
         }
     });
 }
