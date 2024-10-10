@@ -1,5 +1,4 @@
 export function escapeHtml(unsafe) {
-    console.log('escapingHTML')
     return unsafe
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")

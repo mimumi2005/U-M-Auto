@@ -1,6 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+
     document.getElementById('name').focus();
+
+    document.getElementById('acceptPolicy').addEventListener('change', () => {
+        if (document.getElementById('acceptPolicy').checked) {
+            document.getElementById('recaptchaContainer').classList.remove("nodisplay"); // Show reCAPTCHA
+        }
+    });
 
     document.querySelector('form').addEventListener('submit', function (e) {
         // Prevent the default form submission
@@ -85,12 +92,11 @@ document.addEventListener('DOMContentLoaded', function () {
             email: EmailValue,
             username: document.getElementById('username').value,
             password: document.getElementById('password').value,
+            'g-recaptcha-response': document.querySelector('.g-recaptcha-response').value // Get the reCAPTCHA response
         // Add other form fields as needed
         };
         document.getElementById('password').value = '';
         // Make a POST request to the backend
-        console.log('Form Data:', formData);
-        console.log('Sending Data:', JSON.stringify(formData));
 
 
         fetch('/auth/sign-up', {

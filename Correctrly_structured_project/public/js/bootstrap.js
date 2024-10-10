@@ -4505,7 +4505,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.onscroll = function () {
     toggleScrollToTopButton();
   };
-  
+
   const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
   if (scrollToTopBtn) {
     scrollToTopBtn.addEventListener('click', scrollToTop);
@@ -4571,7 +4571,6 @@ function initMap() {
   marker.addListener('click', function () {
     infowindow.open(map, marker);
   });
-  console.log(map)
 }
 
 
@@ -4769,15 +4768,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const link = document.createElement('link');
   link.rel = 'icon';
   link.type = 'image/png';
-  
+
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      // Dark mode is enabled
-      link.href = '/images/Icon.png'; // Use absolute path
+    // Dark mode is enabled
+    link.href = '/images/Icon.png'; // Use absolute path
   } else {
-      // Dark mode is not enabled
-      link.href = '/images/Icon2.png'; // Use absolute path
+    // Dark mode is not enabled
+    link.href = '/images/Icon2.png'; // Use absolute path
   }
-  
+
   document.head.appendChild(link);
 });
 

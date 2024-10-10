@@ -3,7 +3,7 @@ import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as authModel from '../models/authModels.js'; // Importing model
 
-export const getProfilePage = (req, res) => {
+export const  getProfilePage = (req, res) => {
   res.render('pages/Profile', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 

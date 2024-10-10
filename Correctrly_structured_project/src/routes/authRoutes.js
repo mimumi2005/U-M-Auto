@@ -3,6 +3,7 @@ import express from 'express';
 import {sanitizeInputProjects} from '../middleware/escapeHTMLproject.js';
 import {sanitizeInputUsers} from '../middleware/escapeHTMLusers.js';
 import {checkSession} from '../middleware/checkSession.js';
+import {verifyRecaptcha} from '../middleware/verifyRecaptcha.js';
 import { loginUser, handleLogout, handleSignUp, handleCreateAppointment, changePassword, getProfilePage, getUserAppointments, getUserSettings, getUserProfileInfo } from '../controllers/authController.js';
 
 
@@ -19,7 +20,7 @@ router.post('/login', (req, res) => {
 // POST route for logging out a user
 router.post('/log-out',checkSession, handleLogout);
 
-router.post('/sign-up', sanitizeInputUsers, handleSignUp);
+router.post('/sign-up', verifyRecaptcha, sanitizeInputUsers, handleSignUp);
 
 router.post('/createAppointment',checkSession, sanitizeInputProjects, handleCreateAppointment);
 

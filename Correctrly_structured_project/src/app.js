@@ -14,15 +14,15 @@ import { fileURLToPath } from 'url';
 import ejs from 'ejs';
 import expressLayouts from 'express-ejs-layouts';
 // Middleware
+
 import {cacheControlMiddleware} from './middleware/preventCaching.js';
 import { attachUser } from './middleware/attachUser.js';
 import { generateNonce } from './middleware/nonceGen.js'; // Adjust path if needed
 
+// import enforce from 'express-sslify'; // Import express-sslify, for HTTPS usage when converting
 import helmet from "helmet";
 import db from './config/db.js';  // Import MySQL configuration
 import dotenv from "dotenv";
-
-
 
 
 import connection from './config/db.js'; // Importing connection
@@ -38,6 +38,8 @@ dotenv.config();
 const app = express();
 
 
+// For https when converting 
+// app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 // Session middleware setup
 app.use(session({
@@ -70,21 +72,25 @@ app.use(generateNonce);
 
 // Helmet configuration with strict CSP
 app.use(helmet());
+
 app.use(helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"], // Only allow content from the same origin
-        scriptSrc: [
-            "'self'", // Allow scripts from the same origin
-            "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
-            "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
-             'https://maps.googleapis.com/maps/api/mapsjs',
-             "https://maps.googleapis.com/$rpc/google.internal.maps",
-             
-            // Allow inline scripts only with a nonce
-            (req, res) => `'nonce-${res.locals.nonce}'`
-        ],
-    },
-    reportOnly: false, // Enforce the policy
+  directives: {
+      defaultSrc: ["'self'", "https://maps.googleapis.com"], // Only allow content from the same origin
+      frameSrc: ["https://www.google.com", "https://www.gstatic.com"],
+      connectSrc: ["'self'", "https://maps.googleapis.com"],
+      imgSrc: ["'self'", "https://maps.googleapis.com", "https://maps.gstatic.com", "data:"],
+      scriptSrc: [
+          "'self'", // Allow scripts from the same origin
+          "https://maps.googleapis.com",
+          "https://www.gstatic.com", "https://www.google.com/recaptcha/api.js",
+          "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
+          "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+           
+          // Allow inline scripts only with a nonce
+          (req, res) => `'nonce-${res.locals.nonce}'`
+      ],
+  },
+  reportOnly: false, // Enforce the policy
 }));
 
 // Middleware to parse JSON request bodies
