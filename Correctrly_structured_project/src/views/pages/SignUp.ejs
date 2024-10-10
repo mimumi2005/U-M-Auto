@@ -60,9 +60,10 @@
                         <label class="form-check-label" for="acceptPolicy"> I accept the <a href="#termsConditionsModal"
                                 data-bs-toggle="modal" id="termsConditionsLink">terms and conditions</a></label>
                     </div>
-
-                    <div id="recaptchaContainer" class="nodisplay"> <!-- Initially hidden -->
-                        <div class="g-recaptcha" data-sitekey="<%= process.env.RECAPTCHA_SITE_KEY %>"></div>
+                    <div class="d-flex justify-content-center align-items-center m-3">
+                        <div id="recaptchaContainer" class="nodisplay"> <!-- Initially hidden -->
+                            <div class="g-recaptcha" data-sitekey="<%= process.env.RECAPTCHA_SITE_KEY %>"></div>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-secondary btn-block mb-3">Create Account</button>
                 </form>

@@ -25,6 +25,7 @@
     "mysql2": "^3.9.1",
     "node-cron": "^3.0.3",
     "package.json": "^2.0.1",
+    "recaptcha": "^1.2.1",
     "session": "^0.1.0",
     "tedious": "^16.6.1",
     "uuid": "^9.0.1"
