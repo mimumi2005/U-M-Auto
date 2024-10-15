@@ -16,13 +16,19 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js" nonce="<%= nonce %>"></script>
 
 </head>
-<style>
+<style nonce="<%= nonce %>">
   /* Center the text inside the chart */
   .chart-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
+  }
+  .customContainer{
+    min-width:300px;
+  }
+  .gapcontainer{
+    gap:20px;
   }
 </style>
 
@@ -35,9 +41,9 @@
   </div>
 
   <div class="container-fluid">
-    <div class="row justify-content-center mt-5" style="gap: 20px;"> <!-- Added 'justify-content-center' and 'gap' for better alignment and spacing -->
+    <div class="row justify-content-center mt-5 gapcontainer"> <!-- Added 'justify-content-center' and 'gap' for better alignment and spacing -->
       <!-- User Statistics Container -->
-      <div id="UserStatisticsContainer" class="col-lg-5 bg-light p-4" style="min-width: 300px;">
+      <div id="UserStatisticsContainer" class="col-lg-5 bg-light p-4 customContainer" >
         <!-- User data will be dynamically added here -->
         <div class="chart-container">
           <canvas id="userStatisticsChart"></canvas>
@@ -46,7 +52,7 @@
       </div>
   
       <!-- Project Statistics Container -->
-      <div id="ProjectStatisticsContainer" class="col-lg-5 bg-light p-4" style="min-width: 300px;">
+      <div id="ProjectStatisticsContainer" class="col-lg-5 bg-light p-4 customContainer" >
         <div class="chart-container">
           <canvas id="projectStatisticsChart"></canvas>
         </div>

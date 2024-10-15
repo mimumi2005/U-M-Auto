@@ -8,9 +8,8 @@
     <link rel="manifest" href="/js/manifest.json">
     <!-- Local bootstrap.js-->
     <link rel="icon" type="image/png" href="/images/icon.png">
-    <style>
+    <style nonce="<%= nonce %>">
         body {
-
             background-image: url('/images/main_image2.jpg');
             background-size: cover;
             background-position: center;
@@ -21,7 +20,6 @@
             background-color: #000000;
             color: #000000;
         }
-
 
         .position-relative {
             position: relative;
@@ -51,6 +49,32 @@
             background-color: transparent;
             color: red;
         }
+
+        .text-red {
+            color: red;
+        }
+
+        .custom-divider {
+            height: 1px; /* Adjust as needed */
+            background-color: rgba(255, 255, 255, 0.2); /* Adjust the color */
+            margin: 0.5rem 0; /* Adjust spacing as needed */
+        }
+
+        #scroll-to-top-btn {
+            z-index: 1000;
+            display: none;
+        }
+        #LogOutButton{
+            cursor: pointer;
+        }
+        .pointer{
+            cursor: pointer;
+        }
+        .h5px{
+            height:5px;
+        }
+
+
     </style>
 </head>
 
@@ -112,19 +136,19 @@
                             aria-expanded="false">
                             Profile
                         </a>
-                        <div class="dropup dropdown-menu " aria-labelledby="accountDropdown">
+                        <div class="dropup dropdown-menu" aria-labelledby="accountDropdown">
                             <a class=" dropdown-item text-white" href="/auth/ProfilePage">Account Info</a>
-                            <a class=" bg-gray dropdown-item text-white " href="/auth/UserAppointment">Appointments</a>
-                            <a class=" bg-gray dropdown-item text-white " href="/auth/Settings">Settings</a>
-                            <a id="AdminMenu" class=" bg-gray dropdown-item text-white nodisplay "
+                            <div class="bg-gray">
+                            <a class="  dropdown-item text-white " href="/auth/UserAppointment">Appointments</a>
+                            <a class="  dropdown-item text-white " href="/auth/Settings">Settings</a>
+                            <a id="AdminMenu" class="  dropdown-item text-white nodisplay "
                                 href="/admin/admin-dashboard">Admin panel</a>
-                            <a id="Statistics" class=" bg-gray dropdown-item text-white nodisplay "
+                            <a id="Statistics" class="    dropdown-item text-white nodisplay "
                                 href="/admin/Statistics">Statistics</a>
-                            <div class="bg-gray" style="height:20px">
                                 <div class=" custom-divider"></div>
-                            </div>
-                            <a tabindex=0 class=" bg-gray dropdown-item-logout text-red " style="cursor: pointer;"
+                            <a tabindex=0 class="  dropdown-item-logout text-red pointer"
                                 id="Log-out-button">Log Out</a>
+                        </div>
                         </div>
                     </li>
 
@@ -136,7 +160,7 @@
         </nav>
 
     </div>
-    <div id="scroll-to-top-btn" style="z-index:1000; display:none">↑</div>
+    <div id="scroll-to-top-btn">↑</div>
 </body>
 
 </html>

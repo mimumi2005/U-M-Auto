@@ -17,7 +17,27 @@
 
 
 </head>
+<style nonce="<%= nonce %>">
+        /* Custom styles for the table container */
+        .customContainer {
+            float: right;
+            margin-right: 3%;
+        }
+        .overflow-X {
+            overflow-x: auto;
+        }
+        .width50{
+            width:50%;
+        }
+        .width80{
+            width:80%;
+        }
+        .maxw20{
+            max-width:20%;
+        }
 
+        
+</style>
 <body>
     <div id="customRegisterWorker" class="custom-alert nodisplay">
         <h2>Succesfully registered worker</h2>
@@ -26,7 +46,7 @@
         <h2>Succesfully gave administrator permissions</h2>
     </div>
     <div>
-        <div class="container my-4  bg-light mx-80" style="float:right; margin-right:3%">
+        <div class="container my-4  customContainer bg-light mx-80">
             <h2 class="text-center mb-4 text-white" id="TitleHeader">Projects</h2>
             <div class="container-fluid">
                 <div class="row">
@@ -67,7 +87,7 @@
                         </div>
                     </div>
 
-                    <div style="overflow-x: auto;" id="ProjectDataContainer"
+                    <div  id="ProjectDataContainer"
                         class="table-responsive text-white nodisplay">
                         <table class="table table-bordered table-hover">
                             <thead class="thead-dark">
@@ -89,7 +109,7 @@
                         </table>
                     </div>
 
-                    <div style="overflow-x: auto;" id="userDataContainer" class="table-responsive text-white nodisplay">
+                    <div  id="userDataContainer" class="table-responsive text-white nodisplay">
                         <table class="table table-bordered table-hover">
                             <thead class="thead-dark">
                                 <tr>
@@ -107,7 +127,7 @@
                         </table>
                     </div>
 
-                    <div style="overflow-x: auto;" id="adminDataContainer"
+                    <div  id="adminDataContainer"
                         class="table-responsive text-white nodisplay">
                         <table class="table table-bordered table-hover">
                             <thead class="thead-dark">
@@ -128,7 +148,7 @@
                         </table>
                     </div>
 
-                    <div style="overflow-x: auto;" id="workerDataContainer"
+                    <div id="workerDataContainer"
                         class="table-responsive text-white nodisplay">
                         <table class="table table-bordered table-hover">
                             <thead class="thead-dark">
@@ -147,7 +167,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div style="overflow-x: auto;" id="inputNewEndDate" class="table-responsive bg-light nodisplay">
+                    <div id="inputNewEndDate" class="table-responsive bg-light nodisplay">
                         <table class="table table-bordered table-hover">
                             <thead class="thead-dark">
                                 <tr>
@@ -158,15 +178,15 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="align-middle text-white" style="width: 50%;">
+                                    <td class="align-middle text-white width50">
                                         <p><strong>!WARNING!</strong></p>
                                         <p>If the project isn't yet tagged as delayed, it will be after any changes to
                                             the end date time.</p>
                                     </td>
-                                    <td class="align-middle" style="width: 50%;">
+                                    <td class="align-middle width50">
                                         <div class="d-flex flex-column align-items-center">
-                                            <input style="width: 80%;" type="datetime-local" id="dateinput"
-                                                class="form-control text-center mb-2">
+                                            <input  type="datetime-local" id="dateinput"
+                                                class="form-control text-center mb-2 width80">
                                             <button id="changeEndTimeButton"
                                                 class="btn btn-outline-primary mt-2">Change</button>
                                         </div>
@@ -175,7 +195,7 @@
                                 </tr>
                                 <tr id="InvalidDateTime" class="nodisplay">
                                     <td colspan="2" class="text-center">
-                                        <span style="color:rgb(255, 0, 0)"><b>Invalid end time</b></span>
+                                        <span class="text-danger"><b>Invalid end time</b></span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -183,19 +203,19 @@
                     </div>
 
                     <div id="searchUser" class="col-sm-3 m-auto text-center nodisplay">
-                        <span id="InvalidID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid ID</b></span>
+                        <span id="InvalidID" class="nodisplay text-danger"><b>Invalid ID</b></span>
                         <input type="text" id="userIDInput" class="form-control" placeholder="Enter User ID">
                         <button class="btn btn-outline-primary mt-2" id="searchUserButton">Search</button>
                     </div>
 
                     <div id="searchUserByEmail" class="col-sm-4 m-auto text-center nodisplay">
-                        <span id="InvalidEmail" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid Email</b></span>
-                        <input type="text" id="userEmailInput" class="form-control" placeholder="Enter User's email">
+                        <span id="InvalidEmail" class="nodisplay text-danger"><b>Invalid Email</b></span>
+                        <input type="text" id="userEmailInput" class="form-control" placeholder="Enter User's email">   
                         <button class="btn btn-outline-primary mt-2" id="searchUserByEmailButton">Search</button>
                     </div>
 
                     <div id="searchProject" class="col-sm-3 m-auto text-center nodisplay">
-                        <span id="InvalidProjectID" class="nodisplay" style="color:rgb(255, 0, 0)"><b>Invalid
+                        <span id="InvalidProjectID" class="nodisplay text-danger" ><b>Invalid
                                 ID</b></span>
 
                         <input type="text" id="ProjectIDInput" class="form-control" placeholder="Enter Project ID">
@@ -203,15 +223,15 @@
                     </div>
 
 
-                    <div class="col-md-3  bg-light text-white m-auto nodisplay " style="max-width:20%"
+                    <div class="col-md-3  bg-light text-white m-auto nodisplay maxw20 "
                         id="registrationForm">
                         <form class="mt-3">
 
                             <label id="email-red" for="email">Email:</label>
-                            <span class="ml-1 nodisplay" id="NoAccount" style=" color:rgb(255, 0, 0)"><b> - Account
+                            <span class="ml-1 nodisplay text-danger" id="NoAccount" ><b> - Account
                                     doesnt
                                     exsist</b></span>
-                            <span class="ml-1 nodisplay" id="WorkerExsists" style=" color:rgb(255, 0, 0)"><b>- User
+                            <span class="ml-1 nodisplay text-danger" id="WorkerExsists"><b>- User
                                     is
                                     already a
                                     worker</b></span>

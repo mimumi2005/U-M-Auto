@@ -33,10 +33,58 @@ import routes from './routes/index.js';  // Import your routes
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 
+app.use(generateNonce);
+
+app.use(helmet({ hidePoweredBy: true })); // Disable the X-Powered-By header
+
+
+// Middleware to prevent content sniffing
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  next();
+});
+
+// Ensure this is after your generateNonce middleware
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+      defaultSrc: ["'self'", "https://maps.googleapis.com", "file:"],
+      frameSrc: ["https://www.google.com", "https://www.gstatic.com"],
+      connectSrc: ["'self'", "https://maps.googleapis.com"],
+      imgSrc: [
+        "'self'", 
+        "https://maps.googleapis.com", 
+        "https://maps.gstatic.com", 
+        "data:"
+      ],
+      scriptSrc: [
+        "'self'",
+        "https://maps.googleapis.com",
+        "https://www.gstatic.com",
+        "https://www.google.com/recaptcha/api.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js", // Ensure this is the correct version
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+        // Allow inline scripts only with a nonce
+        (req, res) => `'nonce-${res.locals.nonce}'`
+      ],
+      styleSrc: [
+        "'self'",
+        // Allow inline styles only with a nonce
+        (req, res) => `'nonce-${res.locals.nonce}'`,
+        // Allow external stylesheets if necessary
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
+      ],
+      fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"], // Include font sources if using web fonts
+      // Add any other necessary directives like objectSrc, mediaSrc, etc.
+  },
+  reportOnly: false, // Enforce the policy
+}));
+
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the public folder outside src
 
 // For https when converting 
 // app.use(enforce.HTTPS({ trustProtoHeader: true }));
@@ -47,6 +95,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
+    sameSite: 'lax', // Set SameSite attribute
     secure: process.env.NODE_ENV === 'production', // Set to true in production
     maxAge: 1*60*30*1000 // Session expires after 30 minutes
   }
@@ -56,9 +105,6 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views')); // Pointing to the views folder in src
 
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the public folder outside src
-
 // Use express-ejs-layouts
 app.use(expressLayouts);
 
@@ -67,31 +113,25 @@ app.use(attachUser);
 
 app.use(cacheControlMiddleware);
 // Use the nonce middleware
-app.use(generateNonce);
+
+// Middleware to set appropriate Content-Type based on the route
+app.use((req, res, next) => {
+  // Example of setting Content-Type based on route
+  if (req.path.endsWith('.json')) {
+    res.setHeader('Content-Type', 'application/json');
+  } else if (req.path.endsWith('.html')) {
+    res.setHeader('Content-Type', 'text/html');
+  } else if (req.path.endsWith('.css')) {
+    res.setHeader('Content-Type', 'text/css');
+  } else if (req.path.endsWith('.js')) {
+    res.setHeader('Content-Type', 'application/javascript');
+  }
+  // Add more conditions as necessary
+  next();
+});
 
 
-// Helmet configuration with strict CSP
-app.use(helmet());
 
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-      defaultSrc: ["'self'", "https://maps.googleapis.com"], // Only allow content from the same origin
-      frameSrc: ["https://www.google.com", "https://www.gstatic.com"],
-      connectSrc: ["'self'", "https://maps.googleapis.com"],
-      imgSrc: ["'self'", "https://maps.googleapis.com", "https://maps.gstatic.com", "data:"],
-      scriptSrc: [
-          "'self'", // Allow scripts from the same origin
-          "https://maps.googleapis.com",
-          "https://www.gstatic.com", "https://www.google.com/recaptcha/api.js",
-          "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
-          "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
-           
-          // Allow inline scripts only with a nonce
-          (req, res) => `'nonce-${res.locals.nonce}'`
-      ],
-  },
-  reportOnly: false, // Enforce the policy
-}));
 
 // Middleware to parse JSON request bodies
 app.use(express.json());

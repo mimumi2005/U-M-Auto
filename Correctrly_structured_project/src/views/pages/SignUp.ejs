@@ -26,31 +26,31 @@
                 <h1 class="text-center">Sign Up</h1>
                 <form id="signupForm" action="/signup" method="post">
                     <div class="form-group">
-                        <label class="row ml-0 mb-2" id='name-red' for="name">Name <span class="ml-1 nodisplay"
-                                id="EmptyName" style=" color:rgb(255, 0, 0)"><b>- Enter a name</b></label>
+                        <label class="row ml-0 mb-2 text-danger" id='name-red' for="name">Name <span class="ml-1 nodisplay"
+                                id="EmptyName" ><b>- Enter a name</b></label>
                         <input type="name" class="form-control" placeholder="Enter your name" id="name" name="name"
                             maxlength="15">
                     </div>
                     <div class="form-group">
-                        <div id="email-red" class="row ml-0 mb-2" for="email">Email <span class="ml-1 nodisplay"
-                                id="BadEmail" style=" color:rgb(255, 0, 0)"><b>- Enter a valid email</b></span> <span
-                                class="ml-1 nodisplay" id="TakenEmail" style=" color:rgb(255, 0, 0)"><b>- Email is
-                                    taken</b></span><span class="ml-1 nodisplay" id="EmptyEmail"
-                                style=" color:rgb(255, 0, 0)"><b>- Enter an email</b></div>
+                        <div id="email-red" class="row ml-0 mb-2 text-danger" for="email">Email <span class="ml-1 nodisplay"
+                                id="BadEmail" ></span><b>- Enter a valid email</b></span> <span
+                                class="ml-1 nodisplay text-danger" id="TakenEmail"><b>- Email is
+                                    taken</b></span><span class="ml-1 nodisplay text-danger" id="EmptyEmail"
+                               ><b>- Enter an email</b></div>
                         <input type="text" class="form-control" placeholder="Enter your email address" id="email"
                             name="email" maxlength="45">
                     </div>
                     <div class="form-group">
                         <div id="username-red" class="row ml-0 mb-2" for="username">Username <span
-                                class="ml-1 nodisplay" id="TakenUsername" style=" color:rgb(255, 0, 0)"><b>- Username is
-                                    taken</b></span><span class="ml-1 nodisplay" id="EmptyUsername"
-                                style="color:rgb(255, 0, 0)"><b>- Enter a username</b></span></div>
+                                class="ml-1 nodisplay text-danger" id="TakenUsername" ><b>- Username is
+                                    taken</b></span><span class="ml-1 nodisplay text-danger" id="EmptyUsername"
+                                ><b>- Enter a username</b></span></div>
                         <input type="text" class="form-control" placeholder="Choose a username" id="username"
                             name="username" maxlength="20">
                     </div>
                     <div class="form-group">
                         <div id="password-red" class="row ml-0 mb-2" for="password">Password <span
-                                class="ml-1 nodisplay" id="BadPassword" style=" color:rgb(255, 0, 0)"><b>- enter a safe
+                                class="ml-1 nodisplay text-danger" id="BadPassword" ><b>- enter a safe
                                     password</b></span></div>
                         <input type="password" class="form-control" placeholder="Enter your desired password"
                             id="password" name="password" maxlength="45">

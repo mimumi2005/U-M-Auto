@@ -13,12 +13,34 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" nonce="<%= nonce %>"></script>
 </head>
 
+
+<style nonce="<%= nonce %>">
+    /* Custom styles for the table container */
+    .customContainer {
+        float: right;
+        margin-right: 3%;
+    }
+    .overflow-X {
+        overflow-x: auto;
+    }
+    .width50{
+        width:50%;
+    }
+    .width80{
+        width:80%;
+    }
+    .maxw20{
+        max-width:20%;
+    }
+
+    
+</style>
 <body>
     <div class="container my-4 bg-light">
         <h2 class="text-center mb-4 text-white" id="TitleHeader">Projects</h2>
 
         <!-- Table to display appointment data -->
-        <div style="overflow-x: auto;" id="ProjectDataContainer" class="table-responsive text-white">
+        <div  id="ProjectDataContainer" class="overflow-X table-responsive text-white">
             <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -35,7 +57,7 @@
             </table>
         </div>
         <!-- Table to display user data -->
-        <div style="overflow-x: auto;"  id="userDataContainer" class="table-responsive text-white">
+        <div   id="userDataContainer" class="table-responsive overflow-X text-white">
             <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -53,7 +75,7 @@
         </div>
 
 
-        <div style="overflow-x: auto;"  id="inputNewEndDate" class="table-responsive bg-light nodisplay">
+        <div  id="inputNewEndDate" class="table-responsive bg-light overflow-X nodisplay">
             <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -64,12 +86,12 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="align-middle text-white" style="width: 50%;">
+                        <td class="align-middle text-white width50" >
                             <p><strong>!WARNING!</strong></p><p>If the project isn't yet tagged as delayed, it will be after any changes to the enddatetime.</p>
                         </td>
-                        <td class="align-middle" style="width: 50%;">
+                        <td class="align-middle width50" >
                             <div class="d-flex flex-column align-items-center">
-                                <input style="width: 80%;" type="datetime-local" id="dateinput"
+                                <input  class="width80" type="datetime-local" id="dateinput"
                                     class="form-control text-center mb-2">
                                 <button id="changeEndTimeButton" class="btn btn-outline-primary mt-2">Change</button>
                             </div>
@@ -78,7 +100,7 @@
                     </tr>
                     <tr id="InvalidDateTime" class="nodisplay">
                         <td colspan="2" class="text-center">
-                            <span style="color:rgb(255, 0, 0)"><b>Invalid end time</b></span>
+                            <span class="text-danger"><b>Invalid end time</b></span>
                         </td>
                     </tr>
                 </tbody>

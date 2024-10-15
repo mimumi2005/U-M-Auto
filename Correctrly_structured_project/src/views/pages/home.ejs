@@ -13,10 +13,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js" nonce="<%= nonce %>"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" nonce="<%= nonce %>"></script>
 
-</head> <style>
+</head> 
+<style nonce="<%= nonce %>">
     body {
         margin: 0;
         scroll-behavior: smooth;
+    }
+    .minW250px{
+        min-width:250px;
+    }
+    .width40{
+        width: 40%
+    }
+    .max-width95{
+        width: 95%
+    }
+    .max-width80{
+        width: 80%
+    }
+    .max-width75{
+        width: 75%
     }
 </style>
 <body>
@@ -27,8 +43,8 @@
         <h4>No session found, please log in!</h4>
     </div>
 
-<div style="width: 40%" class="container text-white mt-5" >
-    <div tabindex=0 class="bg-light p-4 rounded " style="min-width: 250px ">
+<div  class="container text-white mt-5 width40" >
+    <div tabindex=0 class="bg-light p-4 rounded minW250px">
         <div class="row">
             <div class="col-md-12">
                 <h2 class="text-center">Our Work Hours<br></h2>
@@ -57,7 +73,7 @@
     </div>
 
     <!-- Additional Content Section -->
-    <div tabindex=0 class="bg-light p-4 mt-5 rounded" style="min-width: 250px ">
+    <div tabindex=0 class="bg-light p-4 mt-5 rounded minW250px" >
         <h2 class="text-center ">Online appointment booking</h2>
         <p class="text-center">Logged in users can use our online booking system to choose a repair time that works best for them <span id="LoginP"><a href="/Login">Log-in</a> to make an appoitment for personalized assistance.</span>
             <span id="BookingP" class="nodisplay"><a href="/Appointments">Book an appointment</a></span></p>
@@ -68,8 +84,8 @@
   </div>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <div tabindex=0  id="Services" class=" container-xxl text-white">
-  <div class="container bg-light" style="max-width: 80%">
-      <div class="text-center mx-auto mb-4"  style="max-width: 75%;">
+  <div class="container bg-light max-width80" >
+      <div class="text-center mx-auto mb-4 max-width75" >
           <h1>We offer top tier car repairs</h1>
       </div>
       <div class="row g-4 justify-content-end">
@@ -315,7 +331,7 @@
     </section>
 </main>
 
-    <div class="footer" style="max-width: 95%;">
+    <div class="footer max-width95" >
         <div class="container">
             <p>&copy; 2023 Your Website - Additional Information Here</p>
             <p>Contact: velderis@gmail.com</p>
