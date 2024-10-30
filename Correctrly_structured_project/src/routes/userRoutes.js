@@ -6,8 +6,8 @@ const router = express.Router();
 
 
 
-router.get('/appointment', handlegetUserAppointments)
+router.get('/appointment:UUID', handlegetUserAppointments)
 
-router.post('/all-project-dates', fetchAllProjectDATES );
+router.get('/all-project-dates/:month/:year', fetchAllProjectDATES);
 
 export default router;

@@ -57,10 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
             };
             document.getElementById('password').value = '';
             // Communicates with API to login to account
-            fetch(window.location.origin  + '/auth/login', {
+            fetch('/auth/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData),
             })

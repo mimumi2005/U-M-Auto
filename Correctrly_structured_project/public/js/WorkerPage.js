@@ -28,7 +28,8 @@ function deleteProject(ProjectID) {
     fetch(`/worker/project-delete/${ProjectID}`, {
         method: 'DELETE', // Use the DELETE method to indicate deletion
         headers: {
-            'Content-Type': 'application/json' // Specify that the request body is JSON
+            'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+            'Content-Type': 'application/json'
         },
     })
         .then(response => {
@@ -58,7 +59,8 @@ function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
         fetch('/worker/change-end-date', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 EndDate: EndDate,
@@ -93,13 +95,7 @@ function searchProjectByIDByWorker(idProjects) {
     console.log("Viewing project by ID:", idProjects);
     // Make a fetch request to your backend to retrieve all user data
 
-    fetch('/worker/project-by-ID', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ idProjects: idProjects })
-    })
+    fetch(`/worker/project-by-ID/${idProjects}`)
         .then(response => response.json())
         .then(data => {
             // Call a function to display the user data on the page
@@ -382,13 +378,7 @@ function searchUserByID(idUser) {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     console.log("Viewing user by ID:", idUser);
     // Make a fetch request to your backend to retrieve all user data
-    fetch('/worker/user-by-ID', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ idUser: idUser })
-    })
+    fetch(`/worker/user-by-ID/${idUser}`)
         .then(response => response.json())
         .then(data => {
             // Call a function to display the user data on the page
@@ -408,13 +398,7 @@ function searchProjectsByUserID(idUser) {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.add('nodisplay');
     // Make a fetch request to your backend to retrieve all user data
-    fetch('/worker/project-by-user-ID', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ idUser: idUser })
-    })
+    fetch(`/worker/project-by-user-ID/${idUser}`)
         .then(response => response.json())
         .then(data => {
             // Call a function to display the user data on the page
@@ -433,7 +417,8 @@ function removeDelayed(idProjects) {
     fetch( '/worker/remove-delayed', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             idProjects: idProjects

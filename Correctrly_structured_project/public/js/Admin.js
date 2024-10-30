@@ -81,7 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/admin/register-worker', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(userData),
         })
@@ -465,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
             adminPermLink.href = '#';
             adminPermLink.classList.add('text-danger');
             adminPermLink.onclick = function () {
-                removeAdmin(user.idUser);
+                giveAdmin(user.idUser);
             };
             adminPermCell.appendChild(adminPermLink);
             row.appendChild(adminPermCell);
@@ -558,7 +559,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(`/project-delete/${ProjectID}`, {
             method: 'DELETE', // Use the DELETE method to indicate deletion
             headers: {
-                'Content-Type': 'application/json' // Specify that the request body is JSON
+                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                'Content-Type': 'application/json'
             },
         })
             .then(response => {
@@ -589,13 +591,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Viewing project by ID:", idProjects);
         // Make a fetch request to your backend to retrieve all user data
 
-        fetch('/admin/project-by-ID', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ idProjects: idProjects })
-        })
+        fetch(`/admin/project-by-ID/${idProjects}`)
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -618,13 +614,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('InvalidID').classList.add('nodisplay');
         console.log("Viewing user by ID:", idUser);
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/user-by-ID', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ idUser: idUser })
-        })
+        fetch(`/admin/user-by-ID/${idUser}`)
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -646,13 +636,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('InvalidEmail').classList.add('nodisplay');
         console.log("Viewing user by email:", email);
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/user-by-email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: email })
-        })
+        fetch(`/admin/user-by-email/${email}`)
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -672,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function that shows all active projects
     function viewActiveProjects() {
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/active-projects',)
+        fetch('/admin/active-projects')
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -689,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function that shows all delayed projects
     function viewDelayedProjects() {
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/delayed-projects',)
+        fetch('/admin/delayed-projects')
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -707,7 +691,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function viewFinishedProjects() {
         document.getElementById('inputNewEndDate').classList.add('nodisplay');
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/finished-projects',)
+        fetch('/admin/finished-projects')
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -725,13 +709,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('InvalidProjectID').classList.add('nodisplay');
         console.log("Viewing user by ID:", idUser);
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/project-by-user-ID', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ idUser: idUser })
-        })
+        fetch(`/admin/project-by-user-ID${idUser}`)
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -753,9 +731,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log("Viewing admins");
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/all-admins', {
-            method: 'POST',
-        })
+        fetch('/admin/all-admins')
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
@@ -776,7 +752,8 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch('/admin/change-end-date', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     EndDate: EndDate,
@@ -843,6 +820,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(`/similar-users`, {
             method: 'POST',
             headers: {
+                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ emailPattern })
@@ -875,13 +853,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Viewing user by ID:", idUser);
         // Make a fetch request to your backend to retrieve all user data
 
-        fetch('/admin/user-by-ID', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ idUser: idUser })
-        })
+        fetch(`/admin/user-by-ID/${idUser}`)
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -904,9 +876,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Viewing workers");
         // Make a fetch request to your backend to retrieve all user data
 
-        fetch('/admin/all-workers', {
-            method: 'POST',
-        })
+        fetch('/admin/all-workers')
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
@@ -924,13 +894,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
         // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/project-by-user-ID', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ idUser: idUser })
-        })
+        fetch(`/admin/project-by-user-ID/${idUser}`)
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page
@@ -970,6 +934,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("searchUser").classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
+        document.getElementById('workerDataContainer').classList.add('nodisplay');
+        document.getElementById('adminDataContainer').classList.add('nodisplay');
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById("searchProject").classList.remove('nodisplay');
         const title = document.getElementById('TitleHeader');
@@ -982,6 +948,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("searchProject").classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
+        document.getElementById('workerDataContainer').classList.add('nodisplay');
+        document.getElementById('adminDataContainer').classList.add('nodisplay');
         document.getElementById("searchUser").classList.remove('nodisplay');
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
         const title = document.getElementById('TitleHeader');
@@ -990,11 +958,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Display input field for email
     function findUserByEmail() {
+
         document.getElementById("registrationForm").classList.add('nodisplay');
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
         document.getElementById("searchProject").classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
+        document.getElementById('workerDataContainer').classList.add('nodisplay');
+        document.getElementById('adminDataContainer').classList.add('nodisplay');
         document.getElementById("searchUser").classList.add('nodisplay');
         document.getElementById("searchUserByEmail").classList.remove('nodisplay');
         const title = document.getElementById('TitleHeader');

@@ -65,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     fetch('/auth/createAppointment', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json' // Specify JSON content type
+                            'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(requestData)
                     })
@@ -221,16 +222,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to check if a day is full based on date ranges
     function GetCalendarInfo() {
-        fetch('user/all-project-dates', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                MonthDisplay: currentDate.getMonth() + 1,
-                YearDisplay: currentDate.getFullYear()
-            }),
-        })
+        const Month = currentDate.getMonth() + 1;
+        const Year =  currentDate.getFullYear();
+        fetch(`/user/all-project-dates/${Month}/${Year}`)
             .then(response => response.json())
             .then(data => {
                 // Starts rendering the calendar, taking into count which days cant be used because of the already exsisting projects

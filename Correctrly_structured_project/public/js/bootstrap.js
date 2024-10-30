@@ -4684,12 +4684,7 @@ function LogOut() {
     .catch(error => console.error('Error fetching user data:', error));
   const loggedUser = JSON.parse(getCookie("userData"));
   console.log('Logged user:', loggedUser);
-  fetch('/auth/log-out', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
+  fetch(`/auth/log-out`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -4853,8 +4848,9 @@ function deleteUser(userID) {
   fetch(`/user-delete/${userID}`, {
     method: 'DELETE', // Use the DELETE method to indicate deletion
     headers: {
-      'Content-Type': 'application/json' // Specify that the request body is JSON
-    },
+      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+      'Content-Type': 'application/json'
+  },
   })
     .then(response => {
       if (response.status == 200) {
@@ -4881,8 +4877,9 @@ function giveAdmin(idUser) {
   fetch('/give-admin', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+      'Content-Type': 'application/json'
+  },
     body: JSON.stringify({ idUser: idUser })
   })
     .then(response => response.json())
@@ -4901,8 +4898,9 @@ function removeAdmin(idUser) {
   fetch('/remove-admin', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+      'Content-Type': 'application/json'
+  },
     body: JSON.stringify({ idUser: idUser })
   })
     .then(response => response.json())
@@ -4915,6 +4913,7 @@ function removeAdmin(idUser) {
     .catch(error => console.error('Error fetching user data:', error));
 }
 
+
 // Remove a worker from the worker table
 function removeWorker(idUser) {
   console.log("Removing worker info from ID:", idUser);
@@ -4923,8 +4922,9 @@ function removeWorker(idUser) {
   fetch('/remove-worker', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+      'Content-Type': 'application/json'
+  },
     body: JSON.stringify({ idUser: idUser })
   })
     .then(response => response.json())
@@ -4954,8 +4954,9 @@ function removeDelayed(idProjects) {
   fetch('/remove-delayed', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+      'Content-Type': 'application/json'
+  },
     body: JSON.stringify({
       idProjects: idProjects
     }),
@@ -4980,8 +4981,9 @@ function WorkerRemoveDelayed(idProjects) {
   fetch('/remove-delayed', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+      'Content-Type': 'application/json'
+  },
     body: JSON.stringify({
       idProjects: idProjects
     }),

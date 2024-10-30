@@ -1,6 +1,7 @@
 import express from 'express';
 import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage, getAppointmentPage,  } from '../controllers/pageController.js';
-
+import {generateCSRFToken} from '../middleware/CSRF.js'
+import {checkSession} from '../middleware/checkSession.js';
 // routes/index.js
 import authRoutes from './authRoutes.js';
 import defaultRoutes from './userRoutes.js';
@@ -13,11 +14,14 @@ const router = express.Router();
 
 // Route for basic pages
 router.get('/', getHomePage);
-router.get('/Appointments', getAppointmentPage);
-router.get('/Estimator', getEstimatorPage);
+
+// Logged user only pages
+router.get('/Appointments',checkSession, getAppointmentPage);
+router.get('/Estimator',checkSession, getEstimatorPage);
+
 router.get('/AboutUs', getAboutUsPage);
-router.get('/Login', getLoginPage);
-router.get('/SignUp', getSignUpPage);
+router.get('/Login',generateCSRFToken, getLoginPage);
+router.get('/SignUp',generateCSRFToken, getSignUpPage);
 
 
 // Use the route files

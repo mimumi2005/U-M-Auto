@@ -2,11 +2,12 @@
 import express from 'express';
 import { isWorker } from '../middleware/isWorker.js';
 import { workerDashboard, fetchActiveProjects, fetchTodaysProjects, fetchDelayedProjects, removeDelayedProject, fetchProjectById, changeEndDate, fetchProjectByUserId,fetchUserById } from '../controllers/workerController.js';
-
+import {generateCSRFToken} from '../middleware/CSRF.js'
+import {validateCSRFToken} from '../middleware/CSRF.js'
 const router = express.Router();
 
 
-router.get('/WorkerPage', isWorker, workerDashboard);
+router.get('/WorkerPage',generateCSRFToken, isWorker, workerDashboard);
 
 // Project display
 router.get('/active-projects', isWorker, fetchActiveProjects);
@@ -14,11 +15,10 @@ router.get('/todays-projects', isWorker, fetchTodaysProjects);
 router.get('/delayed-projects', isWorker, fetchDelayedProjects);
 
 //Project custom calls
-router.post('/remove-delayed', isWorker, removeDelayedProject);
-router.post('/project-by-ID', isWorker, fetchProjectById);
-router.post('/change-end-date', isWorker, changeEndDate);
-router.post('/project-by-user-id', isWorker, fetchProjectByUserId);
+router.post('/remove-delayed',validateCSRFToken, isWorker, removeDelayedProject);
+router.post('/change-end-date',validateCSRFToken, isWorker, changeEndDate);
 
-// User calls
-router.post('/user-by-ID', isWorker, fetchUserById);
+router.get('/project-by-ID/:id', isWorker, fetchProjectById);
+router.get('/project-by-user-id/:userId', isWorker, fetchProjectByUserId);
+router.get('/user-by-ID/:id', isWorker, fetchUserById);
 export default router;

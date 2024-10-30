@@ -3,7 +3,7 @@ import * as userModel from '../models/userModel.js'
 // Function to check user information
 
 export const handlegetUserAppointments = async (req, res) => {
-  const {UUID} = req.query;
+  const UUID = req.params.UUID;
   try {
     // Get projects for the user UUID
     const projects = await userModel.getUserAppointments(UUID);
@@ -22,9 +22,8 @@ export const handlegetUserAppointments = async (req, res) => {
 
 // Fetch all projects
 export const fetchAllProjectDATES = (req, res) => {
-  const MonthSelected = req.body.MonthDisplay;
-  const YearSelected = req.body.YearDisplay;
-  
+  const MonthSelected = req.params.month;
+  const YearSelected = req.params.year;
   console.log("Month:", MonthSelected);
   console.log("Year:", YearSelected);
 

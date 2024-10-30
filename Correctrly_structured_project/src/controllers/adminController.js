@@ -1,47 +1,50 @@
 import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as adminModel from '../models/adminModels.js'
-
+import {generateCSRFToken} from '../middleware/CSRF.js'
 export const adminDashboard = (req, res) => {
-    // Render the admin dashboard or serve a file
-    res.render('pages/Admin', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+ 
+  const csrfTokenValue = req.csrfToken;
+  // Render the admin dashboard or serve a file
+  res.render('pages/Admin', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
 };
 export const adminStatistics = (req, res) => {
-    // Render the admin dashboard or serve a file
-    res.render('pages/Statistics', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+  const csrfTokenValue = req.csrfToken;
+  // Render the admin dashboard or serve a file
+  res.render('pages/Statistics', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
 };
 
 
 export const fetchAllWorkers = (req, res) => {
-    adminModel.getAllWorkerIds((err, workerResults) => {
-      if (err) {
-        console.error('Error querying Workers table:', err);
-        return res.status(500).json({ message: 'Error fetching worker data' });
-      }
-  
-      const combinedData = [];
-  
-      workerResults.forEach((worker, index) => {
-        const idUser = worker.idUser;
-  
-        adminModel.getCombinedWorkerInfo(idUser, (err, combinedResult) => {
-          if (err) {
-            console.error(`Error querying combined information for idUser ${idUser}:`, err);
-            return;
-          }
-  
-          combinedData.push(...combinedResult);
-  
-          // Send the response only after all data is fetched
-          if (combinedData.length === workerResults.length) {
-            res.json(combinedData);
-          }
-        });
+  adminModel.getAllWorkerIds((err, workerResults) => {
+    if (err) {
+      console.error('Error querying Workers table:', err);
+      return res.status(500).json({ message: 'Error fetching worker data' });
+    }
+
+    const combinedData = [];
+
+    workerResults.forEach((worker, index) => {
+      const idUser = worker.idUser;
+
+      adminModel.getCombinedWorkerInfo(idUser, (err, combinedResult) => {
+        if (err) {
+          console.error(`Error querying combined information for idUser ${idUser}:`, err);
+          return;
+        }
+
+        combinedData.push(...combinedResult);
+
+        // Send the response only after all data is fetched
+        if (combinedData.length === workerResults.length) {
+          res.json(combinedData);
+        }
       });
     });
-  };
+  });
+};
 
-  
+
 export const fetchAllAdmins = (req, res) => {
   adminModel.getAllAdminIds((err, adminResults) => {
     if (err) {
@@ -50,7 +53,7 @@ export const fetchAllAdmins = (req, res) => {
     }
 
     const combinedData = [];
-    
+
     adminResults.forEach((admin, index) => {
       const idUser = admin.idUser;
 
@@ -73,7 +76,7 @@ export const fetchAllAdmins = (req, res) => {
 // Controller function to get active projects
 export const fetchActiveProjects = (req, res) => {
   const curdate = new Date().toISOString();
-  
+
   // Call the model function
   adminModel.getActiveProjects(curdate, (err, result) => {
     if (err) {
@@ -86,7 +89,7 @@ export const fetchActiveProjects = (req, res) => {
 
 
 export const fetchProjectById = (req, res) => {
-  const { idProjects } = req.body;
+  const idProjects = req.params.id;
 
   // Call the model function
   adminModel.getProjectById(idProjects, (err, result) => {
@@ -99,7 +102,7 @@ export const fetchProjectById = (req, res) => {
 };
 
 export const fetchUserById = (req, res) => {
-  const { idUser } = req.body;
+  const idUser = req.params.id;
 
   // Call the model function
   adminModel.getUserById(idUser, (err, result) => {
@@ -204,6 +207,7 @@ export const changeEndDate = (req, res) => {
 
 // Controller function to remove the delayed status from a project
 export const removeDelayedProject = (req, res) => {
+
   const { idProjects } = req.body;
 
   adminModel.updateProjectDelayedStatus(idProjects, (err, result) => {
@@ -217,7 +221,7 @@ export const removeDelayedProject = (req, res) => {
 };
 
 // Controller function to remove the delayed status from a project
-export const fetchAllUsers= (req, res) => {
+export const fetchAllUsers = (req, res) => {
 
   adminModel.getAllUsers((err, result) => {
     if (err) {
@@ -232,6 +236,7 @@ export const fetchAllUsers= (req, res) => {
 
 // Main function to register a worker
 export const registerWorker = async (req, res) => {
+
   const { email, workerType, isAdmin } = req.body;
   console.log("Making user:", email, "as worker");
 
@@ -274,33 +279,32 @@ export const registerWorker = async (req, res) => {
   }
 };
 
-  // Controller function to remove the delayed status from a project
-  export const fetchProjectByUserId = (req, res) => {
-    const { idUser } = req.body;
-  
-    adminModel.getProjectsByUserId(idUser, (err, result) => {
-      if (err) {
-        console.error('Error updating project status:', err);
-        return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
-      }
-  
-      res.json(result);
-    });
-  };
+// Controller function to remove the delayed status from a project
+export const fetchProjectByUserId = (req, res) => {
+  const idUser = req.params.userId;
+
+  adminModel.getProjectsByUserId(idUser, (err, result) => {
+    if (err) {
+      console.error('Error updating project status:', err);
+      return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
+    }
+
+    res.json(result);
+  });
+};
 
 
-    // Controller function to remove the delayed status from a project
-    export const fetchUserByEmail = (req, res) => {
-      const { email } = req.body;
-    
-      adminModel.getUserByEmail(email, (err, result) => {
-        if (err) {
-          console.error('Error updating project status:', err);
-          return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
-        }
-    
-        res.json(result);
-      });
-    };
-  
-    
+// Controller function to remove the delayed status from a project
+export const fetchUserByEmail = (req, res) => {
+  const email = req.params.email;
+
+  adminModel.getUserByEmail(email, (err, result) => {
+    if (err) {
+      console.error('Error updating project status:', err);
+      return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
+    }
+
+    res.json(result);
+  });
+};
+

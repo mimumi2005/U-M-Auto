@@ -1,35 +1,83 @@
 {
-    "short_name": "Weather",
-    "name": "Weather: Do I need an umbrella?",
-    "icons": [
+  "short_name": "CarRepair",
+  "name": "Car repair: Best car repair shop near you?",
+  "icons": [
       {
-        "src": "/images/icon_white.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      }
-    ],
-    "id": "/?source=pwa",
-    "start_url": "/?source=pwa",
-    "background_color": "#3367D6",
-    "display": "standalone",
-    "scope": "/",
-    "theme_color": "#3367D6",
-    "shortcuts": [
-      {
-        "name": "How's the weather today?",
-        "short_name": "Today",
-        "description": "View weather information for today",
-        "url": "/today?source=pwa",
-        "icons": [{ "src": "/images/today.png", "sizes": "192x192" }]
+          "src": "/images/icon_white.png",
+          "type": "image/png",
+          "sizes": "512x512"
       },
       {
-        "name": "How's the weather tomorrow?",
-        "short_name": "Tomorrow",
-        "description": "View weather information for tomorrow",
-        "url": "/tomorrow?source=pwa",
-        "icons": [{ "src": "/images/tomorrow.png", "sizes": "192x192" }]
+          "src": "/images/icon.png",
+          "type": "image/png",
+          "sizes": "32x32"
+      },
+      {
+          "src": "/images/icon2.png",
+          "type": "image/png",
+          "sizes": "32x32"
+      },
+      {
+          "src": "/images/icon_gradiant.png",
+          "type": "image/png",
+          "sizes": "192x192"
       }
-    ],
-    "description": "Weather forecast information"
-    
-  }
+  ],
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "background_color": "#808080", 
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#808080", 
+  "description": "Car repair information",
+  "shortcuts": [
+      {
+          "name": "Book an Appointment",
+          "short_name": "Appointments",
+          "description": "Schedule a service appointment",
+          "url": "/appointments?source=pwa",
+          "icons": [
+              {
+                  "src": "/images/appointments.png",
+                  "sizes": "192x192"
+              }
+          ]
+      },
+      {
+          "name": "View Services",
+          "short_name": "Services",
+          "description": "Check our available services",
+          "url": "/services?source=pwa",
+          "icons": [
+              {
+                  "src": "/images/services.png",
+                  "sizes": "192x192"
+              }
+          ]
+      },
+      {
+          "name": "Contact Us",
+          "short_name": "Contact",
+          "description": "Get in touch with our team",
+          "url": "/contact?source=pwa",
+          "icons": [
+              {
+                  "src": "/images/contact.png",
+                  "sizes": "192x192"
+              }
+          ]
+      },
+      {
+          "name": "Estimate Repair Costs",
+          "short_name": "Estimate",
+          "description": "Get an estimate for your repairs",
+          "url": "/estimate?source=pwa",
+          "icons": [
+              {
+                  "src": "/images/estimate.png",
+                  "sizes": "192x192"
+              }
+          ]
+      }
+  ]
+}

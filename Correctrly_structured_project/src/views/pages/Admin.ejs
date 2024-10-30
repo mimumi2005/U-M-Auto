@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="manifest" href="/js/manifest.json">
     <!-- Local bootstrap.js-->
-    <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>>
+    <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
     <!-- Global bootstrap js-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
@@ -253,7 +253,7 @@
             </div>
         </div>
 
-
+        <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
         <script src="/js/Admin.js" nonce="<%= nonce %>"></script>
 </body>
 

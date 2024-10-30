@@ -39,8 +39,8 @@
           <input type="password" class="form-control" id="current-password" placeholder="Enter your current password">
         </div>
         <div class="form-group">
-          <div id="new-password-red" class="row ml-0 mb-1" for="password">New password<span class="ml-1 nodisplay"
-              id="UnsafeNewPassword text-danger" ><b>- Enter a safe password</b></span><span
+          <div id="new-password-red" class="row ml-0 mb-1" for="password">New password<span class="ml-1 nodisplay text-danger"
+              id="UnsafeNewPassword"><b>- Enter a safe password</b></span><span
               class="ml-1 nodisplay text-danger" id="EmptyNewPassword" ><b>- Enter a password</b></span>
           </div>
           <input type="password" class="form-control " id="new-password" placeholder="Enter your new password">
@@ -60,6 +60,7 @@
     </form>
 
   </section>
+  <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
   <script src="/js/Profile.js" nonce="<%= nonce %>"></script>
 </body>
 

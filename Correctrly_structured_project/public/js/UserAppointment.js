@@ -3,12 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const UserID = JSON.parse(getCookie("userData"))
     function UserAppointment(UserID) {
         const UserUUID = UserID.UUID;
-        fetch(window.location.origin  + `/user/appointment?UUID=${UserUUID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+        fetch(`/user/appointment/${UserUUID}`)
             .then(response => response.json())
             .then(data => {
                 // Call a function to display the user data on the page

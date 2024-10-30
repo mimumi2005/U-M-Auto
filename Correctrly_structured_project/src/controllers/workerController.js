@@ -3,8 +3,10 @@ import path from 'path'; // Add this line to import the path module
 import * as workerModel from '../models/workerModels.js'
 
 export const workerDashboard = (req, res) => {
-    // Render the admin dashboard or serve a file
-    res.render('pages/WorkerPage', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+    // Generate a CSRF token when rendering the page
+
+    const csrfTokenValue = req.csrfToken;
+    res.render('pages/WorkerPage', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
 };
 
 // Controller function to fetch today's projects
@@ -53,7 +55,7 @@ export const fetchActiveProjects = (req, res) => {
   };
 
   export const fetchProjectById = (req, res) => {
-    const { idProjects } = req.body;
+    const idProjects  = req.params.id;
   
     // Call the model function
     workerModel.getProjectById(idProjects, (err, result) => {
@@ -68,6 +70,7 @@ export const fetchActiveProjects = (req, res) => {
   
 // Controller function to change the end date of a project
 export const changeEndDate = (req, res) => {
+ 
     const { EndDate, idProjects } = req.body;
   
     workerModel.updateProjectEndDate(EndDate, idProjects, (err, result) => {
@@ -83,6 +86,7 @@ export const changeEndDate = (req, res) => {
 
   // Controller function to remove the delayed status from a project
 export const removeDelayedProject = (req, res) => {
+ 
     const { idProjects } = req.body;
   
     workerModel.updateProjectDelayedStatus(idProjects, (err, result) => {
@@ -97,7 +101,7 @@ export const removeDelayedProject = (req, res) => {
   
   // Controller function to remove the delayed status from a project
   export const fetchProjectByUserId = (req, res) => {
-    const { idUser } = req.body;
+    const  idUser  = req.params.userId;
   
     workerModel.getProjectsByUserId(idUser, (err, result) => {
       if (err) {
@@ -110,7 +114,7 @@ export const removeDelayedProject = (req, res) => {
   };
   
   export const fetchUserById = (req, res) => {
-    const { idUser } = req.body;
+    const  idUser  = req.params.id;
   
     // Call the model function
     workerModel.getUserById(idUser, (err, result) => {

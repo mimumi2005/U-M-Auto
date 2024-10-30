@@ -26,14 +26,14 @@
                 <h1 class="text-center">Sign Up</h1>
                 <form id="signupForm" action="/signup" method="post">
                     <div class="form-group">
-                        <label class="row ml-0 mb-2 text-danger" id='name-red' for="name">Name <span class="ml-1 nodisplay"
+                        <label class="row ml-0 mb-2 " id='name-red' for="name">Name <span class="ml-1 nodisplay"
                                 id="EmptyName" ><b>- Enter a name</b></label>
                         <input type="name" class="form-control" placeholder="Enter your name" id="name" name="name"
                             maxlength="15">
                     </div>
                     <div class="form-group">
-                        <div id="email-red" class="row ml-0 mb-2 text-danger" for="email">Email <span class="ml-1 nodisplay"
-                                id="BadEmail" ></span><b>- Enter a valid email</b></span> <span
+                        <div id="email-red" class="row ml-0 mb-2 " for="email">Email <span class="ml-1 nodisplay"
+                                id="BadEmail" ><b>- Enter a valid email</b></span> <span
                                 class="ml-1 nodisplay text-danger" id="TakenEmail"><b>- Email is
                                     taken</b></span><span class="ml-1 nodisplay text-danger" id="EmptyEmail"
                                ><b>- Enter an email</b></div>
@@ -276,6 +276,7 @@
             </div>
         </div>
     </div>
+    <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
     <script src="https://www.google.com/recaptcha/api.js" nonce="<%= nonce %>" async defer></script>
     <script src="/js/SignUp.js" nonce="<%= nonce %>"></script>
 

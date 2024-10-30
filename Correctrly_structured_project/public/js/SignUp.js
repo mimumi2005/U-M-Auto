@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
 
         // Resets the error message styles
-        document.getElementById('name-red').style.color="#fff";
-        document.getElementById('username-red').style.color="#fff";
-        document.getElementById('email-red').style.color="#fff";
-        document.getElementById('password-red').style.color="#fff";
+        document.getElementById('name-red').classList.remove('text-danger');
+        document.getElementById('username-red').classList.remove('text-danger');
+        document.getElementById('email-red').classList.remove('text-danger');
+        document.getElementById('password-red').classList.remove('text-danger');
 
         document.getElementById('EmptyName').classList.add('nodisplay');
         document.getElementById('EmptyUsername').classList.add('nodisplay');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Name validation
         const NameValue = document.getElementById('name').value.trim();
         if(NameValue==''){
-            document.getElementById('name-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('name-red').classList.add('text-danger');
             document.getElementById('name').classList.add('form-control-incorrect')
             document.getElementById('EmptyName').classList.remove('nodisplay');
             return
@@ -48,22 +48,22 @@ document.addEventListener('DOMContentLoaded', function () {
         if ((!EmailPattern.test(EmailValue))){
             document.getElementById('email').classList.add('form-control-incorrect');
             document.getElementById('BadEmail').classList.remove('nodisplay');
-            document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('email-red').classList.add('text-danger');
             return;
         }
         if(EmailValue==''){
             document.getElementById('email').classList.add('form-control-incorrect');
             document.getElementById('EmptyEmail').classList.remove('nodisplay');
-            document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('email-red').classList.add('text-danger');
             return;
         }     
 
         // Username validation
         const UsernameValue = document.getElementById("username").value.trim();
         if (UsernameValue==''){
-            document.getElementById('username').classList.add('form-control-incorrect');
+            document.getElementById('username').classList.add('form-control-incorrect ');
             document.getElementById('EmptyUsername').classList.remove('nodisplay');
-            document.getElementById('username-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('username-red').classList.add('text-danger');
             return;
         }
         
@@ -75,14 +75,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!passwordRegex.test(passwordValue)) {
             document.getElementById('password').classList.add('form-control-incorrect');
             document.getElementById('BadPassword').classList.remove('nodisplay');
-            document.getElementById('password-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('password-red').classList.add('text-danger');
             return;
         }
 
         if(passwordValue==''){
             document.getElementById('password').classList.add('form-control-incorrect');
             document.getElementById('EmptyPassword').classList.remove('nodisplay');
-            document.getElementById('password-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('password-red').classList.add('text-danger');
             return;
         }     
 
@@ -102,7 +102,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/auth/sign-up', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData),
         })
@@ -128,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Divides errors
         if(response.message=='Email is already taken'){
                 document.getElementById('TakenEmail').classList.remove('nodisplay');
-                document.getElementById('email-red').style.color="rgb(255, 0, 0)";
+                document.getElementById('email-red').classList.add('text-danger');
                 document.getElementById('email').classList.add('form-control-incorrect');
 
                 
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         if(response.message=='Username is already taken'){
             document.getElementById('TakenUsername').classList.remove('nodisplay');
-            document.getElementById('username-red').style.color="rgb(255, 0, 0)";
+            document.getElementById('username-red').classList.add('text-danger');
             document.getElementById('username').classList.add('form-control-incorrect');
             
         }

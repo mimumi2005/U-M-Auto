@@ -28,11 +28,13 @@
     "recaptcha": "^1.2.1",
     "session": "^0.1.0",
     "tedious": "^16.6.1",
+    "tiny-csrf": "^1.1.4",
     "uuid": "^9.0.1"
   },
   "keywords": [],
   "description": "",
   "devDependencies": {
+    "depcheck": "^1.4.7",
     "esm": "^3.2.25"
   }
 }

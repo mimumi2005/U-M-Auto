@@ -8,7 +8,7 @@ import { createRequire } from 'module';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import csrf from "csurf";
+
 import path from "path";
 import { fileURLToPath } from 'url';
 import ejs from 'ejs';
@@ -21,7 +21,6 @@ import { generateNonce } from './middleware/nonceGen.js'; // Adjust path if need
 
 // import enforce from 'express-sslify'; // Import express-sslify, for HTTPS usage when converting
 import helmet from "helmet";
-import db from './config/db.js';  // Import MySQL configuration
 import dotenv from "dotenv";
 
 
@@ -52,13 +51,13 @@ app.use((req, res, next) => {
 app.use(helmet.contentSecurityPolicy({
   directives: {
       defaultSrc: ["'self'", "https://maps.googleapis.com", "file:"],
-      frameSrc: ["https://www.google.com", "https://www.gstatic.com"],
+      frameSrc: ["'self'", "https://www.google.com", "https://www.gstatic.com"], // Added 'self' for frames
       connectSrc: ["'self'", "https://maps.googleapis.com"],
       imgSrc: [
         "'self'", 
         "https://maps.googleapis.com", 
         "https://maps.gstatic.com", 
-        "data:"
+        "data:" // Data URIs may still be needed for images
       ],
       scriptSrc: [
         "'self'",
@@ -78,10 +77,12 @@ app.use(helmet.contentSecurityPolicy({
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
       ],
       fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"], // Include font sources if using web fonts
-      // Add any other necessary directives like objectSrc, mediaSrc, etc.
+      objectSrc: ["'none'"], // Disallow <object> and <embed> tags to minimize attack surface
+      mediaSrc: ["'self'"], // Allow only self for media (audio/video)
   },
-  reportOnly: false, // Enforce the policy
+  reportOnly: false, // Set to true if testing CSP violations
 }));
+
 
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the public folder outside src
@@ -95,11 +96,13 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
+    httpOnly: true, // Prevent client-side access to the cookie
     sameSite: 'lax', // Set SameSite attribute
     secure: process.env.NODE_ENV === 'production', // Set to true in production
-    maxAge: 1*60*30*1000 // Session expires after 30 minutes
+    maxAge: 1 * 60 * 30 * 1000 // Session expires after 30 minutes
   }
 }));
+
 
 
 app.set('view engine', 'ejs');
@@ -137,11 +140,12 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+
 
 // Use your routes
-app.use('/', routes);  
 
-app.use(cookieParser());
+app.use('/', routes);
 
 
 const PORT = process.env.PORT || 80;
@@ -149,7 +153,6 @@ const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
 
 
 app.use(bodyParser.json());

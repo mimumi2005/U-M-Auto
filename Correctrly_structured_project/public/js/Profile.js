@@ -112,7 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/auth/change-password', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 currentPassword: currentPassword,

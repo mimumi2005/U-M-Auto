@@ -3,13 +3,14 @@ import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as authModel from '../models/authModels.js'; // Importing model
 
-export const  getProfilePage = (req, res) => {
-  res.render('pages/Profile', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+export const getProfilePage = (req, res) => {
+  const csrfTokenValue = req.csrfToken;
+  res.render('pages/Profile', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
 };
 
-export const getUserProfileInfo =  (req, res) => {
+export const getUserProfileInfo = (req, res) => {
   // Fetch user information based on the logged-in user
-  const  UUID  = req.user.UUID; // Change from req.body to req.query
+  const UUID = req.user.UUID; // Change from req.body to req.query
   console.log(UUID);
 
   const query = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
@@ -44,6 +45,7 @@ export const getUserProfileInfo =  (req, res) => {
 
 // controllers/authController.js
 export const loginUser = (req, res) => {
+  
   const { username, password } = req.body;
   const UUID = uuidv4();
 
@@ -114,7 +116,7 @@ export const loginUser = (req, res) => {
                 return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
               }
               // Session info
-              console.log('Role',user.role);
+              console.log('Role', user.role);
               req.session.userId = user.idUser;
               req.session.UUID = UUID;
               req.session.username = user.username;
@@ -137,6 +139,7 @@ export const loginUser = (req, res) => {
 };
 
 export const handleSignUp = async (req, res) => {
+
   const { name, email, username, password } = req.body;
 
   try {
@@ -169,11 +172,12 @@ export const handleLogout = (req, res) => {
     if (err) {
       return res.status(500).json({ message: 'Error during logout' });
     }
-    
+
     console.log("Session deleted");
 
     try {
       await authModel.logoutUser(UUID); // Call the model function to handle any additional logout logic
+      res.clearCookie('', { path: '/' });
       res.json({ status: 'success', message: 'Logout successful!' });
     } catch (error) {
       console.error('Error logging out user:', error);
@@ -184,6 +188,7 @@ export const handleLogout = (req, res) => {
 
 // Function for making new appointments
 export const handleCreateAppointment = async (req, res) => {
+
   const { idUser, StartDate, EndDateProjection, ProjectInfo } = req.body;
   console.log(req.body);
 
@@ -199,40 +204,41 @@ export const handleCreateAppointment = async (req, res) => {
 
 
 export const changePassword = async (req, res) => {
+
   const { currentPassword, newPassword, UUID } = req.body;
 
   try {
-      // Check user based on UUID
-      const userResults = await authModel.getUserByUUID(UUID);
-      if (userResults.length === 0) {
-          return res.status(401).json({ status: 'error', message: 'Invalid UUID' });
-      }
-      const loggedInUser = userResults[0].idUser;
-      // Retrieve the current hashed password from the database
-      const passwordResults = await authModel.getPasswordByIdUser(loggedInUser);
-      if (passwordResults.length === 0) {
-          return res.status(401).json({ status: 'error', message: 'User not found' });
-      }
+    // Check user based on UUID
+    const userResults = await authModel.getUserByUUID(UUID);
+    if (userResults.length === 0) {
+      return res.status(401).json({ status: 'error', message: 'Invalid UUID' });
+    }
+    const loggedInUser = userResults[0].idUser;
+    // Retrieve the current hashed password from the database
+    const passwordResults = await authModel.getPasswordByIdUser(loggedInUser);
+    if (passwordResults.length === 0) {
+      return res.status(401).json({ status: 'error', message: 'User not found' });
+    }
 
-      const hashedPassword = passwordResults[0].password;
+    const hashedPassword = passwordResults[0].password;
 
-      // Verify if the current password matches the one in the database
-      const isMatch = await authModel.verifyPassword(currentPassword, hashedPassword);
-      if (!isMatch) {
-          return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
-      }
+    // Verify if the current password matches the one in the database
+    const isMatch = await authModel.verifyPassword(currentPassword, hashedPassword);
+    if (!isMatch) {
+      return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
+    }
 
-      // Hash the new password
-      const hashedNewPassword = await authModel.hashPassword(newPassword);
+    // Hash the new password
+    const hashedNewPassword = await authModel.hashPassword(newPassword);
 
-      // Update the user's password in the database
-      await authModel.updatePassword(loggedInUser, hashedNewPassword);
+    // Update the user's password in the database
+    await authModel.updatePassword(loggedInUser, hashedNewPassword);
 
-      res.json({ status: 'success', message: 'Password updated successfully!' });
+    res.json({ status: 'success', message: 'Password updated successfully!' });
 
   } catch (error) {
-      console.error('Error during password change process:', error);
-      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    console.error('Error during password change process:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };
 
@@ -244,7 +250,7 @@ export const getUserAppointments = async (req, res) => {
 
   try {
     const projects = await authModel.getProjectsByUserId(idUser);
-
+   
     // If you need to return the HTML page
     res.render('pages/UserAppointment', { nonce: res.locals.nonce }); // Pass nonce to EJS template
   } catch (error) {
@@ -253,5 +259,6 @@ export const getUserAppointments = async (req, res) => {
   }
 };
 export const getUserSettings = (req, res) => {
+ 
   res.render('pages/Settings', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
