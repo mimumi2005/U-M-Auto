@@ -74,6 +74,7 @@ app.use(helmet.contentSecurityPolicy({
         // Allow inline styles only with a nonce
         (req, res) => `'nonce-${res.locals.nonce}'`,
         // Allow external stylesheets if necessary
+        "https://fonts.googleapis.com/css",
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
       ],
       fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"], // Include font sources if using web fonts
