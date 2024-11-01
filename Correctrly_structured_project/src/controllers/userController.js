@@ -24,8 +24,6 @@ export const handlegetUserAppointments = async (req, res) => {
 export const fetchAllProjectDATES = (req, res) => {
   const MonthSelected = req.params.month;
   const YearSelected = req.params.year;
-  console.log("Month:", MonthSelected);
-  console.log("Year:", YearSelected);
 
   userModel.getProjectDates(MonthSelected, YearSelected, (err, result) => {
     if (err) {

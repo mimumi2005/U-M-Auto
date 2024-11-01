@@ -10,7 +10,6 @@ export const getEstimatorPage = (req, res) => {
 };
 
 export const getAboutUsPage = (req, res) => {
-   
     res.render('pages/AboutUs', { apiKey: process.env.GOOGLE_MAPS_API_KEY, nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 

@@ -3,7 +3,6 @@ import { escapeHtml } from '../utils/escapeHTML.js'; // Adjust the path as neces
 
 // Middleware to escape HTML
 export const sanitizeInputUsers = (req, res, next) => {
-    console.log('escapingHTML1')
     if (req.body.name) {
         req.body.name = escapeHtml(req.body.name);
     }

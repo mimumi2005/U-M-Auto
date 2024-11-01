@@ -1,10 +1,11 @@
-// seeds/seed_administrators.js
-import knex from 'knex';
-import dbConfig from '../knexfile.js';
+// seeds/seed_administrators.cjs
+const knex = require('knex');
+const dbConfig = require('../knexfile.cjs');
 
-const db = knex(dbConfig);
+// Pass the development configuration to knex
+const db = knex(dbConfig.development);
 
-export const seed = async () => {
+exports.seed = async function () {
   await db('administrators').del();
 
   const administrators = [

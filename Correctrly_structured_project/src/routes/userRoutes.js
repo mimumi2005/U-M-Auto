@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 
-router.get('/appointment:UUID', handlegetUserAppointments)
+router.get('/appointment/:UUID', handlegetUserAppointments)
 
 router.get('/all-project-dates/:month/:year', fetchAllProjectDATES);
 

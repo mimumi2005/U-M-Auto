@@ -1,10 +1,10 @@
 // seeds/seed_workers.js
-import knex from 'knex';
-import dbConfig from '../knexfile.js';
+const knex = require('knex');
+const dbConfig = require('../knexfile.cjs');
 
-const db = knex(dbConfig);
+const db = knex(dbConfig.development);
 
-export const seed = async () => {
+exports.seed = async function () {
   await db('workers').del();
 
   const workers = [

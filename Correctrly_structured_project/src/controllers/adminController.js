@@ -153,7 +153,6 @@ export const fetchTodaysProjects = (req, res) => {
   const currentMonth = currentDate.getMonth() + 1; // Months are 0-based in JavaScript
   const currentDay = currentDate.getDate();
 
-  console.log("Current date:", currentDate);
 
   adminModel.getTodaysProjects(currentYear, currentMonth, currentDay, (err, result) => {
     if (err) {

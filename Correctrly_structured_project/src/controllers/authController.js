@@ -5,13 +5,12 @@ import * as authModel from '../models/authModels.js'; // Importing model
 
 export const getProfilePage = (req, res) => {
   const csrfTokenValue = req.csrfToken;
-  res.render('pages/Profile', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
+  res.render('pages/Profile', { nonce: res.locals.nonce, csrfToken: csrfTokenValue }); // Pass nonce to EJS template
 };
 
 export const getUserProfileInfo = (req, res) => {
   // Fetch user information based on the logged-in user
   const UUID = req.user.UUID; // Change from req.body to req.query
-  console.log(UUID);
 
   const query = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
   connection.query(query, [UUID], (err, results) => {
@@ -25,7 +24,6 @@ export const getUserProfileInfo = (req, res) => {
     }
 
     const User = results[0].idUser;
-    console.log(User);
     const query = 'SELECT * FROM users WHERE idUser = ?';
     connection.query(query, [User], (err, results) => {
       if (err) {
@@ -45,7 +43,7 @@ export const getUserProfileInfo = (req, res) => {
 
 // controllers/authController.js
 export const loginUser = (req, res) => {
-  
+
   const { username, password } = req.body;
   const UUID = uuidv4();
 
@@ -177,7 +175,7 @@ export const handleLogout = (req, res) => {
 
     try {
       await authModel.logoutUser(UUID); // Call the model function to handle any additional logout logic
-      res.clearCookie('', { path: '/' });
+      res.clearCookie('userData', { path: '/' });
       res.json({ status: 'success', message: 'Logout successful!' });
     } catch (error) {
       console.error('Error logging out user:', error);
@@ -190,7 +188,6 @@ export const handleLogout = (req, res) => {
 export const handleCreateAppointment = async (req, res) => {
 
   const { idUser, StartDate, EndDateProjection, ProjectInfo } = req.body;
-  console.log(req.body);
 
   try {
     // Call the model function to create an appointment
@@ -250,7 +247,7 @@ export const getUserAppointments = async (req, res) => {
 
   try {
     const projects = await authModel.getProjectsByUserId(idUser);
-   
+
     // If you need to return the HTML page
     res.render('pages/UserAppointment', { nonce: res.locals.nonce }); // Pass nonce to EJS template
   } catch (error) {
@@ -258,7 +255,23 @@ export const getUserAppointments = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
 export const getUserSettings = (req, res) => {
- 
+
   res.render('pages/Settings', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
+
+
+export const handleGetUserByUUID = async (req, res) => {
+  const UUID = req.params.UUID;
+  try {
+    const idUser = await authModel.getUserByUUID(UUID);
+    res.json({ status: 'success', idUser: idUser[0].idUser });
+  }
+  catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+

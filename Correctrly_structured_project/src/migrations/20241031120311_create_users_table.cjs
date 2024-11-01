@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.string('Name', 15).defaultTo(null);
     table.string('Username', 20).defaultTo(null);
     table.string('Email', 45).defaultTo(null);
-    table.string('password', 45).defaultTo(null);
+    table.string('password', 255).defaultTo(null);
   });
 };
 

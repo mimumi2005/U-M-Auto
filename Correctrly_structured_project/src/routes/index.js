@@ -16,7 +16,7 @@ const router = express.Router();
 router.get('/', getHomePage);
 
 // Logged user only pages
-router.get('/Appointments',checkSession, getAppointmentPage);
+router.get('/Appointments',generateCSRFToken, checkSession, getAppointmentPage);
 router.get('/Estimator',checkSession, getEstimatorPage);
 
 router.get('/AboutUs', getAboutUsPage);
