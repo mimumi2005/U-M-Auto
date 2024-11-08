@@ -58,6 +58,7 @@ exports.seed = async function () {
       StartDate: startDate.toISOString(),
       EndDateProjection: endDate.toISOString(),
       Delayed: Math.random() < 0.2 ? 1 : 0, // Randomly delay 20% of projects
+      idStatus: 1,
       ProjectInfo: `${project.description} for ${car}`,
     });
 

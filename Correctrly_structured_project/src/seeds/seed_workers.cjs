@@ -16,7 +16,6 @@ exports.seed = async function () {
 
   for (const worker of workers) {
     await db('workers').insert(worker);
-    console.log(`Inserted worker for user ID: ${worker.idUser}`);
   }
 
   await db.destroy(); // Close the database connection

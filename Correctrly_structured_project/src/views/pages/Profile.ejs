@@ -20,15 +20,28 @@
   <div id="customPasswordChangeAlert" class="custom-alert nodisplay">
     <h2>Succesfully changed password!</h2>
   </div>
-  <section class="container col-md-3  mt-5 p-4 text-white bg-light rounded-lg">
-    <div id="profile-info" class="m-2">
-      <h2 tabindex="0" class="mb-3 ">User Profile</h2>
-      <p tabindex="0" id="name" class="lead">Name: John Doe</p>
-      <p tabindex="0" id="username" class="lead">Username: johndoe</p>
-      <p tabindex="0" id="email" class="lead">Email: johndoe@example.com</p>
-      <p class="lead"> Password: ********* <a type="button" class="btn btn-outline-secondary text-white " tabindex="0"
-          id="change-password-button">Change Password</a></p>
+  <section class="container col-md-3  mt-5 p-4 text-white bg-light rounded">
+    <div id="profile-info">
+      <h2 tabindex="0" class="text-center">User Profile</h2>
+      <p tabindex="0"  class="lead d-flex mx-80 p-1">Name:&nbsp;<a id="name" >johndoe</a> &nbsp;<a type="button" class=" text-white" tabindex="0"
+        id="change-name-button"><svg  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+      </svg>
+      </a></p>
+      <p tabindex="0" class="lead d-flex mx-80 p-1">Username:&nbsp; <a id="username" >johndoe</a> &nbsp;<a type="button" class="text-white" tabindex="0"
+        id="change-username-button"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+      </svg>
+      </a></p>
+      <p tabindex="0" class="lead d-flex mx-80 p-1">Email:&nbsp; <a id="email"> johndoe@example.com</a></p>
+      <p class="lead p-1"> Password: ********* <a type="button" class=" text-white" tabindex="0"
+          id="change-password-button"><svg  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+        </svg>
+        </a></p>
+        <a type="button" id="deleteAccountBtn" class="small text-danger  " data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete account</a>
     </div>
+
     <form id="change-password-form" class="nodisplay">
       <h3>Change your password<br></h1>
         <div class="form-group">
@@ -60,6 +73,36 @@
     </form>
 
   </section>
+  
+                <!-- Modal Structure -->
+                <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+                                <button data-bs-dismiss="modal"
+                                    aria-label="Close">X</button>
+                            </div>
+
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                Are you sure you want to delete your account? This action cannot be undone.
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                <!-- Laravel Form for DELETE Method -->
+                                <form  method="POST">
+                                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
   <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
   <script src="/js/Profile.js" nonce="<%= nonce %>"></script>
 </body>

@@ -175,3 +175,29 @@ export function checkAdminStatus(userid, connection, callback) {
       }
   });
 }
+
+// Function to update the username
+export const updateUsername = (userId, newUsername) => {
+  return new Promise((resolve, reject) => {
+      const query = 'UPDATE users SET username = ? WHERE idUser = ?';
+      connection.query(query, [newUsername, userId], (error, results) => {
+          if (error) {
+              return reject(error);
+          }
+          resolve(results);
+      });
+  });
+};
+
+// Function to update the name
+export const updateName = (userId, newName) => {
+  return new Promise((resolve, reject) => {
+      const query = 'UPDATE users SET name = ? WHERE idUser = ?';
+      connection.query(query, [newName, userId], (error, results) => {
+          if (error) {
+              return reject(error);
+          }
+          resolve(results);
+      });
+  });
+};

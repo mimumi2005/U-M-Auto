@@ -15,11 +15,11 @@
 
 </head>
 <body>
-    <div class="container col-lg-3 mt-5 text-white bg-light rounded-lg">
-        <h1 class="m-2 text-center">Settings</h1>
+    <div class="container col-lg-3 mt-5  p-4 text-white bg-light rounded-lg">
+        <h1 class="m-2 text-center">Notification settings</h1>
         <div class="container m-auto mx-80 mix-40 m-2 p-2">
             <div class="form-group text-white">
-                <label for="Notifications">Notification settings</label>
+                <label for="Notifications">Special deal notifications</label>
                 <select class="form-control" id="Notifications" name="Notifications" required>
                     <option value="None">No notifications</option>
                     <option value="Offers">Special deals/offers</option>
@@ -27,10 +27,12 @@
                     <option value="ALL">All notifications</option>
                 </select>
             </div>
-            <label for="Dark/Light">Choose display mode</label>
+            <label for="Reminders">Appointment reminders</label>
                 <select class="form-control" id="repairType" name="repairType" required>
-                    <option value="Dark">Dark mode</option>
-                    <option value="Light">Light mode</option>
+                    <option value="None">No notifications</option>
+                    <option value="Offers">Special deals/offers</option>
+                    <option value="OilChange">Oil change reminders</option>
+                    <option value="ALL">All notifications</option>
                 </select>
                 <button type="submit" class="btn btn-secondary btn-block mt-3 mb-3">Save settings</button>
         </div>

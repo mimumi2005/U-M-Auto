@@ -9,6 +9,11 @@ exports.up = function (knex) {
     table.string('StartDate', 45).defaultTo(null);
     table.string('EndDateProjection', 45).defaultTo(null);
     table.boolean('Delayed').defaultTo(0);
+    table.integer('idStatus').notNullable()
+      .unsigned()
+      .references('idStatus')
+      .inTable('project_status')
+      .onDelete('CASCADE');
     table.string('ProjectInfo', 255).defaultTo(null);
   });
 };

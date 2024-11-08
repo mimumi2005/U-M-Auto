@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.css">
 
-      
+
 
     <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
 </head>
@@ -16,21 +16,23 @@
         <h2>Appointment registered successfully</h2>
     </div>
     <div class="container">
-        <div class="row justify-content-center text-white mt-3">
-            <div class="col-md-6 bg-light p-3 rounded">
-                <h1 class="text-center mb-3">Appointment Booking</h1>
+        <div class="row justify-content-center text-white mt-2">
+            <div class="col-md-6 bg-light p-4  rounded">
+                <h2 class="text-center mb-0">Appointment Booking</h2>
                 <form id="appointmentForm">
-                    <div class="form-group">
-                        <label for="repairType">Type of Repair</label>
+                    <div class="form-group mb-1">
+                        <label for="repairType"></label>
                         <select class="form-control" id="repairType" name="repairType" required>
+                            <option disabled selected value="0">Choose an appointment type</option>
                             <option tabindex="1" value="1">Oil change</option>
                             <option tabindex="2" value="120">Paint job</option>
                             <option tabindex="3" value="4">Overall checkup or tuning</option>
                             <option tabindex="4" value="4">Custom parts</option>
                             <option tabindex="5" value="1">Project discussion</option>
                         </select>
+
                     </div>
-                    <label for="repairType" class="text-white">Choose a day</label>
+                    <label for="repairType" class="text-white"></label>
                     <div class="container text-dark">
                         <div class="row justify-content-center ">
                             <div class="col-lg-8">
@@ -62,7 +64,7 @@
                             maxlength="255" required></textarea>
                     </div>
                     <div class="">
-                        <button type="submit" class="btn btn-outline-secondary ">Make Appointment</button>
+                        <button type="submit" class=" btn btn-outline-secondary ">Make Appointment</button>
                     </div>
                 </form>
             </div>

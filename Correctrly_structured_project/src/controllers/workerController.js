@@ -23,7 +23,7 @@ export const fetchTodaysProjects = (req, res) => {
         console.error('Error fetching today\'s projects:', err);
         return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
       }
-  
+      console.log(result);
       res.send(result);
     });
   };
@@ -82,6 +82,21 @@ export const changeEndDate = (req, res) => {
       res.json(result);
     });
   };
+
+  // Controller function to change the status of the project
+export const changeStatus = (req, res) => {
+ 
+  const  {newStatus, idProjects} = req.body;
+
+  workerModel.updateProjectStatus(newStatus, idProjects, (err, result) => {
+    if (err) {
+      console.error('Error updating status:', err);
+      return res.status(500).json({ status: 'error', message: 'Error updating status', error: err.message });
+    }
+
+    res.json(result);
+  });
+};
 
 
   // Controller function to remove the delayed status from a project

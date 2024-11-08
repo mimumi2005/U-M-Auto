@@ -11,10 +11,11 @@ exports.seed = async function () {
     await db('user_instance').del();
     await db('users').del();  // Clear users table
     await db('workers').del();  // Clear worker
-
+    await db('project_status').del();  // Clear status table
     await db.raw('ALTER TABLE projects AUTO_INCREMENT = 0');
     await db.raw('ALTER TABLE user_instance AUTO_INCREMENT = 0');
     await db.raw('ALTER TABLE users AUTO_INCREMENT = 0');
+    await db.raw('ALTER TABLE project_status AUTO_INCREMENT = 0');
     console.log("Database cleared");
     await db.destroy();
 };

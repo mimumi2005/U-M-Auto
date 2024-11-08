@@ -17,7 +17,6 @@ exports.seed = async function () {
 
   for (const admin of administrators) {
     await db('administrators').insert(admin);
-    console.log(`Inserted administrator for user ID: ${admin.idUser}`);
   }
 
   await db.destroy(); // Close the database connection

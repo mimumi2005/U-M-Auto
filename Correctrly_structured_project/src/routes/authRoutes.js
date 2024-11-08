@@ -4,7 +4,7 @@ import {sanitizeInputProjects} from '../middleware/escapeHTMLproject.js';
 import {sanitizeInputUsers} from '../middleware/escapeHTMLusers.js';
 import {checkSession} from '../middleware/checkSession.js';
 import {verifyRecaptcha} from '../middleware/verifyRecaptcha.js';
-import { handleGetUserByUUID, loginUser, handleLogout, handleSignUp, handleCreateAppointment, changePassword, getProfilePage, getUserAppointments, getUserSettings, getUserProfileInfo } from '../controllers/authController.js';
+import { handleGetUserByUUID, loginUser, handleLogout, handleSignUp, handleCreateAppointment, changePassword, getProfilePage, getUserAppointments, getUserSettings, getUserProfileInfo, updateUsername, updateName } from '../controllers/authController.js';
 import {generateCSRFToken} from '../middleware/CSRF.js'
 import {validateCSRFToken} from '../middleware/CSRF.js'
 
@@ -21,6 +21,8 @@ router.post('/login', (req, res) => {
 router.post('/sign-up', verifyRecaptcha,validateCSRFToken, sanitizeInputUsers, handleSignUp);
 router.post('/createAppointment',checkSession,validateCSRFToken, sanitizeInputProjects, handleCreateAppointment);
 router.post('/change-password',checkSession,validateCSRFToken, sanitizeInputUsers, changePassword);
+router.post('/update-username',checkSession,validateCSRFToken, sanitizeInputUsers, updateUsername);
+router.post('/update-name',checkSession,validateCSRFToken, sanitizeInputUsers,updateName);
 
 router.get('/userID/:UUID',checkSession, handleGetUserByUUID);
 router.get('/log-out',checkSession,generateCSRFToken, handleLogout);

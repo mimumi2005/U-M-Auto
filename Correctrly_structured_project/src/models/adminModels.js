@@ -41,10 +41,10 @@ export const getAllWorkerIds = (callback) => {
 
 
   export const getActiveProjects = (curdate, callback) => {
-    const sql_query = `
-      SELECT projects.*, users.UserName
-      FROM projects
-      JOIN users ON projects.idUser = users.idUser
+    const sql_query = `SELECT projects.*, users.UserName, project_status.statusName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser
+    JOIN project_status ON projects.idStatus = project_status.idStatus
       WHERE ? < projects.StartDate OR projects.Delayed = true
     `;
   
@@ -54,10 +54,10 @@ export const getAllWorkerIds = (callback) => {
 
 
   export const getProjectById = (idProjects, callback) => {
-    const sql_query = `
-      SELECT projects.*, users.UserName
-      FROM projects
-      JOIN users ON projects.idUser = users.idUser
+    const sql_query = `SELECT projects.*, users.UserName, project_status.statusName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser
+    JOIN project_status ON projects.idStatus = project_status.idStatus
       WHERE idProjects = ?
     `;
   
@@ -91,10 +91,10 @@ export const getUserByEmail = (email, callback) => {
 };
 
 export const getTodaysProjects = (year, month, day, callback) => {
-  const sql_query = `
-    SELECT projects.*, users.UserName
+  const sql_query = `SELECT projects.*, users.UserName, project_status.statusName
     FROM projects
     JOIN users ON projects.idUser = users.idUser
+    JOIN project_status ON projects.idStatus = project_status.idStatus
     WHERE 
       YEAR(StartDate) = ? AND MONTH(StartDate) = ? AND DAY(StartDate) <= ?
       AND 
@@ -106,10 +106,10 @@ export const getTodaysProjects = (year, month, day, callback) => {
 
 // Model function to fetch finished projects
 export const getFinishedProjects = (isoCurrentDate, callback) => {
-  const sql_query = `
-    SELECT projects.*, users.UserName
+  const sql_query =`SELECT projects.*, users.UserName, project_status.statusName
     FROM projects
     JOIN users ON projects.idUser = users.idUser
+    JOIN project_status ON projects.idStatus = project_status.idStatus
     WHERE projects.Delayed = false AND ? > projects.EndDateProjection
   `;
 
@@ -118,12 +118,7 @@ export const getFinishedProjects = (isoCurrentDate, callback) => {
 
 // Model function to fetch delayed projects
 export const getDelayedProjects = (callback) => {
-  const sql_query = `
-    SELECT projects.*, users.UserName 
-    FROM projects 
-    JOIN users ON projects.idUser = users.idUser 
-    WHERE projects.Delayed = true
-  `;
+  const sql_query = 'SELECT projects.*, users.UserName, project_status.statusName FROM projects JOIN users ON projects.idUser = users.idUser JOIN project_status ON projects.idStatus = project_status.idStatus WHERE projects.Delayed = true';
 
   connection.query(sql_query, callback);
 };
@@ -135,7 +130,10 @@ export const updateProjectEndDate = (EndDate, idProjects, callback) => {
     if (err) return callback(err);
 
     // Retrieve the updated project information
-    const selectQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
+    const selectQuery = `SELECT projects.*, users.UserName, project_status.statusName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser
+    JOIN project_status ON projects.idStatus = project_status.idStatus WHERE idProjects = ?`;
     connection.query(selectQuery, [idProjects], callback);
   });
 };
@@ -147,7 +145,10 @@ export const updateProjectDelayedStatus = (idProjects, callback) => {
     if (err) return callback(err);
 
     // Retrieve the updated project information
-    const selectQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE idProjects = ?';
+    const selectQuery = `SELECT projects.*, users.UserName, project_status.statusName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser
+    JOIN project_status ON projects.idStatus = project_status.idStatus WHERE idProjects = ?`;
     connection.query(selectQuery, [idProjects], callback);
   });
 };

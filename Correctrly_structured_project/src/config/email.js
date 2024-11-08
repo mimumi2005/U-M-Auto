@@ -1,12 +1,16 @@
-import mysql2 from 'mysql2';
+import mysql2 from 'mysql2/promise';
 
-// Create a MySQL connection (using callback-style API)
-const connection = mysql2.createConnection({
+// Create a MySQL connection
+// db.js
+
+const connection = await mysql2.createConnection({
     host: 'localhost',
     database: 'CarRepairShop',
     user: 'root',
     password: 'root',
 });
+
+
 
 // Connect to MySQL
 connection.connect((err) => {

@@ -4,6 +4,7 @@ import session from 'express-session';
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cron from "node-cron";
+
 import { createRequire } from 'module';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -13,9 +14,9 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import ejs from 'ejs';
 import expressLayouts from 'express-ejs-layouts';
-// Middleware
 
-import {cacheControlMiddleware} from './middleware/preventCaching.js';
+// Middleware
+import { cacheControlMiddleware } from './middleware/preventCaching.js';
 import { attachUser } from './middleware/attachUser.js';
 import { generateNonce } from './middleware/nonceGen.js'; // Adjust path if needed
 
@@ -24,9 +25,10 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 
 
-import connection from './config/db.js'; // Importing connection
-import routes from './routes/index.js';  // Import your routes
+import connection from './config/db.js';
+import routes from './routes/index.js';
 
+import './models/cronJob.js';
 
 // Replicating __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -50,36 +52,36 @@ app.use((req, res, next) => {
 // Ensure this is after your generateNonce middleware
 app.use(helmet.contentSecurityPolicy({
   directives: {
-      defaultSrc: ["'self'", "https://maps.googleapis.com", "file:"],
-      frameSrc: ["'self'", "https://www.google.com", "https://www.gstatic.com"], // Added 'self' for frames
-      connectSrc: ["'self'", "https://maps.googleapis.com"],
-      imgSrc: [
-        "'self'", 
-        "https://maps.googleapis.com", 
-        "https://maps.gstatic.com", 
-        "data:" // Data URIs may still be needed for images
-      ],
-      scriptSrc: [
-        "'self'",
-        "https://maps.googleapis.com",
-        "https://www.gstatic.com",
-        "https://www.google.com/recaptcha/api.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js", // Ensure this is the correct version
-        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
-        // Allow inline scripts only with a nonce
-        (req, res) => `'nonce-${res.locals.nonce}'`
-      ],
-      styleSrc: [
-        "'self'",
-        // Allow inline styles only with a nonce
-        (req, res) => `'nonce-${res.locals.nonce}'`,
-        // Allow external stylesheets if necessary
-        "https://fonts.googleapis.com/css",
-        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
-      ],
-      fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"], // Include font sources if using web fonts
-      objectSrc: ["'none'"], // Disallow <object> and <embed> tags to minimize attack surface
-      mediaSrc: ["'self'"], // Allow only self for media (audio/video)
+    defaultSrc: ["'self'", "https://maps.googleapis.com", "file:"],
+    frameSrc: ["'self'", "https://www.google.com", "https://www.gstatic.com"], // Added 'self' for frames
+    connectSrc: ["'self'", "https://maps.googleapis.com"],
+    imgSrc: [
+      "'self'",
+      "https://maps.googleapis.com",
+      "https://maps.gstatic.com",
+      "data:" // Data URIs may still be needed for images
+    ],
+    scriptSrc: [
+      "'self'",
+      "https://maps.googleapis.com",
+      "https://www.gstatic.com",
+      "https://www.google.com/recaptcha/api.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js", // Ensure this is the correct version
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+      // Allow inline scripts only with a nonce
+      (req, res) => `'nonce-${res.locals.nonce}'`
+    ],
+    styleSrc: [
+      "'self'",
+      // Allow inline styles only with a nonce
+      (req, res) => `'nonce-${res.locals.nonce}'`,
+      // Allow external stylesheets if necessary
+      "https://fonts.googleapis.com/css",
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
+    ],
+    fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"], // Include font sources if using web fonts
+    objectSrc: ["'none'"], // Disallow <object> and <embed> tags to minimize attack surface
+    mediaSrc: ["'self'"], // Allow only self for media (audio/video)
   },
   reportOnly: false, // Set to true if testing CSP violations
 }));
@@ -145,7 +147,6 @@ app.use(cookieParser());
 
 
 // Use your routes
-
 app.use('/', routes);
 
 
@@ -160,49 +161,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-cron.schedule('0 0 * * *', () => {
-  // Logic to update tenure for all workers
-  updateTenureForAllWorkers();
-});
-
-// Function for updating tenure automatically
-function updateTenureForAllWorkers() {
-  // Query all workers from the database
-  const getAllWorkersQuery = 'SELECT * FROM workers';
-  connection.query(getAllWorkersQuery, (err, workers) => {
-    if (err) {
-      console.error('Error fetching workers:', err);
-      return;
-    }
-    // Iterate through each worker
-    workers.forEach(worker => {
-      // Calculate tenure based on StartWorkDate
-      const startWorkDate = new Date(worker.StartWorkDate);
-      const currentDate = new Date();
-      const tenure = currentDate.getFullYear() - startWorkDate.getFullYear();
-      // Update tenure in the database
-      const updateTenureQuery = 'UPDATE workers SET tenure = ? WHERE idUser = ?';
-      connection.query(updateTenureQuery, [tenure, worker.idUser], (updateErr, updateResult) => {
-        if (updateErr) {
-          console.error('Error updating tenure:', updateErr);
-          return;
-        }
-        console.log(`Tenure updated for worker with idUser ${worker.idUser}`);
-      });
-    });
-  });
-}
 
 // Saving session info
 app.get('/api/getUserSession', (req, res) => {
   if (req.session && req.session.userId) {
-      res.json({
-          isLoggedIn: true,
-          isAdmin: req.session.isAdmin,
-          isWorker: req.session.isWorker
-      });
+    res.json({
+      isLoggedIn: true,
+      isAdmin: req.session.isAdmin,
+      isWorker: req.session.isWorker
+    });
   } else {
-      res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
+    res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
   }
 });
 

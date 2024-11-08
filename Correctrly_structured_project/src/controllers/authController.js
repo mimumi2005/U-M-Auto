@@ -49,6 +49,7 @@ export const loginUser = (req, res) => {
 
   // Query to check if username or email matches a user in the database
   const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
+
   connection.query(query, [username, username], async (err, results) => {
     if (err) {
       return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
@@ -64,6 +65,7 @@ export const loginUser = (req, res) => {
     try {
       // Verify the password using bcrypt (verifyPassword is async)
       const isMatch = await authModel.verifyPassword(password, user.password);
+
 
       if (!isMatch) {
         // Passwords do not match
@@ -258,7 +260,7 @@ export const getUserAppointments = async (req, res) => {
 
 export const getUserSettings = (req, res) => {
 
-  res.render('pages/Settings', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+  res.render('pages/Notif_settings', { nonce: res.locals.nonce }); // Pass nonce to EJS template
 };
 
 
@@ -275,3 +277,33 @@ export const handleGetUserByUUID = async (req, res) => {
 }
 
 
+
+// Controller to update the username
+export const updateUsername = async (req, res) => {
+  try {
+      const userId = req.user.id; // Assuming user ID is stored in session
+      const newUsername = req.body.username; // Get the new username from the request body
+
+      await authModel.updateUsername(userId, newUsername);
+      
+      res.json({ success: true, message: 'Username updated successfully!' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Failed to update username.' });
+  }
+};
+
+// Controller to update the name
+export const  updateName = async (req, res) => {
+  try {
+      const userId = req.user.id; // Assuming user ID is stored in session
+      const newName = req.body.name; // Get the new name from the request body
+
+      await authModel.updateName(userId, newName);
+      
+      res.json({ success: true, message: 'Name updated successfully!' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Failed to update name.' });
+  }
+};
