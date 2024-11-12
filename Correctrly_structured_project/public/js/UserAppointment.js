@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // Function to display the fetched appointment data in a table format
     function displayAppointmentData(data) {
-        console.log(data);
         const tableBody = document.getElementById('appointment-table-body');
         tableBody.innerHTML = ''; // Clear any previous content
 

@@ -1,9 +1,89 @@
 const loggedUser = JSON.parse(getCookie("userData"));
 const form = document.getElementById('change-password-form');
 const inputs = form.querySelectorAll('input');
-console.log(loggedUser);
 
 document.addEventListener('DOMContentLoaded', function () {
+    const changeNameButton = document.getElementById('change-name-button');
+    const changeUsernameButton = document.getElementById('change-username-button');
+
+    // Function to replace text with input field
+    function replaceWithInput(fieldId, defaultValue) {
+        const field = document.getElementById(fieldId);
+        const inputField = document.createElement('input');
+
+        inputField.type = 'text';
+        inputField.value = defaultValue;
+        inputField.className = 'form-control'; // Bootstrap class for styling
+        // Replace the text with input field
+        field.parentNode.replaceChild(inputField, field);
+
+        // Focus on the input field immediately after replacing
+        inputField.focus();
+
+        // Handle saving the new value on blur and Enter key
+        const saveNewValue = () => {
+            changeUsernameButton.classList.remove('d-none');
+            changeNameButton.classList.remove('d-none');
+            const newValue = inputField.value;
+
+            // Replace the input field with the new text
+            const newText = document.createElement('a');
+            newText.id = fieldId; // Restore the original ID
+            newText.textContent = newValue;
+
+            // Reinsert the new text
+            inputField.parentNode.replaceChild(newText, inputField);
+
+            // AJAX POST request to save the new value to the server
+            fetch(`/auth/update-${fieldId}`, { // Adjust the URL as needed
+                method: 'POST',
+                headers: {
+                    'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ [fieldId]: newValue }) // Sending the new value
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse JSON response
+                })
+                .then(data => {
+                    console.log(`${fieldId} updated to: ${newValue}`, data);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        };
+
+
+        inputField.addEventListener('blur', saveNewValue);
+
+        // Add event listener for Enter key press
+        inputField.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                inputField.blur();
+            }
+        });
+    }
+
+
+    // Add click event listeners
+    changeNameButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('name').focus();
+        replaceWithInput('name', document.getElementById('name').textContent);
+        changeNameButton.classList.add('d-none');
+    });
+
+    changeUsernameButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('username').focus();
+        replaceWithInput('username', document.getElementById('username').textContent);
+        changeUsernameButton.classList.add('d-none');
+    });
+
     fetchUserInfo();
     const cancelchangePasswordButton = document.getElementById("cancel-password-reset-button");
     const changePasswordButton = document.getElementById("change-password-button");
@@ -18,14 +98,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
     changePasswordButton.addEventListener("click", ShowPasswordReset);
-    cancelchangePasswordButton.addEventListener("click", HidePasswordReset);    
+    cancelchangePasswordButton.addEventListener("click", HidePasswordReset);
 
 
     // Add event listener to each input field
     inputs.forEach(function (input, index) {
         input.addEventListener('keydown', function (event) {
             if (event.key === 'Enter') {
-                console.log(index);
                 if (index != 2) { // If the current input field is the third one (index 2)S
                     event.preventDefault();
                     const nextIndex = (index + 1) % inputs.length;
@@ -125,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             .then(data => {
                 // Handle the response from the server
-                console.log(data);
                 if (data.status === 'success') {
                     document.getElementById('customPasswordChangeAlert').classList.remove('nodisplay');
                     setTimeout(function () {
@@ -206,9 +284,9 @@ function fetchUserInfo() {
         .then(data => {
             if (data.status === 'success') {
                 // Update the profile information on the page
-                document.getElementById("name").innerText = "Name: " + data.user.Name;
-                document.getElementById("username").innerText = "Username: " + data.user.Username;
-                document.getElementById("email").innerText = "Email: " + data.user.Email;
+                document.getElementById("name").innerText = data.user.Name;
+                document.getElementById("username").innerText = data.user.Username;
+                document.getElementById("email").innerText = data.user.Email;
             } else {
                 console.error('Error fetching user information:', data.message);
             }

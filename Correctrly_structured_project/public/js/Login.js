@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
         inputs.forEach(function (input, index) {
             input.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter') {
-                    console.log(index);
                     if (index != 1) { // If the current input field is the third one (index 2)S
                         event.preventDefault();
                         const nextIndex = (index + 1) % inputs.length;
@@ -74,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function () {
         function handleResponse(response) {
             // If succesful announces it and resets form
             if (response.status === 'success') {
-                console.log('Server response:', response);
                 loginUser(response.data);
                 setTimeout(function () {
                     document.querySelector('form').reset();

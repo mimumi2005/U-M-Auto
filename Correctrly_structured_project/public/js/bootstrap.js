@@ -4593,7 +4593,6 @@ function calculatePrice() {
 // Function to update button visibility depending of login status
 function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
   if (isLoggedIn) {
-    console.log(isLoggedIn);
     if (isAdmin) {
       document.getElementById('AdminMenu').classList.remove('nodisplay');
       document.getElementById('Statistics').classList.remove('nodisplay');
@@ -4659,7 +4658,6 @@ function loginUser(response) {
       IsAdmin: response.IsAdmin,
       IsWorker: response.IsWorker
     };
-    console.log('admin:', response.IsAdmin);
     setCookie('userData', userData, 1); // Expires in 7 days
 
     // Log the document cookie after setting to verify
@@ -4672,18 +4670,6 @@ function loginUser(response) {
 
 // LogOut main function
 function LogOut() {
-  fetch('/dashboard-data')
-    .then(response => response.json())
-    .then(data => {
-      if (data.userId) {
-        console.log('User ID:', data.userId);
-        // Use the userId in your frontend code as needed
-      }
-    })
-
-    .catch(error => console.error('Error fetching user data:', error));
-  const loggedUser = JSON.parse(getCookie("userData"));
-  console.log('Logged user:', loggedUser);
   fetch(`/auth/log-out`)
     .then(response => {
       if (!response.ok) {
@@ -4692,7 +4678,6 @@ function LogOut() {
       return response.json(); // Await here
     })
     .then(data => {
-      console.log('log out:', data); // Log the parsed response data
       isLoggedIn = false;
       updateButtonVisibility();
       clearCookies();
@@ -4748,15 +4733,19 @@ function showCustomSignUpAlert() {
 }
 
 function showCustomAppointmentAlert() {
-  window.location.href = '#';
-  setTimeout(function () {
-    window.location.href = 'Home.html?showSuccess=true';
-  }, 2000);
+  // Show the alert box
   if (document.getElementById('customAppointmentAlert')) {
     const alertBox = document.getElementById('customAppointmentAlert');
     alertBox.classList.remove('nodisplay');
   }
+
+  // Use setTimeout to wait for 2 seconds before redirecting
+  setTimeout(function () {
+    // Redirect the user to the home page
+    window.location.href = '/auth/UserAppointment'; // Change this to your home page route if different
+  }, 2000);
 }
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -4810,7 +4799,6 @@ function slowScrollTo(targetOffset, duration) {
 
 // Function to show statistics about projects
 function ViewUserStatistics() {
-  console.log("Viewing Project statistics");
   // Make a fetch request to your backend to retrieve all user data
 
   fetch('/user-statistics')
@@ -4826,7 +4814,6 @@ function ViewUserStatistics() {
 
 // Function to show statistics about projects
 function ViewProjectStatistics() {
-  console.log("Viewing Project statistics");
   // Make a fetch request to your backend to retrieve all user data
 
   fetch('/project-statistics')
@@ -4864,14 +4851,12 @@ function deleteUser(userID) {
     })
     .then(data => {
       // Process the response data
-      console.log(data);
     })
     .catch(error => console.error('Error deleting user:', error))
 }
 
 // Function to give a worker admin
 function giveAdmin(idUser) {
-  console.log("Giving worker with id:", idUser, "admin permissions");
   // Make a fetch request to your backend to retrieve all user data
 
   fetch('/give-admin', {
@@ -5104,58 +5089,9 @@ function displayDelayedProjectData(projects) {
 }
 
 
-// WORKER function to display project data on the page
-//function displayProjectDataForWorkers(projects) {
-//  const currentDate = new Date();
-//  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
-//  console.log(projects);
-//  const userDataContainer = document.getElementById('ProjectDataContainer');
-//  userDataContainer.innerHTML = `
-//  <div class="container mt-4">
-//            <div class="row row-cols-1 row-cols-md-3">
-//                <!-- User cards will be dynamically added here -->
-//            </div>
-//        </div>
-//  `;
-//  // Loop through each project and cretate HTML elemens to display their data
-//  projects.forEach((project, index) => {
-//    // Create a column for the project card
-//    const column = document.createElement('div');
-//    column.classList.add('col-lg-4');
-//    // Create the project card HTML
-//    const currentDate = new Date();
-//    const startDate = project.StartDate ? new Date(project.StartDate) : null;
-//    const isStartDateToday = startDate && startDate.toDateString() === currentDate.toDateString();
-//
-//    column.innerHTML = `
-//         <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
-//             <div class="card-body text-white">
-//                 <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
-//                 <p class="card-text">Date ${project.StartDate ? new Date(project.StartDate).toLocaleDateString() : 'Invalid Date'} - ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleDateString() : 'Invalid Date'} </p>
-//                 
-//                 ${isStartDateToday ? `<p class="card-text">Start Time: ${startDate.toLocaleTimeString()}</p>` : ''}
-//                 ${project.EndDateProjection ? `<p class="card-text">End Time: ${new Date(project.EndDateProjection).toLocaleTimeString()}</p>` : ''}
-//                 
-//                 <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
-//                 <p class="card-text">Info: ${project.ProjectInfo}</p>
-//                 <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="searchUserByWorkerByID(${project.idUser})">View project user info</button>
-//                 <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="changeEndDateByWorker(${project.idProjects})">Edit project end date</button>
-//             </div>
-//         </div>
-//     `;
-//
-//
-//    // Append the project card to the current row
-//    document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
-//
-//  });
-//}
-
-
 // Function to display project statistics on the page
 function displayProjectStatistics(projects) {
   document.getElementById('ProjectStatisticsContainer').classList.remove('nodisplay');
-  console.log(projects);
 
   // Sort the projects by ProjectsCount in ascending order
   projects.sort((a, b) => b.ProjectsCount - a.ProjectsCount);
@@ -5176,8 +5112,8 @@ function displayProjectStatistics(projects) {
     datasets: [{
       label: 'Number of Projects',
       data: data,
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(75, 192, 192, 1)',
+      backgroundColor: 'rgba(75, 192, 192, 0.4)',
+      borderColor: 'rgba(90, 210, 210, 1)',
       borderWidth: 1
     }]
   };
@@ -5190,7 +5126,7 @@ function displayProjectStatistics(projects) {
       plugins: {
         legend: {
           labels: {
-            color: 'white',
+            color: 'lightgray',
             font: {
               size: 16,
               weight: 'bold'
@@ -5202,7 +5138,7 @@ function displayProjectStatistics(projects) {
         y: {
           beginAtZero: true,
           ticks: {
-            color: 'white',
+            color: 'lightgray',
             font: {
               size: 14,
               weight: 'bold'
@@ -5211,19 +5147,19 @@ function displayProjectStatistics(projects) {
           title: {
             display: true,
             text: 'Number of Projects',
-            color: 'white',
+            color: 'lightgray',
             font: {
               size: 16,
               weight: 'bold'
             }
           },
           grid: {
-            color: 'white'
+            color: 'lightgray'
           }
         },
         x: {
           ticks: {
-            color: 'white',
+            color: 'lightgray',
             font: {
               size: 14,
               weight: 'bold'
@@ -5232,14 +5168,14 @@ function displayProjectStatistics(projects) {
           title: {
             display: true,
             text: 'Type of project',
-            color: 'white',
+            color: 'lightgray',
             font: {
               size: 16,
               weight: 'bold'
             }
           },
           grid: {
-            color: 'white'
+            color: 'lightgray'
           }
         }
       },
@@ -5251,8 +5187,6 @@ function displayProjectStatistics(projects) {
       }
     }
   };
-
-
   new Chart(ctx, config);
 }
 
@@ -5262,7 +5196,6 @@ function displayProjectStatistics(projects) {
 // Function to display user statistics on the page
 function displayUserStatistics(userStats) {
   document.getElementById('UserStatisticsContainer').classList.remove('nodisplay');
-  console.log(userStats);
 
   // Sort the user statistics by ProjectsCount in ascending order
   userStats.sort((b, a) => b.ProjectsCount - a.ProjectsCount);
@@ -5283,8 +5216,8 @@ function displayUserStatistics(userStats) {
     datasets: [{
       label: 'Number of Users',
       data: data,
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(75, 192, 192, 1)',
+      backgroundColor: 'rgba(75, 192, 192, 0.4)',
+      borderColor: 'rgba(90, 210, 210, 1)',
       borderWidth: 1
     }]
   };
@@ -5296,7 +5229,7 @@ function displayUserStatistics(userStats) {
       plugins: {
         legend: {
           labels: {
-            color: 'white',
+            color: 'lightgrey',
             font: {
               size: 16,
               weight: 'bold'
@@ -5308,7 +5241,7 @@ function displayUserStatistics(userStats) {
         y: {
           beginAtZero: true,
           ticks: {
-            color: 'white',
+            color: 'lightgrey',
             font: {
               size: 14,
               weight: 'bold'
@@ -5317,19 +5250,19 @@ function displayUserStatistics(userStats) {
           title: {
             display: true,
             text: 'Number of Users',
-            color: 'white',
+            color: 'lightgrey',
             font: {
               size: 16,
               weight: 'bold'
             }
           },
           grid: {
-            color: 'white'
+            color: 'lightgrey'
           }
         },
         x: {
           ticks: {
-            color: 'white',
+            color: 'lightgrey',
             font: {
               size: 14,
               weight: 'bold'
@@ -5338,14 +5271,14 @@ function displayUserStatistics(userStats) {
           title: {
             display: true,
             text: 'Number of Projects',
-            color: 'white',
+            color: 'lightgrey',
             font: {
               size: 16,
               weight: 'bold'
             }
           },
           grid: {
-            color: 'white'
+            color: 'lightgrey'
           }
         }
       },

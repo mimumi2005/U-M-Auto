@@ -53,8 +53,9 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+/*Scrollbar*/
 html::-webkit-scrollbar {
-  width: 8px;
+  width: 0.75vw;
   /* Width of the scrollbar */
   border-radius: 20px;
   /* Rounded edges */
@@ -70,6 +71,29 @@ html::-webkit-scrollbar-thumb {
 }
 
 html::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(41, 40, 40, 0.8);
+  /* Lighten thumb on hover */
+}
+
+
+
+#termsConditionsModal::-webkit-scrollbar {
+  width: 8px;
+  /* Width of the scrollbar */
+  border-radius: 20px;
+  /* Rounded edges */
+  background-color: #f0f0f0;
+  /* Background color of the scrollbar track */
+}
+
+#termsConditionsModal::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.8);
+  /* Dark gray thumb color */
+  border-radius: 20px;
+  /* Rounded edges */
+}
+
+#termsConditionsModal::-webkit-scrollbar-thumb:hover {
   background-color: rgba(41, 40, 40, 0.8);
   /* Lighten thumb on hover */
 }
@@ -1828,16 +1852,16 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid #696969;
 }
 
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid #696969;
 }
 
 .table tbody+tbody {
-  border-top: 2px solid #dee2e6;
+  border-top: 2px solid #696969;
 }
 
 .table-sm th,
@@ -1846,12 +1870,12 @@ pre code {
 }
 
 .table-bordered {
-  border: 1px solid #dee2e6;
+  border: 1px solid #696969;
 }
 
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid #dee2e6;
+  border: 1px solid #696969;
 }
 
 .table-bordered thead th,
@@ -11664,16 +11688,15 @@ td {
 #sidebar {
   height: 90vh;
   /* Full height */
-  position: fixed;
+  position: absolute;
   /* Sticky to the left */
-  top: 101px;
+  top: 122px;
   left: 0;
   overflow-y: auto;
 
   background-color: #343a40;
   /* Dark background */
   max-width: 15%;
-
 }
 
 #sidebar h3,
@@ -11721,4 +11744,8 @@ td {
     height: auto;
     /* Let it grow with content */
   }
+}
+
+select option:disabled {
+  color: black;
 }

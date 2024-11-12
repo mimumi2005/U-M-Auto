@@ -180,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
             StartDate: document.querySelector('[data-column="StartDate"]'),
             EndDateProjection: document.querySelector('[data-column="EndDateProjection"]'),
             ProjectInfo: document.querySelector('[data-column="ProjectInfo"]'),
+            Status: document.querySelector('[data-column="Status"]'),
             Delayed: document.querySelector('[data-column="Delayed"]')
         };
 
@@ -190,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
             StartDate: 'Start Date',
             EndDateProjection: 'End Date Projection',
             ProjectInfo: 'Project Info',
+            Status: 'Overall status',
             Delayed: 'Delayed Status'
         };
 
@@ -219,19 +221,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const IDCell = document.createElement('td');
                 IDCell.textContent = appointment.idProjects;
                 IDCell.classList.add('text-white'); // By default, since the table is dark mode the text is gray, changing to white
-                IDCell.classList.add('text-center'); // Center the ID's so it looks nicer
-                IDCell.style.fontSize = "1.3rem"; // Make ID's font bigger so the number fills more of the space
-                IDCell.style.width = "9%";  // Clarify width so when sorting by any of the values it doesnt change column width (since it adds the arrow and that increases size)
+                IDCell.style.fontSize = '1.3rem';
+                IDCell.style.width = "10%";  // Clarify width so when sorting by any of the values it doesnt change column width (since it adds the arrow and that increases size)
                 row.appendChild(IDCell);
 
 
                 // User ID
                 const userIDcell = document.createElement('td');
                 const userLink = document.createElement('a');
-                userLink.textContent = appointment.UserName + ` (${appointment.idUser})`;
+                userLink.textContent = appointment.UserName + ` \nUserID:${appointment.idUser}`;
                 userLink.href = '#';
                 userLink.style.width = "15%"; 
-                userLink.style.color = 'blue';
+                userLink.style.color = 'lightblue';
 
 
                 userLink.onclick = function () {
@@ -239,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
                 userIDcell.appendChild(userLink);
                 userIDcell.classList.add('text-white');
+                
                 row.appendChild(userIDcell);
 
                 // Start Date
@@ -261,6 +263,85 @@ document.addEventListener('DOMContentLoaded', function () {
                 projectInfoCell.style.width = "30%"; 
                 projectInfoCell.classList.add('text-white');
                 row.appendChild(projectInfoCell);
+
+                // Overall status
+            const statusCell = document.createElement('td');
+            statusCell.classList.add('text-white', 'text-center');
+            statusCell.style.width = "30%";
+
+            // Create a container for the current status text and center-align it
+            const statusContainer = document.createElement('div');
+            statusContainer.classList.add('text-center'); // Center text within this container
+
+            // Display the current status as text
+            const statusText = document.createElement('span');
+            statusText.textContent = `${appointment.statusName}`;
+            statusContainer.appendChild(statusText); // Add status text to container
+            statusCell.appendChild(statusContainer); // Add container to cell
+
+            // Function to update the status
+            function updateStatus(newStatus) {
+                fetch('/worker/change-status', {
+                    method: 'POST',
+                    headers: {
+                        'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        idProjects: appointment.idProjects,
+                        newStatus: newStatus
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Call a function to display the user data on the page
+                        appointment.statusName = newStatus;
+                        statusText.textContent = newStatus; // Update the displayed status text
+                        renderButtons(); // Re-render buttons based on the new status
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+            
+                    });
+
+               
+            }
+
+            // Function to render buttons based on the current status
+            function renderButtons() {
+                // Clear any existing buttons
+                Array.from(statusCell.querySelectorAll('.status-btn')).forEach(btn => btn.remove());
+
+                // Define button sets based on status
+                const buttonConfigs = {
+                    Pending: [
+                        { name: 'Start', class: 'btn-primary', action: 'In Progress' },
+                        { name: 'No arrival', class: 'btn-warning', action: 'No Arrival' },
+                        { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
+                    ],
+                    'In Progress': [
+                        { name: 'Finish', class: 'btn-success', action: 'Completed' },
+                        { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
+                    ],
+                    // No buttons for 'No Arrival', 'Cancelled', or 'Finished'
+                };
+
+                // Get the buttons to show for the current status
+                const buttonsToShow = buttonConfigs[appointment.statusName] || [];
+
+                // Create a small button for each status option
+                buttonsToShow.forEach(buttonConfig => {
+                    const statusButton = document.createElement('button');
+                    statusButton.textContent = buttonConfig.name;
+                    statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
+                    statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
+                    statusCell.appendChild(statusButton);
+                });
+            }
+
+            // Initial render of buttons based on current status
+            renderButtons();
+            row.appendChild(statusCell);
 
                 // Delay Status
                 const delayedCell = document.createElement('td');
@@ -366,6 +447,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const IDCell = document.createElement('td');
             IDCell.textContent = user.idUser;
             IDCell.classList.add('text-white');
+            IDCell.style.fontSize = '1rem';
+ 
             row.appendChild(IDCell);
 
 
@@ -427,6 +510,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const idCell = document.createElement('td');
             idCell.textContent = user.idUser;
             idCell.classList.add('text-white');
+            idCell.style.fontSize = '1rem';
+ 
             row.appendChild(idCell);
 
             // Name
@@ -497,6 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const idCell = document.createElement('td');
             idCell.textContent = user.idUser;
             idCell.classList.add('text-white');
+            idCell.style.fontSize = '1rem';
             row.appendChild(idCell);
 
             // Name

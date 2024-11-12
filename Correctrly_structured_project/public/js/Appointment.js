@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let previousButtonStates = []; // To keep track of the original classes of the previously selected buttons
 
     const loggedUser = JSON.parse(getCookie("userData"));
-    console.log("Logged: ", loggedUser);
     const UUID = loggedUser.UUID;
 
     const repairTypeSelect = document.getElementById('repairType');
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const additionalInfo = document.getElementById('additionalInfo').value;
         
         // Fetch user information from the server
-        fetch(`/user/profile?UUID=${UUID}`, {
+        fetch(`/auth/userID/${UUID}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Update the profile information on the page
-                    user = data.user.idUser;
+
+                    user = data.idUser;
 
                     const repairTypeSelect = document.getElementById('repairType');
                     const repairTypeDuration = parseInt(repairTypeSelect.value); // Convert the value to an integer
@@ -50,9 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     // Add the specified number of hours to the selected date time
                     endDateTime.setHours(endDateTime.getHours() + repairTypeDuration);
-
-                    console.log('Selected Repair Type Duration:', repairTypeDuration);
-                    console.log('Selected Repair will end:', endDateTime);
                     // Construct the data object to send to the backend
                     const requestData = {
                         idUser: user,
@@ -60,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         EndDateProjection: endDateTime,
                         ProjectInfo: additionalInfo
                     };
-                    console.log(requestData)
+
                     // Fetch request to send form data to backend
                     fetch('/auth/createAppointment', {
                         method: 'POST',
@@ -77,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             return response.json();
                         })
                         .then(data => {
-                            console.log('Appointment created successfully:', data);
+
                             showCustomAppointmentAlert();
 
                         })
@@ -93,9 +89,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error fetching user information:', error);
             });
 
-        console.log(`User:${user}`)
 
-    });function generateTimeButtons(hours, FreeHoursArray, repairtype) {
+
+    });
+    function generateTimeButtons(hours, FreeHoursArray, repairtype) {
         const RepairType = repairtype;
         const FreeHours = FreeHoursArray;
     
@@ -163,12 +160,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // Clear the previous content
         const timeContainer = document.getElementById('time-container');
         timeContainer.innerHTML = ''; // Clear previous content
-    
         // Create a label for the time selection
         const label = document.createElement('label');
-        label.className = 'mt-4';
-        label.textContent = 'Choose Appointment Time';
-    
+        if (FreeHours.some(hour => hour)) {
+            label.className = 'mt-2';
+            label.textContent = 'Choose Appointment Time';
+        }
+        else{
+            label.className = 'mt-2 mb-5';
+            label.textContent = 'Choose a day first';
+        }
         // Create a div to hold the time buttons
         const timeContainerDiv = document.createElement('div');
         timeContainerDiv.className = 'time-container text-white';
@@ -207,11 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
-    function selectTime(time) {
-        // Logic to handle time selection
-        console.log('Selected time:', time);
-    }
-
     /* Scripts for calendar */
     const daysOfWeekElement = document.getElementById('daysOfWeek');
     const calendarElement = document.getElementById('calendar');
@@ -238,10 +234,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Determine available hours in the day
     function getAvailableHourlySlots(dayOfMonth, takenDateTimes) {
         // Define working hours
-        const WORK_DAY_START = new Date();
+        const WORK_DAY_START =  new Date(currentDate.getFullYear(), currentDate.getMonth());
         WORK_DAY_START.setDate(dayOfMonth);
         WORK_DAY_START.setHours(9, 0, 0, 0); // 9 AM
-        const WORK_DAY_END = new Date();
+        const WORK_DAY_END =  new Date(currentDate.getFullYear(), currentDate.getMonth());
         WORK_DAY_END.setDate(dayOfMonth);
         WORK_DAY_END.setHours(18, 0, 0, 0); // 6 PM
 
@@ -287,11 +283,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function isDayFull(dayOfMonth, dateRanges) {
         // Define the working hours for a specific day
-        const WORK_DAY_START = new Date();
+        const WORK_DAY_START = new Date(currentDate.getFullYear(), currentDate.getMonth());
         WORK_DAY_START.setDate(dayOfMonth);
         WORK_DAY_START.setHours(9, 0, 0, 0); // 9 AM
         WORK_DAY_START.setMinutes(0); // Ensure minutes are set to zero
-        const WORK_DAY_END = new Date();
+        const WORK_DAY_END = new Date(currentDate.getFullYear(), currentDate.getMonth());
         WORK_DAY_END.setDate(dayOfMonth);
         WORK_DAY_END.setHours(18, 0, 0, 0); // 6 PM
 
@@ -390,12 +386,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     else {
                         // Add click event listener to each day cell
-                        dayCell.addEventListener('click', () => {
+                        dayCell.addEventListener('click', (event) => {
                             // Remove active from previously selected
                             document.querySelectorAll('.day').forEach(button => {
                                 button.classList.remove('active');
                             });
-                            console.log(document.getElementById('time-container'));
                             selectedDate = null;
                             const FreeHourArray = getAvailableHourlySlots(dayOfMonth, TakenDateTimes);
                             openTimeMenuForDay(event, dayOfMonth, FreeHourArray);
@@ -413,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
 
                                 selectedDate = null;
-                                const FreeHourArray = getAvailableHourlySlots(dayOfMonth, takenDateTimes);
+                                const FreeHourArray = getAvailableHourlySlots(dayOfMonth, TakenDateTimes);
                                 openTimeMenuForDay(event, dayOfMonth, FreeHourArray);
                             }
                         });
@@ -455,7 +450,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let availableTime = array;
         // Store the selected date
         selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        console.log('Selected date:', selectedDate);
 
 
         // Revert the state of previously selected buttons
@@ -481,7 +475,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Store the selected date
         selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        console.log('Selected date:', selectedDate);
 
         // If repair type is '120', select the next five days too
         const repairTypeSelect = document.getElementById('repairType');
@@ -513,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 endDate.setDate(endDate.getDate() + 5); // Add 5 days
                 selectedDateRangeInfo.innerHTML = `
             <div tabindex="0" class="mt-4">
-                Selected Date Range: ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}
+                Selected Date Range:<b> ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}</b>
             </div>
         `;
             }
@@ -524,6 +517,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     }
+
+    
 
     /* Scripts for showing time choosing options */
     function selectTime(hour) {
@@ -536,7 +531,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Construct the selected datetime using the selected date and hour
         const selectedHour = parseInt(hour);
         selectedDateTime = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), selectedHour, 0, 0);
-        console.log('Selected datetime:', selectedDateTime);
 
         // Update the time-container with the selected datetime
         const timeContainer = document.querySelector('.time-container');
@@ -545,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Construct the HTML string for the selected time paragraph
-        const selectedTimeHTML = `<p tabindex="0"  class="mt-2 selected-time">Selected Date & Time: ${selectedDate.toLocaleDateString()} ${selectedDateTime.getHours().toString().padStart(2, '0')}:${selectedDateTime.getMinutes().toString().padStart(2, '0')}</p>`;
+        const selectedTimeHTML = `<p tabindex="0"  class="mt-2 selected-time">Selected Date & Time: <b>${selectedDate.toLocaleDateString()} ${selectedDateTime.getHours().toString().padStart(2, '0')}:${selectedDateTime.getMinutes().toString().padStart(2, '0')}</b></p>`;
 
         // Add the selected time paragraph to the timeContainer
         timeContainer.insertAdjacentHTML('beforeend', selectedTimeHTML);
@@ -554,19 +548,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    prevMonthButton.addEventListener('click', () => {
+    prevMonthButton.addEventListener('click', (event) => {
         event.preventDefault();
         currentDate.setMonth(currentDate.getMonth() - 1);
-        // Add checking already taken days in database to block their selection in render calendar 
-
-
-        GetCalendarInfo();
+        GetCalendarInfo(); // Fetch the calendar info for the new month
     });
-    nextMonthButton.addEventListener('click', () => {
+    
+    nextMonthButton.addEventListener('click', (event) => {
         event.preventDefault();
         currentDate.setMonth(currentDate.getMonth() + 1);
-        GetCalendarInfo();
+        GetCalendarInfo(); // Fetch the calendar info for the new month
     });
+    
 
     document.addEventListener("DOMContentLoaded", function () {
         const repairTypeSelect = document.getElementById("repairType");

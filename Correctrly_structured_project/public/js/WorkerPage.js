@@ -43,8 +43,6 @@ function deleteProject(ProjectID) {
             }
         })
         .then(data => {
-            // Process the response data
-            console.log(data);
         })
         .catch(error => console.error('Error deleting project:', error))
 }
@@ -53,7 +51,6 @@ function deleteProject(ProjectID) {
 function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
     NewDate = new Date(NewEndDateTime);
     const EndDate = NewDate.toISOString();
-    console.log(EndDate);
 
     if (EndDate) {
         fetch('/worker/change-end-date', {
@@ -92,7 +89,6 @@ function searchProjectByIDByWorker(idProjects) {
     if (document.getElementById('InvalidProjectID')) {
         document.getElementById('InvalidProjectID').classList.add('nodisplay');
     }
-    console.log("Viewing project by ID:", idProjects);
     // Make a fetch request to your backend to retrieve all user data
 
     fetch(`/worker/project-by-ID/${idProjects}`)
@@ -100,6 +96,7 @@ function searchProjectByIDByWorker(idProjects) {
         .then(data => {
             // Call a function to display the user data on the page
             if (data[0]) {
+                console.log(data);
                 displayProjectDataForWorker(data);
             }
             else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
@@ -121,6 +118,7 @@ function displayProjectDataForWorker(data) {
         StartDate: document.querySelector('[data-column="StartDate"]'),
         EndDateProjection: document.querySelector('[data-column="EndDateProjection"]'),
         ProjectInfo: document.querySelector('[data-column="ProjectInfo"]'),
+        Status: document.querySelector('[data-column="Status"]'),
         Delayed: document.querySelector('[data-column="Delayed"]')
     };
 
@@ -130,6 +128,7 @@ function displayProjectDataForWorker(data) {
         StartDate: 'Start Date',
         EndDateProjection: 'End Date Projection',
         ProjectInfo: 'Project Info',
+        Status: 'Overall Status',
         Delayed: 'Delayed Status'
     };
 
@@ -157,9 +156,10 @@ function displayProjectDataForWorker(data) {
             // User ID
             const userIDcell = document.createElement('td');
             const userLink = document.createElement('a');
+            userIDcell.style.width = "12.5%";
             userLink.textContent = appointment.UserName + ` (${appointment.idUser})`;
             userLink.href = '#';
-            userLink.style.color = 'blue';
+            userLink.style.color = 'lightblue';
 
 
             userLink.onclick = function () {
@@ -186,6 +186,88 @@ function displayProjectDataForWorker(data) {
             projectInfoCell.textContent = appointment.ProjectInfo;
             projectInfoCell.classList.add('text-white');
             row.appendChild(projectInfoCell);
+
+            // Overall status
+            const statusCell = document.createElement('td');
+            statusCell.classList.add('text-white', 'text-center');
+            statusCell.style.width = "20%";
+
+            // Create a container for the current status text and center-align it
+            const statusContainer = document.createElement('div');
+            statusContainer.classList.add('text-center'); // Center text within this container
+
+            // Display the current status as text
+            const statusText = document.createElement('span');
+            statusText.textContent = `${appointment.statusName}`;
+            statusContainer.appendChild(statusText); // Add status text to container
+            statusCell.appendChild(statusContainer); // Add container to cell
+
+            // Function to update the status
+            function updateStatus(newStatus) {
+                fetch('/worker/change-status', {
+                    method: 'POST',
+                    headers: {
+                        'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        idProjects: appointment.idProjects,
+                        newStatus: newStatus
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Call a function to display the user data on the page
+                        appointment.statusName = newStatus;
+                        statusText.textContent = newStatus; // Update the displayed status text
+                        renderButtons(); // Re-render buttons based on the new status
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+            
+                    });
+
+               
+            }
+
+            // Function to render buttons based on the current status
+            function renderButtons() {
+                // Clear any existing buttons
+                Array.from(statusCell.querySelectorAll('.status-btn')).forEach(btn => btn.remove());
+
+                // Define button sets based on status
+                const buttonConfigs = {
+                    Pending: [
+                        { name: 'Start', class: 'btn-primary', action: 'In Progress' },
+                        { name: 'No arrival', class: 'btn-warning', action: 'No Arrival' },
+                        { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
+                    ],
+                    'In Progress': [
+                        { name: 'Finish', class: 'btn-success', action: 'Completed' },
+                        { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
+                    ],
+                    // No buttons for 'No Arrival', 'Cancelled', or 'Finished'
+                };
+
+                // Get the buttons to show for the current status
+                const buttonsToShow = buttonConfigs[appointment.statusName] || [];
+
+                // Create a small button for each status option
+                buttonsToShow.forEach(buttonConfig => {
+                    const statusButton = document.createElement('button');
+                    statusButton.textContent = buttonConfig.name;
+                    statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
+                    statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
+                    statusCell.appendChild(statusButton);
+                });
+            }
+
+            // Initial render of buttons based on current status
+            renderButtons();
+            row.appendChild(statusCell);
+
+
+
 
             // Delay Status
             const delayedCell = document.createElement('td');
@@ -272,7 +354,6 @@ function displayUserDataForWorker(users) {
     document.getElementById('ProjectDataContainer').classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.remove('nodisplay');
     const userDataContainer = document.getElementById('userDataContainer');
-    console.log(users);
     const tableBody = document.getElementById('user-table-body');
     tableBody.innerHTML = ''; // Clear any previous content
 
@@ -376,7 +457,6 @@ function searchDelayedProjects() {
 // WORKER function to show a singular account by account ID 
 function searchUserByID(idUser) {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
-    console.log("Viewing user by ID:", idUser);
     // Make a fetch request to your backend to retrieve all user data
     fetch(`/worker/user-by-ID/${idUser}`)
         .then(response => response.json())
@@ -394,7 +474,6 @@ function searchUserByID(idUser) {
 
 // Function that displays all projects that have been made by one person (ID)
 function searchProjectsByUserID(idUser) {
-    console.log("Viewing user by ID:", idUser);
     document.getElementById("inputNewEndDate").classList.add('nodisplay');
     document.getElementById('userDataContainer').classList.add('nodisplay');
     // Make a fetch request to your backend to retrieve all user data
@@ -414,7 +493,7 @@ function searchProjectsByUserID(idUser) {
 
 // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function removeDelayed(idProjects) {
-    fetch( '/worker/remove-delayed', {
+    fetch('/worker/remove-delayed', {
         method: 'POST',
         headers: {
             'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
