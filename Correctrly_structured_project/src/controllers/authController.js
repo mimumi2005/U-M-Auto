@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as authModel from '../models/authModels.js'; // Importing model
+import * as notificationModel from '../models/notificationModels.js';
 
 export const getProfilePage = (req, res) => {
   const csrfTokenValue = req.csrfToken;
@@ -260,7 +261,8 @@ export const getUserAppointments = async (req, res) => {
 
 export const getUserSettings = (req, res) => {
 
-  res.render('pages/Notif_settings', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+  const csrfTokenValue = req.csrfToken;
+  res.render('pages/Notif_settings', { nonce: res.locals.nonce, csrfToken: csrfTokenValue }); // Pass nonce to EJS template
 };
 
 
@@ -305,5 +307,29 @@ export const  updateName = async (req, res) => {
   } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, message: 'Failed to update name.' });
+  }
+};
+
+
+export const getNotificationSettings = async (req, res) => {
+  try {
+      const userId = req.user.id;
+      const settings = await notificationModel.getNotificationSettings(userId);
+      res.json({ status: 'success', settings });
+  } catch (error) {
+      console.error('Error fetching notification settings:', error);
+      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+};
+
+export const updateNotificationSettings = async (req, res) => {
+  try {
+      const userId = req.user.id;
+      const { dealNotifications, appointmentReminders } = req.body;
+      await notificationModel.updateNotificationSettings(userId, dealNotifications, appointmentReminders);
+      res.json({ status: 'success', message: 'Settings updated successfully' });
+  } catch (error) {
+      console.error('Error updating notification settings:', error);
+      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };

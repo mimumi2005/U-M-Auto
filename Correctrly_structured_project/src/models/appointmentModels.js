@@ -39,3 +39,47 @@ export const getAppointmentsForTomorrow = async () => {
         throw error; // Rethrow the error for further handling
     }
 };
+
+
+export const getAppointmentsForHour = async () => {
+    // Get current time and add one hour
+    const now = new Date();
+    const nextHour = new Date(now);
+    nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0); // Set to start of next hour
+    const hourEnd = new Date(nextHour);
+    hourEnd.setMinutes(59, 59, 999); // End of the hour
+
+    // Convert to ISO strings for the query
+    const hourStartISO = nextHour.toISOString();
+    const hourEndISO = hourEnd.toISOString();
+
+    // SQL query to fetch appointments in the next hour
+    const query = `
+        SELECT 
+            u.Username,
+            u.Email,
+            p.StartDate,
+            p.EndDateProjection,
+            p.ProjectInfo
+        FROM 
+            projects p
+        JOIN 
+            users u ON p.idUser = u.idUser
+        WHERE 
+            p.StartDate BETWEEN ? AND ?`;
+
+    try {
+        // Execute the query
+        const [rows] = await connection.execute(query, [hourStartISO, hourEndISO]);
+
+        // Ensure rows is an array
+        if (!Array.isArray(rows)) {
+            throw new Error('Expected rows to be an array');
+        }
+        console.log('Next hour appointments:', rows);
+        return rows;
+    } catch (error) {
+        console.error('Error fetching next hour appointments:', error);
+        throw error;
+    }
+};

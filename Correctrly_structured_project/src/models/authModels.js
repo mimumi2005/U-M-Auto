@@ -72,7 +72,7 @@ export const signupUser = async (name, email, username, password) => {
 // Function to create a new appointment
 export const createAppointment = (idUser, StartDate, EndDateProjection, ProjectInfo) => {
     return new Promise((resolve, reject) => {
-      const sql_query = 'INSERT INTO projects (idUser, StartDate, EndDateProjection, ProjectInfo) VALUES (?, ?, ?, ?)';
+      const sql_query = 'INSERT INTO projects (idUser, StartDate, EndDateProjection, ProjectInfo) VALUES (?, ?, ?, ? )';
       connection.query(sql_query, [idUser, StartDate, EndDateProjection, ProjectInfo], (err, result) => {
         if (err) {
           console.error('Error inserting data into the database:', err);

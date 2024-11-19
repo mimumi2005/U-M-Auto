@@ -9,13 +9,19 @@
     <!-- Local bootstrap.js-->
     <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
     <!-- Global bootstrap js-->
-      
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js" nonce="<%= nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" nonce="<%= nonce %>"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
+        nonce="<%= nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        nonce="<%= nonce %>"></script>
 
 </head>
+
 <body>
-    <div class="container col-lg-3 mt-5  p-4 text-white bg-light rounded-lg">
+    <div id="customNotificationAlert" class="custom-alert nodisplay">
+        <h2>Notification settings updated</h2>
+    </div>
+    <div class="container col-lg-3 mt-5 p-4 text-white bg-light rounded-lg">
         <h1 class="m-2 text-center">Notification settings</h1>
 
         <div class="container m-auto mx-80 mix-40 m-2 p-2">
@@ -29,15 +35,16 @@
                 </select>
             </div>
             <label for="Reminders">Appointment reminders</label>
-                <select class="form-control" id="repairType" name="repairType" required>
-                    <option value="None">No notifications</option>
-                    <option value="Day">Remind me 1 day before</option>
-                    <option value="Hour">Remind me 1 hour before</option>
-                    <option value="Both">Remind me both 1 day and 1 hour before</option>                    
-                </select>
-                <p class="mt-3">*Notifications are sent by email</p>
-                <button type="submit" class="btn btn-secondary btn-block">Save settings</button>
+            <select class="form-control" id="repairType" name="repairType" required>
+                <option value="None">No notifications</option>
+                <option value="Day">Remind me 1 day before</option>
+                <option value="Hour">Remind me 1 hour before</option>
+                <option value="Both">Remind me both 1 day and 1 hour before</option>
+            </select>
+            <p class="mt-3">*Notifications are sent by email</p>
+            <button type="submit" class="btn btn-secondary btn-block">Save settings</button>
         </div>
     </div>
-        
+    <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
+    <script src="/js/Notif_settings.js" nonce="<%= nonce %>"></script>
 </body>
