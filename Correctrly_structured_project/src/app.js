@@ -8,7 +8,7 @@ import cron from "node-cron";
 import { createRequire } from 'module';
 
 import { v4 as uuidv4 } from 'uuid';
-
+import i18n from 'i18n';
 
 import path from "path";
 import { fileURLToPath } from 'url';
@@ -37,6 +37,7 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
+
 
 app.use(generateNonce);
 
@@ -92,7 +93,6 @@ app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the p
 
 // For https when converting 
 // app.use(enforce.HTTPS({ trustProtoHeader: true }));
-
 // Session middleware setup
 app.use(session({
   secret: '072637e0cbb770e4e60efc963fbfbdc1a93da3efeb5945491257bae9db01b5c2718c87a1300934b07562a19a4418a4e3537324661c90f384b747f11237d25e5f', // Keep it secret
@@ -106,13 +106,42 @@ app.use(session({
   }
 }));
 
-
+// Initialize i18n
+i18n.configure({
+  locales: ['en', 'lv', 'de', 'ru'], // Define supported languages
+  directory: path.join(__dirname, 'locales'), // Define the directory for translation files
+  defaultLocale: 'en', // Default language
+  autoReload: true,
+  syncFiles: true
+});
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, './views')); // Pointing to the views folder in src
+app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts); // Tell Express to use Express Layouts
 
-// Use express-ejs-layouts
-app.use(expressLayouts);
+// Middleware to detect language change via URL query parameter
+app.use((req, res, next) => {
+  i18n.init(req, res);
+  const lang = req.query.lang || req.session.language || 'en';
+  req.session.language = lang; 
+  i18n.setLocale(req, lang);
+  
+  // Pass the current language to all views and layouts
+  res.locals.language = lang; // Now available as `language` in your layout
+  res.locals.__ = res.__; // Make the translation function available in views
+  
+  next();
+});
+
+// Middleware for language redirection after switching
+app.get('*', (req, res, next) => {
+  if (req.query.lang) {
+    res.redirect(req.originalUrl.split('?')[0]);
+  } else {
+    next();
+  }
+});
+
 
 
 app.use(attachUser);
@@ -144,7 +173,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
-
 
 // Use your routes
 app.use('/', routes);

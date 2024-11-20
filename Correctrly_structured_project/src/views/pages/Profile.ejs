@@ -18,57 +18,55 @@
 
 <body>
   <div id="customPasswordChangeAlert" class="custom-alert nodisplay">
-    <h2>Succesfully changed password!</h2>
+    <h2><%= __('Successfully changed password') %></h2>
   </div>
   <section class="container col-md-3  mt-5 p-4 text-white bg-light rounded">
     <div id="profile-info">
-      <h2 tabindex="0" class="text-center">User Profile</h2>
-      <p tabindex="0"  class="lead d-flex mx-80 p-1">Name:&nbsp;<a id="name" >johndoe</a> &nbsp;<a type="button" class=" text-white" tabindex="0"
+      <h2 tabindex="0" class="text-center"><%= __('User Profile') %></h2>
+      <p tabindex="0"  class="lead d-flex mx-80 p-1"><%= __('Name') %>:&nbsp;<a id="name" >johndoe</a> &nbsp;<a type="button" class=" text-white" tabindex="0"
         id="change-name-button"><svg  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
           <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
       </svg>
       </a></p>
-      <p tabindex="0" class="lead d-flex mx-80 p-1">Username:&nbsp; <a id="username" >johndoe</a> &nbsp;<a type="button" class="text-white" tabindex="0"
+      <p tabindex="0" class="lead d-flex mx-80 p-1"><%= __('Username') %>:&nbsp; <a id="username" >johndoe</a> &nbsp;<a type="button" class="text-white" tabindex="0"
         id="change-username-button"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
           <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
       </svg>
       </a></p>
-      <p tabindex="0" class="lead d-flex mx-80 p-1">Email:&nbsp; <a id="email"> johndoe@example.com</a></p>
-      <p class="lead p-1"> Password: ********* <a type="button" class=" text-white" tabindex="0"
+      <p tabindex="0" class="lead d-flex mx-80 p-1"><%= __('Email') %>:&nbsp; <a id="email"> johndoe@example.com</a></p>
+      <p class="lead p-1"> <%= __('Password') %>: ********* <a type="button" class=" text-white" tabindex="0"
           id="change-password-button"><svg  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
             <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
         </svg>
         </a></p>
-        <a type="button" id="deleteAccountBtn" class="small text-danger  " data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete account</a>
+        <a type="button" id="deleteAccountBtn" class="small text-danger  " data-bs-toggle="modal" data-bs-target="#deleteAccountModal"><%= __('Delete account') %></a>
     </div>
 
     <form id="change-password-form" class="nodisplay">
-      <h3>Change your password<br></h1>
+      <h3><%= __('Change your password') %><br></h1>
         <div class="form-group">
-          <div id="current-password-red" class="row ml-0 mt-4 mb-1" for="password">Current password <span
-              class="ml-1 nodisplay text-danger" id="WrongPassword" ><b>- Incorrect current
-                password</b></span><span class="ml-1 nodisplay text-danger" id="EmptyOldPassword" ><b>-
-                Enter your current password</b></span></div>
-          <input type="password" class="form-control" id="current-password" placeholder="Enter your current password">
+          <div id="current-password-red" class="row ml-0 mt-4 mb-1" for="password"><%= __('Current password') %><span
+              class="ml-1 nodisplay text-danger" id="WrongPassword" ><b>- <%= __('Incorrect current password') %></b></span><span class="ml-1 nodisplay text-danger" id="EmptyOldPassword" ><b>-
+              <%= __('Enter your current password') %></b></span></div>
+          <input type="password" class="form-control" id="current-password" placeholder="<%= __('Enter your current password') %>">
         </div>
         <div class="form-group">
-          <div id="new-password-red" class="row ml-0 mb-1" for="password">New password<span class="ml-1 nodisplay text-danger"
-              id="UnsafeNewPassword"><b>- Enter a safe password</b></span><span
-              class="ml-1 nodisplay text-danger" id="EmptyNewPassword" ><b>- Enter a password</b></span>
+          <div id="new-password-red" class="row ml-0 mb-1" for="password"><%= __('New password') %><span class="ml-1 nodisplay text-danger"
+              id="UnsafeNewPassword"><b>- <%= __('Enter a safe password') %></b></span><span
+              class="ml-1 nodisplay text-danger" id="EmptyNewPassword" ><b>- <%= __('Enter a password') %></b></span>
           </div>
-          <input type="password" class="form-control " id="new-password" placeholder="Enter your new password">
+          <input type="password" class="form-control " id="new-password" placeholder="<%= __('Enter your new password') %>">
         </div>
         <div class="form-group">
-          <div id="confirm-new-password-red" class="row ml-0  mb-1" for="password">Confirm new password<span
-              class="ml-1 nodisplay text-danger" id="NoMatchPassword" ><b>- Passwords dont
-                match</b></span><span class="ml-1 nodisplay text-danger" id="EmptyConfirmPassword" ><b>-
-                Enter a password</b></span></div>
+          <div id="confirm-new-password-red" class="row ml-0  mb-1" for="password"><%= __('Confirm new password') %><span
+              class="ml-1 nodisplay text-danger" id="NoMatchPassword" ><b>- <%= __('Passwords dont match') %></b></span><span class="ml-1 nodisplay text-danger" id="EmptyConfirmPassword" ><b>-
+              <%= __('Enter a password') %></b></span></div>
           <input type="password" class="form-control " id="confirm-new-password"
-            placeholder="Enter your new password again">
+            placeholder="<%= __('Enter your new password again') %>">
         </div>
         <div class="row"><button id="submitbutton" type="submit"
-            class="btn btn-outline-secondary text-white mb-3 ml-3">Change Password</button> <a
-            class="btn btn-outline-danger mb-3 ml-auto mr-3" id="cancel-password-reset-button" tabindex="0">Cancel</a>
+            class="btn btn-outline-secondary text-white mb-3 ml-3"><%= __('Change Password') %></button> <a
+            class="btn btn-outline-danger mb-3 ml-auto mr-3" id="cancel-password-reset-button" tabindex="0"><%= __('Cancel') %></a>
           <br>
     </form>
 
@@ -81,23 +79,23 @@
                         <div class="modal-content">
                             <!-- Modal Header -->
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+                                <h5 class="modal-title" id="deleteAccountModalLabel"><%= __('Confirm Account Deletion') %></h5>
                                 <button data-bs-dismiss="modal"
-                                    aria-label="Close">X</button>
+                                    aria-label="<%= __('Close') %>">X</button>
                             </div>
 
                             <!-- Modal Body -->
                             <div class="modal-body">
-                                Are you sure you want to delete your account? This action cannot be undone.
+                                <%= __('Are you sure you want to delete your account? This action cannot be undone.') %>
                             </div>
 
                             <!-- Modal Footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= __('Cancel') %></button>
 
                                 <!-- Laravel Form for DELETE Method -->
                                 <form  method="POST">
-                                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                                    <button type="submit" class="btn btn-danger"><%= __('Delete Account') %></button>
                                 </form>
                             </div>
                         </div>

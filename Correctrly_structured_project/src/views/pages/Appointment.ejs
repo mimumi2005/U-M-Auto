@@ -6,40 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.css">
 
-
-
     <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
 </head>
 
 <body>
     <div id="customAppointmentAlert" class="custom-alert nodisplay">
-        <h2>Appointment registered successfully</h2>
+        <h2><%= __('Appointment registered successfully') %></h2>
     </div>
     <div class="container">
         <div class="row justify-content-center text-white mt-2">
-            <div class="col-md-6 bg-light p-4  rounded">
-                <h2 class="text-center mb-0">Appointment Booking</h2>
+            <div class="col-md-6 bg-light p-4 rounded">
+                <h2 class="text-center mb-0"><%= __('Appointment Booking') %></h2>
                 <form id="appointmentForm">
                     <div class="form-group mb-1">
                         <label for="repairType"></label>
                         <select class="form-control" id="repairType" name="repairType" required>
-                            <option disabled selected value="0">Choose an appointment type</option>
-                            <option tabindex="1" value="1">Oil change</option>
-                            <option tabindex="2" value="120">Paint job</option>
-                            <option tabindex="3" value="4">Overall checkup or tuning</option>
-                            <option tabindex="4" value="4">Custom parts</option>
-                            <option tabindex="5" value="1">Project discussion</option>
+                            <option disabled selected value="0"><%= __('Choose an appointment type') %></option>
+                            <option tabindex="1" value="1"><%= __('Oil change') %></option>
+                            <option tabindex="2" value="120"><%= __('Paint job') %></option>
+                            <option tabindex="3" value="4"><%= __('Overall checkup or tuning') %></option>
+                            <option tabindex="4" value="4"><%= __('Custom parts') %></option>
+                            <option tabindex="5" value="1"><%= __('Project discussion') %></option>
                         </select>
-
                     </div>
                     <label for="repairType" class="text-white"></label>
                     <div class="container text-dark">
-                        <div class="row justify-content-center ">
+                        <div class="row justify-content-center">
                             <div class="col-lg-8">
                                 <div class="card">
                                     <div class="card-header row">
                                         <button id="prevMonth" class="btn btn-outline-secondary m-auto">&lt;</button>
-                                        <h3 tabindex=0 id="monthYear" class="m-auto"></h3>
+                                        <h3 tabindex="0" id="monthYear" class="m-auto"></h3>
                                         <button id="nextMonth" class="btn btn-outline-secondary m-auto">&gt;</button>
                                     </div>
                                     <div class="card-body">
@@ -58,20 +55,32 @@
                         <!-- Choices for time will dynamically appear here-->
                     </div>
                     <div class="form-group mt-2">
-                        <label class="form-label" for="additionalInfo">Car info / Additional info</label>
+                        <label class="form-label" for="additionalInfo"><%= __('Car info / Additional info') %></label>
                         <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="2"
-                            placeholder="Enter a vehicle description and any other information about the appointment"
+                            placeholder="<%= __('Enter a vehicle description and any other information about the appointment') %>"
                             maxlength="255" required></textarea>
                     </div>
                     <div class="">
-                        <button type="submit" class=" btn btn-outline-secondary ">Make Appointment</button>
+                        <button type="submit" class="btn btn-outline-secondary"><%= __('Make Appointment') %></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-
+    <div class="footer mt-5">
+        <div class="container">
+            <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
+            <p class="mb-2"><%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %></p>
+    
+            <!-- Language Switcher Links in Footer -->
+            <div class="language-switcher-footer">
+                <a href="/?lang=en" class="footer-link">🇬🇧  English</a> |
+                <a href="/?lang=lv" class="footer-link">🇱🇻  Latviešu valoda</a> |
+                <a href="/?lang=ru" class="footer-link">🇷🇺  Русский язык</a> |
+                <a href="/?lang=de" class="footer-link">🇩🇪  Deutsche Sprache</a>
+            </div>
+        </div>
+    </div>
     <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
     <script src="/js/Appointment.js" nonce="<%= nonce %>"></script>
 </body>

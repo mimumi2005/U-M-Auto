@@ -22,103 +22,116 @@
 <body>
 
     <div class="container text-white mt-5 bg-light rounded ">
-        <div class="row pt-4 pl-4">
+        <div class="row pt-3 pl-2">
         <div class="col-md-8">
-            <h2 tabindex=0>Select Car Areas to Paint</h2>
+            <h2 tabindex=0><%= __('Select Car Areas to Paint') %></h2>
             <div class="mt-3 bg-dark" id="imageContainer">
-                <img class="mt-3" src="../images/car_template.png" alt="Your Image" id="carImage" usemap="#image-map" />
+                <img class="mt-3" src="../images/car_template.png" alt="<%= __('Your Image') %>" id="carImage" usemap="#image-map" />
                 <canvas class="mt-3" id="overlayCanvas"></canvas>
                 <map name="image-map" id="image-map">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Hood" id="Hood"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Hood') %>" id="Hood"
                         coords="128,172,250,172,243,199,243,215,241,236,243,256,241,275,242,297,250,327,229,326,198,327,162,327,128,325,126,304,124,287,120,279,120,236,121,221,126,199"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Roof" id="Roof"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Roof') %>" id="Roof"
                         coords="304,251,302,209,306,189,329,190,345,190,397,191,417,190,436,190,453,190,448,213,448,233,446,263,448,286,451,313,403,310,362,309,323,311,307,311,304,289"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Trunk" id="Trunk"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Trunk') %>" id="Trunk"
                         coords="589,252,588,206,582,174,538,174,517,175,467,185,454,189,448,214,446,253,446,283,453,313,494,317,520,326,539,329,582,327,590,295,520,314,503,313,474,309,457,302,453,281,453,258,453,234,456,209,457,198,469,192,490,187,504,185,521,187,525,187,524,210,526,251,526,281,525,312,589,296"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Front left door" id="Front left door"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Front left door') %>" id="Front left door"
                         coords="370,351,345,350,320,354,308,358,291,367,278,374,269,380,257,386,247,395,246,414,243,430,244,449,247,459,250,472,261,475,275,475,292,475,314,474,327,474,346,476,370,475,365,453,363,428,364,410,365,400,362,355,364,374,362,388,360,394,340,394,322,395,304,396,282,396,260,395,266,388,280,380,296,371,317,359,344,356,352,355,364,357,363,416"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Back left door" id="Back left door"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Back left door') %>" id="Back left door"
                         coords="433,472,441,448,452,433,473,420,476,415,471,400,464,387,450,372,438,360,434,353,420,351,407,351,393,351,382,351,370,351,367,371,367,395,365,415,364,437,367,455,370,474,404,472,373,395,374,375,373,357,388,355,401,355,410,356,418,357,425,357,430,362,440,368,448,377,455,386,458,394,448,395,437,395,421,395,410,396,391,395,372,394,373,474,424,476"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Front right door" id="Front right door"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Front right door') %>" id="Front right door"
                         coords="252,25,279,25,298,24,341,24,368,25,364,52,364,87,368,127,370,148,349,150,325,147,306,141,282,127,264,114,250,106,243,74,245,44,258,103,270,111,280,119,290,124,299,129,314,137,329,143,348,143,365,143,362,125,362,111,361,104,346,103,328,103,309,103,290,103,269,102,258,103,242,49"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Back right door" id="Back right door"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Back right door') %>" id="Back right door"
                         coords="368,25,392,25,419,25,434,25,437,42,445,58,453,65,464,74,475,81,473,93,466,103,456,118,450,126,441,137,430,145,419,148,408,149,389,149,369,148,368,124,367,103,362,78,364,61,365,44,376,143,397,142,411,142,427,141,440,129,451,117,458,104,442,105,425,103,408,104,393,104,373,104,365,60"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Back Left corner of the car"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Back Left corner of the car') %>"
                         id="Back Left corner of the car"
                         coords="434,474,442,474,449,454,456,441,469,435,483,431,498,433,509,444,517,459,522,470,526,475,540,476,569,475,576,463,585,458,584,438,576,436,568,435,567,423,568,413,581,414,582,406,573,401,561,398,546,393,530,390,522,385,515,382,503,377,495,371,482,366,469,361,458,357,446,355,434,355,445,359,461,363,474,368,486,373,496,378,504,383,515,390,527,395,510,395,494,395,479,395,469,385,461,377,447,363,435,355,447,371,459,382,464,392,472,402,477,411,473,420,458,430,447,439"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Back right corner of the car"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Back right corner of the car') %>"
                         id="Back right corner of the car"
                         coords="433,26,445,25,447,41,458,58,471,66,485,70,498,64,506,58,517,49,520,40,520,30,525,26,568,24,575,32,578,41,586,43,584,55,581,62,569,65,568,70,570,86,581,84,583,93,575,96,568,99,554,102,543,107,527,111,517,116,502,123,492,129,480,136,465,141,450,144,432,145,446,140,458,137,469,132,482,127,497,120,510,113,527,104,504,103,480,103,469,114,453,129,447,137,434,145,440,136,447,128,454,120,460,112,469,101,474,92,476,82,469,74,459,69,448,59,443,51"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Front right corner of the car"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Front right corner of the car') %>"
                         id="Front right corner of the car"
                         coords="250,24,234,25,232,42,219,60,208,67,187,67,170,60,157,39,154,24,128,25,119,39,110,46,112,63,125,64,137,64,144,83,127,84,148,93,165,98,195,98,213,100,232,102,242,104,248,107,244,88,244,75,242,56"
                         shape="poly">
-                    <area tabindex="0" tag="area" class="pointer-cursor" alt="Front left corner of the car"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Front left corner of the car') %>"
                         id="Front left corner of the car"
                         coords="197,431,218,437,230,451,237,476,253,475,245,457,245,433,244,417,248,394,230,395,207,401,193,399,169,404,136,410,128,414,144,418,138,435,114,435,110,448,112,459,120,460,127,475,154,474,157,456,169,440,182,433"
                         shape="poly">
-                    <area tabindex=" 0" tag="area" class="pointer-cursor" alt="Back bumper" id="Back bumper"
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Back bumper') %>" id="Back bumper"
                         coords="667,248,666,168,652,163,651,159,642,157,639,163,637,197,610,198,611,303,640,304,637,336,642,340,650,340,653,336,659,334,667,328"
                         shape="poly">
-                    <area tabindex=" 0" tag="area" class="pointer-cursor" alt="Front bumper" id="Front bumper "
+                    <area tabindex="0" tag="area" class="pointer-cursor" alt="<%= __('Front bumper') %>" id="Front bumper "
                         coords="18,199,18,171,26,164,32,162,38,157,45,160,48,162,60,163,70,167,69,183,69,209,64,214,64,282,69,289,69,310,69,333,57,336,50,336,42,342,36,338,24,334,19,325,21,260,18,236"
                         shape="polygon">
                 </map>
             </div>
             <div class="text-center">
-            <button id="select-all-button" class="btn btn-outline-secondary text-white mt-2">Select All</button>
-            <button id="deselect-all-button" class="btn  btn-outline-secondary text-white mt-2">Deselect All</button>
-            <p>Estimated Price: $<span id="price">0.00</span></p>
+            <button id="select-all-button" class="btn btn-outline-secondary text-white mt-2"><%= __('Select All') %></button>
+            <button id="deselect-all-button" class="btn  btn-outline-secondary text-white mt-2"><%= __('Deselect All') %></button>
+            <p><%= __('Estimated Price: $') %><span id="price">0.00</span></p>
             </div>
         </div>
 
-        <div class="text-white ml-4" >
-            <h2>Choose services</h2>
+        <div class="text-white ml-2" >
+            <h2><%= __('Choose services') %></h2>
             <form id="repairForm" class="mt-3">
                 <div class="form-check">
-                    <input alt="Overall checkup service selection" tabindex="0" type="checkbox" class="form-check-input"
+                    <input alt="<%= __('Overall checkup service selection') %>" tabindex="0" type="checkbox" class="form-check-input"
                         id="OverallCheckup" value="150">
-                    <label class="form-check-label" for="OverallCheckup">Overall Checkup - $<span
+                    <label class="form-check-label" for="OverallCheckup"><%= __('Overall Checkup') %> - $<span
                             id="CheckupCost">150.00</span></label>
                 </div>
                 <div class="form-check">
-                    <input alt="Rust removal service selection" tabindex="0" type="checkbox" class="form-check-input"
+                    <input alt="<%= __('Rust removal service selection') %>" tabindex="0" type="checkbox" class="form-check-input"
                         id="RustRemoval" value="500">
-                    <label class="form-check-label" for="RustRemoval">Rust Removal - $<span
+                    <label class="form-check-label" for="RustRemoval"><%= __('Rust Removal') %> - $<span
                             id="RustRemovalCost">500.00</span></label>
                 </div>
                 <div class="form-check">
-                    <input alt="Tuning service selection" tabindex="0" type="checkbox" class="form-check-input"
+                    <input alt="<%= __('Tuning service selection') %>" tabindex="0" type="checkbox" class="form-check-input"
                         id="Tuning" value="1500">
-                    <label class="form-check-label" for="Tuning">Tuning - $<span id="TuningCost">1500.00</span></label>
+                    <label class="form-check-label" for="Tuning"><%= __('Tuning') %> - $<span id="TuningCost">1500.00</span></label>
                 </div>
                 <div class="form-check">
-                    <input alt="Custom part insertion service selection" tabindex="0" type="checkbox"
+                    <input alt="<%= __('Custom part insertion service selection') %>" tabindex="0" type="checkbox"
                         class="form-check-input" id="CustomPartInsertion" value="150">
-                    <label class="form-check-label" for="CustomPartInsertion">Custom Part Insertion - $<span
+                    <label class="form-check-label" for="CustomPartInsertion"><%= __('Custom Part Insertion') %> - $<span
                             id="CustomPartInsertionCost">150.00</span></label>
                 </div>
                 <div class="form-check">
-                    <input alt="Paint job service selection" tabindex="0" type="checkbox" class="form-check-input"
+                    <input alt="<%= __('Paint job service selection') %>" tabindex="0" type="checkbox" class="form-check-input"
                         id="Pricing" value="0">
-                    <label class="form-check-label" for="Pricing">Paint job - $<span id="paintPrice">0.00</span></label>
+                    <label class="form-check-label" for="Pricing"><%= __('Paint job') %> - $<span id="paintPrice">0.00</span></label>
                 </div>
             </form>
-            <p tabindex="0" id="totalPrice" class="mt-4 ">Estimated Price: $0.00</p>
+            <p tabindex="0" id="totalPrice" class="mt-4 "><%= __('Estimated Price: $') %>0.00</p>
         </div>
     </div>
     </div>
 
-
+    <div class="footer mt-5">
+        <div class="container">
+            <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
+            <p class="mb-2"><%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %></p>
+    
+            <!-- Language Switcher Links in Footer -->
+            <div class="language-switcher-footer">
+                <a href="/?lang=en" class="footer-link">🇬🇧  English</a> |
+                <a href="/?lang=lv" class="footer-link">🇱🇻  Latviešu valoda</a> |
+                <a href="/?lang=ru" class="footer-link">🇷🇺  Русский язык</a> |
+                <a href="/?lang=de" class="footer-link">🇩🇪  Deutsche Sprache</a>
+            </div>
+        </div>
+    </div>
 
     <script src="/js/Estimator.js" nonce="<%= nonce %>"></script>
 </body>
