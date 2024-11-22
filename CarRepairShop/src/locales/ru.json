@@ -11,10 +11,10 @@
 	"View active projects": "Просмотреть активные проекты",
 	"Login": "Войти",
 	"Profile": "Профиль",
-	"Account Info": "Информация о аккаунте",
+	"Account Info": "Инфо о аккаунте",
 	"Appointments": "Записи",
 	"Notifications": "Уведомления",
-	"Admin panel": "Панель администратора",
+	"Admin panel": "Панель админ",
 	"Statistics": "Статистика",
 	"Log Out": "Выйти",
 	"Sign Up": "Зарегистрироваться",
@@ -329,5 +329,6 @@
 	"In Progress": "В процессе",
 	"Pending": "В ожидании",
 	"No Arrival": "Нет прибытия",
-	"Cancelled": "Отменено"
+	"Cancelled": "Отменено",
+	"Language": "Language"
 }

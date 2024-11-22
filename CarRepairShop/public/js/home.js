@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+
   window.addEventListener('scroll', function () {
     var scrollIndicator = document.getElementById('scrollIndicator');
     var servicesSection = document.getElementById('Services');
@@ -13,16 +15,20 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-  // JavaScript to handle smooth scrolling
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+// JavaScript to handle smooth scrolling
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+      if (this.getAttribute('href') === '#') {
+          return; // Skip smooth scrolling if the href is exactly '#'
+      }
       e.preventDefault();
       var targetElement = document.querySelector(this.getAttribute('href'));
       var targetOffset = targetElement.getBoundingClientRect().top + window.pageYOffset - 100;
       var duration = 1500; // Adjust duration as needed (in milliseconds)
       slowScrollTo(targetOffset, duration);
-    });
   });
+});
+
   // Scroll event
   // Function to check if an element is in the viewport
   function isInViewport(element) {
@@ -64,3 +70,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+
+
+  

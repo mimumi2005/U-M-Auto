@@ -4499,12 +4499,35 @@
 
 // CORE PROJECT JS
 
-// WHEN LOADED, inject header// WHEN LOADED, inject header
 document.addEventListener("DOMContentLoaded", function () {
   // Set up event listeners for scroll to top button
   window.onscroll = function () {
     toggleScrollToTopButton();
   };
+
+  // Variables for langauge links
+  const languageLinks = document.querySelectorAll('#languageDropdownSelect .dropdown-item');
+  const currentLanguageFlag = document.getElementById('currentLanguageFlag');
+
+  // Set the initial flag
+  setFlag(window.currentLanguage, currentLanguageFlag);
+  // Loop through language links and add event listeners
+  languageLinks.forEach(link => {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      const lang = this.getAttribute('data-lang');
+      console.log('Selected language:', lang); // Debugging
+      setLanguage(lang);
+    });
+  });
+
+  // Loop through dropdown items and hide the one matching the current language
+  languageLinks.forEach(item => {
+    const lang = item.getAttribute('data-lang');
+    if (lang === currentLanguage.toLowerCase()) {
+      item.style.display = 'none'; // Hide the current language item
+    }
+  });
 
   const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
   if (scrollToTopBtn) {
@@ -4541,7 +4564,38 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Setting language function
+function setLanguage(lang) {
+  // Update the current language in the session and reload the page
+  fetch(`/set-language?lang=${lang}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  window.location.reload(); // Reload the page to apply the new language
+}
 
+// Function to set the flag based on the current language
+function setFlag(lang, flag) {
+  flag.className = 'flag-icon';
+  switch (lang) {
+      case 'en':
+        flag.classList.add('flag-icon-gb');
+          break;
+      case 'lv':
+        flag.classList.add('flag-icon-lv');
+          break;
+      case 'de':
+        flag.classList.add('flag-icon-de');
+          break;
+      case 'ru':
+        flag.classList.add('flag-icon-ru');
+          break;
+      default:
+        flag.className = '';
+  }
+}
 
 // Initialize the map
 
@@ -4837,7 +4891,7 @@ function deleteUser(userID) {
     headers: {
       'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
       'Content-Type': 'application/json'
-  },
+    },
   })
     .then(response => {
       if (response.status == 200) {
@@ -4864,7 +4918,7 @@ function giveAdmin(idUser) {
     headers: {
       'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
       'Content-Type': 'application/json'
-  },
+    },
     body: JSON.stringify({ idUser: idUser })
   })
     .then(response => response.json())
@@ -4885,7 +4939,7 @@ function removeAdmin(idUser) {
     headers: {
       'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
       'Content-Type': 'application/json'
-  },
+    },
     body: JSON.stringify({ idUser: idUser })
   })
     .then(response => response.json())
@@ -4909,7 +4963,7 @@ function removeWorker(idUser) {
     headers: {
       'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
       'Content-Type': 'application/json'
-  },
+    },
     body: JSON.stringify({ idUser: idUser })
   })
     .then(response => response.json())
@@ -4941,7 +4995,7 @@ function removeDelayed(idProjects) {
     headers: {
       'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
       'Content-Type': 'application/json'
-  },
+    },
     body: JSON.stringify({
       idProjects: idProjects
     }),
@@ -4968,7 +5022,7 @@ function WorkerRemoveDelayed(idProjects) {
     headers: {
       'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
       'Content-Type': 'application/json'
-  },
+    },
     body: JSON.stringify({
       idProjects: idProjects
     }),

@@ -60,6 +60,10 @@ app.use(helmet.contentSecurityPolicy({
       "'self'",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
+      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/ru.svg",
+      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/gb.svg",
+      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/lv.svg",
+      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/de.svg",
       "data:" // Data URIs may still be needed for images
     ],
     scriptSrc: [
@@ -79,6 +83,7 @@ app.use(helmet.contentSecurityPolicy({
       // Allow external stylesheets if necessary
       "https://fonts.googleapis.com/css",
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
+      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css"
     ],
     fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"], // Include font sources if using web fonts
     objectSrc: ["'none'"], // Disallow <object> and <embed> tags to minimize attack surface
@@ -132,6 +137,8 @@ app.use((req, res, next) => {
   
   next();
 });
+
+
 
 // Middleware for language redirection after switching
 app.get('*', (req, res, next) => {

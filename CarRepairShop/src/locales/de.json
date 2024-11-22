@@ -322,13 +322,14 @@
 	"Administrator": "Administrator",
 	"Register worker": "Arbeiter registrieren",
 	"User": "Benutzer",
-    "Project": "Projekt",
-    "Start": "Start",
-    "No arrival": "Keine Ankunft",
-    "Finish": "Fertigstellen",
-    "Completed": "Abgeschlossen",
-    "In Progress": "In Bearbeitung",
-    "Pending": "Ausstehend",
-    "No Arrival": "Keine Ankunft",
-    "Cancelled": "Abgebrochen"
+	"Project": "Projekt",
+	"Start": "Start",
+	"No arrival": "Keine Ankunft",
+	"Finish": "Fertigstellen",
+	"Completed": "Abgeschlossen",
+	"In Progress": "In Bearbeitung",
+	"Pending": "Ausstehend",
+	"No Arrival": "Keine Ankunft",
+	"Cancelled": "Abgebrochen",
+	"Language": "Language"
 }
