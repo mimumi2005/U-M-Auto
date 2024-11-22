@@ -3,10 +3,11 @@ import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as authModel from '../models/authModels.js'; // Importing model
 import * as notificationModel from '../models/notificationModels.js';
+import i18n from 'i18n';
 
 export const getProfilePage = (req, res) => {
   const csrfTokenValue = req.csrfToken;
-  res.render('pages/Profile', { nonce: res.locals.nonce, csrfToken: csrfTokenValue }); // Pass nonce to EJS template
+  res.render('pages/Profile', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
 };
 
 export const getUserProfileInfo = (req, res) => {
@@ -252,7 +253,7 @@ export const getUserAppointments = async (req, res) => {
     const projects = await authModel.getProjectsByUserId(idUser);
 
     // If you need to return the HTML page
-    res.render('pages/UserAppointment', { nonce: res.locals.nonce }); // Pass nonce to EJS template
+    res.render('pages/UserAppointment', { nonce: res.locals.nonce, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
   } catch (error) {
     console.error('Error fetching projects:', error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -262,7 +263,7 @@ export const getUserAppointments = async (req, res) => {
 export const getUserSettings = (req, res) => {
 
   const csrfTokenValue = req.csrfToken;
-  res.render('pages/Notif_settings', { nonce: res.locals.nonce, csrfToken: csrfTokenValue }); // Pass nonce to EJS template
+  res.render('pages/Notif_settings', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
 };
 
 

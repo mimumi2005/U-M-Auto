@@ -1,12 +1,13 @@
 import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as workerModel from '../models/workerModels.js'
+import i18n from 'i18n';
 
 export const workerDashboard = (req, res) => {
     // Generate a CSRF token when rendering the page
 
     const csrfTokenValue = req.csrfToken;
-    res.render('pages/WorkerPage', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
+    res.render('pages/WorkerPage', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
 };
 
 // Controller function to fetch today's projects

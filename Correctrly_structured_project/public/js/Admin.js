@@ -186,13 +186,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Original header text for each column
         const headerText = {
-            idProject: 'Project ID',
-            idUser: 'User info',
-            StartDate: 'Start Date',
-            EndDateProjection: 'End Date Projection',
-            ProjectInfo: 'Project Info',
-            Status: 'Overall status',
-            Delayed: 'Delayed Status'
+            idProject: translate('Project ID'),
+            idUser: translate('User info'),
+            StartDate: translate('Start Date'),
+            EndDateProjection: translate('End Date Projection'),
+            ProjectInfo: translate('Project Info'),
+            Status: translate('Overall status'),
+            Delayed: translate('Delayed Status')
         };
 
         // Function to update arrow indicators in the headers
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const userLink = document.createElement('a');
                 userLink.textContent = appointment.UserName + ` \nUserID:${appointment.idUser}`;
                 userLink.href = '#';
-                userLink.style.width = "15%"; 
+                userLink.style.width = "15%";
                 userLink.style.color = 'lightblue';
 
 
@@ -240,113 +240,113 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
                 userIDcell.appendChild(userLink);
                 userIDcell.classList.add('text-white');
-                
+
                 row.appendChild(userIDcell);
 
                 // Start Date
                 const startDateCell = document.createElement('td');
                 startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString() + `\n${new Date(appointment.StartDate).toLocaleTimeString()}`;
                 startDateCell.classList.add('text-white');
-                startDateCell.style.width = "11%"; 
+                startDateCell.style.width = "11%";
                 row.appendChild(startDateCell);
 
                 // Projected End Date
                 const endDateCell = document.createElement('td');
                 endDateCell.textContent = new Date(appointment.EndDateProjection).toLocaleDateString() + `\n${new Date(appointment.EndDateProjection).toLocaleTimeString()}`;
                 endDateCell.classList.add('text-white');
-                endDateCell.style.width = "15%"; 
+                endDateCell.style.width = "15%";
                 row.appendChild(endDateCell);
 
                 // Project Info
                 const projectInfoCell = document.createElement('td');
                 projectInfoCell.textContent = appointment.ProjectInfo;
-                projectInfoCell.style.width = "30%"; 
+                projectInfoCell.style.width = "30%";
                 projectInfoCell.classList.add('text-white');
                 row.appendChild(projectInfoCell);
 
                 // Overall status
-            const statusCell = document.createElement('td');
-            statusCell.classList.add('text-white', 'text-center');
-            statusCell.style.width = "30%";
+                const statusCell = document.createElement('td');
+                statusCell.classList.add('text-white', 'text-center');
+                statusCell.style.width = "30%";
 
-            // Create a container for the current status text and center-align it
-            const statusContainer = document.createElement('div');
-            statusContainer.classList.add('text-center'); // Center text within this container
+                // Create a container for the current status text and center-align it
+                const statusContainer = document.createElement('div');
+                statusContainer.classList.add('text-center'); // Center text within this container
 
-            // Display the current status as text
-            const statusText = document.createElement('span');
-            statusText.textContent = `${appointment.statusName}`;
-            statusContainer.appendChild(statusText); // Add status text to container
-            statusCell.appendChild(statusContainer); // Add container to cell
+                // Display the current status as text
+                const statusText = document.createElement('span');
+                statusText.textContent = `${appointment.statusName}`;
+                statusContainer.appendChild(statusText); // Add status text to container
+                statusCell.appendChild(statusContainer); // Add container to cell
 
-            // Function to update the status
-            function updateStatus(newStatus) {
-                fetch('/worker/change-status', {
-                    method: 'POST',
-                    headers: {
-                        'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        idProjects: appointment.idProjects,
-                        newStatus: newStatus
-                    }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Call a function to display the user data on the page
-                        appointment.statusName = newStatus;
-                        statusText.textContent = newStatus; // Update the displayed status text
-                        renderButtons(); // Re-render buttons based on the new status
+                // Function to update the status
+                function updateStatus(newStatus) {
+                    fetch('/worker/change-status', {
+                        method: 'POST',
+                        headers: {
+                            'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            idProjects: appointment.idProjects,
+                            newStatus: newStatus
+                        }),
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-            
+                        .then(response => response.json())
+                        .then(data => {
+                            // Call a function to display the user data on the page
+                            appointment.statusName = newStatus;
+                            statusText.textContent = newStatus; // Update the displayed status text
+                            renderButtons(); // Re-render buttons based on the new status
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+
+                        });
+
+
+                }
+
+                // Function to render buttons based on the current status
+                function renderButtons() {
+                    // Clear any existing buttons
+                    Array.from(statusCell.querySelectorAll('.status-btn')).forEach(btn => btn.remove());
+
+                    // Define button sets based on status
+                    const buttonConfigs = {
+                        Pending: [
+                            { name: 'Start', class: 'btn-primary', action: 'In Progress' },
+                            { name: 'No arrival', class: 'btn-warning', action: 'No Arrival' },
+                            { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
+                        ],
+                        'In Progress': [
+                            { name: 'Finish', class: 'btn-success', action: 'Completed' },
+                            { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
+                        ],
+                        // No buttons for 'No Arrival', 'Cancelled', or 'Finished'
+                    };
+
+                    // Get the buttons to show for the current status
+                    const buttonsToShow = buttonConfigs[appointment.statusName] || [];
+
+                    // Create a small button for each status option
+                    buttonsToShow.forEach(buttonConfig => {
+                        const statusButton = document.createElement('button');
+                        statusButton.textContent = buttonConfig.name;
+                        statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
+                        statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
+                        statusCell.appendChild(statusButton);
                     });
+                }
 
-               
-            }
-
-            // Function to render buttons based on the current status
-            function renderButtons() {
-                // Clear any existing buttons
-                Array.from(statusCell.querySelectorAll('.status-btn')).forEach(btn => btn.remove());
-
-                // Define button sets based on status
-                const buttonConfigs = {
-                    Pending: [
-                        { name: 'Start', class: 'btn-primary', action: 'In Progress' },
-                        { name: 'No arrival', class: 'btn-warning', action: 'No Arrival' },
-                        { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
-                    ],
-                    'In Progress': [
-                        { name: 'Finish', class: 'btn-success', action: 'Completed' },
-                        { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
-                    ],
-                    // No buttons for 'No Arrival', 'Cancelled', or 'Finished'
-                };
-
-                // Get the buttons to show for the current status
-                const buttonsToShow = buttonConfigs[appointment.statusName] || [];
-
-                // Create a small button for each status option
-                buttonsToShow.forEach(buttonConfig => {
-                    const statusButton = document.createElement('button');
-                    statusButton.textContent = buttonConfig.name;
-                    statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
-                    statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
-                    statusCell.appendChild(statusButton);
-                });
-            }
-
-            // Initial render of buttons based on current status
-            renderButtons();
-            row.appendChild(statusCell);
+                // Initial render of buttons based on current status
+                renderButtons();
+                row.appendChild(statusCell);
 
                 // Delay Status
                 const delayedCell = document.createElement('td');
                 const DelayLink = document.createElement('a');
-                delayedCell.style.width = "15%"; 
+                delayedCell.style.width = "15%";
 
                 if (appointment.Delayed === 1) {
                     DelayLink.innerHTML = delayedCell.innerHTML + '<br><a class="text-light" href="#">(Click to finish project)</a>';
@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
             IDCell.textContent = user.idUser;
             IDCell.classList.add('text-white');
             IDCell.style.fontSize = '1rem';
- 
+
             row.appendChild(IDCell);
 
 
@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
             idCell.textContent = user.idUser;
             idCell.classList.add('text-white');
             idCell.style.fontSize = '1rem';
- 
+
             row.appendChild(idCell);
 
             // Name
@@ -547,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Remove Admin Permissions Link
             const adminPermCell = document.createElement('td');
             const adminPermLink = document.createElement('a');
-            adminPermLink.innerHTML = '(Click to give administrator)';
+            adminPermLink.innerHTML = translate('(Click to give administrator)');
             adminPermLink.href = '#';
             adminPermLink.classList.add('text-danger');
             adminPermLink.onclick = function () {
@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Remove Admin Permissions Link
             const adminPermCell = document.createElement('td');
             const adminPermLink = document.createElement('a');
-            adminPermLink.innerHTML = '(Click to remove administrator)';
+            adminPermLink.innerHTML = translate('(Click to remove administrator)');
             adminPermLink.href = '#';
             adminPermLink.classList.add('text-danger');
             adminPermLink.onclick = function () {
@@ -683,7 +683,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
-                    title.innerHTML = `Project-${data[0].idProjects}`;
+                    const projectTitle = translate('Project');
+                    title.innerHTML = `${projectTitle}-${data[0].idProjects}`;
                     displayProjectData(data);
                 }
                 else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
@@ -706,7 +707,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
-                    title.innerHTML = `UserID-${idUser}`;
+                    const userTitle = translate('UserID');
+                    title.innerHTML = `${userTitle}-${idUser}`;
                     displayUserData(data);
                 }
                 else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
@@ -728,7 +730,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
-                    title.innerHTML = `Email- ${email}`;
+                    const emailTitle = translate('Email');
+                    title.innerHTML = `${emailTitle}-${email}`;
                     displayUserData(data);
                 }
                 else { document.getElementById('InvalidEmail').classList.remove('nodisplay'); }
@@ -748,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 document.getElementById("inputNewEndDate").classList.add('nodisplay');
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `Active projects`;
+                title.innerHTML = translate("Active projects");
                 displayProjectData(data);
             })
             .catch(error => console.error('Error fetching user data:', error));
@@ -766,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 document.getElementById("inputNewEndDate").classList.add('nodisplay');
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `Delayed projects`;
+                title.innerHTML = translate("Delayed projects");
                 displayProjectData(data);
 
             })
@@ -782,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // Call a function to display the user data on the page
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `Finished projects`;
+                title.innerHTML = translate("Finished projects");
                 displayProjectData(data);
 
             })
@@ -801,7 +804,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
-                    title.innerHTML = `${data.UserName}'s projects`;
+                    const userTitle = translate('projects');
+                    title.innerHTML = `${data[0].userName}'s ${userTitle}`;
                     displayProjectData(data);
                 }
                 else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
@@ -821,7 +825,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `Admin data`;
+                title.innerHTML = translate("Admin data");
                 // Call a function to display the user data on the page
                 displayAdminData(data);
             })
@@ -851,7 +855,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Call a function to display the user data on the page
                     if (data[0]) {
                         const title = document.getElementById('TitleHeader');
-                        title.innerHTML = `Changing end date of ${data[0].idProjects}`;
+                        const dateTitle = translate('Changing end date of');
+                        const projectTitle = translate('projects');
+                        title.innerHTML = `${dateTitle} ${data[0].idProjects}'s ${projectTitle}`;
                         displayProjectData(data);
                         document.getElementById('InvalidDateTime').classList.add('nodisplay');
                     }
@@ -873,7 +879,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `All users`;
+                title.innerHTML = translate("All users");
                 // Call a function to display the user data on the page
                 displayUserData(data);
             })
@@ -889,7 +895,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `Users currently logged in`;
+                title.innerHTML = translate("Users currently logged in");
                 // Call a function to display the user data on the page
                 displayUserData(data);
             })
@@ -914,7 +920,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `Users with similar credentials (suspected bot accounts)`;
+                title.innerHTML = translate("Users with similar credentials (suspected bot accounts)");
                 // Process the response containing similar users
 
                 console.log(data);
@@ -945,7 +951,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
-                    title.innerHTML = `User-${data[0].idUser}`;
+                    const userTitle = translate('User');
+                    title.innerHTML = `${userTitle}-${data[0].idUser}`;
                     displayUserData(data);
                 }
                 else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
@@ -966,7 +973,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = `All workers`;
+                title.innerHTML = translate("All workers");
                 // Call a function to display the user data on the page
                 displayWorkerData(data);
             })
@@ -986,7 +993,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
-                    title.innerHTML = `Users Projects`;
+                    title.innerHTML = translate("Users Projects");
                     displayProjectData(data);
                 }
             })
@@ -1025,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById("searchProject").classList.remove('nodisplay');
         const title = document.getElementById('TitleHeader');
-        title.innerHTML = `Search project by ID`;
+        title.innerHTML = translate("Search project by ID");
     }
     // Display input field for id
     function findUserByID() {
@@ -1039,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("searchUser").classList.remove('nodisplay');
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
         const title = document.getElementById('TitleHeader');
-        title.innerHTML = `Search user by ID`;
+        title.innerHTML = translate("Search user by ID");
     }
 
     // Display input field for email
@@ -1055,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("searchUser").classList.add('nodisplay');
         document.getElementById("searchUserByEmail").classList.remove('nodisplay');
         const title = document.getElementById('TitleHeader');
-        title.innerHTML = `Search user by ID`;
+        title.innerHTML = translate("Search user by ID");
     }
     // Display input field for adding a new worker
     function addWorkerForm() {
@@ -1070,9 +1077,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('workerDataContainer').classList.add('nodisplay');
         document.getElementById('adminDataContainer').classList.add('nodisplay');
         const title = document.getElementById('TitleHeader');
-        title.innerHTML = `Adding a new worker`;
+        title.innerHTML = translate("Adding a new worker");
     }
 
 
     viewActiveProjects();
 });
+
+function translate(key) {
+    const lang = window.currentLanguage || 'en';
+    return window.translations[lang][key] || key;
+}

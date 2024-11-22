@@ -124,12 +124,12 @@ function displayProjectDataForWorker(data) {
 
     // Original header text for each column
     const headerText = {
-        idUser: 'Username',
-        StartDate: 'Start Date',
-        EndDateProjection: 'End Date Projection',
-        ProjectInfo: 'Project Info',
-        Status: 'Overall Status',
-        Delayed: 'Delayed Status'
+        idUser: translate('Username'),
+        StartDate: translate('Start Date'),
+        EndDateProjection: translate('End Date Projection'),
+        ProjectInfo: translate('Project Info'),
+        Status: translate('Overall Status'),
+        Delayed: translate('Delayed Status')
     };
 
     // Function to update arrow indicators in the headers
@@ -414,7 +414,7 @@ function searchTodaysProjects() {
         .then(data => {
             // Call a function to display the user data on the page
             const title = document.getElementById('TitleHeader');
-            title.innerHTML = `To be finished today`;
+            title.innerHTML = translate("To be finished today");
             displayProjectDataForWorker(data);
 
         })
@@ -529,3 +529,8 @@ document.getElementById('changeEndTimeButton').addEventListener('click', functio
 
 // Add event listener to the datetime input
 document.getElementById('dateinput').addEventListener('keypress', handleEndDateKeyPress);
+
+function translate(key) {
+    const lang = window.currentLanguage || 'en';
+    return window.translations[lang][key] || key;
+}

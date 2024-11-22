@@ -320,5 +320,15 @@
 	"User is already a worker": "User is already a worker",
 	"Worker Type": "Worker Type",
 	"Administrator": "Administrator",
-	"Register worker": "Register worker"
+	"Register worker": "Register worker",
+	"User": "User",
+    "Project": "Project",
+    "Start": "Start",
+    "No arrival": "No arrival",
+    "Finish": "Finish",
+    "Completed": "Completed",
+    "In Progress": "In Progress",
+    "Pending": "Pending",
+    "No Arrival": "No Arrival",
+    "Cancelled": "Cancelled"
 }

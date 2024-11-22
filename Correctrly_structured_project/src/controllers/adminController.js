@@ -2,16 +2,17 @@ import connection from '../config/db.js'; // Importing connection
 import path from 'path'; // Add this line to import the path module
 import * as adminModel from '../models/adminModels.js'
 import {generateCSRFToken} from '../middleware/CSRF.js'
+import i18n from 'i18n';
 export const adminDashboard = (req, res) => {
  
   const csrfTokenValue = req.csrfToken;
   // Render the admin dashboard or serve a file
-  res.render('pages/Admin', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
+  res.render('pages/Admin', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
 };
 export const adminStatistics = (req, res) => {
   const csrfTokenValue = req.csrfToken;
   // Render the admin dashboard or serve a file
-  res.render('pages/Statistics', { nonce: res.locals.nonce, csrfToken: csrfTokenValue}); // Pass nonce to EJS template
+  res.render('pages/Statistics', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
 };
 
 
