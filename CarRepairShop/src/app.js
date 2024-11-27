@@ -83,9 +83,10 @@ app.use(helmet.contentSecurityPolicy({
       // Allow external stylesheets if necessary
       "https://fonts.googleapis.com/css",
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
-      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css"
+      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css",
+      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
     ],
-    fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"], // Include font sources if using web fonts
+    fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"], // Include font sources if using web fonts
     objectSrc: ["'none'"], // Disallow <object> and <embed> tags to minimize attack surface
     mediaSrc: ["'self'"], // Allow only self for media (audio/video)
   },
