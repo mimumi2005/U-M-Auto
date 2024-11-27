@@ -1,328 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/app.css">
     <link rel="manifest" href="/js/manifest.json">
-    
 
-</head> 
-<style nonce="<%= nonce %>">
-    body {
-        margin: 0;
-        scroll-behavior: smooth;
-    }
-    .minW250px{
-        min-width:250px;
-    }
-    .width40{
-        width: 40%
-    }
-    .max-width95{
-        width: 95%
-    }
-    .max-width80{
-        width: 80%
-    }
-    .max-width75{
-        width: 75%
-    }
-</style>
+
+</head>
+
 <body>
     <div id="unauthorizedAccess" class="custom-alert text-danger nodisplay">
-        <h4><%= __('unauthorized_access') %></h4>
+        <h4>
+            <%= __('unauthorized_access') %>
+        </h4>
     </div>
     <div id="session-message" class="custom-alert nodisplay">
-        <h4><%= __('session_message') %></h4>
+        <h4>
+            <%= __('session_message') %>
+        </h4>
     </div>
 
-<div  class="container text-white mt-5 width40" >
-    <div tabindex=0 class="bg-light p-4 rounded minW250px">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="text-center"><%= __('work_hours_title') %><br></h2>
-                <p class="text-center"><%= __('work_hours_text') %></p>
-            </div>
-        </div>
-        <div class="row text-white">
-            <div class="col-md-6 text-left">
-                <ul class="list-unstyled ">
-                    <li><strong><%= __('monday') %></strong></li>
-                    <li><strong><%= __('tuesday') %></strong></li>
-                    <li><strong><%= __('wednesday') %></strong></li>
-                    <li><strong><%= __('thursday') %></strong></li>
-                </ul>
+    <div tabindex="0" id="Services" class=" mt-4 text-white">
+        <div class="bg-light rounded ">
+            <div id="servicesCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators "> 
+                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="0"
+                        class="active btn " aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1"
+                        aria-label="Slide 2 " class="btn "></button>
+                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="2"
+                        aria-label="Slide 3" class="btn"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="3"
+                        aria-label="Slide 4" class="btn"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active ">
+                        <div id="test" class=" row flex-nowrap  p-1 mr-1 ">
+                            <div class="service-item col-md-4 p-2 ml-3 m-1">
+                                <div class="rounded text-center ">
+                                    <a class="text-light  " href="#Overall_Checkup">
+                                        <img class="img rounded " src="/images/Overall_Checkup.png"
+                                            alt="Overall checkup image">
+                                        <h4 class="text-center position-absolute overlay-text">
+                                            <%= __('overall_checkup_title') %>
+                                        </h4>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="service-item col-md-4 p-2  m-1">
+                                <div class="rounded text-center">
+                                    <a class="text-light " href="#Car_Painting">
+                                        <img class="img rounded " src="/images/Car_Painting.png"
+                                            alt="Car painting image">
+                                        <h4 class="text-center position-absolute overlay-text">
+                                            <%= __('car_painting_title') %>
+                                        </h4>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="service-item col-md-4 p-2 m-1">
+                                <div class="rounded text-center">
+                                    <a class="text-light " href="#Rust_Removal">
+                                        <img class="img rounded " src="/images/Rust_Removal.webp"
+                                            alt="Rust Removal image">
+                                        <h4 class="text-center position-absolute overlay-text">
+                                            <%= __('rust_removal_title') %>
+                                        </h4>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="service-item col-md-4 p-2 m-1">
+                                <div class="rounded text-center ">
+                                    <a class="text-light  " href="#Tuning">
+                                        <img class="img rounded " src="/images/Tuning.png" alt="Tuning image">
+                                        <h4 class="text-center position-absolute overlay-text">
+                                            <%= __('tuning_title') %>
+                                        </h4>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="service-item col-md-4 p-2 m-1">
+                                <div class="rounded text-center">
+                                    <a class="text-light " href="#Custom_Part_Insertion">
+                                        <img class="img rounded" src="/images/Custom_Part_Insertion.png"
+                                            alt="Custom part insertion image">
+                                        <h4 class="text-center position-absolute overlay-text">
+                                            <%= __('custom_part_insertion_title') %>
+                                        </h4>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="service-item col-md-4 p-2 m-1" id="price_estimator_guest_title">
+                                <div class="rounded text-center ">
+                                    <a class="text-light ">
+                                        <img class="img rounded " src="/images/Price_Calculation_Guest.webp"
+                                            alt="Log in to access this function image">
 
-            </div>
-            <div class="col-md-6 text-left mb-4">
-                <ul class="list-unstyled">
-                    <li><strong><%= __('friday') %></strong></li>
-                    <li><strong class="text-red"><b><%= __('saturday') %></b></strong></li>
-                    <li><strong class="text-red"><b><%= __('sunday') %></b></strong></li>
-                </ul>
-            </div>
-        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    </div>
-
-    <!-- Additional Content Section -->
-    <div tabindex=0 class="bg-light p-4 mt-5 rounded minW250px" >
-        <h2 class="text-center "><%= __('appointment_booking') %></h2>
-        <p class="text-center"><%= __('booking_description') %> <span id="LoginP"><a href="/Login"><%= __('login_prompt') %></a> <%= __('booking_prompt') %></span>
-            <span id="BookingP" class="nodisplay"><a href="/Appointments"><%= __('Make Appointment') %></a></span></p>
-    </div>
-</div>
-
-<div id="scrollIndicator">
-    <span>↓ <%= __('Services') %> ↓</span>
-  </div>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<div tabindex=0  id="Services" class=" container-xxl  text-white">
-  <div class="container bg-light max-width80 rounded" >
-      <div class="text-center mx-auto mb-4 max-width75" >
-          <h1><%= __('services_section_title') %></h1>
-      </div>
-      <div class="row g-4 justify-content-end">
-          <div class="col-md-6 col-lg-4 " >
-              <div class="service-item rounded overflow-hidden">
-                <a class="text-light" href="#Overall_Checkup">
-                  <img class="img-fluid ml-4 rounded" src="/images/Overall_Checkup.png" alt="Overall checkup image">
-                  <div class="position-relative p-4">
-                      <div class="service-icon">
-                          <i class="fa fa-solar-panel fa-3x"></i>
-                      </div>
-                      <h4 class="mb-3 text-light"><%= __('overall_checkup_title') %></h4>
-                      </a>
-                      <p><%= __('overall_checkup_description') %></p>
-                  </div>
-                
-              </div>
-          </div>
-          <div class="col-md-6 col-lg-4 " >
-              <div class="service-item rounded overflow-hidden">
-                <a class="text-light" href="#Car_Painting">
-                  <img class="img-fluid ml-4 rounded" src="/images/Car_Painting.png" alt="Car painting image">
-                  <div class="position-relative p-4 pt-0">
-                      <div class="service-icon">
-                          <i class="fa fa-wind fa-3x"></i>
-                      </div>
-                      <h4 class="mb-3 text-light"><%= __('car_painting_title') %></h4>
-                      </a>
-                      <p><%= __('service_description_painting') %></p>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6 col-lg-4 ">
-              <div class="service-item rounded overflow-hidden">
-                <a class="text-light" href="#Rust_Removal">
-                  <img class="img-fluid ml-4 rounded" src="/images/Rust_Removal.webp" alt="Rust Removal image">
-                  <div class="position-relative p-4 pt-0">
-                      <div class="service-icon">
-                          <i class="fa fa-lightbulb fa-3x"></i>
-                      </div>
-                      <h4 class="mb-3 text-light"><%= __('rust_removal_title') %></h4>
-                      </a>
-                      <p><%= __('service_description_rust_removal') %></p>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
-              <div class="service-item rounded overflow-hidden">
-                <a class="text-light" href="#Tuning">
-                  <img class="img-fluid ml-4 rounded" src="/images/Tuning.png" alt="Tuning image">
-                  <div class="position-relative p-4 pt-0">
-                      <div class="service-icon">
-                          <i class="fa fa-solar-panel fa-3x"></i>
-                      </div>
-                      <h4 class="mb-3 text-light"><%= __('tuning_title') %></h4>
-                      </a>
-                      <p><%= __('service_description_tuning') %></p>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
-              <div class="service-item rounded overflow-hidden">
-                <a class="text-light" href="#Custom_Part_Insertion">
-                  <img class="img-fluid ml-4 rounded" src="/images/Custom_Part_Insertion.png" alt="Custom part insertion image">
-                  <div class="position-relative p-4 pt-0">
-                      <div class="service-icon">
-                          <i class="fa fa-wind fa-3x"></i>
-                      </div>
-                      <h4 class="mb-3 text-light"><%= __('custom_part_insertion_title') %></h4>
-                      </a>
-                      <p><%= __('service_description_custom_insertion') %></p>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6 col-lg-4 wow fadeInUp " data-wow-delay="0.5s" id="EstimatorInfo">
-              <div class="service-item rounded overflow-hidden nodisplay" id="PriceEstimator" >
-                <a class="text-light" href="/Estimator">
-                  <img class="img-fluid ml-4 rounded" src="/images/Price_Calculation.webp" alt="Automatic price estimator image">
-                  <div class="position-relative p-4 pt-0">
-                      <div class="service-icon">
-                          <i class="fa fa-lightbulb fa-3x"></i>
-                      </div>
-                      <h4 class="mb-3 text-light"><%= __('price_estimator_title') %></h4>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#servicesCarousel" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
                 </a>
-                      <p ><%= __('service_description_price_estimator') %></p>
-                  </div>
-              </div>
-              <div class="service-item rounded overflow-hidden" id="PriceEstimatorGuest" >
-                <a class="text-light">
-                  <img class="img-fluid ml-4 rounded" src="/images/Price_Calculation_Guest.webp" alt="Log in to access this function image"> 
-                  <div class="position-relative p-4 pt-0">
-                      <div class="service-icon">
-                          <i class="fa fa-lightbulb fa-3x"></i>
-                      </div>
-                      <h4 class="mb-3 text-light"><%= __('price_estimator_guest_title') %></h4>
+                <a class="carousel-control-next" href="#servicesCarousel" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
                 </a>
-                      <p ><%= __('service_description_price_estimator_guest') %></p>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</div>
-
-<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden" >
-    <!-- Section 1: Overall Checkup -->
-    <section id="Overall_Checkup" >
-        <div class="text-center ">
-        <h1><%= __('overall_checkup_title') %></h1>
-        </div>
-        <div class="paragraph mt-4 fade-in-hidden">
-        <p class="lead"><%= __('service_description_checkup') %><br>
-        <br>1. <b><%= __('checkup_engine') %></b><br>
-        2. <b><%= __('checkup_safety') %></b><br>
-        3. <b><%= __('checkup_tires') %></b><br>
-        4. <b><%= __('checkup_fluid_management') %></b><br>
-        5. <b><%= __('checkup_expertise') %></b><br>
-        </p>
-        <h2 class="mt-4 fade-in-hidden"><br><b><%= __('why_choose_checkup') %></b><br> </h2>
-        <ul class="fade-in-hidden">
-            
-            <li><b><%= __('checkup_expertise') %></b><br></li>
-            <li><b><%= __('checkup_safety') %></b><br></li>
-            <li><b><%= __('checkup_engine') %></b><br></li>
-            <li><b><%= __('checkup_tires') %></b><br></li>
-            <li><b><%= __('checkup_fluid_management') %></b><br></li>
-        </ul>
-        </div>
-      </div>
-    </section>  
-  </main>
-</div>
-</div>
-
-<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-    <section id="Car_Painting">
-        <div class="text-center mt-5 ">
-            <h1><%= __('car_painting_title') %></h1>
-        </div>
-        <div class="paragraph mt-4 fade-in-hidden ">
-            <p class="lead"><%= __('service_description_painting') %></p>
-
-            <h2 class="mt-4 fade-in-hidden"><%= __('why_choose_painting') %></h2>
-
-            <ul class="fade-in-hidden">
-                <li><b><%= __('painting_quality_materials') %></b></li>
-                <li><b><%= __('painting_skilled_painters') %></b></li>
-                <li><b><%= __('painting_customization_options') %></b></li>
-                <li><b><%= __('painting_restoration_repairs') %></b></li>
-                <li><b><%= __('painting_protective_coatings') %></b></li>
-            </ul>
-        </div>
-    </section>
-</main>
-
-<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-    <!-- Section: Rust Removal -->
-    <section id="Rust_Removal">
-        <div class="text-center mt-5">
-            <h1><%= __('rust_removal_title') %></h1>
-        </div>
-        <div class="paragraph mt-4 fade-in-hidden">
-            <p class="lead">
-                <%= __('service_description_rust_removal') %>
-            </p>
-
-            <h2 class="mt-4 fade-in-hidden"><%= __('why_choose_rust_removal') %></h2>
-
-            <ul class="fade-in-hidden">
-                <li><b><%= __('general_info') %></b></li>
-                <li><b><%= __('car_repair_description') %></b></li>
-                <li><b><%= __('pricing_description') %></b></li>
-                <li><b><%= __('visit_us') %></b></li>
-                <li><b><%= __('address_label') %></b></li>
-            </ul>
-        </div>
-    </section>
-</main>
-
-<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden" > 
-    <!-- Section: Tuning -->
-    <section id="Tuning">
-        <div class="text-center mt-5 ">
-            <h1><%= __('tuning_title') %></h1>
-        </div>
-        <div class="paragraph mt-4">
-            <p class="lead fade-in-hidden">
-                <%= __('service_description_tuning') %>
-            </p>
-
-            <h2 class="mt-4 fade-in-hidden"><%= __('why_choose_checkup') %></h2>
-
-            <ul class="fade-in-hidden">
-                <li><b><%= __('checkup_expertise') %></b></li>
-                <li><b><%= __('checkup_safety') %></b></li>
-                <li><b><%= __('checkup_engine') %></b></li>
-                <li><b><%= __('checkup_tires') %></b></li>
-                <li><b><%= __('checkup_fluid_management') %></b></li>
-            </ul>
-        </div>
-    </section>
-</main>
-
-<main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden mb-4">
-    <!-- Section: Custom Part Insertion -->
-    <section id="Custom_Part_Insertion">
-        <div class="text-center mt-5">
-            <h1><%= __('custom_part_insertion_title') %></h1>
-        </div>
-        <div class="paragraph mt-4 fade-in-hidden">
-            <p class="lead">
-                <%= __('service_description_custom_insertion') %>
-            </p>
-
-            <h2 class="mt-4 fade-in-hidden"><%= __('why_choose_checkup') %></h2>
-
-            <ul class="fade-in-hidden">
-                <li><b><%= __('checkup_expertise') %></b></li>
-                <li><b><%= __('checkup_safety') %></b></li>
-                <li><b><%= __('checkup_engine') %></b></li>
-                <li><b><%= __('checkup_tires') %></b></li>
-                <li><b><%= __('checkup_fluid_management') %></b></li>
-            </ul>
-        </div>
-    </section>
-</main>
-
-<div class="footer mt-5">
-    <div class="container">
-        <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
-        <p class="mb-2"><%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %></p>
-
-        <!-- Language Switcher Links in Footer -->
-        <div class="language-switcher-footer">
-            <a href="/?lang=en" class="footer-link"><span class="flag-icon flag-icon-gb"></span> English</a> |
-            <a href="/?lang=lv" class="footer-link"><span class="flag-icon flag-icon-lv"></span> Latviešu valoda</a> |
-            <a href="/?lang=ru" class="footer-link"><span class="flag-icon flag-icon-ru"></span> Русский язык</a> |
-            <a href="/?lang=de" class="footer-link"><span class="flag-icon flag-icon-de"></span> Deutsche Sprache</a>
+            </div>
         </div>
     </div>
-</div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="container text-white mt-5 ">
+        <div tabindex=0 class="bg-light p-4 rounded minW250px">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="text-center">
+                        <%= __('work_hours_title') %><br>
+                    </h2>
+                    <p class="text-center">
+                        <%= __('work_hours_text') %>
+                    </p>
+                </div>
+            </div>
+            <div class="row text-white">
+                <div class="col-md-6 text-left">
+                    <ul class="list-unstyled ">
+                        <li><strong>
+                                <%= __('monday') %>
+                            </strong></li>
+                        <li><strong>
+                                <%= __('tuesday') %>
+                            </strong></li>
+                        <li><strong>
+                                <%= __('wednesday') %>
+                            </strong></li>
+                        <li><strong>
+                                <%= __('thursday') %>
+                            </strong></li>
+                    </ul>
+
+                </div>
+                <div class="col-md-6 text-left mb-4">
+                    <ul class="list-unstyled">
+                        <li><strong>
+                                <%= __('friday') %>
+                            </strong></li>
+                        <li><strong class="text-red"><b>
+                                    <%= __('saturday') %>
+                                </b></strong></li>
+                        <li><strong class="text-red"><b>
+                                    <%= __('sunday') %>
+                                </b></strong></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Additional Content Section -->
+        <div tabindex=0 class="bg-light p-4 mt-5 rounded minW250px">
+            <h2 class="text-center ">
+                <%= __('appointment_booking') %>
+            </h2>
+            <p class="text-center">
+                <%= __('booking_description') %> <span id="LoginP"><a href="/Login">
+                            <%= __('login_prompt') %>
+                        </a>
+                        <%= __('booking_prompt') %>
+                    </span>
+                    <span id="BookingP" class="nodisplay"><a href="/Appointments">
+                            <%= __('Make Appointment') %>
+                        </a></span>
+            </p>
+        </div>
+    </div>
+
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
+        <!-- Section 1: Overall Checkup -->
+        <section id="Overall_Checkup">
+            <div class="text-center ">
+                <h1>
+                    <%= __('overall_checkup_title') %>
+                </h1>
+            </div>
+            <div class="paragraph mt-4 fade-in-hidden">
+                <p class="lead">
+                    <%= __('service_description_checkup') %><br>
+                        <br>1. <b>
+                            <%= __('checkup_engine') %>
+                        </b><br>
+                        2. <b>
+                            <%= __('checkup_safety') %>
+                        </b><br>
+                        3. <b>
+                            <%= __('checkup_tires') %>
+                        </b><br>
+                        4. <b>
+                            <%= __('checkup_fluid_management') %>
+                        </b><br>
+                        5. <b>
+                            <%= __('checkup_expertise') %>
+                        </b><br>
+                </p>
+                <h2 class="mt-4 fade-in-hidden"><br><b>
+                        <%= __('why_choose_checkup') %>
+                    </b><br> </h2>
+                <ul class="fade-in-hidden">
+
+                    <li><b>
+                            <%= __('checkup_expertise') %>
+                        </b><br></li>
+                    <li><b>
+                            <%= __('checkup_safety') %>
+                        </b><br></li>
+                    <li><b>
+                            <%= __('checkup_engine') %>
+                        </b><br></li>
+                    <li><b>
+                            <%= __('checkup_tires') %>
+                        </b><br></li>
+                    <li><b>
+                            <%= __('checkup_fluid_management') %>
+                        </b><br></li>
+                </ul>
+            </div>
+            </div>
+        </section>
+    </main>
+    </div>
+    </div>
+
+    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
+        <section id="Car_Painting">
+            <div class="text-center mt-5 ">
+                <h1>
+                    <%= __('car_painting_title') %>
+                </h1>
+            </div>
+            <div class="paragraph mt-4 fade-in-hidden ">
+                <p class="lead">
+                    <%= __('service_description_painting') %>
+                </p>
+
+                <h2 class="mt-4 fade-in-hidden">
+                    <%= __('why_choose_painting') %>
+                </h2>
+
+                <ul class="fade-in-hidden">
+                    <li><b>
+                            <%= __('painting_quality_materials') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('painting_skilled_painters') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('painting_customization_options') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('painting_restoration_repairs') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('painting_protective_coatings') %>
+                        </b></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
+        <!-- Section: Rust Removal -->
+        <section id="Rust_Removal">
+            <div class="text-center mt-5">
+                <h1>
+                    <%= __('rust_removal_title') %>
+                </h1>
+            </div>
+            <div class="paragraph mt-4 fade-in-hidden">
+                <p class="lead">
+                    <%= __('service_description_rust_removal') %>
+                </p>
+
+                <h2 class="mt-4 fade-in-hidden">
+                    <%= __('why_choose_rust_removal') %>
+                </h2>
+
+                <ul class="fade-in-hidden">
+                    <li><b>
+                            <%= __('general_info') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('car_repair_description') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('pricing_description') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('visit_us') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('address_label') %>
+                        </b></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
+        <!-- Section: Tuning -->
+        <section id="Tuning">
+            <div class="text-center mt-5 ">
+                <h1>
+                    <%= __('tuning_title') %>
+                </h1>
+            </div>
+            <div class="paragraph mt-4">
+                <p class="lead fade-in-hidden">
+                    <%= __('service_description_tuning') %>
+                </p>
+
+                <h2 class="mt-4 fade-in-hidden">
+                    <%= __('why_choose_checkup') %>
+                </h2>
+
+                <ul class="fade-in-hidden">
+                    <li><b>
+                            <%= __('checkup_expertise') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_safety') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_engine') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_tires') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_fluid_management') %>
+                        </b></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden mb-4">
+        <!-- Section: Custom Part Insertion -->
+        <section id="Custom_Part_Insertion">
+            <div class="text-center mt-5">
+                <h1>
+                    <%= __('custom_part_insertion_title') %>
+                </h1>
+            </div>
+            <div class="paragraph mt-4 fade-in-hidden">
+                <p class="lead">
+                    <%= __('service_description_custom_insertion') %>
+                </p>
+
+                <h2 class="mt-4 fade-in-hidden">
+                    <%= __('why_choose_checkup') %>
+                </h2>
+
+                <ul class="fade-in-hidden">
+                    <li><b>
+                            <%= __('checkup_expertise') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_safety') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_engine') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_tires') %>
+                        </b></li>
+                    <li><b>
+                            <%= __('checkup_fluid_management') %>
+                        </b></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <div class="footer mt-5">
+        <div class="container">
+            <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
+            <p class="mb-2">
+                <%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %>
+            </p>
+
+            <!-- Language Switcher Links in Footer -->
+            <div class="language-switcher-footer">
+                <a href="/?lang=en" class="footer-link"><span class="flag-icon flag-icon-gb"></span> English</a> |
+                <a href="/?lang=lv" class="footer-link"><span class="flag-icon flag-icon-lv"></span> Latviešu valoda</a>
+                |
+                <a href="/?lang=ru" class="footer-link"><span class="flag-icon flag-icon-ru"></span> Русский язык</a> |
+                <a href="/?lang=de" class="footer-link"><span class="flag-icon flag-icon-de"></span> Deutsche
+                    Sprache</a>
+            </div>
+        </div>
+    </div>
 
     <script src="/js/home.js" nonce="<%= nonce %>"></script>
-</body> 
+</body>
+
 </html>

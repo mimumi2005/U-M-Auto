@@ -193,7 +193,7 @@ function calculatePrice() {
         }
     });
 
-    document.getElementById('totalPrice').innerText = `Estimated Price: $${totalPrice.toFixed(2)}`;
+    document.getElementById('totalPrice').innerText = `${totalPrice.toFixed(2)}`;
 }
 
 // Add event listeners to checkboxes

@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // Delay Status
             const delayedCell = document.createElement('td');
             if (appointment.Delayed === 1) {
-                delayedCell.innerHTML = '<span class="badge bg-danger">Project end date has changed due to delay</span>';
+                delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project end date has changed due to delay')}</span>`;
             } else {
-                delayedCell.innerHTML = '<span class="badge bg-success">Project has no delays</span>'; // No display if no delay
+                delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project has no delays')}</span>`; // No display if no delay
             }
             row.appendChild(delayedCell);
 

@@ -1,33 +1,59 @@
 document.addEventListener('DOMContentLoaded', function () {
+  const carouselElement = document.getElementById('servicesCarousel');
+  const carouselInner = carouselElement.querySelector('.carousel-inner');
+  const view = carouselInner.querySelector('.carousel-item');
+  const items = view.querySelectorAll('.service-item');
+  const prevButton = document.querySelector('.carousel-control-prev');
+  const nextButton = document.querySelector('.carousel-control-next');
+  const indicators = document.querySelectorAll('.carousel-indicators button');
+  let currentIndex = 0;
 
-
-  window.addEventListener('scroll', function () {
-    var scrollIndicator = document.getElementById('scrollIndicator');
-    var servicesSection = document.getElementById('Services');
-    if (servicesSection) {
-      var servicesRect = servicesSection.getBoundingClientRect();
-      if (servicesRect.top >= window.innerHeight) {
-        scrollIndicator.style.display = 'block';
+  function updateCarousel() {
+    const offset = -currentIndex * 34.115 ; // Calculate the offset for translateX
+    view.style.transform = `translateX(${offset}%)`;
+    indicators.forEach((indicator, index) => {
+      if (index === Math.floor(currentIndex)) {
+        indicator.classList.add('active');
       } else {
-        scrollIndicator.style.display = 'none';
+        indicator.classList.remove('active');
       }
-    }
+    });
+  }
+
+  prevButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    currentIndex = (currentIndex - 1 + items.length-2) % (items.length-2);
+    updateCarousel();
   });
 
+  nextButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    currentIndex = (currentIndex + 1) % (items.length-2);
+    updateCarousel();
+  });
 
-// JavaScript to handle smooth scrolling
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-      if (this.getAttribute('href') === '#') {
-          return; // Skip smooth scrolling if the href is exactly '#'
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', function () {
+      currentIndex = index ;
+      updateCarousel();
+    });
+  });
+
+  updateCarousel();
+
+  // JavaScript to handle smooth scrolling
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      if (this.getAttribute('href') === '#' || this.getAttribute('href') === '#servicesCarousel') {
+        return; // Skip smooth scrolling if the href is exactly '#'
       }
       e.preventDefault();
       var targetElement = document.querySelector(this.getAttribute('href'));
       var targetOffset = targetElement.getBoundingClientRect().top + window.pageYOffset - 100;
       var duration = 1500; // Adjust duration as needed (in milliseconds)
       slowScrollTo(targetOffset, duration);
+    });
   });
-});
 
   // Scroll event
   // Function to check if an element is in the viewport
@@ -72,4 +98,4 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 
 
-  
+

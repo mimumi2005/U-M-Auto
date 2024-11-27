@@ -4658,6 +4658,7 @@ function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
     // Show buttons for logged-in users
     // But workers see a different button instead of Make Appointments
     if (isWorker) {
+      document.getElementById('defaultNav').classList.add('nodisplay');
       document.getElementById('workerButton').classList.remove('nodisplay');
       document.getElementById('WorkerButtonDropDown').classList.remove('nodisplay');
     }
@@ -5157,14 +5158,14 @@ function displayProjectStatistics(projects) {
 
   // Uses the data from database to display correct graph data
   projects.forEach(project => {
-    labels.push(project.TimeRange);
+    labels.push(translate(project.TimeRange));
     data.push(project.ProjectsCount);
   });
   // Formats how the data looks when displayed
   const chartData = {
     labels: labels,
     datasets: [{
-      label: 'Number of Projects',
+      label: translate('Number of Projects'),
       data: data,
       backgroundColor: 'rgba(75, 192, 192, 0.4)',
       borderColor: 'rgba(90, 210, 210, 1)',
@@ -5200,7 +5201,7 @@ function displayProjectStatistics(projects) {
           },
           title: {
             display: true,
-            text: 'Number of Projects',
+            text: translate('Number of Projects'),
             color: 'lightgray',
             font: {
               size: 16,
@@ -5221,7 +5222,7 @@ function displayProjectStatistics(projects) {
           },
           title: {
             display: true,
-            text: 'Type of project',
+            text: translate('Type of project'),
             color: 'lightgray',
             font: {
               size: 16,
@@ -5268,7 +5269,7 @@ function displayUserStatistics(userStats) {
   const chartData = {
     labels: labels,
     datasets: [{
-      label: 'Number of Users',
+      label: translate('Number of Users'),
       data: data,
       backgroundColor: 'rgba(75, 192, 192, 0.4)',
       borderColor: 'rgba(90, 210, 210, 1)',
@@ -5303,7 +5304,7 @@ function displayUserStatistics(userStats) {
           },
           title: {
             display: true,
-            text: 'Number of Users',
+            text: translate('Number of Users'),
             color: 'lightgrey',
             font: {
               size: 16,
@@ -5324,7 +5325,7 @@ function displayUserStatistics(userStats) {
           },
           title: {
             display: true,
-            text: 'Number of Projects',
+            text: translate('Number of Projects'),
             color: 'lightgrey',
             font: {
               size: 16,
@@ -5364,4 +5365,10 @@ function setCookie(name, value, days) {
 const getCookie = (name) => {
   const cookieValue = (document.cookie.match('(^|;\\s*)' + name + '=([^;]*)') || [])[2];
   return cookieValue ? decodeURIComponent(cookieValue) : null;
+}
+
+
+function translate(key) {
+  const lang = window.currentLanguage || 'en';
+  return window.translations[lang][key] || key;
 }

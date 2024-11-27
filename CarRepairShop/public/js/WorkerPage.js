@@ -198,7 +198,7 @@ function displayProjectDataForWorker(data) {
 
             // Display the current status as text
             const statusText = document.createElement('span');
-            statusText.textContent = `${appointment.statusName}`;
+            statusText.textContent = translate(`${appointment.statusName}`);
             statusContainer.appendChild(statusText); // Add status text to container
             statusCell.appendChild(statusContainer); // Add container to cell
 
@@ -255,7 +255,7 @@ function displayProjectDataForWorker(data) {
                 // Create a small button for each status option
                 buttonsToShow.forEach(buttonConfig => {
                     const statusButton = document.createElement('button');
-                    statusButton.textContent = buttonConfig.name;
+                    statusButton.textContent = translate(buttonConfig.name);
                     statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
                     statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
                     statusCell.appendChild(statusButton);
@@ -274,15 +274,15 @@ function displayProjectDataForWorker(data) {
             const DelayLink = document.createElement('a');
 
             if (appointment.Delayed === 1) {
-                DelayLink.innerHTML = delayedCell.innerHTML + '<br><a class="text-light" href="#">(Click to finish project)</a>';
-                delayedCell.innerHTML = '<span class="badge bg-danger">Project end date has changed due to delay</span>' + DelayLink.innerHTML;
+                DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to finish project)')}</a>`;
+                delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project end date has changed due to delay')}</span>` + DelayLink.innerHTML;
                 delayedCell.onclick = function () {
                     removeDelayed(appointment.idProjects);
                 };
             } else {
 
-                DelayLink.innerHTML = delayedCell.innerHTML + '<br><a class="text-light" href="#">(Click to delay)</a>';
-                delayedCell.innerHTML = '<span class="badge bg-success">Project has no delays</span>' + DelayLink.innerHTML;
+                DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to delay)')}</a>`;
+                delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
                 delayedCell.onclick = function () {
                     changeEndDateByWorker(appointment.idProjects);
                 };
@@ -385,7 +385,7 @@ function displayUserDataForWorker(users) {
 
         // Create the anchor element
         const ProjectLink = document.createElement('a');
-        ProjectLink.innerHTML = '(Click to check all this users appointments)'; // Set the link text
+        ProjectLink.innerHTML = translate('(Click to check all this users appointments)'); // Set the link text
         ProjectLink.href = '#'; // Set href to '#' to make it behave like a link (you can adjust this if you want an actual URL)
 
         ProjectLink.style.color = 'gray'; // Make text blue
@@ -431,7 +431,7 @@ function searchActiveProjects() {
         .then(data => {
             // Call a function to display the user data on the page
             const title = document.getElementById('TitleHeader');
-            title.innerHTML = `Active projects`;
+            title.innerHTML = translate("Active Projects");
             displayProjectDataForWorker(data);
 
         })
@@ -447,7 +447,7 @@ function searchDelayedProjects() {
         .then(data => {
             // Call a function to display the user data on the page
             const title = document.getElementById('TitleHeader');
-            title.innerHTML = `Delayed projects`;
+            title.innerHTML = translate(`Delayed projects`);
             displayProjectDataForWorker(data);
         })
         .catch(error => console.error('Error fetching user data:', error));
@@ -530,7 +530,3 @@ document.getElementById('changeEndTimeButton').addEventListener('click', functio
 // Add event listener to the datetime input
 document.getElementById('dateinput').addEventListener('keypress', handleEndDateKeyPress);
 
-function translate(key) {
-    const lang = window.currentLanguage || 'en';
-    return window.translations[lang][key] || key;
-}

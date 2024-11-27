@@ -1,0 +1,561 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  .content {
+    flex: 1;
+  }
+  
+  .footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  
+  
+  .polygon-overlay {
+    background-color: red;
+    opacity: 0.5;
+    pointer-events: none;
+    /* Overlay is not clickable */
+  }
+  
+  #imageContainer {
+    position: relative;
+    user-select: none;
+  }
+  
+  
+  #imageContainer::-webkit-scrollbar {
+    height: 5px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+  
+  
+  
+  
+  }
+  
+  #imageContainer::-webkit-scrollbar-thumb {
+    background-color: rgba(41, 40, 40, 0.8);
+  
+    border-radius: 20px;
+  
+  }
+  
+  #imageContainer::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  #carImage {
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+  
+  #overlayCanvas {
+    position: absolute;
+    margin-right: 100px;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  
+  }
+  
+  .pointer-cursor {
+    cursor: pointer;
+  }
+  
+  /*Scaling*/
+  @media (max-width: 968px) {
+    #imageContainer {
+      overflow-y: hidden;
+      overflow-x: scroll;
+    }
+  }
+  
+  @media (min-width: 969px) {
+    #imageContainer {
+      overflow: hidden;
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    #repairForm {
+      margin-top: 20px;
+      /* Add some space between imageContainer and repairForm */
+    }
+  }
+  
+  .paragraph {
+    margin-top: 10px;
+  
+  }
+  
+  
+  body {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  
+  }
+  
+  .wrapper {
+    flex: 1;
+  }
+  
+  .content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100px;
+  }
+  
+  .footer {
+    background-color: #000000;
+    /* Add a background color to the footer */
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #ffffff;
+    /* Change the text color on hover */
+  }
+  
+  /* Style the validation popup message */
+  #password:invalid::after {
+    content: 'Password must have at least 5 characters, at least 1 capital letter, and at least 1 special character.';
+    /* Custom error message */
+    display: block;
+    color: red;
+    font-size: 0.8em;
+  }
+  
+  
+  #scroll-to-top-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #222;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  #scroll-to-top-btn:hover {
+    background-color: #555;
+  }
+  
+  
+  /* Add this style for the sliding animation */
+  .slide-in-out {
+    animation: slideInOut 5s ease-in-out;
+    display: none;
+    /* Initially hide the element */
+  }
+  
+  @keyframes slideInOut {
+    0% {
+      transform: translateY(-100%);
+    }
+  
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  .custom-divider {
+    background-color: #888;
+    height: 1px;
+    position: relative;
+    top: 50%;
+  }
+  
+  .nodisplay {
+    display: none;
+  }
+  
+  .text-red {
+    color: rgb(255, 0, 0) !important;
+  }
+  
+  .text-red:hover {
+    color: rgb(255, 0, 0) !important;
+  }
+  
+  .custom-alert {
+    z-index: 99;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border-radius: 8px;
+    width: 300px;
+  }
+  
+  
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #fff;
+  }
+  
+  
+  .mx-80 {
+    max-width: 80%;
+  }
+  
+  .mix-40 {
+    min-width: 40%;
+  }
+  
+  /* Define the animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Apply animation to elements */
+  .fade-in {
+    animation: fadeIn 1s ease forwards;
+  }
+  
+  /* Hide initially */
+  .fade-in-hidden {
+    opacity: 0;
+  
+  }
+  
+  /*calendar*/
+  .calendar {
+    width: 400px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  
+  .day {
+  
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 35px !important;
+    height: 35px !important;
+    margin: 2px;
+  
+  }
+  
+  .currentMonth {
+    background-color: #f0f0f0;
+    color: #333;
+  
+  }
+  
+  .prevMonth,
+  .nextMonth {
+    color: #fff;
+    font-weight: 500;
+    background-color: #fff;
+  }
+  
+  .prevDay {
+    background-color: #bababa;
+  }
+  
+  .takenDay {
+    background-color: #bababa;
+  }
+  
+  .outline {
+    border: 2px solid #000;
+  }
+  
+  .menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 200px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: none;
+  }
+  
+  .menu.visible {
+    display: block;
+  }
+  
+  
+  .small-font {
+    font-size: 0.74rem;
+    /* Adjust the font size as needed */
+  }
+  
+  
+  
+  .time-button {
+    background-color: #ffffff00;
+    min-width: 90px;
+  }
+  
+  /* Style for the active class */
+  .time-button.active {
+    background-color: #007bff;
+    /* Change background color to blue */
+    color: #fff;
+    /* Change text color to white */
+  }
+  
+  .weekend {
+    color: #000;
+    background-color: #e4606d !important;
+  }
+  
+  
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(100%);
+    /* Change the color here */
+  }
+  
+  #scrollIndicator {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    opacity: 0.5;
+  }
+  
+  #repairForm {
+    font-size: 1.1em;
+    /* Adjust the font size as needed */
+  }
+  
+  
+  
+  #repairForm .form-check-input[type="checkbox"] {
+    transform: scale(1.5);
+    /* Adjust the scale as needed here */
+    margin-right: 10px;
+    /* Adjust the margin as needed here */
+  
+  }
+  
+  
+  td {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    /* Ensures that long text wraps properly */
+    max-width: 500px;
+    /* Adjust width as needed */
+  }
+  
+  #sidebar {
+    height: 90vh;
+    /* Full height */
+    position: absolute;
+    /* Sticky to the left */
+    top: 122px;
+    left: 0;
+    overflow-y: auto;
+  
+    background-color: #343a40;
+    /* Dark background */
+    max-width: 15%;
+  }
+  
+  #sidebar h3,
+  #sidebar h5 {
+    color: #ffffff;
+  }
+  
+  #sidebar .btn-outline-secondary {
+    border-color: #ffffff;
+  }
+  
+  #sidebar .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    /* Lighter background on hover */
+  }
+  
+  .d-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* Spacing between buttons */
+  }
+  
+  #map {
+    width: 265px;
+    max-width: 60vw;
+    min-width: 8vh;
+    height: 265px;
+  }
+  
+  
+  
+  @media (max-width: 500px) {
+  
+    /* Adjust the max-width as needed */
+    #sidebar {
+      max-width: 100%;
+      /* Make it full width on mobile */
+      width: 100%;
+      /* Ensure it takes full width */
+      position: relative;
+      /* Change to relative for mobile view */
+      top: 0;
+      /* Reset top position */
+      height: auto;
+      /* Let it grow with content */
+    }
+  }
+  
+  select option:disabled {
+    color: black;
+  }
+  
+
+  
+  .carousel-control-prev {
+    left: -5.8%;
+}
+
+.carousel-control-next {
+    right: -5.8%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgb(54, 52, 52);
+    border-radius: 50%;
+    padding: 15px;
+    width: 50px;
+    height: 50px;
+    background-size: 50%;
+}
+
+.carousel-inner {
+    display: flex;
+}
+
+.carousel-item {
+    height: 22vw;
+    transition: transform 0.5s ease-in-out;
+
+}
+.carousel-indicators{
+    margin-bottom: 1%;
+}
+
+.service-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.overlay-text {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 2vw;
+}
+
+
+.carousel-indicators .btn {
+    margin-left:1px;
+    border-color: #6d6e6e9c; /* Change border color to match theme */
+    width: 3vw;
+    height: 1vw;
+    border-radius: 20%;
+    background-color: #0000005b; /* Change background color to match theme */
+    transition: background-color 0.3s, transform 0.3s; /* Add transition for smooth effect */
+}
+
+.carousel-indicators .btn:hover {
+    background-color: #979797; /* Darker shade on hover */
+    transform: scale(1.2); /* Slightly enlarge on hover */
+}
+
+.carousel-indicators .btn.active {
+    background-color: #c0c0c0c9; /* Darker shade for active state */
+}
+@media (max-width: 768px) {
+    .carousel-inner {
+        flex-wrap: nowrap;
+        display: flex;
+    }
+
+    .overlay-text {
+        font-size: 1vw;
+        /* Fixed font size */
+        bottom: 5px;
+    }
+
+    .service-item {
+        min-width: 32%;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-item {
+        min-width: 32%;
+    }
+
+    .carousel-inner {
+
+        flex-wrap: nowrap;
+        display: flex;
+    }
+
+    .overlay-text {
+        font-size: 1vw;
+        /* Fixed font size */
+        bottom: 5px;
+    }
+}
+
+#test {
+    height: 20vw;
+}

@@ -96,7 +96,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav" id="defaultNav">
                     <li class="nav-item">
                         <a class="nav-link h3 mr-2 text-light" href="/">
                             <%= __('Services') %>
@@ -119,6 +119,7 @@
                             <%= __('Make Appointment') %>
                         </a>
                     </li>
+                
 
                     <li class="nav-item nodisplay" id="workerButton">
                     <li class="nav-item dropdown  dropdown-hover nodisplay" id="WorkerButtonDropDown">
@@ -183,28 +184,28 @@
                     <a class="nav-link h3 mr-2 text-light" href="/SignUp" id="SignUpButton">
                         <%= __('Sign Up') %>
                     </a>
-                    
+
                     <li class="nav-item dropdown form-select">
                         <a class="nav-link dropdown-toggle h3 mr-0 text-light" id="languageDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false"><span class="small">
-                        <span id="currentLanguageFlag" class="flag-icon small"></span></span>
-                        <%= language.toUpperCase() %>
-                    </a>
+                            data-bs-toggle="dropdown" aria-expanded="false"><span class="small">
+                                <span id="currentLanguageFlag" class="flag-icon small"></span></span>
+                            <%= language.toUpperCase() %>
+                        </a>
                         <ul id="languageDropdownSelect" class="dropdown-menu text-light"
                             aria-labelledby="languageDropdown">
                             <li><a class="dropdown-item text-white" href="#" data-lang="en"><span
                                         class="flag-icon flag-icon-gb"></span> EN</a></li>
-                                        <div class="bg-gray">
-                            <li><a class="dropdown-item text-white" href="#" data-lang="lv"><span
-                                        class="flag-icon flag-icon-lv"></span> LV</a></li>
-                            <li><a class="dropdown-item text-white" href="#" data-lang="de"><span
-                                        class="flag-icon flag-icon-de"></span> DE</a></li>
-                            <li><a class="dropdown-item text-white" href="#" data-lang="ru"><span
-                                        class="flag-icon flag-icon-ru"></span> RU</a></li>
-                                        </div>
+                            <div class="bg-gray">
+                                <li><a class="dropdown-item text-white" href="#" data-lang="lv"><span
+                                            class="flag-icon flag-icon-lv"></span> LV</a></li>
+                                <li><a class="dropdown-item text-white" href="#" data-lang="de"><span
+                                            class="flag-icon flag-icon-de"></span> DE</a></li>
+                                <li><a class="dropdown-item text-white" href="#" data-lang="ru"><span
+                                            class="flag-icon flag-icon-ru"></span> RU</a></li>
+                            </div>
                         </ul>
-                        </li>
-                        
+                    </li>
+
                 </ul>
                 </li>
                 </ul>

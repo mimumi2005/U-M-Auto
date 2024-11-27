@@ -187,11 +187,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // Original header text for each column
         const headerText = {
             idProject: translate('Project ID'),
-            idUser: translate('User info'),
+            idUser: translate('User Info'),
             StartDate: translate('Start Date'),
             EndDateProjection: translate('End Date Projection'),
             ProjectInfo: translate('Project Info'),
-            Status: translate('Overall status'),
+            Status: translate('Overall Status'),
             Delayed: translate('Delayed Status')
         };
 
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Display the current status as text
                 const statusText = document.createElement('span');
-                statusText.textContent = `${appointment.statusName}`;
+                statusText.textContent = translate(`${appointment.statusName}`);
                 statusContainer.appendChild(statusText); // Add status text to container
                 statusCell.appendChild(statusContainer); // Add container to cell
 
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Create a small button for each status option
                     buttonsToShow.forEach(buttonConfig => {
                         const statusButton = document.createElement('button');
-                        statusButton.textContent = buttonConfig.name;
+                        statusButton.textContent = translate(buttonConfig.name);
                         statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
                         statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
                         statusCell.appendChild(statusButton);
@@ -349,15 +349,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 delayedCell.style.width = "15%";
 
                 if (appointment.Delayed === 1) {
-                    DelayLink.innerHTML = delayedCell.innerHTML + '<br><a class="text-light" href="#">(Click to finish project)</a>';
-                    delayedCell.innerHTML = '<span class="badge bg-danger">Project end date has changed due to delay</span>' + DelayLink.innerHTML;
+                    DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to finish project)')}</a>`;
+                    delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project end date has changed due to delay')}</span>` + DelayLink.innerHTML;
                     delayedCell.onclick = function () {
                         removeDelayed(appointment.idProjects);
                     };
                 } else {
 
-                    DelayLink.innerHTML = delayedCell.innerHTML + '<br><a class="text-light" href="#">(Click to delay)</a>';
-                    delayedCell.innerHTML = '<span class="badge bg-success">Project has no delays</span>' + DelayLink.innerHTML;
+                    DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate("(Click to delay)")}</a>`;
+                    delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
                     delayedCell.onclick = function () {
                         changeEndDate(appointment.idProjects);
                     };
@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Check projects button
             const ProjectCell = document.createElement('td');
             const ProjectLink = document.createElement('a');
-            ProjectLink.innerHTML = '(Click to check all this user\'s appointments)';
+            ProjectLink.innerHTML = `${translate('(Click to check all this user\'s appointments)')}`;
             ProjectLink.href = '#';
             ProjectLink.style.color = 'gray';
             ProjectLink.onclick = function () {
@@ -751,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 document.getElementById("inputNewEndDate").classList.add('nodisplay');
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Active projects");
+                title.innerHTML = translate("Active Projects");
                 displayProjectData(data);
             })
             .catch(error => console.error('Error fetching user data:', error));
@@ -769,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 document.getElementById("inputNewEndDate").classList.add('nodisplay');
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Delayed projects");
+                title.innerHTML = translate("Delayed Projects");
                 displayProjectData(data);
 
             })
@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // Call a function to display the user data on the page
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Finished projects");
+                title.innerHTML = translate("Finished Projects");
                 displayProjectData(data);
 
             })
@@ -825,7 +825,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Admin data");
+                title.innerHTML = translate("Admin Data");
                 // Call a function to display the user data on the page
                 displayAdminData(data);
             })
@@ -879,7 +879,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("All users");
+                title.innerHTML = translate("All Users");
                 // Call a function to display the user data on the page
                 displayUserData(data);
             })
@@ -973,7 +973,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("All workers");
+                title.innerHTML = translate("All Workers");
                 // Call a function to display the user data on the page
                 displayWorkerData(data);
             })
