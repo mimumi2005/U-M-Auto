@@ -482,7 +482,7 @@ body {
 
 }
 .carousel-indicators{
-    margin-bottom: 0.5%;
+    margin-bottom: 1%;
 }
 
 .service-item img {
@@ -504,11 +504,11 @@ body {
 
 
 .carousel-indicators .btn {
-    margin-left:1px;
+    margin-left:5px;
     border-color: #6d6e6e9c; /* Change border color to match theme */
-    width: 3vw;
-    height: 1vw;
-    border-radius: 20%;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
 
     background-color: #0000005b; /* Change background color to match theme */
     transition: background-color 0.3s, transform 0.3s; /* Add transition for smooth effect */
@@ -557,6 +557,120 @@ body {
     }
 }
 
-#test {
+#carousel {
     height: 20vw;
 }
+
+.faq-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* FAQ Question Styling */
+.faq-question {
+  position: relative;
+  padding: 10px 15px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #1e1e1e;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s;
+
+  border: 2px solid #444; /* Border color */
+
+
+}
+
+.faq-question:hover {
+  background-color: #2c2c2c;
+}
+
+/* Arrow Styling */
+.arrow {
+  transform: scaleX(1.5); 
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.arrow.rotate {
+  transform: rotate(180deg) scaleX(1.5);
+}
+
+
+.nodisplay {
+  display: none;
+}
+
+/* FAQ Answer Styling */
+.faq-answer {
+  display: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: #1e1e1e;
+  border-radius: 0 0 5px 5px;
+  color: #d1d1d1;
+}
+
+.faq-answer.active {
+  display: block;
+}
+
+.divider.active {
+  display: block;
+}
+.divider {
+  height: 1px;
+  background-color: #ffffff;
+  margin: 10px 0;
+}
+
+.news-section {
+  padding: 20px;
+  background-color: #121212;
+  color: #f5f5f5;
+  border-radius: 8px;
+  max-width: 1000px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* News Item Styling */
+.news-item {
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.news-title {
+  padding: 0  px 5px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffcc00;
+}
+
+.news-details {
+  padding: 10px 15px;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: #1e1e1e;
+  border-radius: 0 0 5px 5px;
+  color: #d1d1d1;
+}
+

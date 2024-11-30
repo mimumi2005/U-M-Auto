@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/app.css">
     <link rel="manifest" href="/js/manifest.json">
-    
+
 
 </head>
 
@@ -24,22 +24,22 @@
     </div>
 
     <div tabindex="0" id="Services" class=" mt-2 text-white">
-        <div class="bg-light rounded ">
+        <div class=" rounded ">
             <div id="servicesCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators "> 
-                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="0"
-                        class="active btn " aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1"
-                        aria-label="Slide 2 " class="btn "></button>
-                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="2"
-                        aria-label="Slide 3" class="btn"></button>
-                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="3"
-                        aria-label="Slide 4" class="btn"></button>
+                <div class="carousel-indicators ">
+                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="0" class="active btn "
+                        aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1" aria-label="Slide 2 "
+                        class="btn "></button>
+                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="2" aria-label="Slide 3"
+                        class="btn"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="3" aria-label="Slide 4"
+                        class="btn"></button>
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active ">
-                        <div id="test" class=" row flex-nowrap  p-1 mr-1 ">
-                            <div class="service-item col-md-4 p-2 ml-3 m-1">
+                        <div id="carousel" class=" row flex-nowrap  p-1 mr-1 ">
+                            <div class="service-item col-md-4 p-2 ml-2 m-1">
                                 <div class="rounded text-center ">
                                     <a class="text-light  " href="#Overall_Checkup">
                                         <img class="img rounded " src="/images/Overall_Checkup.png"
@@ -121,62 +121,85 @@
 
 
     <div class="container text-white ">
-        <div tabindex=0 class="bg-gray  rounded m-2">
+        <div tabindex=0 class="  rounded m-2">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 ">
                     <h2 class="text-center">
                         Advantages of Choosing Us<br>
                     </h2>
                 </div>
             </div>
-            <div class="row text-white">
+            <div class="row text-white ml-5 p-2 ">
                 <div class="col-md-6 text-left">
                     <ul class="list-unstyled">
                         <li class="mb-3">
-                            <i class="fas fa-tools fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Expert Technicians:</b> Our team consists of highly skilled and certified technicians.</span>
+                            <i class="fas fa-calendar-check fa-2x text-primary"></i>
+                            <span class="ml-2"><b>Easy Appointments:</b> Book your service appointments online with
+                                ease.<span id="LoginP"><a href="/Login">
+                                        <%= __('login_prompt') %>
+                                    </a>
+                                    <%= __('booking_prompt') %>
+                                </span></span>
                         </li>
                         <li class="mb-3">
-                            <i class="fas fa-clock fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Quick Service:</b> We ensure timely service to get you back on the road as soon as possible.</span>
+                            <i class="fas fa-car fa-2x text-primary"></i>
+                            <span class="ml-2"><b>Multiple vehicle repair:</b> We offer repairs for Hatchback, Sedan,
+                                SUV, MUV, Coupe, Convertible, and Pickup Truck, we do it all.</span>
                         </li>
-                        <li class="mb-3">
-                            <i class="fas fa-dollar-sign fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Affordable Prices:</b> Competitive pricing without compromising on quality.</span>
-                        </li>
-                        <li class="mb-3">
-                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Reliable Repairs:</b> We use high-quality parts and provide a warranty on all repairs.</span>
-                        </li>
+
+
                     </ul>
                 </div>
                 <div class="col-md-6 text-left mb-1">
                     <ul class="list-unstyled">
                         <li class="mb-3">
-                            <i class="fas fa-car fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Comprehensive Services:</b> From routine maintenance to complex repairs, we do it all.</span>
+                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                            <span class="ml-2"><b>Reliable Repairs:</b> We use high-quality parts and provide a warranty
+                                on all repairs.</span>
                         </li>
+
+
+
                         <li class="mb-3">
-                            <i class="fas fa-thumbs-up fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Customer Satisfaction:</b> Our top priority is ensuring our customers are happy with our service.</span>
+                            <i class="fas fa-dollar-sign fa-2x text-primary"></i>
+                            <span class="ml-2"><b>Fair Prices:</b> We have an online price estimator for transparancy,
+                                so you can be certain to not get overcharged.</span>
                         </li>
-                        <li class="mb-3">
-                            <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Convenient Location:</b> Easily accessible location with ample parking space.</span>
-                        </li>
-                        <li class="mb-3">
-                            <i class="fas fa-calendar-check fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Easy Appointments:</b> Book your service appointments online with ease.</span>
-                        </li>
+
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
+    <section class="news-section mt-5">
+        <h2 class="section-title">Latest News & Deals</h2>
+        <div class="news-item">
+            <div class="news-title">🚗 20% Off on Oil Changes This Month!</div>
+            <hr class="bg-dark">
+            <div class="news-details">
+                Take advantage of our special offer and get 20% off all oil change services until the end of the month. Book now to secure your spot!
+            </div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">📅 New Online Booking Feature!</div>
+            <hr class="bg-dark">
+            <div class="news-details">
+                We’ve launched our new online booking system! You can now select available times from our calendar to schedule your car repairs. 
+            </div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">🔧 New service location</div>
+            <hr class="bg-dark">
+            <div class="news-details">
+                Check out our new location at Odre "Strautnieki" to get your car serviced by our expert team!
+            </div>
+        </div>
+    </section>
     
+    <br>
     <div class="container text-white mt-5 ">
-        <div tabindex=0 class="bg-light p-4 rounded minW250px">
+        <div tabindex=0 class="bg-light p-4 rounded">
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="text-center">
@@ -221,7 +244,55 @@
             </div>
         </div>
 
-        <!-- Additional Content Section -->
+        <h1 class="mt-5 text-center text-white">Frequently Asked Questions</h1>
+        <div class="faq-container mt-3">
+            <div class="faq-item">
+                <p class="faq-question">What is this system for?<span class="arrow">&#9660;</span></p>
+                <div class="divider nodisplay"></div>
+                <p class="faq-answer">The Car Repair Shop System is designed to manage repair shop operations, making
+                    processes more efficient for both employees and customers. It includes user registration, scheduling
+                    repairs, sending reminders, and more.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">What features are available to registered users?<span class="arrow">&#9660;</span></p>
+                <div class="divider nodisplay"></div>
+                <p class="faq-answer">Registered users have access to exclusive features such as a price calculator, a
+                    calendar for scheduling repairs, reminders for maintenance and discounts, and the ability to view active
+                    repairs.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">How can I schedule a repair?<span class="arrow">&#9660;</span></p>
+                <div class="divider nodisplay"></div>
+                <p class="faq-answer">Customers can select available time slots from the calendar to schedule their car
+                    repairs. These slots are visible to registered users through the system.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">What features are available for employees?<span class="arrow">&#9660;</span></p>
+                <div class="divider nodisplay"></div>
+                <p class="faq-answer">Employees can use the system to organize and track repair tasks, ensuring efficient
+                    workflow and better customer service.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">What administrative tools are available?<span class="arrow">&#9660;</span></p>
+                <div class="divider nodisplay"></div>
+                <p class="faq-answer">Administrators can manage the system by adding, editing, or deleting data as needed.
+                    This includes managing user accounts, repairs, and schedules.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">How does this system save time?<span class="arrow">&#9660;</span></p>
+                <div class="divider nodisplay"></div>
+                <p class="faq-answer">The system streamlines processes such as scheduling, reminders, and task management,
+                    reducing manual work for employees and providing transparency for customers.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">Can I receive notifications for repairs or discounts?<span class="arrow">&#9660;</span></p>
+                <div class="divider nodisplay"></div>
+                <p class="faq-answer">Yes, registered users will receive reminders about scheduled repairs, oil changes, and
+                    notifications about special deals or discounts.</p>
+            </div>
+        </div>
+
+        <!-- Additional Content Section 
         <div tabindex=0 class="bg-light p-4 mt-5 rounded minW250px">
             <h2 class="text-center ">
                 <%= __('appointment_booking') %>
@@ -237,14 +308,15 @@
                         </a></span>
             </p>
         </div>
+        -->
     </div>
 
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-
+<!-- Services 
     <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-        <!-- Section 1: Overall Checkup -->
+        
         <section id="Overall_Checkup">
             <div class="text-center ">
                 <h1>
@@ -336,7 +408,6 @@
     </main>
 
     <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-        <!-- Section: Rust Removal -->
         <section id="Rust_Removal">
             <div class="text-center mt-5">
                 <h1>
@@ -374,7 +445,6 @@
     </main>
 
     <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-        <!-- Section: Tuning -->
         <section id="Tuning">
             <div class="text-center mt-5 ">
                 <h1>
@@ -412,7 +482,6 @@
     </main>
 
     <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden mb-4">
-        <!-- Section: Custom Part Insertion -->
         <section id="Custom_Part_Insertion">
             <div class="text-center mt-5">
                 <h1>
@@ -448,7 +517,7 @@
             </div>
         </section>
     </main>
-
+ -->
     <div class="footer mt-5">
         <div class="container">
             <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>

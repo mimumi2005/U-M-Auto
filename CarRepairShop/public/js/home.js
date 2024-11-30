@@ -1,4 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling.nextElementSibling; // Answer element
+        const divider = question.nextElementSibling; // Divider element
+        const arrow = question.querySelector('.arrow'); // Arrow element
+
+        const isActive = answer.classList.contains('active');
+
+        // Close all answers and reset arrows
+        document.querySelectorAll('.faq-answer').forEach(ans => ans.classList.remove('active'));
+        document.querySelectorAll('.divider').forEach(div => div.classList.remove('active'));
+        document.querySelectorAll('.arrow').forEach(arw => arw.classList.remove('rotate'));
+
+        // Toggle current question's answer, divider, and arrow
+        if (!isActive) {
+            answer.classList.add('active');
+            divider.classList.add('active');
+            arrow.classList.add('rotate');
+        }
+    });
+});
+
+
+
   const carouselElement = document.getElementById('servicesCarousel');
   const carouselInner = carouselElement.querySelector('.carousel-inner');
   const view = carouselInner.querySelector('.carousel-item');

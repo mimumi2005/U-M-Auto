@@ -3,16 +3,15 @@ import express from "express";
 import session from 'express-session';
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import cron from "node-cron";
 
+import fs from "fs";
+import https from "https";	
 import { createRequire } from 'module';
 
-import { v4 as uuidv4 } from 'uuid';
 import i18n from 'i18n';
 
 import path from "path";
 import { fileURLToPath } from 'url';
-import ejs from 'ejs';
 import expressLayouts from 'express-ejs-layouts';
 
 // Middleware
@@ -53,11 +52,12 @@ app.use((req, res, next) => {
 // Ensure this is after your generateNonce middleware
 app.use(helmet.contentSecurityPolicy({
   directives: {
-    defaultSrc: ["'self'", "https://maps.googleapis.com", "file:"],
-    frameSrc: ["'self'", "https://www.google.com", "https://www.gstatic.com"], // Added 'self' for frames
-    connectSrc: ["'self'", "https://maps.googleapis.com"],
+    defaultSrc: ["'self'", "https://maps.googleapis.com","carrepairshop.com", "file:"],
+    frameSrc: ["'self'", "https://www.google.com","carrepairshop.com", "https://www.gstatic.com"], // Added 'self' for frames
+    connectSrc: ["'self'","carrepairshop.com", "https://maps.googleapis.com"],
     imgSrc: [
       "'self'",
+      "carrepairshop.com",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/ru.svg",
@@ -68,6 +68,7 @@ app.use(helmet.contentSecurityPolicy({
     ],
     scriptSrc: [
       "'self'",
+      "carrepairshop.com",
       "https://maps.googleapis.com",
       "https://www.gstatic.com",
       "https://www.google.com/recaptcha/api.js",
@@ -82,11 +83,12 @@ app.use(helmet.contentSecurityPolicy({
       (req, res) => `'nonce-${res.locals.nonce}'`,
       // Allow external stylesheets if necessary
       "https://fonts.googleapis.com/css",
+      "carrepairshop.com",
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css",
       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
     ],
-    fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"], // Include font sources if using web fonts
+    fontSrc: ["'self'", "carrepairshop.com","https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"], // Include font sources if using web fonts
     objectSrc: ["'none'"], // Disallow <object> and <embed> tags to minimize attack surface
     mediaSrc: ["'self'"], // Allow only self for media (audio/video)
   },
@@ -96,6 +98,14 @@ app.use(helmet.contentSecurityPolicy({
 
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the public folder outside src
+
+
+// Create HTTPS server
+const options = {
+  key: fs.readFileSync(path.join(__dirname, '../certs/server.key')),
+  cert: fs.readFileSync(path.join(__dirname, '../certs/carrepairshop.com.crt'))
+};
+
 
 // For https when converting 
 // app.use(enforce.HTTPS({ trustProtoHeader: true }));
@@ -190,6 +200,10 @@ const PORT = process.env.PORT || 80;
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+});
+
+https.createServer(options, app).listen(process.env.HTTPS_PORT, () => {
+  console.log(`HTTPS server running on port ${process.env.HTTPS_PORT}`);
 });
 
 

@@ -32,7 +32,7 @@ How to run the project:
 
 3. Uzip the folder;
 
-4. Run the folder with visual studio code or other;
+4. Run the folder with visual studio code or other IDE;
 
 ```
 That finishes the frontend setup, now you need to set up the database.
