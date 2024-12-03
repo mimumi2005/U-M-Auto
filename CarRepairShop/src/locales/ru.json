@@ -362,5 +362,7 @@
 	"Overall checkup/tuning": "Общая проверка/тюнинг",
 	"(Click to check all this users appointments)": "(Нажмите, чтобы проверить все встречи этого пользователя)",
 	"email": "email",
-	"car_wash_title": "car_wash_title"
+	"car_wash_title": "car_wash_title",
+	"Passwords don't match": "Passwords don't match",
+	"Edit": "Edit"
 }

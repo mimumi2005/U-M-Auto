@@ -1,5 +1,5 @@
 import express from 'express';
-import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage, getAppointmentPage,  } from '../controllers/pageController.js';
+import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage, getAppointmentPage,getServicesPage  } from '../controllers/pageController.js';
 import {generateCSRFToken} from '../middleware/CSRF.js'
 import {checkSession} from '../middleware/checkSession.js';
 // routes/index.js
@@ -20,6 +20,7 @@ router.get('/Appointments',generateCSRFToken, checkSession, getAppointmentPage);
 router.get('/Estimator',checkSession, getEstimatorPage);
 
 router.get('/AboutUs', getAboutUsPage);
+router.get('/Services', getServicesPage);
 router.get('/Login',generateCSRFToken, getLoginPage);
 router.get('/SignUp',generateCSRFToken, getSignUpPage);
 

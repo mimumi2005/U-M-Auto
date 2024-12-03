@@ -362,5 +362,7 @@
 	"Type of project": "Type of project",
 	"Oil change/project discussion": "Oil change/project discussion",
 	"Overall checkup/tuning": "Overall checkup/tuning",
-	"car_wash_title": "car_wash_title"
+	"car_wash_title": "car_wash_title",
+	"Passwords don't match": "Passwords don't match",
+	"Edit": "Edit"
 }

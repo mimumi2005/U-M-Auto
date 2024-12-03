@@ -1,95 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <link rel="manifest" href="/js/manifest.json">
-
-
-</head>
-
 <body>
-    <div class="d-flex justify-content-center align-items-center">
-        <section class="container my-3 text-white">
-            
-            <div class="row justify-content-center"> <!-- Center the row -->
-                <div tabindex="0" class="col-md-10 ml-3 col-lg-5 bg-light p-4 mt-5 mr-3 rounded"> <!-- General Information -->
-                    <h2><%= __('general_info') %></h2>
-                    
-                    <p><%= __('car_repair_description') %></p>
-                    <p><%= __('pricing_description') %></p>
+    <div class="d-flex justify-content-center align-items-center ">
+        <section class="container  text-white">
+
+            <div class="row justify-content-center "> <!-- Center the row -->
+                <div tabindex="0" class="col-md-10 ml-3  p-4 mt-3 mr-3 rounded text-light bg-light">
+                    <!-- General Information -->
+                    <h2 class="text-white">
+                        <%= __('general_info') %>
+                    </h2>
+
+                    <p>
+                        <%= __('car_repair_description') %>
+                    </p>
+                    <p>
+                        <%= __('pricing_description') %>
+                    </p>
                 </div>
                 <div class="w-120 my-3 "></div> <!-- Gap -->
-                <div class="col-md-10 col-lg-5 ml-3 mt-5 mr-3 "> <!-- Visit Our Location -->
+                <div class="col-md-10  ml-3 mt-3 mr-3 "> <!-- Visit Our Location -->
                     <div class="row">
-                        <div class="col-12 bg-light p-4 d-flex flex-lg-row flex-column justify-content-between align-items-start rounded"> <!-- Responsive Flex Container -->
+                        <div
+                            class="col-12  p-4 d-flex flex-lg-row  justify-content-between align-items-start rounded bg-light text-light">
+                            <!-- Responsive Flex Container -->
                             <div> <!-- Text and Address -->
-                                <h2><%= __('visit_us') %></h2>
-                                <p><%= __('address_label') %></p>
+                                <h2 class="text-white">
+                                    <%= __('visit_us') %>
+                                </h2>
+                                <p>
+                                    <%= __('address_label') %>
+                                </p>
                                 <address>
                                     <%= __('address_1') %><br>
-                                    <%= __('address_2') %><br>
-                                    <%= __('address_3') %>
+                                        <%= __('address_2') %><br>
+                                            <%= __('address_3') %>
                                 </address>
                             </div>
-                            <div class="ml-lg-3 mt-3 mt-lg-0"> <!-- Map -->
-                                <div id="map"></div>
-                            </div>
+
+                            <div id="map"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
-    
 
-<section class="py-4">
-    <div tabindex=0 class="container text-white bg-light rounded">
-        <div class="row justify-content-center ">
-            <div class="col-md-10 col-lg-6 p-4 "> <!-- Contact Us Text -->
-                <h2><%= __('contact_us') %></h2>
-                <p><%= __('contact_description') %></p>
-                <p><%= __('call_us') %></p>
+
+    <section class="py-2">
+        <div tabindex=0 class="container text-white  rounded ">
+            <div class="row justify-content-center text-light">
+                <div class="col-md-10 col-lg-5 p-4 bg-light"> <!-- Contact Us Text -->
+                    <h2 class="text-white">
+                        <%= __('contact_us') %>
+                    </h2>
+                    <p>
+                        <%= __('contact_description') %>
+                    </p>
+                    <p>
+                        <%= __('call_us') %>
+                    </p>
+                </div>
+                <div class="col-md-9 col-lg-5 p-4 bg-light"> <!-- Contact Form -->
+                    <form>
+                        <div class="form-group">
+                            <label for="name">
+                                <%= __('name') %>
+                            </label>
+                            <input type="text" class="form-control" id="name"
+                                placeholder="<%= __('name_placeholder') %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">
+                                <%= __('email') %>
+                            </label>
+                            <input type="email" class="form-control" id="email"
+                                placeholder="<%= __('email_placeholder') %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">
+                                <%= __('message') %>
+                            </label>
+                            <textarea class="form-control" id="message" rows="2"
+                                placeholder="<%= __('message_placeholder') %>"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <%= __('send_message') %>
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="col-md-10 col-lg-6 p-4"> <!-- Contact Form -->
-                <form>
-                    <div class="form-group">
-                        <label for="name"><%= __('name') %></label>
-                        <input type="text" class="form-control" id="name" placeholder="<%= __('name_placeholder') %>">
-                    </div>
-                    <div class="form-group">
-                        <label for="email"><%= __('email') %></label>
-                        <input type="email" class="form-control" id="email" placeholder="<%= __('email_placeholder') %>">
-                    </div>
-                    <div class="form-group">
-                        <label for="message"><%= __('message') %></label>
-                        <textarea class="form-control" id="message" rows="2" placeholder="<%= __('message_placeholder') %>"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary"><%= __('send_message') %></button>
-                </form>
+        </div>
+    </section>
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
+            <p class="mb-2">
+                <%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %>
+            </p>
+
+            <!-- Language Switcher Links in Footer -->
+            <div class="language-switcher-footer">
+                <a href="/?lang=en" class="footer-link">🇬🇧 English</a> |
+                <a href="/?lang=lv" class="footer-link">🇱🇻 Latviešu valoda</a> |
+                <a href="/?lang=ru" class="footer-link">🇷🇺 Русский язык</a> |
+                <a href="/?lang=de" class="footer-link">🇩🇪 Deutsche Sprache</a>
             </div>
         </div>
     </div>
-</section>
-<div class="footer">
-    <div class="container">
-        <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
-        <p class="mb-2"><%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %></p>
 
-        <!-- Language Switcher Links in Footer -->
-        <div class="language-switcher-footer">
-            <a href="/?lang=en" class="footer-link">🇬🇧  English</a> |
-            <a href="/?lang=lv" class="footer-link">🇱🇻  Latviešu valoda</a> |
-            <a href="/?lang=ru" class="footer-link">🇷🇺  Русский язык</a> |
-            <a href="/?lang=de" class="footer-link">🇩🇪  Deutsche Sprache</a>
-        </div>
-    </div>
-</div>
-    
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=<%= apiKey %>&callback=initMap" nonce="<%= nonce %>">
-    </script>
-
-</body>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= apiKey %>&callback=initMap"
+        nonce="<%= nonce %>">
+        </script>

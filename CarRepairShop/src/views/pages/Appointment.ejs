@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.css">
-
-    <script src="/js/bootstrap.js" nonce="<%= nonce %>"></script>
-</head>
 
 <body>
     <div id="customAppointmentAlert" class="custom-alert nodisplay">
@@ -20,7 +10,7 @@
                 <form id="appointmentForm">
                     <div class="form-group mb-1">
                         <label for="repairType"></label>
-                        <select class="form-control" id="repairType" name="repairType" required>
+                        <select class="form-control form-control-select" id="repairType" name="repairType" required>
                             <option disabled selected value="0"><%= __('Choose an appointment type') %></option>
                             <option tabindex="1" value="1"><%= __('Oil change') %></option>
                             <option tabindex="2" value="120"><%= __('Paint job') %></option>
@@ -84,5 +74,3 @@
     <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
     <script src="/js/Appointment.js" nonce="<%= nonce %>"></script>
 </body>
-
-</html>

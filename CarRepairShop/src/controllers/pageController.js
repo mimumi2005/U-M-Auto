@@ -27,6 +27,11 @@ export const getSignUpPage = (req, res) => {
     res.render('pages/SignUp', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
 };
 
+export const getServicesPage = (req, res) => {
+    const csrfTokenValue = req.csrfToken;
+    res.render('pages/Services', { nonce: res.locals.nonce, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
+};
+
 export const getAppointmentPage = (req, res) => {
     const csrfTokenValue = req.csrfToken;
     res.render('pages/Appointment', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template

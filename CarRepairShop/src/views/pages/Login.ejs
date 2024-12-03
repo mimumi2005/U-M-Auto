@@ -1,20 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <link rel="manifest" href="/js/manifest.json">
-    
-
-
-    <style nonce="<%= nonce %>">
-        .text-danger {
-            color: rgb(255, 0, 0);
-        }
-    </style>
-</head>
 
 <body>
     <div id="customLoginAlert" class="custom-alert nodisplay">
@@ -24,7 +7,7 @@
     <div class="container text-white mt-5 mx-80">
         <div class="row justify-content-center">
             <div class="col-md-4 bg-light rounded-lg">
-                <form class="p-4" id="loginForm">
+                <form class="pl-4 pr-4 pt-4" id="loginForm">
                     <h1 class="text-center"><%= __('Login') %></h1>
                     <div class="form-group">
                         <div id="username-red" class="row ml-0 mb-2" for="username">
@@ -42,15 +25,15 @@
                         </div>
                         <input type="password" class="form-control" id="password" placeholder="<%= __('Enter a password') %>" maxlength="45">
                     </div>
-                    <a href="/SignUp">Create an account instead?</a>
+                    <a href="/RecoverPassword">Forgot password?</a>
                     <button type="submit" class="btn btn-secondary btn-block mt-1"><%= __('Login button') %></button>
                     <br>
                 </form>
+                <a class="text-center btn text-white btn-block mb-3 mt-0" href="/SignUp"><b>Create an account instead?<b></a>
             </div>
+            
         </div>
     </div>
     <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
     <script src="/js/Login.js" nonce="<%= nonce %>"></script>
 </body>
-
-</html>

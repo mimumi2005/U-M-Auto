@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <link rel="manifest" href="/js/manifest.json">
-
-    <link rel="icon" type="image/png" href="/images/icon.png">
     <style nonce="<%= nonce %>">
         body {
             background-image: url('/images/main_image2.jpg');
@@ -98,7 +90,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav" id="defaultNav">
                     <li class="nav-item">
-                        <a class="nav-link h3 mr-2 text-light" href="/">
+                        <a class="nav-link h3 mr-2 text-light" href="/Services">
                             <%= __('Services') %>
                         </a>
                     </li>
@@ -175,7 +167,7 @@
                                 </a>
                                 <div class=" custom-divider"></div>
                                 <a tabindex=0 class=" pl-3 dropdown-item-logout text-red pointer" id="Log-out-button">
-                                    <%= __('Log Out') %>
+                                    <b><%= __('Log Out') %></b>
                                 </a>
                             </div>
                         </div>
@@ -213,5 +205,3 @@
     </div>
     <div id="scroll-to-top-btn">↑</div>
 </body>
-
-</html>

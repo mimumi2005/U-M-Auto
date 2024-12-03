@@ -1,11 +1,4 @@
 
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-  
   .content {
     flex: 1;
   }
@@ -102,13 +95,12 @@ body {
   
   }
   
-  
   body {
     background-color: black;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  
+    overflow-x: hidden;
   }
   
   .wrapper {
@@ -422,14 +414,6 @@ body {
     /* Spacing between buttons */
   }
   
-  #map {
-    width: 265px;
-    max-width: 60vw;
-    min-width: 8vh;
-    height: 265px;
-  }
-  
-  
   
   @media (max-width: 500px) {
   
@@ -577,7 +561,7 @@ body {
   font-size: 18px;
   font-weight: bold;
   background-color: #1e1e1e;
-  color: #fff;
+  color: #dadada;
   cursor: pointer;
   border-radius: 5px;
   display: flex;
@@ -618,7 +602,7 @@ body {
   line-height: 1.5;
   background-color: #1e1e1e;
   border-radius: 0 0 5px 5px;
-  color: #d1d1d1;
+  color: #9a9b9c;
 }
 
 .faq-answer.active {
@@ -630,21 +614,21 @@ body {
 }
 .divider {
   height: 1px;
-  background-color: #ffffff;
+  background-color: #9a9b9c;
   margin: 10px 0;
 }
 
-.news-section {
+.news-section, .how-we-work-section, .work-hours-section {
   padding: 20px;
   background-color: #121212;
-  color: #f5f5f5;
+  color: #9a9b9c;
   border-radius: 8px;
   max-width: 1000px;
   margin: 20px auto;
   font-family: Arial, sans-serif;
 }
 
-.section-title {
+.news-section-title, .work-section-title {
   font-size: 24px;
   margin-bottom: 20px;
   text-align: center;
@@ -652,8 +636,16 @@ body {
   text-decoration: underline;
 }
 
+.work-section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffffff;
+}
+
+
 /* News Item Styling */
-.news-item {
+.news-item, .work-item {
   margin-bottom: 15px;
   transition: background-color 0.3s ease;
 }
@@ -665,7 +657,7 @@ body {
   color: #ffcc00;
 }
 
-.news-details {
+.news-details, .work-details {
   padding: 10px 15px;
   font-size: 16px;
   line-height: 1.5;
@@ -674,3 +666,217 @@ body {
   color: #d1d1d1;
 }
 
+/* Appointment Container */
+.appointment-container {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: stretch;  /* Allow children to stretch naturally */
+  justify-content: flex-start;
+  padding:50px;
+  height: auto;
+  overflow: visible;
+  min-height: calc(100vh - 101px);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0),rgb(24, 24, 24));
+  color: #ffffff;
+}
+
+
+/* Appointment Container */
+.appointment-content {
+  width: 80%;
+  min-width: 80%;
+  padding: 30px;
+  background-color: rgba(40, 40, 40, 0.9);
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  height: auto; /* Ensures it grows to fit content */
+  overflow: visible; /* Ensures no scrollbars are shown */
+}
+
+
+/* Settings Container */
+.settings-container {
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  padding:50px;
+  height: calc(100vh - 101px);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0),rgb(24, 24, 24));
+  color: #ffffff;
+}
+
+/* Settings Container */
+.settings-content {
+  width: auto;
+  min-width:35%;
+  height:435px;
+  padding: 30px;
+  background-color: rgba(40, 40, 40, 0.9);
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  text-align: left;
+}
+
+.form-control-select {
+  height:auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Profile Container */
+.profile-container {
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  padding:50px;
+  height: calc(100vh - 101px);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0),rgb(24, 24, 24));
+  color: #ffffff;
+}
+
+/* Profile Content */
+.profile-content {
+  width: auto;
+  min-width:30%;
+  height:375px;
+  padding: 30px;
+  background-color: rgba(40, 40, 40, 0.9);
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  text-align: left;
+}
+
+/* Profile Title */
+.profile-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #f1f1f1;
+}
+
+/* Profile Info */
+.profile-info {
+  margin-bottom: 20px;
+}
+
+.profile-item {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-label {
+  font-weight: bold;
+  color: #ddd;
+}
+
+.profile-value {
+  color: #f1f1f1;
+}
+
+  /* Profile Content */
+  .password-edit-container {
+      width: auto;
+      min-width:30%;
+      height:450px;
+      padding: 30px;
+      background-color: rgba(40, 40, 40, 0.9);
+      border-radius: 15px;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+      text-align: left;
+    }
+
+.edit-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-account-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-account-button:hover {
+  background-color: #b02a37;
+}
+
+/* Form Styling */
+.hidden-form {
+  display: none;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-submit {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+  background-color: #218838;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+/* Error Messages */
+.error-message {
+  font-size: 0.9rem;
+  color: #dc3545;
+  display: none;
+}
