@@ -1,4 +1,3 @@
-
 <body>
     <div id="unauthorizedAccess" class="custom-alert text-danger nodisplay">
         <h4>
@@ -11,310 +10,250 @@
         </h4>
     </div>
 
-    <div tabindex="0" id="Services" class=" mt-2 text-white">
-        <div class=" rounded ">
-            <div id="servicesCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators ">
-                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="0" class="active btn "
-                        aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1" aria-label="Slide 2 "
-                        class="btn "></button>
-                    <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="2" aria-label="Slide 3"
-                        class="btn"></button>
-                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="3" aria-label="Slide 4"
-                        class="btn"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active ">
-                        <div id="carousel" class=" row flex-nowrap  p-1 mr-1 ">
-                            <div class="service-item col-md-4 p-2 ml-2 m-1">
-                                <div class="rounded text-center ">
-                                    <a class="text-light  " href="#Overall_Checkup">
-                                        <img class="img rounded " src="/images/Overall_Checkup.png"
-                                            alt="Overall checkup image">
-                                        <h4 class="text-center position-absolute overlay-text">
-                                            <%= __('overall_checkup_title') %>
-                                        </h4>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="service-item col-md-4 p-2  m-1">
-                                <div class="rounded text-center">
-                                    <a class="text-light " href="#Car_Painting">
-                                        <img class="img rounded " src="/images/Car_Painting.png"
-                                            alt="Car painting image">
-                                        <h4 class="text-center position-absolute overlay-text">
-                                            <%= __('car_painting_title') %>
-                                        </h4>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="service-item col-md-4 p-2 m-1">
-                                <div class="rounded text-center">
-                                    <a class="text-light " href="#Rust_Removal">
-                                        <img class="img rounded " src="/images/Rust_Removal.jpg"
-                                            alt="Rust Removal image">
-                                        <h4 class="text-center position-absolute overlay-text">
-                                            <%= __('rust_removal_title') %>
-                                        </h4>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="service-item col-md-4 p-2 m-1">
-                                <div class="rounded text-center ">
-                                    <a class="text-light  " href="#Tuning">
-                                        <img class="img rounded " src="/images/Tuning.png" alt="Tuning image">
-                                        <h4 class="text-center position-absolute overlay-text">
-                                            <%= __('tuning_title') %>
-                                        </h4>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="service-item col-md-4 p-2 m-1">
-                                <div class="rounded text-center">
-                                    <a class="text-light " href="#Custom_Part_Insertion">
-                                        <img class="img rounded" src="/images/Custom_Part_Insertion.png"
-                                            alt="Custom part insertion image">
-                                        <h4 class="text-center position-absolute overlay-text">
-                                            <%= __('custom_part_insertion_title') %>
-                                        </h4>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="service-item col-md-4 p-2 m-1" id="price_estimator_guest_title">
-                                <div class="rounded text-center ">
-                                    <a class="text-light ">
-                                        <img class="img rounded " src="/images/Price_Calculation_Guest.jpg"
-                                            alt="Log in to access this function image">
-
-                                    </a>
-                                </div>
-                            </div>
+    <div id="Services" class="mt-4  text-white ">
+        <div class="container p-4 bg-light">
+            <h2 class="text-center ">
+                <%= __('our_services_title') %>
+            </h2>
+            <div class="row justify-content-center">
+                <!-- Service 1 -->
+                <div class="service-item col-md-4 p-3 text-center">
+                    <a href="/Services?scrollTo=Overall_Checkup" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-wrench fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('overall_checkup_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('overall_checkup_description') %>
+                            </p>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
-                <!-- Carousel Controls -->
-                <a class="carousel-control-prev" href="#servicesCarousel" role="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#servicesCarousel" role="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+                <!-- Service 2 -->
+                <div class="service-item col-md-4 p-3 text-center">
+                    <a href="/Services?scrollTo=Car_Painting" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-paint-brush fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('car_painting_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('car_painting_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="service-item col-md-4 p-3 text-center">
+                    <a href="/Services?scrollTo=Rust_Removal" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-eraser fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('rust_removal_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('rust_removal_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <!-- Service 4 -->
+                <div class="service-item col-md-6 p-3 text-center">
+                    <a href="/Services?scrollTo=Tuning" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-car fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('tuning_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('tuning_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="service-item col-md-6 p-3 text-center mb-5">
+                    <a href="/Services?scrollTo=Custom_Part_Insertion" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-cogs fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('custom_part_insertion_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('custom_part_insertion_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-
-
-
-
-
-    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-        
-        <section id="Overall_Checkup">
-            <div class="text-center ">
-                <h1>
-                    <%= __('overall_checkup_title') %>
-                </h1>
-            </div>
-            <div class="paragraph mt-4 fade-in-hidden">
-                <p class="lead">
-                    <%= __('service_description_checkup') %><br>
-                        <br>1. <b>
-                            <%= __('checkup_engine') %>
-                        </b><br>
-                        2. <b>
-                            <%= __('checkup_safety') %>
-                        </b><br>
-                        3. <b>
-                            <%= __('checkup_tires') %>
-                        </b><br>
-                        4. <b>
-                            <%= __('checkup_fluid_management') %>
-                        </b><br>
-                        5. <b>
-                            <%= __('checkup_expertise') %>
-                        </b><br>
-                </p>
-                <h2 class="mt-4 fade-in-hidden"><br><b>
-                        <%= __('why_choose_checkup') %>
-                    </b><br> </h2>
-                <ul class="fade-in-hidden">
-
-                    <li><b>
-                            <%= __('checkup_expertise') %>
-                        </b><br></li>
-                    <li><b>
-                            <%= __('checkup_safety') %>
-                        </b><br></li>
-                    <li><b>
-                            <%= __('checkup_engine') %>
-                        </b><br></li>
-                    <li><b>
-                            <%= __('checkup_tires') %>
-                        </b><br></li>
-                    <li><b>
-                            <%= __('checkup_fluid_management') %>
-                        </b><br></li>
-                </ul>
-            </div>
-            </div>
-        </section>
-    </main>
+    <div class=" p-1 mt-5 text-light">
+        <div class="container p-4">
+            <!-- Overall Checkup -->
+            <section id="Overall_Checkup" class="mt-3 p-5 bg-light fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('overall_checkup_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('overall_checkup_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('overall_checkup_engine_title') %></h3>
+                        <p>
+                            <%= __('overall_checkup_engine_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('overall_checkup_safety_title') %></h3>
+                        <p>
+                            <%= __('overall_checkup_safety_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('overall_checkup_tires_title') %></h3>
+                        <p>
+                            <%= __('overall_checkup_tires_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+    
+            <!-- Car Painting -->
+            <section id="Car_Painting" class="mt-5 p-5 bg-light fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('car_painting_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('car_painting_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('car_painting_materials_title') %></h3>
+                        <p>
+                            <%= __('car_painting_materials_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('car_painting_customization_title') %></h3>
+                        <p>
+                            <%= __('car_painting_customization_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('car_painting_protection_title') %></h3>
+                        <p>
+                            <%= __('car_painting_protection_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+    
+            <!-- Rust Removal -->
+            <section id="Rust_Removal" class="mt-5 p-5 bg-light fade-in-hidden">
+                <div class="text-center  text-white mb-4">
+                    <h2><%= __('rust_removal_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('rust_removal_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('rust_removal_process_title') %></h3>
+                        <p>
+                            <%= __('rust_removal_process_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('rust_removal_protection_title') %></h3>
+                        <p>
+                            <%= __('rust_removal_protection_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('rust_removal_benefits_title') %></h3>
+                        <p>
+                            <%= __('rust_removal_benefits_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+    
+            <!-- Tuning -->
+            <section id="Tuning" class="mt-5 p-5 bg-light fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('tuning_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('tuning_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('tuning_performance_title') %></h3>
+                        <p>
+                            <%= __('tuning_performance_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('tuning_customization_title') %></h3>
+                        <p>
+                            <%= __('tuning_customization_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('tuning_efficiency_title') %></h3>
+                        <p>
+                            <%= __('tuning_efficiency_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+    
+            <!-- Custom Part Insertion -->
+            <section id="Custom_Part_Insertion" class="mt-5 p-5 bg-light  fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('custom_part_insertion_title') %></h2>
+                </div>
+                <div class="paragraph ">
+                    <p class="lead text-center">
+                        <%= __('custom_part_insertion_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('custom_part_insertion_high_quality_title') %></h3>
+                        <p>
+                            <%= __('custom_part_insertion_high_quality_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('custom_part_insertion_performance_title') %></h3>
+                        <p>
+                            <%= __('custom_part_insertion_performance_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('custom_part_insertion_customizable_title') %></h3>
+                        <p>
+                            <%= __('custom_part_insertion_customizable_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
     </div>
-    </div>
-
-    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-        <section id="Car_Painting">
-            <div class="text-center mt-5 ">
-                <h1>
-                    <%= __('car_painting_title') %>
-                </h1>
-            </div>
-            <div class="paragraph mt-4 fade-in-hidden ">
-                <p class="lead">
-                    <%= __('service_description_painting') %>
-                </p>
-
-                <h2 class="mt-4 fade-in-hidden">
-                    <%= __('why_choose_painting') %>
-                </h2>
-
-                <ul class="fade-in-hidden">
-                    <li><b>
-                            <%= __('painting_quality_materials') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('painting_skilled_painters') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('painting_customization_options') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('painting_restoration_repairs') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('painting_protective_coatings') %>
-                        </b></li>
-                </ul>
-            </div>
-        </section>
-    </main>
-
-    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-        <section id="Rust_Removal">
-            <div class="text-center mt-5">
-                <h1>
-                    <%= __('rust_removal_title') %>
-                </h1>
-            </div>
-            <div class="paragraph mt-4 fade-in-hidden">
-                <p class="lead">
-                    <%= __('service_description_rust_removal') %>
-                </p>
-
-                <h2 class="mt-4 fade-in-hidden">
-                    <%= __('why_choose_rust_removal') %>
-                </h2>
-
-                <ul class="fade-in-hidden">
-                    <li><b>
-                            <%= __('general_info') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('car_repair_description') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('pricing_description') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('visit_us') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('address_label') %>
-                        </b></li>
-                </ul>
-            </div>
-        </section>
-    </main>
-
-    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden">
-        <section id="Tuning">
-            <div class="text-center mt-5 ">
-                <h1>
-                    <%= __('tuning_title') %>
-                </h1>
-            </div>
-            <div class="paragraph mt-4">
-                <p class="lead fade-in-hidden">
-                    <%= __('service_description_tuning') %>
-                </p>
-
-                <h2 class="mt-4 fade-in-hidden">
-                    <%= __('why_choose_checkup') %>
-                </h2>
-
-                <ul class="fade-in-hidden">
-                    <li><b>
-                            <%= __('checkup_expertise') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_safety') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_engine') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_tires') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_fluid_management') %>
-                        </b></li>
-                </ul>
-            </div>
-        </section>
-    </main>
-
-    <main tabindex=0 role="main" class="container mt-5 text-light fade-in-hidden mb-4">
-        <section id="Custom_Part_Insertion">
-            <div class="text-center mt-5">
-                <h1>
-                    <%= __('custom_part_insertion_title') %>
-                </h1>
-            </div>
-            <div class="paragraph mt-4 fade-in-hidden">
-                <p class="lead">
-                    <%= __('service_description_custom_insertion') %>
-                </p>
-
-                <h2 class="mt-4 fade-in-hidden">
-                    <%= __('why_choose_checkup') %>
-                </h2>
-
-                <ul class="fade-in-hidden">
-                    <li><b>
-                            <%= __('checkup_expertise') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_safety') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_engine') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_tires') %>
-                        </b></li>
-                    <li><b>
-                            <%= __('checkup_fluid_management') %>
-                        </b></li>
-                </ul>
-            </div>
-        </section>
-    </main>
-
-    <div class="footer mt-5">
+    
+    <div class="footer">
         <div class="container">
             <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
             <p class="mb-2">
@@ -333,5 +272,5 @@
         </div>
     </div>
 
-    <script src="/js/home.js" nonce="<%= nonce %>"></script>
+    <script src="/js/Services.js" nonce="<%= nonce %>"></script>
 </body>

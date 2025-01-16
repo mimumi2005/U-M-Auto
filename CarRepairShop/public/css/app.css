@@ -1,4 +1,4 @@
-
+  
   .content {
     flex: 1;
   }
@@ -9,7 +9,6 @@
     text-align: center;
     padding: 10px;
   }
-  
   
   
   .polygon-overlay {
@@ -101,8 +100,13 @@
     flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden;
+    font-family: "Poppins"
   }
-  
+
+  *{
+    font-family: "Poppins"
+  }
+
   .wrapper {
     flex: 1;
   }
@@ -333,8 +337,9 @@
   }
   
   .weekend {
-    color: #000;
-    background-color: #e4606d !important;
+    color: #000000;
+    font-weight: bold;
+    background-color: #e46060 !important;
   }
   
   
@@ -473,6 +478,22 @@
     width: 100%;
     height: auto;
     object-fit: cover;
+}
+.service-item a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.service-item a:hover .rounded {
+  box-shadow: 0 4px 15px rgba(121, 121, 121, 0.333);
+  transform: translateY(-5px);
+  background-color:rgba(0, 0, 0, 0.1)
+}
+
+.service-item a:hover {
+  text-decoration: none;
 }
 
 .overlay-text {
@@ -633,7 +654,7 @@
   margin-bottom: 20px;
   text-align: center;
   color: #ffffff;
-  text-decoration: underline;
+  font-style: italic;
 }
 
 .work-section-title {
@@ -879,4 +900,11 @@
   font-size: 0.9rem;
   color: #dc3545;
   display: none;
+}
+
+.hidden-visibility {
+  visibility: hidden;
+}
+.visible-visibility {
+  visibility: visible;
 }

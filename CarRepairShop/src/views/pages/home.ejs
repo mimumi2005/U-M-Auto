@@ -28,7 +28,7 @@
                         <div id="carousel" class=" row flex-nowrap  p-1 mr-1 ">
                             <div class="service-item col-md-4 p-2 ml-2 m-1">
                                 <div class="rounded text-center ">
-                                    <a class="text-light  " href="/Services?Overall_Checkup">
+                                    <a class="text-light  " href="/Services?scrollTo=Overall_Checkup">
                                         <img class="img rounded " src="/images/Overall_Checkup.png"
                                             alt="Overall checkup image">
                                         <h4 class="text-center position-absolute overlay-text">
@@ -39,7 +39,7 @@
                             </div>
                             <div class="service-item col-md-4 p-2  m-1">
                                 <div class="rounded text-center">
-                                    <a class="text-light " href="/Services?Car_Painting">
+                                    <a class="text-light " href="/Services?scrollTo=Car_Painting">
                                         <img class="img rounded " src="/images/Car_Painting.png"
                                             alt="Car painting image">
                                         <h4 class="text-center position-absolute overlay-text">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="service-item col-md-4 p-2 m-1">
                                 <div class="rounded text-center">
-                                    <a class="text-light " href="/Services?Rust_Removal">
+                                    <a class="text-light " href="/Services?scrollTo=Rust_Removal">
                                         <img class="img rounded " src="/images/Rust_Removal.jpg"
                                             alt="Rust Removal image">
                                         <h4 class="text-center position-absolute overlay-text">
@@ -61,7 +61,7 @@
                             </div>
                             <div class="service-item col-md-4 p-2 m-1">
                                 <div class="rounded text-center ">
-                                    <a class="text-light  " href="/Services?Tuning">
+                                    <a class="text-light  " href="/Services?scrollTo=Tuning">
                                         <img class="img rounded " src="/images/Tuning.png" alt="Tuning image">
                                         <h4 class="text-center position-absolute overlay-text">
                                             <%= __('tuning_title') %>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="service-item col-md-4 p-2 m-1">
                                 <div class="rounded text-center">
-                                    <a class="text-light " href="/Services?Custom_Part_Insertion">
+                                    <a class="text-light " href="/Services?scrollTo=Custom_Part_Insertion">
                                         <img class="img rounded" src="/images/Custom_Part_Insertion.png"
                                             alt="Custom part insertion image">
                                         <h4 class="text-center position-absolute overlay-text">
@@ -117,52 +117,60 @@
     </div>
 
 
-    <div class="container text-white ">
-        <div tabindex=0 class="  rounded m-2">
-            <div class="row">
-                <div class="col-md-12 ">
-                    <h2 class="text-center">
-                        Advantages of Choosing Us<br>
-                    </h2>
-                </div>
-            </div>
-            <div class="row text-light ml-5 p-2 ">
+    <div class="container text-white">
+        <div class="rounded m-3">
+            <h3 class="text-center">
+                <%= __('advantages_title') %>
+            </h3>
+            <div class="row ml-5 p-3">
                 <div class="col-md-6 text-left">
                     <ul class="list-unstyled">
                         <li class="mb-3">
                             <i class="fas fa-calendar-check fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Easy Appointments:</b> Book your service appointments online with
-                                ease.<span id="LoginP"><a href="/Login">
-                                        <%= __('login_prompt') %>
-                                    </a>
-                                    <%= __('booking_prompt') %>
-                                </span></span>
+                            <span class="ml-2">
+                                <b>
+                                    <%= __('easy_appointments_title') %>:
+                                </b>
+                                <%= __('easy_appointments_description') %>
+                                    <span id="LoginP">
+                                        <a href="/Login">
+                                            <%= __('login_prompt') %>
+                                        </a>
+                                        <%= __('booking_prompt') %>
+                                    </span>
+                            </span>
                         </li>
                         <li class="mb-3">
                             <i class="fas fa-car fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Multiple vehicle repair:</b> We offer repairs for Hatchback, Sedan,
-                                SUV, MUV, Coupe, Convertible, and Pickup Truck, we do it all.</span>
+                            <span class="ml-2">
+                                <b>
+                                    <%= __('multiple_repairs_title') %>:
+                                </b>
+                                <%= __('multiple_repairs_description') %>
+                            </span>
                         </li>
-
-
                     </ul>
                 </div>
-                <div class="col-md-6 text-left mb-1">
+                <div class="col-md-6 text-left">
                     <ul class="list-unstyled">
                         <li class="mb-3">
                             <i class="fas fa-shield-alt fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Reliable Repairs:</b> We use high-quality parts and provide a warranty
-                                on all repairs.</span>
+                            <span class="ml-2">
+                                <b>
+                                    <%= __('reliable_repairs_title') %>:
+                                </b>
+                                <%= __('reliable_repairs_description') %>
+                            </span>
                         </li>
-
-
-
                         <li class="mb-3">
                             <i class="fas fa-dollar-sign fa-2x text-primary"></i>
-                            <span class="ml-2"><b>Fair Prices:</b> We have an online price estimator for transparancy,
-                                so you can be certain to not get overcharged.</span>
+                            <span class="ml-2">
+                                <b>
+                                    <%= __('fair_prices_title') %>:
+                                </b>
+                                <%= __('fair_prices_description') %>
+                            </span>
                         </li>
-
                     </ul>
                 </div>
             </div>
@@ -170,86 +178,80 @@
     </div>
 
     <section class="news-section mt-5">
-        <h2 class="news-section-title">Latest News & Deals</h2>
+        <h2 class="news-section-title">
+            <%= __('news_title') %>
+        </h2>
+
         <div class="news-item">
-            <div class="news-title">🚗 20% Off on Oil Changes This Month!</div>
+            <div class="news-title">🚗 <%= __('news_oil_discount_title') %>
+            </div>
             <hr class="bg-dark">
             <div class="news-details">
-                Take advantage of our special offer and get 20% off all oil change services until the end of the month.
-                Book now to secure your spot!
+                <%= __('news_oil_discount_details') %>
             </div>
         </div>
+
         <div class="news-item"><br>
-            <div class="news-title">📅 New Online Booking Feature!</div>
+            <div class="news-title">📅 <%= __('news_online_booking_title') %>
+            </div>
             <hr class="bg-dark">
             <div class="news-details">
-                We’ve launched our new online booking system! You can now select available times from our calendar to
-                schedule your car repairs.
+                <%= __('news_online_booking_details') %>
             </div>
         </div>
+
         <div class="news-item"><br>
-            <div class="news-title">🔧 New service location</div>
+            <div class="news-title">🔧 <%= __('news_new_location_title') %>
+            </div>
             <hr class="bg-dark">
             <div class="news-details">
-                Check out our new location at Odre "Strautnieki" to get your car serviced by our expert team!
+                <%= __('news_new_location_details') %>
             </div>
         </div>
     </section>
-
-
 
     <section class="how-we-work-section mt-5">
-        <h2 class="work-section-title ">How We Work with Our Clients</h2>
+        <h2 class="work-section-title">
+            <%= __('how_we_work_title') %>
+        </h2>
+
         <div class="work-item">
-            <div class="work-title text-white">🌐 Online Appointments</div>
+            <div class="work-title text-white">🌐 <%= __('work_online_appointments_title') %>
+            </div>
             <hr class="bg-dark">
             <div class="work-details">
-                Scheduling your car repair has never been easier! Use our online booking system to select a time that
-                works best for you. Simply pick a service, choose a time slot, and confirm your appointment. You’ll
-                receive a confirmation email with all the details, making the process hassle-free.
+                <%= __('work_online_appointments_details') %>
             </div>
         </div>
+
         <div class="work-item"><br>
-            <div class="work-title text-white ">📞 Call to Schedule</div>
+            <div class="work-title text-white">📞 <%= __('work_call_to_schedule_title') %>
+            </div>
             <hr class="bg-dark">
             <div class="work-details">
-                Prefer the personal touch? No problem! Give us a call, and our friendly staff will assist you in
-                scheduling your appointment. We’ll help you find the most convenient time and answer any questions about
-                our services and process.
+                <%= __('work_call_to_schedule_details') %>
             </div>
         </div>
+
         <div class="work-item"><br>
-            <div class="work-title text-white">📅 Notifications & Reminders</div>
+            <div class="work-title text-white">📅 <%= __('work_notifications_title') %>
+            </div>
             <hr class="bg-dark">
             <div class="work-details">
-                We ensure you never miss an appointment by sending timely notifications based on your preferences. When
-                you book an appointment, you can choose to receive reminders:
-                <ul>
-                    <li><strong>1 day before:</strong> Perfect for planning your schedule in advance.</li>
-                    <li><strong>1 hour before:</strong> Ideal for last-minute preparation.</li>
-                    <li><strong>Both:</strong> Stay extra prepared with reminders on both occasions.</li>
-                </ul>
-                Notifications are sent via email to ensure you're always in the loop.
+                <%= __('work_notifications_details') %>
             </div>
         </div>
+
         <div class="work-item"><br>
-            <div class="work-title text-white">⏱ Arrival & Waiting Options</div>
+            <div class="work-title text-white">⏱ <%= __('work_arrival_options_title') %>
+            </div>
             <hr class="bg-dark">
             <div class="work-details">
-                To ensure a smooth experience, we recommend arriving at our service location <strong>10 minutes before
-                    your scheduled appointment time.</strong> This helps us verify your details and prepare for the
-                service without delays.
-                <br><br>
-                Depending on the duration of your appointment, you can choose from the following options:
-                <ul>
-                    <li><strong>Short appointments:</strong> Relax in our comfortable waiting area with free Wi-Fi and
-                        refreshments while we service your car.</li>
-                    <li><strong>Longer appointments:</strong> Feel free to leave your car with us. We’ll notify you as
-                        soon as the service is completed, so you can pick it up at your convenience.</li>
-                </ul>
+                <%= __('work_arrival_options_details') %>
             </div>
         </div>
     </section>
+
 
 
     <section class="work-hours-section mt-5">
@@ -301,55 +303,75 @@
 
 
     </div>
-    <h1 class="mt-5 text-center text-white">Frequently Asked Questions</h1>
-    <div class="faq-container mt-3 col-lg-5 ">
-        <div class="faq-item ">
-            <p class="faq-question">What is this system for?<span class="arrow">&#9660;</span></p>
-            <div class="divider nodisplay"></div>
-            <p class="faq-answer">The Car Repair Shop System is designed to manage repair shop operations, making
-                processes more efficient for both employees and customers. It includes user registration, scheduling
-                repairs, sending reminders, and more.</p>
-        </div>
+    <h1 class="mt-5 text-center text-white">
+        <%= __('faq_title') %>
+    </h1>
+    <div class="faq-container mt-3 col-lg-5">
         <div class="faq-item">
-            <p class="faq-question">What features are available to registered users?<span class="arrow">&#9660;</span>
+            <p class="faq-question">
+                <%= __('faq_system_question') %><span class="arrow">&#9660;</span>
             </p>
             <div class="divider nodisplay"></div>
-            <p class="faq-answer">Registered users have access to exclusive features such as a price calculator, a
-                calendar for scheduling repairs, reminders for maintenance and discounts, and the ability to view active
-                repairs.</p>
+            <p class="faq-answer">
+                <%= __('faq_system_answer') %>
+            </p>
         </div>
         <div class="faq-item">
-            <p class="faq-question">How can I schedule a repair?<span class="arrow">&#9660;</span></p>
+            <p class="faq-question">
+                <%= __('faq_features_users_question') %><span class="arrow">&#9660;</span>
+            </p>
             <div class="divider nodisplay"></div>
-            <p class="faq-answer">Customers can select available time slots from the calendar to schedule their car
-                repairs. These slots are visible to registered users through the system.</p>
+            <p class="faq-answer">
+                <%= __('faq_features_users_answer') %>
+            </p>
         </div>
         <div class="faq-item">
-            <p class="faq-question">What features are available for employees?<span class="arrow">&#9660;</span></p>
+            <p class="faq-question">
+                <%= __('faq_schedule_repair_question') %><span class="arrow">&#9660;</span>
+            </p>
             <div class="divider nodisplay"></div>
-            <p class="faq-answer">Employees can use the system to organize and track repair tasks, ensuring efficient
-                workflow and better customer service.</p>
+            <p class="faq-answer">
+                <%= __('faq_schedule_repair_answer') %>
+            </p>
         </div>
         <div class="faq-item">
-            <p class="faq-question">What administrative tools are available?<span class="arrow">&#9660;</span></p>
+            <p class="faq-question">
+                <%= __('faq_features_employees_question') %><span class="arrow">&#9660;</span>
+            </p>
             <div class="divider nodisplay"></div>
-            <p class="faq-answer">Administrators can manage the system by adding, editing, or deleting data as needed.
-                This includes managing user accounts, repairs, and schedules.</p>
+            <p class="faq-answer">
+                <%= __('faq_features_employees_answer') %>
+            </p>
         </div>
         <div class="faq-item">
-            <p class="faq-question">How does this system save time?<span class="arrow">&#9660;</span></p>
+            <p class="faq-question">
+                <%= __('faq_admin_tools_question') %><span class="arrow">&#9660;</span>
+            </p>
             <div class="divider nodisplay"></div>
-            <p class="faq-answer">The system streamlines processes such as scheduling, reminders, and task management,
-                reducing manual work for employees and providing transparency for customers.</p>
+            <p class="faq-answer">
+                <%= __('faq_admin_tools_answer') %>
+            </p>
         </div>
         <div class="faq-item">
-            <p class="faq-question">Can I receive notifications for repairs or discounts?<span
-                    class="arrow">&#9660;</span></p>
+            <p class="faq-question">
+                <%= __('faq_time_saving_question') %><span class="arrow">&#9660;</span>
+            </p>
             <div class="divider nodisplay"></div>
-            <p class="faq-answer">Yes, registered users will receive reminders about scheduled repairs, oil changes, and
-                notifications about special deals or discounts.</p>
+            <p class="faq-answer">
+                <%= __('faq_time_saving_answer') %>
+            </p>
+        </div>
+        <div class="faq-item">
+            <p class="faq-question">
+                <%= __('faq_notifications_question') %><span class="arrow">&#9660;</span>
+            </p>
+            <div class="divider nodisplay"></div>
+            <p class="faq-answer">
+                <%= __('faq_notifications_answer') %>
+            </p>
         </div>
     </div>
+
     <div class="footer mt-5">
         <div class="container">
             <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>

@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
     // Set the initial flag
     setFlag(window.currentLanguage, currentLanguageFlag);
+
     // Loop through language links and add event listeners
     languageLinks.forEach(link => {
       link.addEventListener('click', function (event) {
@@ -341,14 +342,10 @@ document.addEventListener("DOMContentLoaded", function () {
       t--;
       return -c / 2 * (t * (t - 2) - 1) + b;
     }
-  
     requestAnimationFrame(animation);
   }
   
-  // Functions for viewing different account info (VIEW USERS)
-  
-  
-  
+  // Functions for viewing different account info (VIEW USERS)  
   
   // Functions for statistics (VIEW STATISTICS)
   

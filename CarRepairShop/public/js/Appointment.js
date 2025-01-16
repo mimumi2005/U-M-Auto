@@ -1,5 +1,28 @@
 
 document.addEventListener('DOMContentLoaded', function () {
+// Show or hide the brand warning
+document.getElementById('carModel').addEventListener('mouseenter', function () {
+    const carBrandWarning = document.getElementById('carBrandWarning');
+    if (document.getElementById('carBrand').value === '') {
+        carBrandWarning.classList.remove('hidden-visibility');
+        carBrandWarning.classList.add('visible-visibility');
+    } else {
+        carBrandWarning.classList.remove('visible-visibility');
+        carBrandWarning.classList.add('hidden-visibility');
+    }
+});
+
+// Show or hide the model warning
+document.getElementById('carYear').addEventListener('mouseenter', function () {
+    const carModelWarning = document.getElementById('carModelWarning');
+    if (document.getElementById('carModel').value === '') {
+        carModelWarning.classList.remove('hidden-visibility');
+        carModelWarning.classList.add('visible-visibility');
+    } else {
+        carModelWarning.classList.remove('visible-visibility');
+        carModelWarning.classList.add('hidden-visibility');
+    }
+});
     let selectedDateTime = null; // Variable to store the selected datetime
     let selectedDate = null; // Variable to store the selected date
     let user = null;
@@ -15,11 +38,97 @@ document.addEventListener('DOMContentLoaded', function () {
         changeTimeContainer(new Array(9).fill(false));
     });
 
+    const carBrandSelect = document.getElementById('carBrand');
+    const carModelSelect = document.getElementById('carModel');
+    const carYearSelect = document.getElementById('carYear');
+
+    // Function to fetch car brands
+    async function fetchCarBrands() {
+        const popularBrandsSet = new Set([
+            "Toyota",
+            "Honda",
+            "Ford",
+            "Chevrolet",
+            "Mercedes-Benz",
+            "BMW",
+            "Audi",
+            "Volkswagen",
+            "Nissan",
+            "Hyundai",
+            "Kia",
+            "Lexus",
+            "Mazda",
+            "Subaru",
+            "Jeep"
+        ].map(brand => brand.toLowerCase())); // Normalize the set to lowercase
+
+        try {
+            const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json');
+            const data = await response.json();
+
+            data.Results.forEach(brand => {
+                const normalizedMakeName = brand.Make_Name.trim().toLowerCase(); // Normalize API result
+                if (popularBrandsSet.has(normalizedMakeName)) {
+                    const option = document.createElement('option');
+                    option.value = brand.Make_Name;
+                    option.textContent = brand.Make_Name;
+                    carBrandSelect.appendChild(option);
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching car brands:', error);
+        }
+    }
+
+    // Fetch car models based on selected brand
+    async function fetchCarModels(brand) {
+        try {
+            const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${brand}?format=json`);
+            const data = await response.json();
+            carModelSelect.innerHTML = '<option value="" disabled selected>Choose a model</option>';
+            data.Results.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.Model_Name;
+                option.textContent = model.Model_Name;
+                carModelSelect.appendChild(option);
+            });
+            carModelSelect.disabled = false;
+        } catch (error) {
+            console.error('Error fetching car models:', error);
+        }
+    }
+
+    // Populate years (static range)
+    function populateYears() {
+        const currentYear = new Date().getFullYear();
+        for (let year = currentYear; year >= 1990; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            carYearSelect.appendChild(option);
+        }
+        carYearSelect.disabled = false;
+    }
+
+    // Event Listeners
+    carBrandSelect.addEventListener('change', function () {
+        fetchCarModels(this.value);
+        carModelSelect.disabled = true;
+        carYearSelect.disabled = true;
+        carYearSelect.innerHTML = '<option value="" disabled selected>Choose a year</option>';
+    });
+
+    carModelSelect.addEventListener('change', populateYears);
+
+    // Initial fetch for car brands
+    fetchCarBrands();
+
+
     document.getElementById('appointmentForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent default form submission
         // Retrieve form data
-        const additionalInfo = document.getElementById('additionalInfo').value;
-        
+        const additionalInfo = getAdditionalInfo();
+
         // Fetch user information from the server
         fetch(`/auth/userID/${UUID}`, {
             method: 'GET',
@@ -95,18 +204,18 @@ document.addEventListener('DOMContentLoaded', function () {
     function generateTimeButtons(hours, FreeHoursArray, repairtype) {
         const RepairType = repairtype;
         const FreeHours = FreeHoursArray;
-    
+
         // Check if all values in FreeHours are false
         const allHoursTaken = FreeHours.every(hour => !hour); // True if all are false
-    
+
         // Create a document fragment to hold the buttons
         const buttonContainer = document.createDocumentFragment();
-    
+
         if (allHoursTaken) {
             // Return an empty document fragment if all hours are taken
             return buttonContainer; // Returning an empty fragment instead of an empty string
         }
-    
+
         hours.forEach((hour) => {
             const hourIndex = hour - 9; // Calculate index in FreeHoursArray
             if (FreeHours[hourIndex]) { // Check if hour is available
@@ -114,19 +223,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.type = 'button';
                 button.className = 'btn-sm btn-outline-light time-button mb-1';
                 button.id = hour;
-    
+
                 // Set the button text based on the repair type
                 if (RepairType === "long") {
                     button.textContent = `${hour}:00-${hour + 4}:00`;
                 } else {
                     button.textContent = `${hour}:00-${hour + 1}:00`;
                 }
-    
+
                 // Attach event listener to handle time selection
                 button.addEventListener('click', function () {
                     selectTime(hour); // Ensure selectTime is defined
                 });
-    
+
                 // Append button to the container
                 buttonContainer.appendChild(button);
             } else {
@@ -134,55 +243,56 @@ document.addEventListener('DOMContentLoaded', function () {
                 const disabledButton = document.createElement('button');
                 disabledButton.type = 'button';
                 disabledButton.className = 'btn-sm disabled btn-outline-dark mb-1';
-    
+
                 if (RepairType === "long") {
                     disabledButton.textContent = `${hour}:00-${hour + 4}:00`;
                 } else {
                     disabledButton.textContent = `${hour}:00-${hour + 1}:00`;
                 }
-    
+
                 // Append disabled button to the container
                 buttonContainer.appendChild(disabledButton);
             }
         });
-    
+
         return buttonContainer; // Return the document fragment
     }
-    
-
-
 
     function changeTimeContainer(Array) {
         GetCalendarInfo();
         let FreeHours = Array;
         const repairType = document.getElementById('repairType').value;
-    
+        console.log(repairType);
         // Clear the previous content
         const timeContainer = document.getElementById('time-container');
         timeContainer.innerHTML = ''; // Clear previous content
         // Create a label for the time selection
         const label = document.createElement('label');
-        if (FreeHours.some(hour => hour)) {
+        if (repairType == 0) {
+            label.className = 'mt-2 mb-4 text-danger';
+            label.textContent = 'Choose an appointment type first';
+        }
+        else if (FreeHours.some(hour => hour)) {
             label.className = 'mt-2';
             label.textContent = 'Choose Appointment Time';
         }
-        else{
-            label.className = 'mt-2 mb-5';
-            label.textContent = 'Choose a day first';
+        else {
+            label.className = 'mt-2 mb-4 text-danger';
+            label.textContent = 'Choose a date first';
         }
         // Create a div to hold the time buttons
         const timeContainerDiv = document.createElement('div');
         timeContainerDiv.className = 'time-container text-white';
-        
+
         const rowDiv = document.createElement('div');
         rowDiv.className = 'row';
-    
+
         const colDiv = document.createElement('div');
         colDiv.className = 'col-12';
-    
+
         const mAutoDiv = document.createElement('div');
         mAutoDiv.className = 'm-auto';
-    
+
         // Generate the buttons based on repair type and append them
         switch (repairType) {
             case '1':
@@ -198,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Handle default case if needed
                 break;
         }
-    
+
         // Append all elements to the main container
         colDiv.appendChild(mAutoDiv);
         rowDiv.appendChild(colDiv);
@@ -206,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function () {
         timeContainer.appendChild(label);
         timeContainer.appendChild(timeContainerDiv);
     }
-    
+
 
     /* Scripts for calendar */
     const daysOfWeekElement = document.getElementById('daysOfWeek');
@@ -219,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to check if a day is full based on date ranges
     function GetCalendarInfo() {
         const Month = currentDate.getMonth() + 1;
-        const Year =  currentDate.getFullYear();
+        const Year = currentDate.getFullYear();
         fetch(`/user/all-project-dates/${Month}/${Year}`)
             .then(response => response.json())
             .then(data => {
@@ -234,10 +344,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Determine available hours in the day
     function getAvailableHourlySlots(dayOfMonth, takenDateTimes) {
         // Define working hours
-        const WORK_DAY_START =  new Date(currentDate.getFullYear(), currentDate.getMonth());
+        const WORK_DAY_START = new Date(currentDate.getFullYear(), currentDate.getMonth());
         WORK_DAY_START.setDate(dayOfMonth);
         WORK_DAY_START.setHours(9, 0, 0, 0); // 9 AM
-        const WORK_DAY_END =  new Date(currentDate.getFullYear(), currentDate.getMonth());
+        const WORK_DAY_END = new Date(currentDate.getFullYear(), currentDate.getMonth());
         WORK_DAY_END.setDate(dayOfMonth);
         WORK_DAY_END.setHours(18, 0, 0, 0); // 6 PM
 
@@ -518,7 +628,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    
+
 
     /* Scripts for showing time choosing options */
     function selectTime(hour) {
@@ -544,22 +654,36 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add the selected time paragraph to the timeContainer
         timeContainer.insertAdjacentHTML('beforeend', selectedTimeHTML);
     }
-
-
-
+    function getAdditionalInfo() {
+        const carBrand = document.getElementById('carBrand').value || 'No brand selected';
+        const carModel = document.getElementById('carModel').value || 'No model selected';
+        const carYear = document.getElementById('carYear').value || 'No year selected';
+        const additionalInfo = document.getElementById('additionalInfo').value || 'No additional info provided';
+    
+        // Combine all the information
+        const combinedInfo = `
+            Car info:
+            Car Brand- ${carBrand}
+            Car Model- ${carModel}
+            Car Year- ${carYear}
+            Additional Info- ${additionalInfo}
+        `.trim();
+    
+        return combinedInfo;
+    }
 
     prevMonthButton.addEventListener('click', (event) => {
         event.preventDefault();
         currentDate.setMonth(currentDate.getMonth() - 1);
         GetCalendarInfo(); // Fetch the calendar info for the new month
     });
-    
+
     nextMonthButton.addEventListener('click', (event) => {
         event.preventDefault();
         currentDate.setMonth(currentDate.getMonth() + 1);
         GetCalendarInfo(); // Fetch the calendar info for the new month
     });
-    
+
 
     document.addEventListener("DOMContentLoaded", function () {
         const repairTypeSelect = document.getElementById("repairType");

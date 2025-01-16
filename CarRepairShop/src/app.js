@@ -54,7 +54,7 @@ app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'", "https://maps.googleapis.com","carrepairshop.com", "file:"],
     frameSrc: ["'self'", "https://www.google.com","carrepairshop.com", "https://www.gstatic.com"], // Added 'self' for frames
-    connectSrc: ["'self'","carrepairshop.com", "https://maps.googleapis.com"],
+    connectSrc: ["'self'","carrepairshop.com", "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov"],
     imgSrc: [
       "'self'",
       "carrepairshop.com",
@@ -83,6 +83,7 @@ app.use(helmet.contentSecurityPolicy({
       (req, res) => `'nonce-${res.locals.nonce}'`,
       // Allow external stylesheets if necessary
       "https://fonts.googleapis.com/css",
+      "https://fonts.googleapis.com/css2",
       "carrepairshop.com",
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css",
@@ -100,11 +101,11 @@ app.use(helmet.contentSecurityPolicy({
 app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the public folder outside src
 
 
-// Create HTTPS server
-const options = {
-  key: fs.readFileSync(path.join(__dirname, '../certs/server.key')),
-  cert: fs.readFileSync(path.join(__dirname, '../certs/carrepairshop.com.crt'))
-};
+// // Create HTTPS server
+// const options = {
+//   key: fs.readFileSync(path.join(__dirname, '../certs/server.key')),
+//   cert: fs.readFileSync(path.join(__dirname, '../certs/carrepairshop.com.crt'))
+// };
 
 
 // For https when converting 
@@ -202,9 +203,9 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-https.createServer(options, app).listen(process.env.HTTPS_PORT, () => {
-  console.log(`HTTPS server running on port ${process.env.HTTPS_PORT}`);
-});
+// https.createServer(options, app).listen(process.env.HTTPS_PORT, () => {
+//   console.log(`HTTPS server running on port ${process.env.HTTPS_PORT}`);
+// });
 
 
 app.use(bodyParser.json());

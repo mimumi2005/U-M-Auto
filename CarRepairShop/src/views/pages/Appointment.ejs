@@ -1,22 +1,42 @@
-
 <body>
     <div id="customAppointmentAlert" class="custom-alert nodisplay">
-        <h2><%= __('Appointment registered successfully') %></h2>
+        <h2>
+            <%= __('Appointment registered successfully') %>
+        </h2>
     </div>
-    <div class="container">
-        <div class="row justify-content-center text-white mt-2">
-            <div class="col-md-6 bg-light p-4 rounded">
-                <h2 class="text-center mb-0"><%= __('Appointment Booking') %></h2>
-                <form id="appointmentForm">
-                    <div class="form-group mb-1">
+    <div class="container bg-light mt-3 ">
+        <form id="appointmentForm">
+            <h2 class="text-center text-white p-3">
+                <%= __('Appointment Booking') %>
+            </h2>
+            <div class="row text-white">
+
+                <!-- Left Section -->
+                <div class="col-md-6 px-4 rounded">
+                    <h4 class="text-center text-white ">
+                        <%= __('Appointment Booking Type and Date') %>
+                    </h4>
+                    <div class="form-group px-5">
                         <label for="repairType"></label>
                         <select class="form-control form-control-select" id="repairType" name="repairType" required>
-                            <option disabled selected value="0"><%= __('Choose an appointment type') %></option>
-                            <option tabindex="1" value="1"><%= __('Oil change') %></option>
-                            <option tabindex="2" value="120"><%= __('Paint job') %></option>
-                            <option tabindex="3" value="4"><%= __('Overall checkup or tuning') %></option>
-                            <option tabindex="4" value="4"><%= __('Custom parts') %></option>
-                            <option tabindex="5" value="1"><%= __('Project discussion') %></option>
+                            <option disabled selected value="0">
+                                <%= __('Choose an appointment type') %>
+                            </option>
+                            <option tabindex="1" value="1">
+                                <%= __('Oil change') %>
+                            </option>
+                            <option tabindex="2" value="120">
+                                <%= __('Paint job') %>
+                            </option>
+                            <option tabindex="3" value="4">
+                                <%= __('Overall checkup or tuning') %>
+                            </option>
+                            <option tabindex="4" value="4">
+                                <%= __('Custom parts') %>
+                            </option>
+                            <option tabindex="5" value="1">
+                                <%= __('Project discussion') %>
+                            </option>
                         </select>
                     </div>
                     <label for="repairType" class="text-white"></label>
@@ -44,32 +64,66 @@
                     <div class="selectable" id="time-container">
                         <!-- Choices for time will dynamically appear here-->
                     </div>
-                    <div class="form-group mt-2">
-                        <label class="form-label" for="additionalInfo"><%= __('Car info / Additional info') %></label>
-                        <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="2"
-                            placeholder="<%= __('Enter a vehicle description and any other information about the appointment') %>"
-                            maxlength="255" required></textarea>
+                </div>
+                <!-- Right Section -->
+                <div class="col-md-6 rounded">
+                    <h4 class="text-center text-white">
+                        <%= __('appointment_booking_car_details') %>
+                    </h4>
+
+                    <!-- Car Brand Selection -->
+                    <div class="form-group mt-4 p-2">
+                        <select class="form-control form-control-select" id="carBrand" name="carBrand" required>
+                            <option value="" disabled selected>
+                                <%= __('choose_brand') %>
+                            </option>
+                            <!-- Brands will be dynamically populated here -->
+                        </select>
                     </div>
-                    <div class="">
-                        <button type="submit" class="btn btn-outline-secondary"><%= __('Make Appointment') %></button>
+                    <!-- Car Model Selection -->
+                    <div class="form-group  p-2">
+                        <label class="form-label text-danger hidden-visibility" id="carBrandWarning">
+                            <%= __('select_brand_first') %>
+                        </label>
+                        <select class="form-control form-control-select" id="carModel" name="carModel" disabled
+                            required>
+                            <option value="" disabled selected>
+                                <%= __('choose_model') %>
+                            </option>
+                            <!-- Models will be dynamically populated here -->
+                        </select>
                     </div>
-                </form>
+
+                    <!-- Car Year Selection -->
+                    <div class="form-group p-2">
+                        <label class="form-label text-danger hidden-visibility" id="carModelWarning">
+                            <%= __('select_model_first') %>
+                        </label>
+                        <select class="form-control form-control-select" id="carYear" name="carYear" disabled required>
+                            <option value="" disabled selected>
+                                <%= __('choose_year') %>
+                            </option>
+                            <!-- Years will be dynamically populated here -->
+                        </select>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="form-group p-2">
+                        <label class="form-label" for="additionalInfo">
+                            <%= __('additional_info') %>
+                        </label>
+                        <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="3"
+                            placeholder="<%= __('additional_info_placeholder') %>"></textarea>
+                    </div>
+                </div>
+
             </div>
-        </div>
-    </div>
-    <div class="footer mt-5">
-        <div class="container">
-            <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
-            <p class="mb-2"><%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %></p>
-    
-            <!-- Language Switcher Links in Footer -->
-            <div class="language-switcher-footer">
-                <a href="/?lang=en" class="footer-link">🇬🇧  English</a> |
-                <a href="/?lang=lv" class="footer-link">🇱🇻  Latviešu valoda</a> |
-                <a href="/?lang=ru" class="footer-link">🇷🇺  Русский язык</a> |
-                <a href="/?lang=de" class="footer-link">🇩🇪  Deutsche Sprache</a>
+            <div class="text-center p-2">
+                <button type="submit" class="btn btn-lg btn-outline-secondary">
+                    <%= __('Make Appointment') %>
+                </button>
             </div>
-        </div>
+        </form>
     </div>
     <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
     <script src="/js/Appointment.js" nonce="<%= nonce %>"></script>
