@@ -1,95 +1,170 @@
+# Website for Car Repair Shop
 
+Creating a unique car repair shop website, where users can easily navigate through the information and functions we offer.
 
+---
 
-# Website for car repair shop
+## Table of Contents
+1. [All Pages](#all-pages)
+   - [Guest Pages](#guest-pages)
+   - [User Pages](#user-pages)
+   - [Admin/Worker Pages](#adminworker-pages)
+2. [How to Run the Project](#how-to-run-the-project)
+   - [Step 1: Install Necessary Technologies](#step-1-install-necessary-technologies)
+   - [Step 2: Set Up the Frontend](#step-2-set-up-the-frontend)
+   - [Step 3: Set Up the Database](#step-3-set-up-the-database)
+3. [Functionality](#functionality)
+4. [Used Technologies](#used-technologies)
+5. [🛠 Skills](#🛠-skills)
+6. [To Do](#to-do)
 
-Creating a unique car repair shop website, where users can neately move between information and functions that we offer.
+---
 
-# Home page
-![image](https://github.com/user-attachments/assets/c22de027-7ed9-42b3-9a4e-8a1a29de95a8)
+## All Pages
 
-# Price estimator page
-![image](https://github.com/user-attachments/assets/5f9b21fa-87fd-4c00-bcbb-e1c13840bdaf)
+### Guest Pages
+These pages are accessible without logging in:
 
+#### Home Page
+The landing page of the website, providing quick navigation to all features.
+![image](https://github.com/user-attachments/assets/9a9e9811-f252-4ee2-a9b2-5e71c0ac6413)
 
-# Booking appointments page
-![image](https://github.com/user-attachments/assets/ad9176f4-797a-49dd-a322-6149601589c5)
+---
 
-# Admin pannel
-![image](https://github.com/user-attachments/assets/47b1e5d6-9713-4a3e-a3c3-f09c7fd3d50a)
+#### Services Page
+Showcases all services offered by the shop in a user-friendly format.
+![image](https://github.com/user-attachments/assets/0be05c93-d850-46d7-8b43-e22cfb807261)
 
+---
 
-How to run the project:
-- 
-```
-1. Download all the neccesary technoligies:
-    1. MySQL 8.0 database;
-    2. Visual studio code or other IDE;
-    3. Node.js
-    (Might need to run Powershell as admin and run "Set-ExecutionPolicy RemoteSigned")
-```
-```
-2. Download the repository as zip;
+#### About Us Page
+Information about the shop, its mission, and the team behind it.
+![image](https://github.com/user-attachments/assets/deb980ef-f741-4640-83dd-b555c9b5bfd1)
 
-3. Uzip the folder;
+---
 
-4. Run the folder with visual studio code or other IDE;
+### User Pages
+These pages are available to logged-in users:
 
-```
-That finishes the frontend setup, now you need to set up the database.
-```
-5. To start with the database, run MySQL workbench;
+#### Price Estimator Page
+An interactive tool allowing users to estimate costs for specific services.
+![image](https://github.com/user-attachments/assets/d5861662-b093-445e-863f-eae44fe83beb)
 
-6. Run your local instance of MySQL and check the username and password you have for it;
+---
 
-7. Create a database scheme named "carrepairshop", or change the .env database name to an exsisting one;
+#### Booking Appointments Page
+A seamless way for customers to book appointments online.
+![image](https://github.com/user-attachments/assets/0c395648-0266-49cb-9f04-886c90e75357)
 
-8. Go back to visual studio code, or other and open .env  (its in ./Correctly_structured_project folder)
-find where it says password: "root", and change "root" to your instance password
-leave empty if you dont have a paswword for it;
+---
 
-9. Open terminal in the IDE and run the command "npx knex migrate:latest --knexfile ./knexfile.cjs" and then "npx knex seed:run --knexfile ./knexfile.cjs" to generate the database data;
-12. Then open a terminal in visual studio code, write 'cd ./correctly_structured_project/src' and then 'node app.js'
-````
-Now go back to the web page and the database should be up and running at localhost.
+#### Own Appointments Page
+A page for logged-in users to manage their scheduled appointments.
+![image](https://github.com/user-attachments/assets/051e8bce-3994-485a-9d40-04ceec9ffb80)
 
-  
-# Functionality 
-Instant functions will include:
-- 
-- Services page that neately displays all offered services;
-- Map location;
-- Log-in and Sign-up.
-  
-Functions unlocked on Log-in include:
-- 
-   - Online price estimator with integrated layout of a car, for users to select parts required to be painted;
-   - Unique offers for customers using the information from the Sign-up, users can choose to recieve these unique offers and reminders of things like oil change;
-   - Ability to view account info and change password if needed within a seperate page.
-  
-Functions for admin:
--
-  - Ability to view all users (All, all active and view users by ID or Username);
-  - View projects (All, all delayed and view projects by ID or User);
-  - While viewing users ability to delete them, view projects associated with them or view similar users in case of botting;
-  - While viewing projects ability to change end date, view user associated with the project and view delayed projects.
+---
 
-## Used technoligies
+#### Profile Page
+Manage account details and update personal information securely.
+![image](https://github.com/user-attachments/assets/07bb9f94-b860-43d2-b32f-115ce18f8d29)
 
-- MySQL 8.0 database
-- NodeJS, Express
-- HTML/NodeJS/EJS
-- Bootstrap
+---
 
+#### Notification Settings Page
+Allows users to customize their notification preferences for reminders and special deals.
+![image](https://github.com/user-attachments/assets/db1ea554-5411-431e-b1f3-a7bf46a0cf86)
+
+---
+
+### Admin/Worker Pages
+These pages are restricted to workers and administrators:
+
+#### Worker Page
+Dedicated to workers for managing and viewing repair tasks.
+![image](https://github.com/user-attachments/assets/f5464da9-e2a4-46c4-8438-e95d3d2a0ea9)
+
+---
+
+#### Admin Panel
+Provides administrators with tools to manage users and projects.
+![image](https://github.com/user-attachments/assets/23224693-b8db-4b0d-8911-862b2ac87389)
+
+---
+
+#### Statistics Page
+Displays detailed performance and usage statistics for administrators.
+![image](https://github.com/user-attachments/assets/787ed149-3147-4b58-b624-61c2300dbbdf)
+
+---
+
+## How to Run the Project
+
+### Step 1: Install Necessary Technologies
+1. Download and install the following:
+   - **MySQL 8.0** database.
+   - **Visual Studio Code** (or another IDE).
+   - **Node.js**.
+
+   *Tip*: You may need to run PowerShell as admin and execute `Set-ExecutionPolicy RemoteSigned`.
+
+---
+
+### Step 2: Set Up the Frontend
+1. Download the repository as a ZIP file.
+2. Unzip the folder.
+3. Open the folder with Visual Studio Code (or another IDE).
+
+---
+
+### Step 3: Set Up the Database
+1. Open **MySQL Workbench**.
+2. Run your local MySQL instance and check your username and password.
+3. Create a database schema named `carrepairshop`, or update the `.env` file with an existing database name.
+4. Update `.env` file (in `./Correctly_structured_project`) with your MySQL username and password.
+5. Open the terminal in your IDE (under `./CarRepairShop/src`) and run:
+```npx knex migrate:latest --knexfile ./knexfile.cjs```
+and then ``` npx knex seed:run --knexfile ./knexfile.cjs```;
+7. Then, finally run `node app.js`;
+8. Visit `localhost` in your browser to start the website.
+
+---
+
+## Functionality
+
+### Instant Functions
+- Services page neatly displays all offered services.
+- Map location and navigation.
+- Log-in and Sign-up functionality.
+
+### Functions Unlocked on Log-in
+- Online price estimator with an interactive car layout.
+- Unique offers and reminders for registered users.
+- Account management (update information, change password).
+
+### Functions for Admins
+- View all users and projects.
+- Manage users (delete, view projects, identify bots).
+- Update project deadlines and statuses.
+
+---
+
+## Used Technologies
+- **MySQL 8.0** database
+- **Node.js**, **Express.js**
+- **HTML**, **EJS**, **CSS**
+- **Bootstrap**
+
+---
 
 ## 🛠 Skills
-Javascript, HTML, CSS...
+JavaScript, HTML, CSS...
+
+---
 
 ## TO DO
-- [x] Give admins the ability to add workers and administrators;
-- [x] Make a worker page where workers can see project information;
-- [ ] Possibly add light mode;
-- [ ] If i can be bothered add password reset through email, with that also notifications for users, about deals, sales and other reminders;
-- [ ] Add notification settings in database (so we can easily see if the user is opted in or out of notifs and send email reminders, etc. to only opted in users instantly, with just a simple query)
-- [ ] Fix database and documentation
-
+- [x] Allow admins to add workers and administrators.
+- [x] Create a worker page for managing projects.
+- [ ] Add a light mode theme.
+- [ ] Implement password reset via email.
+- [ ] Add notification settings for email reminders.
+- [ ] Improve database structure and documentation.
