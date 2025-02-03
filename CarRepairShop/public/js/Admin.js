@@ -315,8 +315,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Define button sets based on status
                     const buttonConfigs = {
                         Pending: [
-                            { name: 'Start', class: 'btn-primary', action: 'In Progress' },
-                            { name: 'No arrival', class: 'btn-warning', action: 'No Arrival' },
+                            { name: 'Start', class: 'btn-success', action: 'In Progress' },
+                            { name: 'No arrival', class: 'btn-secondary', action: 'No Arrival' },
                             { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
                         ],
                         'In Progress': [

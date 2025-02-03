@@ -21,10 +21,14 @@ export const getLoginPage = (req, res) => {
     res.render('pages/login', { expiredMessage, nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Render the login page with the message
 };
 
-
 export const getSignUpPage = (req, res) => {
     const csrfTokenValue = req.csrfToken;
     res.render('pages/SignUp', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
+};
+
+export const getRecoverPage = (req, res) => {
+    const csrfTokenValue = req.csrfToken;
+    res.render('pages/RecoverPassword', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
 };
 
 export const getServicesPage = (req, res) => {

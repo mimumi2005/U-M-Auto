@@ -468,5 +468,10 @@
 	"additional_info": "Additional Information (Color, motor, cilinder information)",
 	"additional_info_placeholder": "Enter any additional information about your car or appointment.",
 	"car_repair_description": "Our car repair service ensures your vehicle gets the professional care it needs. Our expert technicians are trained to handle various vehicle types and models, ensuring that your car is back on the road in optimal condition. Whether it's engine issues, brake problems, or electrical faults, you can trust us to deliver exceptional service.",
-	"pricing_description": "We believe in transparent and competitive pricing to ensure you get the best value for your money. Our pricing structure is designed to be clear and straightforward, with no hidden costs. Using our online price estimator, you can get an accurate quote for your repair needs. Our goal is to make professional car repair affordable and accessible, without compromising on quality."
+	"pricing_description": "We believe in transparent and competitive pricing to ensure you get the best value for your money. Our pricing structure is designed to be clear and straightforward, with no hidden costs. Using our online price estimator, you can get an accurate quote for your repair needs. Our goal is to make professional car repair affordable and accessible, without compromising on quality.",
+	"Password reset link sent": "Password reset link sent",
+	"Reset Password": "Reset Password",
+	"Enter your email": "Enter your email",
+	"Invalid email address": "Invalid email address",
+	"Send Reset Link": "Send Reset Link"
 }

@@ -468,5 +468,10 @@
 	"additional_info": "Zusätzliche Informationen (Farbe, Motor, Zylinderinformationen)",
 	"additional_info_placeholder": "Geben Sie zusätzliche Informationen zu Ihrem Auto oder Termin ein.",
 	"car_repair_description": "Unser Autoreparaturservice sorgt dafür, dass Ihr Fahrzeug die professionelle Pflege erhält, die es benötigt. ",
-	"pricing_description": "Wir glauben an transparente und wettbewerbsfähige Preise, um sicherzustellen, dass Sie das beste Preis-Leistungs-Verhältnis erhalten. "
-  }
+	"pricing_description": "Wir glauben an transparente und wettbewerbsfähige Preise, um sicherzustellen, dass Sie das beste Preis-Leistungs-Verhältnis erhalten. ",
+	"Password reset link sent": "Password reset link sent",
+	"Reset Password": "Reset Password",
+	"Enter your email": "Enter your email",
+	"Invalid email address": "Invalid email address",
+	"Send Reset Link": "Send Reset Link"
+}

@@ -468,5 +468,10 @@
 	"additional_info": "Дополнительная информация (информация о цвете, двигателе, цилиндре)",
 	"additional_info_placeholder": "Введите любую дополнительную информацию о вашем автомобиле или встрече.",
 	"car_repair_description": "Наш автосервис гарантирует, что вашему автомобилю будет оказана профессиональная помощь. ",
-	"pricing_description": "Мы верим в прозрачное и конкурентоспособное ценообразование, чтобы гарантировать, что вы получите лучшее соотношение цены и качества. "
-  }
+	"pricing_description": "Мы верим в прозрачное и конкурентоспособное ценообразование, чтобы гарантировать, что вы получите лучшее соотношение цены и качества. ",
+	"Password reset link sent": "Password reset link sent",
+	"Reset Password": "Reset Password",
+	"Enter your email": "Enter your email",
+	"Invalid email address": "Invalid email address",
+	"Send Reset Link": "Send Reset Link"
+}

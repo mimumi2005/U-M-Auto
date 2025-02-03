@@ -468,5 +468,10 @@
 	"additional_info": "Papildinformācija (informācija par krāsu, motoru, cilindru)",
 	"additional_info_placeholder": "Ievadiet jebkādu papildu informāciju par savu automašīnu vai remontu.",
 	"car_repair_description": "Mūsu automašīnu remonta serviss nodrošina, ka jūsu automašīna saņems tai nepieciešamo profesionālu aprūpi. ",
-	"pricing_description": "Mēs ticam pārredzamām un konkurētspējīgām cenām, lai nodrošinātu, ka jūs saņemat vislabāko naudas vērtību. "
-  }
+	"pricing_description": "Mēs ticam pārredzamām un konkurētspējīgām cenām, lai nodrošinātu, ka jūs saņemat vislabāko naudas vērtību. ",
+	"Password reset link sent": "Password reset link sent",
+	"Reset Password": "Reset Password",
+	"Enter your email": "Enter your email",
+	"Invalid email address": "Invalid email address",
+	"Send Reset Link": "Send Reset Link"
+}
