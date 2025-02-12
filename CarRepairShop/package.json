@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "main": "database.js",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "scripts": 
+  {
+    "start": "node app.js",
+    "migrate": "npx knex migrate:latest --knexfile knexfile.cjs",
+    "seed": "npx knex seed:run --knexfile knexfile.cjs",
+    "setup": "npm install && npm run migrate && npm run seed"
   },
+
   "author": "",
   "license": "ISC",
   "dependencies": {
