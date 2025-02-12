@@ -1,59 +1,42 @@
 
+
 import express from "express";
-import session from 'express-session';
-import bodyParser from "body-parser";
+import session from "express-session";
 import cookieParser from "cookie-parser";
-
-import fs from "fs";
-import https from "https";	
-import { createRequire } from 'module';
-
-import i18n from 'i18n';
-
 import path from "path";
-import { fileURLToPath } from 'url';
-import expressLayouts from 'express-ejs-layouts';
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+import helmet from "helmet";
+import expressLayouts from "express-ejs-layouts";
+import i18n from "i18n";
 
 // Middleware
-import { cacheControlMiddleware } from './middleware/preventCaching.js';
-import { attachUser } from './middleware/attachUser.js';
-import { generateNonce } from './middleware/nonceGen.js'; // Adjust path if needed
+import { cacheControlMiddleware } from "./middleware/preventCaching.js";
+import { attachUser } from "./middleware/attachUser.js";
+import { generateNonce } from "./middleware/nonceGen.js";
 
-// import enforce from 'express-sslify'; // Import express-sslify, for HTTPS usage when converting
-import helmet from "helmet";
-import dotenv from "dotenv";
+// Database & Routes
+import connection from "./config/db.js";
+import routes from "./routes/index.js";
 
-
-import connection from './config/db.js';
-import routes from './routes/index.js';
-
-import './models/cronJob.js';
+import "./models/cronJob.js";
 
 // Replicating __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const app = express();
 
-
+// Security Middleware
 app.use(generateNonce);
+app.use(helmet({ hidePoweredBy: true }));
 
-app.use(helmet({ hidePoweredBy: true })); // Disable the X-Powered-By header
-
-
-// Middleware to prevent content sniffing
-app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  next();
-});
-
-// Ensure this is after your generateNonce middleware
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'", "https://maps.googleapis.com","carrepairshop.com", "file:"],
-    frameSrc: ["'self'", "https://www.google.com","carrepairshop.com", "https://www.gstatic.com"], // Added 'self' for frames
+    frameSrc: ["'self'", "https://www.google.com","carrepairshop.com", "https://www.gstatic.com"],
     connectSrc: ["'self'","carrepairshop.com", "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov"],
     imgSrc: [
       "'self'",
@@ -64,7 +47,7 @@ app.use(helmet.contentSecurityPolicy({
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/gb.svg",
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/lv.svg",
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/de.svg",
-      "data:" // Data URIs may still be needed for images
+      "data:"
     ],
     scriptSrc: [
       "'self'",
@@ -72,146 +55,95 @@ app.use(helmet.contentSecurityPolicy({
       "https://maps.googleapis.com",
       "https://www.gstatic.com",
       "https://www.google.com/recaptcha/api.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js", // Ensure this is the correct version
+      "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
-      // Allow inline scripts only with a nonce
       (req, res) => `'nonce-${res.locals.nonce}'`
     ],
     styleSrc: [
       "'self'",
-      // Allow inline styles only with a nonce
       (req, res) => `'nonce-${res.locals.nonce}'`,
-      // Allow external stylesheets if necessary
       "https://fonts.googleapis.com/css",
       "https://fonts.googleapis.com/css2",
       "carrepairshop.com",
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css", // If using Bootstrap styles
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css",
       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
     ],
-    fontSrc: ["'self'", "carrepairshop.com","https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"], // Include font sources if using web fonts
-    objectSrc: ["'none'"], // Disallow <object> and <embed> tags to minimize attack surface
-    mediaSrc: ["'self'"], // Allow only self for media (audio/video)
+    fontSrc: ["'self'", "carrepairshop.com","https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"],
+    objectSrc: ["'none'"],
+    mediaSrc: ["'self'"], 
   },
-  reportOnly: false, // Set to true if testing CSP violations
+  reportOnly: false,
 }));
 
 
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, '../public'))); // Pointing to the public folder outside src
+// Serve static files
+app.use(express.static(path.join(__dirname, "../public")));
 
-
-// // Create HTTPS server
-// const options = {
-//   key: fs.readFileSync(path.join(__dirname, '../certs/server.key')),
-//   cert: fs.readFileSync(path.join(__dirname, '../certs/carrepairshop.com.crt'))
-// };
-
-
-// For https when converting 
-// app.use(enforce.HTTPS({ trustProtoHeader: true }));
-// Session middleware setup
+// Session Configuration
 app.use(session({
-  secret: '072637e0cbb770e4e60efc963fbfbdc1a93da3efeb5945491257bae9db01b5c2718c87a1300934b07562a19a4418a4e3537324661c90f384b747f11237d25e5f', // Keep it secret
+  secret: process.env.SESSION_SECRET || "default_secret",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    httpOnly: true, // Prevent client-side access to the cookie
-    sameSite: 'lax', // Set SameSite attribute
-    secure: process.env.NODE_ENV === 'production', // Set to true in production
-    maxAge: 1 * 60 * 30 * 1000 // Session expires after 30 minutes
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 30 * 60 * 1000 // 30 minutes
   }
 }));
 
 // Initialize i18n
 i18n.configure({
-  locales: ['en', 'lv', 'de', 'ru'], // Define supported languages
-  directory: path.join(__dirname, 'locales'), // Define the directory for translation files
-  defaultLocale: 'en', // Default language
+  locales: ["en", "lv", "de", "ru"],
+  directory: path.join(__dirname, "locales"),
+  defaultLocale: "en",
   autoReload: true,
   syncFiles: true
 });
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(expressLayouts); // Tell Express to use Express Layouts
+// View Engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(expressLayouts);
 
-// Middleware to detect language change via URL query parameter
+// Language Middleware
 app.use((req, res, next) => {
   i18n.init(req, res);
-  const lang = req.query.lang || req.session.language || 'en';
-  req.session.language = lang; 
+  const lang = req.query.lang || req.session.language || "en";
+  req.session.language = lang;
   i18n.setLocale(req, lang);
-  
-  // Pass the current language to all views and layouts
-  res.locals.language = lang; // Now available as `language` in your layout
-  res.locals.__ = res.__; // Make the translation function available in views
-  
+
+  res.locals.language = lang;
+  res.locals.__ = res.__;
+
   next();
 });
 
-
-
-// Middleware for language redirection after switching
-app.get('*', (req, res, next) => {
+// Redirect for language changes
+app.get("*", (req, res, next) => {
   if (req.query.lang) {
-    res.redirect(req.originalUrl.split('?')[0]);
+    res.redirect(req.originalUrl.split("?")[0]);
   } else {
     next();
   }
 });
 
-
-
+// Middleware
 app.use(attachUser);
-
 app.use(cacheControlMiddleware);
-// Use the nonce middleware
-
-// Middleware to set appropriate Content-Type based on the route
-app.use((req, res, next) => {
-  // Example of setting Content-Type based on route
-  if (req.path.endsWith('.json')) {
-    res.setHeader('Content-Type', 'application/json');
-  } else if (req.path.endsWith('.html')) {
-    res.setHeader('Content-Type', 'text/html');
-  } else if (req.path.endsWith('.css')) {
-    res.setHeader('Content-Type', 'text/css');
-  } else if (req.path.endsWith('.js')) {
-    res.setHeader('Content-Type', 'application/javascript');
-  }
-  // Add more conditions as necessary
-  next();
-});
-
-
-
-
-// Middleware to parse JSON request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser());
 
-// Use your routes
-app.use('/', routes);
-
+// Routes
+app.use("/", routes);
 
 const PORT = process.env.PORT || 80;
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
-// https.createServer(options, app).listen(process.env.HTTPS_PORT, () => {
-//   console.log(`HTTPS server running on port ${process.env.HTTPS_PORT}`);
-// });
-
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
 
 // Saving session info
 app.get('/api/getUserSession', (req, res) => {
@@ -225,10 +157,6 @@ app.get('/api/getUserSession', (req, res) => {
     res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
   }
 });
-
-
-
-
 
 // Fetch all users
 app.get("/all-users", (req, res) => {
@@ -502,7 +430,6 @@ app.delete('/user-delete/:userID', async (req, res) => {
   }
 });
 
-
 app.delete('/project-delete/:ProjectID', async (req, res) => {
   const ProjectID = req.params.ProjectID;
   console.log(ProjectID);
@@ -517,7 +444,6 @@ app.delete('/project-delete/:ProjectID', async (req, res) => {
     res.status(200).json({ message: 'Project deleted successfully' });
   });
 });
-
 
 
 // Disconnect from the database
