@@ -67,10 +67,25 @@ export const getAllWorkerIds = (callback) => {
 
   export const getAllUsers = (callback) => {
     const sql_query = `
-      SELECT * FROM users`;
+      SELECT users.*, user_instance.idInstance, workers.idWorker, administrators.idAdmin
+      FROM users
+      JOIN user_instance ON users.idUser = user_instance.idUser
+      JOIN workers ON users.idUser = workers.idUser
+      JOIN administrators ON users.idUser = administrators.idUser`;
     // Execute the query
     connection.query(sql_query, callback);
   };
+
+  export const getAllProjects = (callback) => {
+    const sql_query =`SELECT projects.*, users.UserName, project_status.statusName
+    FROM projects
+    JOIN users ON projects.idUser = users.idUser
+    JOIN project_status ON projects.idStatus = project_status.idStatus
+  `;
+    // Execute the query
+    connection.query(sql_query, callback);
+  };
+
 
   // Model function to fetch active user instances
 export const getActiveInstances = (callback) => {

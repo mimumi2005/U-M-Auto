@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
-  
+
   const carouselElement = document.getElementById('servicesCarousel');
   const carouselInner = carouselElement.querySelector('.carousel-inner');
   const view = carouselInner.querySelector('.carousel-item');
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   nextButton.addEventListener('click', function (event) {
     event.preventDefault();
-    currentIndex = (currentIndex + 1) % (items.length - 3);
+    currentIndex = (currentIndex + 1) % (items.length - 2);
     updateCarousel();
   });
 
@@ -60,24 +60,18 @@ document.addEventListener('DOMContentLoaded', function () {
       currentIndex = index;
       updateCarousel();
     });
+
+    updateCarousel();
+
+    // Check for the 'sessionEnded' query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionEnded = urlParams.get('sessionEnded');
+    const unauthorizedAccess = urlParams.get('unauthorizedAccess')
+    if (sessionEnded) {
+      document.getElementById('session-message').classList.remove('nodisplay');
+    }
+    if (unauthorizedAccess) {
+      document.getElementById('unauthorizedAccess').classList.remove('nodisplay');
+    }
   });
-
-  updateCarousel();
-
-  // Check for the 'sessionEnded' query parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const sessionEnded = urlParams.get('sessionEnded');
-  const unauthorizedAccess = urlParams.get('unauthorizedAccess')
-  if (sessionEnded) {
-    document.getElementById('session-message').classList.remove('nodisplay');
-  }
-  if (unauthorizedAccess) {
-    document.getElementById('unauthorizedAccess').classList.remove('nodisplay');
-  }
-
-
 });
-
-
-
-

@@ -1,30 +1,91 @@
-
+let allUsers = [];
+let allProjects = [];
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Adding event listeners 
-    // Users Section
-    document.getElementById('findUserByID').addEventListener('click', findUserByID);
-    document.getElementById('findUserByEmail').addEventListener('click', findUserByEmail);
-    document.getElementById('viewActiveUsers').addEventListener('click', viewActiveUsers);
-    document.getElementById('viewAllUsers').addEventListener('click', viewAllUsers);
-    document.getElementById('viewAdmins').addEventListener('click', viewAdmins);
-    document.getElementById('viewWorkers').addEventListener('click', viewWorkers);
-    document.getElementById('addWorkerForm').addEventListener('click', addWorkerForm);
+    const userFilter = document.getElementById('userFilter');
+    const userSearchInput = document.getElementById('userSearchInput');
+    const projectFilter = document.getElementById('projectFilter');
+    const projectSearchInput = document.getElementById('projectSearchInput');
+    const projectDateInput = document.getElementById('projectDate');
+    const dateFilter = document.getElementById('dateFilter');
+    const searchByDate = document.getElementById('searchByDate');
 
-    // Projects Section
-    document.getElementById('findProjectByID').addEventListener('click', findProjectByID);
-    document.getElementById('viewDelayedProjects').addEventListener('click', viewDelayedProjects);
-    document.getElementById('viewActiveProjects').addEventListener('click', viewActiveProjects);
-    document.getElementById('viewFinishedProjects').addEventListener('click', viewFinishedProjects);
+    userFilter.addEventListener('change', filterAndSearchUsers);
+    userSearchInput.addEventListener('input', debounce(filterAndSearchUsers, 300));
+    projectFilter.addEventListener('change', filterAndSearchProjects);
+    projectSearchInput.addEventListener('input', debounce(filterAndSearchProjects, 300));
+    searchByDate.addEventListener('click', handleProjectDateFilter);
 
-    // Add event listener for the user ID input
-    document.getElementById('userIDInput').addEventListener('keypress', handleKeyPress);
+    function filterAndSearchUsers() {
+        let filtered = [...allUsers];
+        const filterVal = userFilter.value;
+        const search = userSearchInput.value.trim().toLowerCase();
 
-    // Add event listener for the user email input
-    document.getElementById('userEmailInput').addEventListener('keypress', handleEmailKeyPress);
+        if (filterVal === 'active') {
+            filtered = filtered.filter(u => u.idInstance != null);
+        } else if (filterVal === 'withProjects') {
+            filtered = filtered.filter(u => u.hasProjects);
+        } else if (filterVal === 'admins') {
+            filtered = filtered.filter(u => u.idAdmin == "true");
+        } else if (filterVal === 'workers') {
+            filtered = filtered.filter(u => u.isWorker == "true");
+        }
 
-    // Add event listener for the project ID input
-    document.getElementById('ProjectIDInput').addEventListener('keypress', handleProjectKeyPress);
+        if (search) {
+            filtered = filtered.filter(u =>
+                u.Email.toLowerCase().includes(search) ||
+                u.idUser.toString().includes(search) ||
+                u.Username.toString().includes(search)
+            );
+        }
+
+        displayUserData(filtered);
+    }
+
+    function filterAndSearchProjects() {
+        let filtered = [...allProjects];
+        const filterVal = projectFilter.value;
+        const search = projectSearchInput.value.trim().toLowerCase();
+
+        if (filterVal === 'delayed') {
+            filtered = filtered.filter(p => p.Delayed === 1);
+        } else if (filterVal === 'active') {
+            filtered = filtered.filter(p => p.statusName === 'In Progress');
+        } else if (filterVal === 'finished') {
+            filtered = filtered.filter(p => p.statusName === 'Completed');
+        }
+
+        if (search) {
+            filtered = filtered.filter(p =>
+                p.idProjects.toString().includes(search) ||
+                p.UserName.toLowerCase().includes(search) ||
+                p.ProjectInfo.toLowerCase().includes(search)
+            );
+        }
+
+        displayProjectData(filtered);
+    }
+
+    function handleProjectDateFilter() {
+        const date = projectDateInput.value;
+        const mode = dateFilter.value;
+        if (!date) return;
+
+        const filtered = allProjects.filter(p => {
+            const compareDate = new Date(mode === 'started' ? p.StartDate : p.EndDateProjection);
+            return compareDate.toISOString().split('T')[0] === date;
+        });
+
+        displayProjectData(filtered);
+    }
+
+    function debounce(fn, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
 
     // Change End Time Button
     document.getElementById('changeEndTimeButton').addEventListener('click', function () {
@@ -717,65 +778,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching user data:', error));
     }
 
-
-    // Function to show a singular account by account ID
-    function searchUserByEmail(email) {
-        document.getElementById('userEmailInput').value = '';
-        document.getElementById('InvalidEmail').classList.add('nodisplay');
-        console.log("Viewing user by email:", email);
-        // Make a fetch request to your backend to retrieve all user data
-        fetch(`/admin/user-by-email/${email}`)
-            .then(response => response.json())
-            .then(data => {
-                // Call a function to display the user data on the page
-                if (data[0]) {
-                    const title = document.getElementById('TitleHeader');
-                    const emailTitle = translate('Email');
-                    title.innerHTML = `${emailTitle}-${email}`;
-                    displayUserData(data);
-                }
-                else { document.getElementById('InvalidEmail').classList.remove('nodisplay'); }
-
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
-
-
-
-    // Function that shows all active projects
-    function viewActiveProjects() {
-        // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/active-projects')
-            .then(response => response.json())
-            .then(data => {
-                // Call a function to display the user data on the page
-                document.getElementById("inputNewEndDate").classList.add('nodisplay');
-                const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Active Projects");
-                displayProjectData(data);
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
-
-
-
-    // Function that shows all delayed projects
-    function viewDelayedProjects() {
-        // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/delayed-projects')
-            .then(response => response.json())
-            .then(data => {
-                // Call a function to display the user data on the page
-
-                document.getElementById("inputNewEndDate").classList.add('nodisplay');
-                const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Delayed Projects");
-                displayProjectData(data);
-
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
-
     // Function to show all Projects
     function viewFinishedProjects() {
         document.getElementById('inputNewEndDate').classList.add('nodisplay');
@@ -791,7 +793,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error('Error fetching user data:', error));
     }
-
 
     // Function that displays all projects that have been made by one person (ID)
     function searchProjectByUserID(idUser) {
@@ -814,8 +815,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching user data:', error));
 
     }
-
-
     // Function to show all admin accounts
     function viewAdmins() {
 
@@ -872,7 +871,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Function to show all users
-    function viewAllUsers() {
+    function fetchAllUsers() {
         console.log("Viewing users");
         // Make a fetch request to your backend to retrieve all user data
         fetch('/admin/all-users')
@@ -880,28 +879,26 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const title = document.getElementById('TitleHeader');
                 title.innerHTML = translate("All Users");
-                // Call a function to display the user data on the page
-                displayUserData(data);
+                allUsers = data;
+                filterAndSearchUsers();
             })
             .catch(error => console.error('Error fetching user data:', error));
     }
 
-    // Function to show all active users (currently online)
-    function viewActiveUsers() {
-        console.log("Viewing users");
+    // Function to show all users
+    function fetchAllProjects() {
+        console.log("Viewing projects");
         // Make a fetch request to your backend to retrieve all user data
-
-        fetch('/admin/active-users')
+        fetch('/admin/all-projects')
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Users currently logged in");
-                // Call a function to display the user data on the page
-                displayUserData(data);
+                title.innerHTML = translate("All Projects");
+                allProjects = data;
+                filterAndSearchProjects();
             })
             .catch(error => console.error('Error fetching user data:', error));
     }
-
 
     // Function that searches for similar users, to have a defense for botting
     function searchSimilarUsers(email) {
@@ -930,37 +927,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error searching similar users:', error));
 
     }
-
-
-
-
-    // Function to show a singular account by account ID
-    function searchUserByID(idUser) {
-        if (document.getElementById('userIDInput')) {
-            document.getElementById('userIDInput').value = '';
-        }
-        if (document.getElementById('InvalidID')) {
-            document.getElementById('InvalidID').classList.add('nodisplay');
-        }
-        console.log("Viewing user by ID:", idUser);
-        // Make a fetch request to your backend to retrieve all user data
-
-        fetch(`/admin/user-by-ID/${idUser}`)
-            .then(response => response.json())
-            .then(data => {
-                // Call a function to display the user data on the page
-                if (data[0]) {
-                    const title = document.getElementById('TitleHeader');
-                    const userTitle = translate('User');
-                    title.innerHTML = `${userTitle}-${data[0].idUser}`;
-                    displayUserData(data);
-                }
-                else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
-
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
-
     // HIGHER IMPORTANCE USER VIEW
 
     // Function to show all workers accounts
@@ -1019,51 +985,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("inputNewEndDate").classList.remove('nodisplay');
 
     }
-    //  Displaying search field for searching project by ID
-    function findProjectByID() {
-        document.getElementById("registrationForm").classList.add('nodisplay');
-        document.getElementById("inputNewEndDate").classList.add('nodisplay');
-        document.getElementById('InvalidProjectID').classList.add('nodisplay');
-        document.getElementById("searchUser").classList.add('nodisplay');
-        document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-        document.getElementById('userDataContainer').classList.add('nodisplay');
-        document.getElementById('workerDataContainer').classList.add('nodisplay');
-        document.getElementById('adminDataContainer').classList.add('nodisplay');
-        document.getElementById("searchUserByEmail").classList.add('nodisplay');
-        document.getElementById("searchProject").classList.remove('nodisplay');
-        const title = document.getElementById('TitleHeader');
-        title.innerHTML = translate("Search project by ID");
-    }
-    // Display input field for id
-    function findUserByID() {
-        document.getElementById("registrationForm").classList.add('nodisplay');
-        document.getElementById("inputNewEndDate").classList.add('nodisplay');
-        document.getElementById("searchProject").classList.add('nodisplay');
-        document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-        document.getElementById('userDataContainer').classList.add('nodisplay');
-        document.getElementById('workerDataContainer').classList.add('nodisplay');
-        document.getElementById('adminDataContainer').classList.add('nodisplay');
-        document.getElementById("searchUser").classList.remove('nodisplay');
-        document.getElementById("searchUserByEmail").classList.add('nodisplay');
-        const title = document.getElementById('TitleHeader');
-        title.innerHTML = translate("Search user by ID");
-    }
-
-    // Display input field for email
-    function findUserByEmail() {
-
-        document.getElementById("registrationForm").classList.add('nodisplay');
-        document.getElementById("inputNewEndDate").classList.add('nodisplay');
-        document.getElementById("searchProject").classList.add('nodisplay');
-        document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-        document.getElementById('userDataContainer').classList.add('nodisplay');
-        document.getElementById('workerDataContainer').classList.add('nodisplay');
-        document.getElementById('adminDataContainer').classList.add('nodisplay');
-        document.getElementById("searchUser").classList.add('nodisplay');
-        document.getElementById("searchUserByEmail").classList.remove('nodisplay');
-        const title = document.getElementById('TitleHeader');
-        title.innerHTML = translate("Search user by ID");
-    }
     // Display input field for adding a new worker
     function addWorkerForm() {
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
@@ -1079,9 +1000,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const title = document.getElementById('TitleHeader');
         title.innerHTML = translate("Adding a new worker");
     }
-
-
-    viewActiveProjects();
+    fetchAllProjects();
+    fetchAllUsers();
 });
 
 function translate(key) {

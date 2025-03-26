@@ -69,14 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // Setting language function
   function setLanguage(lang) {
-    // Update the current language in the session and reload the page
-    fetch(`/set-language?lang=${lang}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    window.location.reload(); // Reload the page to apply the new language
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', lang);
+    window.location.href = url.toString();
   }
   
   // Function to set the flag based on the current language

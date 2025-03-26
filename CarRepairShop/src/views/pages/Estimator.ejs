@@ -107,20 +107,23 @@
     </div>
     </div>
 
-    <div class="footer mt-5">
+    <div class="footer pt-5 mt-5">
         <div class="container">
             <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
-            <p class="mb-2"><%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %></p>
-    
+            <p class="mb-2">
+                <%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %>
+            </p>
+
             <!-- Language Switcher Links in Footer -->
             <div class="language-switcher-footer">
-                <a href="/?lang=en" class="footer-link">🇬🇧  English</a> |
-                <a href="/?lang=lv" class="footer-link">🇱🇻  Latviešu valoda</a> |
-                <a href="/?lang=ru" class="footer-link">🇷🇺  Русский язык</a> |
-                <a href="/?lang=de" class="footer-link">🇩🇪  Deutsche Sprache</a>
+                <a href="/?lang=en" class="footer-link"><span class="flag-icon flag-icon-gb"></span> English</a> |
+                <a href="/?lang=lv" class="footer-link"><span class="flag-icon flag-icon-lv"></span> Latviešu valoda</a>
+                |
+                <a href="/?lang=ru" class="footer-link"><span class="flag-icon flag-icon-ru"></span> Русский язык</a> |
+                <a href="/?lang=de" class="footer-link"><span class="flag-icon flag-icon-de"></span> Deutsche
+                    Sprache</a>
             </div>
         </div>
     </div>
-
     <script src="/js/Estimator.js" nonce="<%= nonce %>"></script>
 </body>

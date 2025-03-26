@@ -4,7 +4,7 @@
   }
   
   .footer {
-    background-color: #333;
+    background: linear-gradient(to bottom, #000, #535353);
     color: #fff;
     text-align: center;
     padding: 10px;
@@ -120,13 +120,6 @@
     justify-content: center;
     align-items: flex-end;
     height: 100px;
-  }
-  
-  .footer {
-    background-color: #000000;
-    /* Add a background color to the footer */
-    padding: 20px;
-    text-align: center;
   }
   
   .navbar-nav .nav-link:hover {
@@ -907,4 +900,42 @@
 }
 .visible-visibility {
   visibility: visible;
+}
+
+
+.service-list {
+  display: flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top: 20px;
+}
+
+.service-page-item {
+  flex:0 0 30%;
+  margin: 10px ;
+  padding: 20px;
+  background-color: #343a40;
+  border-radius: 5px;
+  text-align:center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.service-page-item:hover {
+  background-color: #495057;
+}
+
+.service-page-list a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.service-page-list a:hover {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.service-page-list i {
+  font-size: 2rem;
+  margin-bottom:10px;
 }

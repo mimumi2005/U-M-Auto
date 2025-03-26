@@ -26,6 +26,23 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active ">
                         <div id="carousel" class=" row flex-nowrap  p-1 mr-1 ">
+                            <div class="service-item col-md-4 p-2 m-1">
+                                <div class="rounded text-center " id="PriceEstimatorGuest">
+                                    <a class="text-light ">
+                                        <img class="img rounded " src="/images/Price_Calculation_Guest.jpg"
+                                            alt="Log in to access this function image">
+                                    </a>
+                                </div>
+                                <div class="rounded text-center " id="PriceEstimator">
+                                    <a class="text-light" href="/Estimator">
+                                        <img class="img rounded" src="/images/Price_Calculation.jpg"
+                                            alt="Automatic price estimator image">
+                                        <h4 class="text-center position-absolute overlay-text">
+                                            <%= __('price_estimator_title') %>
+                                        </h4>
+                                    </a>
+                                </div>
+                            </div>
                             <div class="service-item col-md-4 p-2 ml-2 m-1">
                                 <div class="rounded text-center ">
                                     <a class="text-light  " href="/Services?scrollTo=Overall_Checkup">
@@ -80,41 +97,22 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="service-item col-md-4 p-2 m-1" id="PriceEstimatorGuest">
-                                <div class="rounded text-center ">
-                                    <a class="text-light ">
-                                        <img class="img rounded " src="/images/Price_Calculation_Guest.jpg"
-                                            alt="Log in to access this function image">
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="service-item col-md-4 p-2 m-1 nodisplay" id="PriceEstimator">
-                                <div class="rounded text-center ">
-                                    <a class="text-light" href="/Estimator">
-                                        <img class="img rounded" src="/images/Price_Calculation.jpg"
-                                            alt="Automatic price estimator image">
-                                        <h4 class="text-center position-absolute overlay-text">
-                                            <%= __('price_estimator_title') %>
-                                        </h4>
-                                    </a>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
-                </div>
 
-                <!-- Carousel Controls -->
-                <a class="carousel-control-prev" href="#servicesCarousel" role="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#servicesCarousel" role="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+                    <!-- Carousel Controls -->
+                    <a class="carousel-control-prev" href="#servicesCarousel" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesCarousel" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
 
     <div class="container text-white">
@@ -254,51 +252,51 @@
 
 
 
-    <section class="work-hours-section mt-5">
-        <h2 class="work-section-title ">
-            <%= __('work_hours_title') %>
-        </h2>
-        <div class="work-item text-light">
-            <div class="work-title text-white">
-                <%= __('work_hours_description') %>
-            </div>
-            <hr class="bg-dark">
-            <div tabindex=0 class="work-details">
-                <div class="row text-white">
-                    <div class="col-md-6 text-left">
-                        <ul class="list-unstyled ">
-                            <li><strong>
-                                    <%= __('monday') %>
-                                </strong></li>
-                            <li><strong>
-                                    <%= __('tuesday') %>
-                                </strong></li>
-                            <li><strong>
-                                    <%= __('wednesday') %>
-                                </strong></li>
-                            <li><strong>
-                                    <%= __('thursday') %>
-                                </strong></li>
-                        </ul>
+        <section class="work-hours-section mt-5">
+            <h2 class="work-section-title ">
+                <%= __('work_hours_title') %>
+            </h2>
+            <div class="work-item text-light">
+                <div class="work-title text-white">
+                    <%= __('work_hours_description') %>
+                </div>
+                <hr class="bg-dark">
+                <div tabindex=0 class="work-details">
+                    <div class="row text-white">
+                        <div class="col-md-6 text-left">
+                            <ul class="list-unstyled ">
+                                <li><strong>
+                                        <%= __('monday') %>
+                                    </strong></li>
+                                <li><strong>
+                                        <%= __('tuesday') %>
+                                    </strong></li>
+                                <li><strong>
+                                        <%= __('wednesday') %>
+                                    </strong></li>
+                                <li><strong>
+                                        <%= __('thursday') %>
+                                    </strong></li>
+                            </ul>
 
-                    </div>
-                    <div class="col-md-6 text-left mb-4">
-                        <ul class="list-unstyled">
-                            <li><strong>
-                                    <%= __('friday') %>
-                                </strong></li>
-                            <li><strong class="text-light"><b>
-                                        <%= __('saturday') %>
-                                    </b></strong></li>
-                            <li><strong class="text-light"><b>
-                                        <%= __('sunday') %>
-                                    </b></strong></li>
-                        </ul>
+                        </div>
+                        <div class="col-md-6 text-left mb-4">
+                            <ul class="list-unstyled">
+                                <li><strong>
+                                        <%= __('friday') %>
+                                    </strong></li>
+                                <li><strong class="text-light"><b>
+                                            <%= __('saturday') %>
+                                        </b></strong></li>
+                                <li><strong class="text-light"><b>
+                                            <%= __('sunday') %>
+                                        </b></strong></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
 
 

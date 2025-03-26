@@ -40,31 +40,46 @@
                     <div class="col-lg-2 col-md-4 col-sm-12 bg-light rounded p-4 d-flex flex-column justify-content-start"
                         id="sidebar">
                         <h3 class="text-center mb-4 text-white "><%= __('Admin panel') %></h3>
-                        <!-- Users Section -->
+                        
                         <h5 class="text-white text-center"><%= __('Users') %></h5>
-                        <div class="d-grid gap-3 mb-4">
-                            <button id="findUserByEmail" class="btn btn-outline-secondary text-white"><%= __('View user by Email') %></button>
-                            <button id="findUserByID" class="btn btn-outline-secondary text-white"><%= __('View user by ID') %></button>
-                            <button id="viewActiveUsers" class="btn btn-outline-secondary text-white"><%= __('View all active users') %></button>
-                            <button id="viewAllUsers" class="btn btn-outline-secondary text-white"><%= __('View all users') %></button>
-                            <button id="viewAdmins" class="btn btn-outline-secondary text-white"><%= __('View admins') %></button>
-                            <button id="viewWorkers" class="btn btn-outline-secondary text-white"><%= __('View workers') %></button>
-                            <button id="addWorkerForm" class="btn btn-outline-secondary text-white"><%= __('Add worker') %></button>
-                        </div>
-
+                        <div class="d-grid gap-2 mb-4">
+                          <select id="userFilter" class="btn btn-outline-secondary text-white text-start">
+                            <option value="all"><%= __('All Users') %></option>
+                            <option value="active"><%= __('Active Users') %></option>
+                            <option value="withProjects"><%= __('Users With Projects') %></option>
+                            <option value="admins"><%= __('Admins') %></option>
+                            <option value="workers"><%= __('Workers') %></option>
+                          </select>
+                          
+                          <input id="userSearchInput" class="form-control bg-dark text-white border-white" type="text" placeholder="<%= __('Search by Email, ID or ProjectID') %>">
+                          <hr class="text-white">
+                          <button id="addWorkerForm" class="btn btn-outline-success text-white"><%= __('Add Worker') %></button>
+                        </div>                      
                         <!-- Divider -->
                         <hr class="text-white">
 
-                        <!-- Projects Section -->
                         <h5 class="text-white text-center"><%= __('Projects') %></h5>
-                        <div class="d-grid gap-3 mb-4">
-                            <button id="findProjectByID" class="btn btn-outline-secondary text-white"><%= __('View projects by ID') %></button>
-                            <button id="viewDelayedProjects" class="btn btn-outline-secondary text-white"><%= __('View delayed projects') %></button>
-                            <button id="viewActiveProjects" class="btn btn-outline-secondary text-white"><%= __('View active projects') %></button>
-                            <button id="viewFinishedProjects" class="btn btn-outline-secondary text-white"><%= __('View finished projects') %></button>
+                        <div class="d-grid gap-2 mb-4">
+                          <select id="projectFilter" class="btn btn-outline-secondary text-white text-start">
+                            <option value="all"><%= __('All Projects') %></option>
+                            <option value="delayed"><%= __('Delayed Projects') %></option>
+                            <option value="active"><%= __('Active Projects') %></option>
+                            <option value="finished"><%= __('Finished Projects') %></option>
+                          </select>
+                        
+                          <input id="projectSearchInput" class="form-control bg-dark text-white border-white" type="text" placeholder="<%= __('Search by ID, Username, or Info') %>">
+                        
+                          <hr class="text-white">
+                        
+                          <label for="projectDate" class="form-label text-white mb-0"><%= __('Projects by Date') %></label>
+                          <input id="projectDate" class="form-control bg-dark text-white border-white mb-1" type="date">
+                          <select id="dateFilter" class="btn btn-outline-secondary text-white text-start mb-1">
+                            <option value="started"><%= __('Started on this day') %></option>
+                            <option value="finished"><%= __('Finished on this day') %></option>
+                          </select>
+                          <button id="searchByDate" class="btn btn-outline-secondary text-white"><%= __('Search by Date') %></button>
                         </div>
                     </div>
-
                         <div id="ProjectDataContainer" class="table-responsive text-white nodisplay">
                             <table class="table table-bordered table-hover">
                                 <thead class="thead-dark">

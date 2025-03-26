@@ -2,8 +2,9 @@
 import express from 'express';
 import { isAdmin } from '../middleware/isAdmin.js';
 import {
-    adminDashboard, adminStatistics, fetchAllWorkers, fetchAllAdmins, fetchActiveProjects,
-    fetchProjectById, fetchUserById, fetchActiveUsers, fetchTodaysProjects, fetchFinishedProjects, fetchDelayedProjects, changeEndDate, removeDelayedProject, fetchAllUsers, registerWorker, fetchProjectByUserId, fetchUserByEmail
+    adminDashboard, adminStatistics, fetchAllWorkers, fetchAllAdmins, fetchActiveProjects, fetchAllProjects,
+    fetchProjectById, fetchUserById, fetchActiveUsers, fetchTodaysProjects, fetchFinishedProjects, fetchDelayedProjects, changeEndDate, removeDelayedProject, fetchAllUsers, registerWorker, fetchProjectByUserId, fetchUserByEmail,
+
 } from '../controllers/adminController.js';
 import {validateCSRFToken} from '../middleware/CSRF.js'
 import {generateCSRFToken} from '../middleware/CSRF.js'
@@ -19,6 +20,7 @@ router.post('/remove-delayed', isAdmin, validateCSRFToken, removeDelayedProject)
 router.post('/register-worker', isAdmin, validateCSRFToken, registerWorker);
 
 // Routes for data fetching (GET requests don’t need CSRF)
+router.get('/all-projects', isAdmin, fetchAllProjects);
 router.get('/active-projects', isAdmin, fetchActiveProjects);
 router.get('/active-users', isAdmin, fetchActiveUsers);
 router.get('/todays-projects', isAdmin, fetchTodaysProjects);

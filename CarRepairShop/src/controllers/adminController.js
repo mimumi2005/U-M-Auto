@@ -220,13 +220,26 @@ export const removeDelayedProject = (req, res) => {
   });
 };
 
-// Controller function to remove the delayed status from a project
+// Controller function to retrieve all projects
+export const fetchAllProjects = (req, res) => {
+
+  adminModel.getAllProjects((err, result) => {
+    if (err) {
+      console.error('Error retrieving the projects:', err);
+      return res.status(500).json({ status: 'error', message: 'Error retrieving the projects', error: err.message });
+    }
+
+    res.json(result);
+  });
+};
+
+// Controller function to retrieve all users
 export const fetchAllUsers = (req, res) => {
 
   adminModel.getAllUsers((err, result) => {
     if (err) {
-      console.error('Error updating project status:', err);
-      return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
+      console.error('Error retrieving the users:', err);
+      return res.status(500).json({ status: 'error', message: 'Error retrieving the users', error: err.message });
     }
 
     res.json(result);
