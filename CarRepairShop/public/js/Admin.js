@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
             title.innerHTML = translate("All administrators");
             displayAdminData(filtered);
         } else if (filterVal === 'workers') {
+            filtered = filtered.filter(u => u.AdminTenure == null);
             filtered = filtered.filter(u => u.tenure != null);
             title.innerHTML = translate("All workers");
             displayWorkerData(filtered);
@@ -167,47 +168,88 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(userData),
         })
-            .then(response => response.json())
-            .then(data => handleResponses(data))
+            .then(response => handleAddWorkerResponses(response, userData.administrator))
             .catch(error => {
                 alert(`Cannot connect to server :P ${error}`);
             });
     });
 
-    function handleResponses(response) {
+    function handleAddWorkerResponses(response, isAdmin) {
         // If succesful announces it and resets form
-        if (response.status === 'Success') {
-            console.log("Successfully made worker account for userID:", response.idUser);
-            if (document.getElementById('customRegisterWorker')) {
-                document.getElementById('customRegisterWorker').classList.remove('nodisplay');
-            }
-            setTimeout(function () {
-                userFilter.value = "workers";
-                filterAndSearchUsers();
-                document.getElementById('customRegisterWorker').classList.add('nodisplay');
+        response.json().then(data => {
+            if (data.status === 'Success') {
+                console.log("Successfully made worker account for userID:", response.idUser);
+                if (isAdmin) {
+                    showSuccessAlert('Successfully made worker account', () => {
+                        userFilter.value = "admins";
+                        fetchAllUsers();
+                    });
+                }
+                else {
+                    showSuccessAlert('Successfully made worker account', () => {
+                        userFilter.value = "workers";
+                        fetchAllUsers();
+                    });
+                }
                 document.querySelector('form').reset();
-
-            }, 2000);
-
-
-        }
-        else if (response.type == '2') {
-            document.getElementById('email-red').style.color = "rgb(255, 0, 0)";
-            document.getElementById('NoAccount').classList.add('nodisplay');
-            document.getElementById('WorkerExsists').classList.remove('nodisplay');
-            document.getElementById('email').classList.add('form-control-incorrect');
-        }
-        else if (response.type == '1') {
-            document.getElementById('email-red').style.color = "rgb(255, 0, 0)";
-            document.getElementById('NoAccount').classList.remove('nodisplay');
-            document.getElementById('WorkerExsists').classList.add('nodisplay');
-            document.getElementById('email').classList.add('form-control-incorrect');
-        }
-        else {
-            //Else divides errors to wrong username or wrong password
-            console.error('Error:', response);
-        }
+            }
+            else if (data.type == '2') {
+                document.getElementById('email-red').style.color = "rgb(255, 0, 0)";
+                document.getElementById('NoAccount').classList.add('nodisplay');
+                document.getElementById('WorkerExsists').classList.remove('nodisplay');
+                document.getElementById('email').classList.add('form-control-incorrect');
+            }
+            else if (data.type == '1') {
+                document.getElementById('email-red').style.color = "rgb(255, 0, 0)";
+                document.getElementById('NoAccount').classList.remove('nodisplay');
+                document.getElementById('WorkerExsists').classList.add('nodisplay');
+                document.getElementById('email').classList.add('form-control-incorrect');
+            }
+            else {
+                console.error('Error:', data);
+            }
+        });
     }
+
+    function handleGiveAdminResponses(response) {
+        response.json().then(data => {
+            if (data.status === 'Success') {
+                console.log("Successfully gave admin to user with id:", data.idUser);
+                showSuccessAlert('Successfully gave administrator permissions', () => {
+                    userFilter.value = "admins";
+                    fetchAllUsers();
+                });
+            } else if (data.type == 2) {
+                showErrorAlert('User does already has admin permissions');
+            }
+            else {
+                showErrorAlert('Something went wrong while trying to remove admin permissions');
+            }
+        }).catch(err => {
+            console.error('Failed to parse JSON response:', err);
+        });
+    }
+
+    function handleRemoveAdminResponses(response) {
+        response.json().then(data => {
+            if (data.status === 'Success') {
+                console.log("Successfully removed admin from user with id:", data.idUser);
+                showSuccessAlert('Successfully removed administrator permissions', () => {
+                    userFilter.value = "workers";
+                    fetchAllUsers();
+                });
+            } else if (data.type == 2) {
+                showErrorAlert('User does not have admin permissions');
+            }
+            else {
+                showErrorAlert('Something went wrong while trying to give admin permissions');
+            }
+        }).catch(err => {
+            console.error('Failed to parse JSON response:', err);
+        });
+    }
+
+
     function handleEndDateKeyPress(event) {
         if (event.key === 'Enter') {
             projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
@@ -811,6 +853,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to give a worker admin
+    function giveAdmin(idUser) {
+        fetch('/admin/give-admin', {
+            method: 'POST',
+            headers: {
+                'CSRF-Token': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idUser: idUser })
+        })
+            .then(response => handleGiveAdminResponses(response))
+            .catch(error => console.error('Error fetching user data:', error));
+    }
+
+    // Remove admin from a worker
+    function removeAdmin(idUser) {
+        console.log("Removing admin permissions from ID:", idUser);
+        // Make a fetch request to your backend to retrieve all user data
+
+        fetch('/admin/remove-admin', {
+            method: 'POST',
+            headers: {
+                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idUser: idUser })
+        })
+            .then(response => handleRemoveAdminResponses(response))
+            .catch(error => console.error('Error fetching user data:', error));
+    }
+
     // Function to show all users
     function fetchAllUsers() {
         console.log("Viewing users");
@@ -903,6 +976,35 @@ document.addEventListener('DOMContentLoaded', function () {
 function translate(key) {
     const lang = window.currentLanguage || 'en';
     return window.translations[lang][key] || key;
+}
+
+function showSuccessAlert(messageKey, callbackAfter) {
+    const alertBox = document.getElementById('successAlert');
+    const alertText = document.getElementById('successAlertMessage');
+
+    if (alertBox && alertText) {
+        alertText.textContent = translate(messageKey);
+        alertBox.classList.remove('nodisplay');
+
+        setTimeout(() => {
+            alertBox.classList.add('nodisplay');
+            if (typeof callbackAfter === 'function') callbackAfter();
+        }, 2000);
+    }
+}
+
+function showErrorAlert(messageKey) {
+    const alertBox = document.getElementById('errorAlert');
+    const alertText = document.getElementById('errorAlertMessage');
+
+    if (alertBox && alertText) {
+        alertText.textContent = translate(messageKey);
+        alertBox.classList.remove('nodisplay');
+
+        setTimeout(() => {
+            alertBox.classList.add('nodisplay');
+        }, 2000);
+    }
 }
 
 function debounce(fn, delay) {

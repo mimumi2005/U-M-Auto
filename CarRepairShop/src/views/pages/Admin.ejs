@@ -25,11 +25,11 @@
     }
 </style>
 <body>
-    <div id="customRegisterWorker" class="custom-alert nodisplay">
-        <h2><%= __('Successfully registered worker') %></h2>
+    <div id="successAlert" class="custom-alert nodisplay">
+        <h2 id="successAlertMessage"></h2>
     </div>
-    <div id="customAdminPerms" class="custom-alert nodisplay">
-        <h2><%= __('Successfully gave administrator permissions') %></h2>
+    <div id="errorAlert" class="custom-alert nodisplay">
+        <h2 class="text-danger" id="errorAlertMessage"></h2>
     </div>
     <div>
         <div class="container my-4 customContainer bg-light rounded mx-80">

@@ -28,17 +28,6 @@ export const getAllWorkerIds = (callback) => {
     connection.query(workerQuery, callback);
   };
   
-  export const getCombinedWorkerInfo = (idUser, callback) => {
-    const combinedQuery = 'SELECT Users.*, Workers.* FROM Users INNER JOIN Workers ON Users.idUser = Workers.idUser WHERE Users.idUser = ?';
-    connection.query(combinedQuery, [idUser], callback);
-  };
-
-
-  export const getCombinedAdminInfo = (idUser, callback) => {
-    const combinedQuery = 'SELECT Users.*, Workers.*, administrators.* FROM Users INNER JOIN Workers ON Users.idUser = Workers.idUser INNER JOIN administrators ON Users.idUser = administrators.idUser WHERE Users.idUser = ? ';
-    connection.query(combinedQuery, [idUser], callback);
-  };
-
 
   export const getActiveProjects = (curdate, callback) => {
     const sql_query = `SELECT projects.*, users.UserName, project_status.statusName
@@ -67,7 +56,7 @@ export const getAllWorkerIds = (callback) => {
 
   export const getAllUsers = (callback) => {
     const sql_query = `
-      SELECT users.*, user_instance.idInstance, workers.tenure, administrators.AdminTenure, p.idProjects
+      SELECT users.*, user_instance.idInstance, workers.tenure, administrators.AdminTenure, p.idProjects, workers.WorkerType
       FROM users
       LEFT JOIN user_instance ON users.idUser = user_instance.idUser
       LEFT JOIN workers ON users.idUser = workers.idUser
@@ -92,23 +81,10 @@ export const getAllWorkerIds = (callback) => {
     connection.query(sql_query, callback);
   };
 
-
-  // Model function to fetch active user instances
-export const getActiveInstances = (callback) => {
-  const instance_query = 'SELECT * FROM user_instance';
-  connection.query(instance_query, callback);
-};
-
 // Model function to fetch user information by user ID
 export const getUserById = (idUser, callback) => {
   const user_query = 'SELECT * FROM users WHERE idUser = ?';
   connection.query(user_query, [idUser], callback);
-};
-
-// Model function to fetch user information by user ID
-export const getUserByEmail = (email, callback) => {
-  const user_query = 'SELECT * FROM users WHERE Email = ?';
-  connection.query(user_query, [email], callback);
 };
 
 export const getTodaysProjects = (year, month, day, callback) => {
@@ -122,19 +98,6 @@ export const getTodaysProjects = (year, month, day, callback) => {
       YEAR(EndDateProjection) = ? AND MONTH(EndDateProjection) = ? AND DAY(EndDateProjection) = ?
   `;
   connection.query(sql_query, [year, month, day, year, month, day], callback);
-};
-
-
-// Model function to fetch finished projects
-export const getFinishedProjects = (isoCurrentDate, callback) => {
-  const sql_query =`SELECT projects.*, users.UserName, project_status.statusName
-    FROM projects
-    JOIN users ON projects.idUser = users.idUser
-    JOIN project_status ON projects.idStatus = project_status.idStatus
-    WHERE projects.Delayed = false AND ? > projects.EndDateProjection
-  `;
-
-  connection.query(sql_query, [isoCurrentDate], callback);
 };
 
 // Model function to fetch delayed projects
@@ -201,6 +164,19 @@ export const isUserAlreadyWorker = (idUser) => {
   });
 };
 
+// Function to check if user is already a worker
+export const isUserAlreadyAdmin = (idUser) => {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM administrators WHERE idUser = ?';
+    connection.query(query, [idUser], (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(result);
+    });
+  });
+};
+
 // Function to insert a new worker
 export const insertWorker = (idUser, workerType, startWorkDate, tenure) => {
   return new Promise((resolve, reject) => {
@@ -217,7 +193,7 @@ export const insertWorker = (idUser, workerType, startWorkDate, tenure) => {
 // Function to insert an admin
 export const insertAdmin = (idUser) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO administrators (idUser) VALUES (?)';
+    const query = 'INSERT INTO administrators (idUser, AdminTenure) VALUES (?, 0)';
     connection.query(query, [idUser], (err, result) => {
       if (err) {
         return reject(err);
@@ -226,6 +202,20 @@ export const insertAdmin = (idUser) => {
     });
   });
 };
+
+// Function to remove an admin
+export const removeAdmin = (idUser) => {
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM administrators WHERE idUser = ?';
+    connection.query(query, [idUser], (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(result);
+    });
+  });
+};
+
 
 export const getProjectsByUserId = (idUser, callback) => {
   const sql_query = `

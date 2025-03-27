@@ -4,7 +4,6 @@ import * as adminModel from '../models/adminModels.js'
 import {generateCSRFToken} from '../middleware/CSRF.js'
 import i18n from 'i18n';
 export const adminDashboard = (req, res) => {
- 
   const csrfTokenValue = req.csrfToken;
   // Render the admin dashboard or serve a file
   res.render('pages/Admin', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
@@ -13,65 +12,6 @@ export const adminStatistics = (req, res) => {
   const csrfTokenValue = req.csrfToken;
   // Render the admin dashboard or serve a file
   res.render('pages/Statistics', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en'}); // Pass nonce to EJS template
-};
-
-
-export const fetchAllWorkers = (req, res) => {
-  adminModel.getAllWorkerIds((err, workerResults) => {
-    if (err) {
-      console.error('Error querying Workers table:', err);
-      return res.status(500).json({ message: 'Error fetching worker data' });
-    }
-
-    const combinedData = [];
-
-    workerResults.forEach((worker, index) => {
-      const idUser = worker.idUser;
-
-      adminModel.getCombinedWorkerInfo(idUser, (err, combinedResult) => {
-        if (err) {
-          console.error(`Error querying combined information for idUser ${idUser}:`, err);
-          return;
-        }
-
-        combinedData.push(...combinedResult);
-
-        // Send the response only after all data is fetched
-        if (combinedData.length === workerResults.length) {
-          res.json(combinedData);
-        }
-      });
-    });
-  });
-};
-
-
-export const fetchAllAdmins = (req, res) => {
-  adminModel.getAllAdminIds((err, adminResults) => {
-    if (err) {
-      console.error('Error querying Workers table:', err);
-      return res.status(500).json({ message: 'Error fetching worker data' });
-    }
-
-    const combinedData = [];
-
-    adminResults.forEach((admin, index) => {
-      const idUser = admin.idUser;
-
-      adminModel.getCombinedAdminInfo(idUser, (err, combinedResult) => {
-        if (err) {
-          console.error(`Error querying combined information for idUser ${idUser}:`, err);
-          return;
-        }
-
-        combinedData.push(...combinedResult);
-        // Send the response only after all data is fetched
-        if (combinedData.length === adminResults.length) {
-          res.json(combinedData);
-        }
-      });
-    });
-  });
 };
 
 // Controller function to get active projects
@@ -83,20 +23,6 @@ export const fetchActiveProjects = (req, res) => {
     if (err) {
       console.error("Error fetching active projects:", err);
       return res.status(500).send("An error occurred while fetching active projects.");
-    }
-    res.send(result);
-  });
-};
-
-
-export const fetchProjectById = (req, res) => {
-  const idProjects = req.params.id;
-
-  // Call the model function
-  adminModel.getProjectById(idProjects, (err, result) => {
-    if (err) {
-      console.error("Error fetching project by ID:", err);
-      return res.status(500).send("An error occurred while fetching the project.");
     }
     res.send(result);
   });
@@ -115,35 +41,16 @@ export const fetchUserById = (req, res) => {
   });
 };
 
-export const fetchActiveUsers = (req, res) => {
-  adminModel.getActiveInstances((err, instances) => {
+export const fetchProjectById = (req, res) => {
+  const idProjects = req.params.id;
+
+  // Call the model function
+  adminModel.getProjectById(idProjects, (err, result) => {
     if (err) {
-      console.error('Error fetching active instances:', err);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      console.error("Error fetching project by ID:", err);
+      return res.status(500).send("An error occurred while fetching the project.");
     }
-
-    const usersInfo = [];
-    let count = 0;
-
-    // Iterate over each instance and fetch the user info based on the userId
-    instances.forEach((instance) => {
-      const userId = instance.idUser;
-
-      adminModel.getUserById(userId, (err, userResult) => {
-        if (err) {
-          console.error('Error fetching user info:', err);
-          return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-        }
-
-        usersInfo.push(userResult[0]);
-        count++;
-
-        // Send response after all user information is collected
-        if (count === instances.length) {
-          res.json(usersInfo);
-        }
-      });
-    });
+    res.send(result);
   });
 };
 
@@ -158,21 +65,6 @@ export const fetchTodaysProjects = (req, res) => {
   adminModel.getTodaysProjects(currentYear, currentMonth, currentDay, (err, result) => {
     if (err) {
       console.error('Error fetching today\'s projects:', err);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-    }
-
-    res.send(result);
-  });
-};
-
-
-// Controller function to fetch finished projects
-export const fetchFinishedProjects = (req, res) => {
-  const currentDate = new Date().toISOString(); // Get current ISO date string
-
-  adminModel.getFinishedProjects(currentDate, (err, result) => {
-    if (err) {
-      console.error('Error fetching finished projects:', err);
       return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
 
@@ -205,8 +97,60 @@ export const changeEndDate = (req, res) => {
   });
 };
 
+
+// Controller function to give admin perms to worker
+export const giveAdmin = async (req, res) => {
+  const { idUser } = req.body;
+
+  try {
+    const checkResult = await adminModel.isUserAlreadyAdmin(idUser);
+    if (checkResult.length) {
+      return res.status(409).json({ status: 'error', type: '2', message: 'User already has administrator perms' });
+    }
+
+    // Proceed to remove
+    await adminModel.insertAdmin(idUser);
+
+    res.json({
+      status: 'Success',
+      message: 'Admin perms given successfully',
+      idUser: idUser,
+    });
+  } catch (err) {
+    console.error('Error giving admin:', err);
+    res.status(500).json({ status: 'error', message: 'Internal server error', error: err.message });
+  }
+};
+
+
+// Controller function to remove admin perms
+export const removeAdmin = async (req, res) => {
+  const { idUser } = req.body;
+
+  try {
+    const checkResult = await adminModel.isUserAlreadyAdmin(idUser);
+    if (!checkResult.length) {
+      return res.status(409).json({ status: 'error', type: '2', message: 'User does not have administrator perms' });
+    }
+
+    // Proceed to remove
+    await adminModel.removeAdmin(idUser);
+
+    res.json({
+      status: 'Success',
+      message: 'Admin perms removed successfully',
+      idUser: idUser,
+    });
+  } catch (err) {
+    console.error('Error removing admin:', err);
+    res.status(500).json({ status: 'error', message: 'Internal server error', error: err.message });
+  }
+};
+
+
+
 // Controller function to remove the delayed status from a project
-export const removeDelayedProject = (req, res) => {
+export const finishProject = (req, res) => {
 
   const { idProjects } = req.body;
 
@@ -250,7 +194,7 @@ export const fetchAllUsers = (req, res) => {
 // Main function to register a worker
 export const registerWorker = async (req, res) => {
 
-  const { email, workerType, isAdmin } = req.body;
+  const { email, workerType, administrator } = req.body;
   console.log("Making user:", email, "as worker");
 
   try {
@@ -272,7 +216,7 @@ export const registerWorker = async (req, res) => {
 
     await adminModel.insertWorker(idUser, workerType, currentDate, tenure);
 
-    if (isAdmin) {
+    if (administrator) {
       await adminModel.insertAdmin(idUser);
       console.log('User added to Administrators table');
     }
@@ -305,19 +249,3 @@ export const fetchProjectByUserId = (req, res) => {
     res.json(result);
   });
 };
-
-
-// Controller function to remove the delayed status from a project
-export const fetchUserByEmail = (req, res) => {
-  const email = req.params.email;
-
-  adminModel.getUserByEmail(email, (err, result) => {
-    if (err) {
-      console.error('Error updating project status:', err);
-      return res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });
-    }
-
-    res.json(result);
-  });
-};
-

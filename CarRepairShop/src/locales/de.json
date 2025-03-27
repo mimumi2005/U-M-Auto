@@ -506,5 +506,6 @@
 	"Search by ID, Username, or Info": "Search by ID, Username, or Info",
 	"Completed Projects": "Completed Projects",
 	"Pending Projects": "Pending Projects",
-	"Cancelled Projects": "Cancelled Projects"
+	"Cancelled Projects": "Cancelled Projects",
+	"Successfully removed administrator permissions": "Successfully removed administrator permissions"
 }
