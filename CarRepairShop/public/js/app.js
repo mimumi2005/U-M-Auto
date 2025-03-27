@@ -479,32 +479,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   
   
-  
-  // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
-  function removeDelayed(idProjects) {
-  
-    fetch('/remove-delayed', {
-      method: 'POST',
-      headers: {
-        'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        idProjects: idProjects
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Call a function to display the user data on the page
-        if (data[0]) {
-          displayProjectData(data);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-  
-      });
-  }
+
   
   
   // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
@@ -534,14 +509,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   // Displaying functions (DISPLAY)
-  
-  
-  
-  
-  
-  
-  
-  
+    
   // Function that displays the Worker info
   function displayWorkerData(users) {
     document.getElementById("registrationForm").classList.add('nodisplay');

@@ -67,14 +67,20 @@ export const getAllWorkerIds = (callback) => {
 
   export const getAllUsers = (callback) => {
     const sql_query = `
-      SELECT users.*, user_instance.idInstance, workers.idWorker, administrators.idAdmin
+      SELECT users.*, user_instance.idInstance, workers.tenure, administrators.AdminTenure, p.idProjects
       FROM users
-      JOIN user_instance ON users.idUser = user_instance.idUser
-      JOIN workers ON users.idUser = workers.idUser
-      JOIN administrators ON users.idUser = administrators.idUser`;
-    // Execute the query
+      LEFT JOIN user_instance ON users.idUser = user_instance.idUser
+      LEFT JOIN workers ON users.idUser = workers.idUser
+      LEFT JOIN administrators ON users.idUser = administrators.idUser
+      LEFT JOIN (
+        SELECT idUser, MIN(idProjects) AS idProjects
+        FROM projects
+        GROUP BY idUser
+      ) AS p ON users.idUser = p.idUser
+    `;
     connection.query(sql_query, callback);
   };
+  
 
   export const getAllProjects = (callback) => {
     const sql_query =`SELECT projects.*, users.UserName, project_status.statusName

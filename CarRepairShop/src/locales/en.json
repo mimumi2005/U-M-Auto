@@ -503,5 +503,8 @@
 	"Search Projects": "Search Projects",
 	"Search by ID, Email, or ProjectID": "Search by ID, Email, or ProjectID",
 	"Search by Email, ID or ProjectID": "Search by Email, ID or ProjectID",
-	"Search by ID, Username, or Info": "Search by ID, Username, or Info"
+	"Search by ID, Username, or Info": "Search by ID, Username, or Info",
+	"Completed Projects": "Completed Projects",
+	"Pending Projects": "Pending Projects",
+	"Cancelled Projects": "Cancelled Projects"
 }

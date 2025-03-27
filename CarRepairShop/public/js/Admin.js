@@ -9,27 +9,47 @@ document.addEventListener('DOMContentLoaded', function () {
     const projectDateInput = document.getElementById('projectDate');
     const dateFilter = document.getElementById('dateFilter');
     const searchByDate = document.getElementById('searchByDate');
+    const addWorkerButton = document.getElementById('addWorkerForm');
+    const addWorkerFormBtn = document.getElementById('registrationForm');
+    const changeEndDateBtn = document.getElementById('changeEndTimeButton');
+    const searchUserButton = document.getElementById('searchUserButton');
+    const searchProjectButton = document.getElementById('searchProjectButton');
+
+    const title = document.getElementById('TitleHeader');
 
     userFilter.addEventListener('change', filterAndSearchUsers);
+    userFilter.addEventListener('click', filterAndSearchUsers);
     userSearchInput.addEventListener('input', debounce(filterAndSearchUsers, 300));
     projectFilter.addEventListener('change', filterAndSearchProjects);
+    projectFilter.addEventListener('click', filterAndSearchProjects);
     projectSearchInput.addEventListener('input', debounce(filterAndSearchProjects, 300));
     searchByDate.addEventListener('click', handleProjectDateFilter);
+
+    addWorkerButton.addEventListener('click', addWorkerForm);
+    addWorkerFormBtn.addEventListener('keypress', handleWorkerKeyPress);
+
+    changeEndDateBtn.addEventListener('keypress', handleEndDateKeyPress);
+    changeEndDateBtn.addEventListener('click', function () {
+        projectChangeEndTime(
+            document.getElementById('project_id').textContent,
+            document.getElementById('dateinput').value
+        );
+    });
+
+    // Search User Button
+    searchUserButton.addEventListener('click', function () {
+        searchUserByID(document.getElementById('userIDInput').value);
+    });
+
+    // Search Project Button
+    searchProjectButton.addEventListener('click', function () {
+        searchProjectByID(document.getElementById('ProjectIDInput').value);
+    });
 
     function filterAndSearchUsers() {
         let filtered = [...allUsers];
         const filterVal = userFilter.value;
         const search = userSearchInput.value.trim().toLowerCase();
-
-        if (filterVal === 'active') {
-            filtered = filtered.filter(u => u.idInstance != null);
-        } else if (filterVal === 'withProjects') {
-            filtered = filtered.filter(u => u.hasProjects);
-        } else if (filterVal === 'admins') {
-            filtered = filtered.filter(u => u.idAdmin == "true");
-        } else if (filterVal === 'workers') {
-            filtered = filtered.filter(u => u.isWorker == "true");
-        }
 
         if (search) {
             filtered = filtered.filter(u =>
@@ -39,7 +59,26 @@ document.addEventListener('DOMContentLoaded', function () {
             );
         }
 
-        displayUserData(filtered);
+        if (filterVal === 'all') {
+            title.innerHTML = translate("All users");
+            displayUserData(filtered);
+        } else if (filterVal === 'active') {
+            filtered = filtered.filter(u => u.idInstance != null);
+            title.innerHTML = translate("Active users");
+            displayUserData(filtered);
+        } else if (filterVal === 'withProjects') {
+            filtered = filtered.filter(u => u.idProjects != null);
+            title.innerHTML = translate("Users that have projects");
+            displayUserData(filtered);
+        } else if (filterVal === 'admins') {
+            filtered = filtered.filter(u => u.AdminTenure != null);
+            title.innerHTML = translate("All administrators");
+            displayAdminData(filtered);
+        } else if (filterVal === 'workers') {
+            filtered = filtered.filter(u => u.tenure != null);
+            title.innerHTML = translate("All workers");
+            displayWorkerData(filtered);
+        }
     }
 
     function filterAndSearchProjects() {
@@ -47,12 +86,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const filterVal = projectFilter.value;
         const search = projectSearchInput.value.trim().toLowerCase();
 
+        title.innerHTML = translate("All projects");
         if (filterVal === 'delayed') {
             filtered = filtered.filter(p => p.Delayed === 1);
+            title.innerHTML = translate("Delayed projects");
         } else if (filterVal === 'active') {
             filtered = filtered.filter(p => p.statusName === 'In Progress');
-        } else if (filterVal === 'finished') {
+            title.innerHTML = translate("Projects in progress");
+        } else if (filterVal === 'completed') {
             filtered = filtered.filter(p => p.statusName === 'Completed');
+            title.innerHTML = translate("Completed projects");
+        } else if (filterVal === 'cancelled') {
+            filtered = filtered.filter(p => p.statusName === 'Cancelled' || p.statusName === 'No Arrival');
+            title.innerHTML = translate("Cancelled or no arrival projects");
+        } else if (filterVal === 'pending') {
+            filtered = filtered.filter(p => p.statusName === 'Pending');
+            title.innerHTML = translate("Pending projects");
         }
 
         if (search) {
@@ -62,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 p.ProjectInfo.toLowerCase().includes(search)
             );
         }
-
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
         displayProjectData(filtered);
     }
 
@@ -75,40 +124,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const compareDate = new Date(mode === 'started' ? p.StartDate : p.EndDateProjection);
             return compareDate.toISOString().split('T')[0] === date;
         });
-
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
         displayProjectData(filtered);
     }
 
-    function debounce(fn, delay) {
-        let timeout;
-        return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => fn.apply(this, args), delay);
-        };
-    }
 
-    // Change End Time Button
-    document.getElementById('changeEndTimeButton').addEventListener('click', function () {
-        projectChangeEndTime(
-            document.getElementById('project_id').textContent,
-            document.getElementById('dateinput').value
-        );
-    });
-
-    // Search User Button
-    document.getElementById('searchUserButton').addEventListener('click', function () {
-        searchUserByID(document.getElementById('userIDInput').value);
-    });
-
-    // Search User by email Button
-    document.getElementById('searchUserByEmailButton').addEventListener('click', function () {
-        searchUserByEmail(document.getElementById('userEmailInput').value);
-    });
-
-    // Search Project Button
-    document.getElementById('searchProjectButton').addEventListener('click', function () {
-        searchProjectByID(document.getElementById('ProjectIDInput').value);
-    });
     // Function to handle keypress event
     function handleKeyPressForum(event) {
         // Check if Enter key is pressed
@@ -162,7 +182,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('customRegisterWorker').classList.remove('nodisplay');
             }
             setTimeout(function () {
-                viewWorkers();
+                userFilter.value = "workers";
+                filterAndSearchUsers();
                 document.getElementById('customRegisterWorker').classList.add('nodisplay');
                 document.querySelector('form').reset();
 
@@ -185,31 +206,11 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             //Else divides errors to wrong username or wrong password
             console.error('Error:', response);
-
         }
     }
-
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            searchUserByID(document.getElementById('userIDInput').value);
-        }
-    }
-
-    function handleEmailKeyPress(event) {
-        if (event.key === 'Enter') {
-            searchUserByEmail(document.getElementById('userEmailInput').value);
-        }
-    }
-
     function handleEndDateKeyPress(event) {
         if (event.key === 'Enter') {
             projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
-        }
-    }
-
-    function handleProjectKeyPress(event) {
-        if (event.key === 'Enter') {
-            searchProjectByID(document.getElementById('ProjectIDInput').value);
         }
     }
 
@@ -219,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function () {
             addWorker(document.getElementById('registrationForm').value);
         }
     }
-
 
     // Function to display the fetched appointment data in a table formatfunction(data) {
     function displayProjectData(data) {
@@ -484,11 +484,12 @@ document.addEventListener('DOMContentLoaded', function () {
         headers.ProjectInfo.onclick = () => sortData('ProjectInfo');
         headers.Delayed.onclick = () => sortData('Delayed');
 
-        sortData('idProject'); // Initial sort by 'User ID'
+        sortData('idProject'); // Initial sort by
     }
 
     // Function to display user data on the page
     function displayUserData(users) {
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById('registrationForm').classList.add('nodisplay');
         document.getElementById('searchProject').classList.add('nodisplay');
@@ -552,6 +553,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display user data on the page
     function displayWorkerData(users) {
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById('registrationForm').classList.add('nodisplay');
         document.getElementById('searchProject').classList.add('nodisplay');
@@ -624,6 +626,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display user data on the page
     function displayAdminData(users) {
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
         document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById('registrationForm').classList.add('nodisplay');
         document.getElementById('searchProject').classList.add('nodisplay');
@@ -700,33 +703,30 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
+    function removeDelayed(idProjects) {
 
-
-    function deleteProject(ProjectID) {
-        fetch(`/project-delete/${ProjectID}`, {
-            method: 'DELETE', // Use the DELETE method to indicate deletion
+        fetch('/admin/remove-delayed', {
+            method: 'POST',
             headers: {
                 'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify({
+                idProjects: idProjects
+            }),
         })
-            .then(response => {
-                if (response.status == 200) {
-                    const card = document.getElementById(`Project_div${ProjectID}`);
-                    if (card) {
-                        card.remove();
-                    }
-                    card.remove();
-                    viewAllProjects();
+            .then(response => response.json())
+            .then(data => {
+                // Call a function to display the user data on the page
+                if (data[0]) {
+                    displayProjectData(data);
                 }
             })
-            .then(data => {
-                // Process the response data
-                console.log(data);
-            })
-            .catch(error => console.error('Error deleting project:', error))
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
-
     // Function that displays projects by ID
     function searchProjectByID(idProjects) {
         if (document.getElementById('ProjectIDInput')) {
@@ -754,8 +754,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching user data:', error));
     }
 
-
-
     // Function to show a singular account by account ID
     function searchUserByID(idUser) {
         document.getElementById('userIDInput').value = '';
@@ -774,59 +772,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
 
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
-
-    // Function to show all Projects
-    function viewFinishedProjects() {
-        document.getElementById('inputNewEndDate').classList.add('nodisplay');
-        // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/finished-projects')
-            .then(response => response.json())
-            .then(data => {
-                // Call a function to display the user data on the page
-                const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Finished Projects");
-                displayProjectData(data);
-
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
-
-    // Function that displays all projects that have been made by one person (ID)
-    function searchProjectByUserID(idUser) {
-        document.getElementById('InvalidProjectID').classList.add('nodisplay');
-        console.log("Viewing user by ID:", idUser);
-        // Make a fetch request to your backend to retrieve all user data
-        fetch(`/admin/project-by-user-ID${idUser}`)
-            .then(response => response.json())
-            .then(data => {
-                // Call a function to display the user data on the page
-                if (data[0]) {
-                    const title = document.getElementById('TitleHeader');
-                    const userTitle = translate('projects');
-                    title.innerHTML = `${data[0].userName}'s ${userTitle}`;
-                    displayProjectData(data);
-                }
-                else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
-
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-
-    }
-    // Function to show all admin accounts
-    function viewAdmins() {
-
-        console.log("Viewing admins");
-        // Make a fetch request to your backend to retrieve all user data
-        fetch('/admin/all-admins')
-            .then(response => response.json())
-            .then(data => {
-                const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Admin Data");
-                // Call a function to display the user data on the page
-                displayAdminData(data);
             })
             .catch(error => console.error('Error fetching user data:', error));
     }
@@ -853,10 +798,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     // Call a function to display the user data on the page
                     if (data[0]) {
-                        const title = document.getElementById('TitleHeader');
-                        const dateTitle = translate('Changing end date of');
-                        const projectTitle = translate('projects');
-                        title.innerHTML = `${dateTitle} ${data[0].idProjects}'s ${projectTitle}`;
+                        ;
                         displayProjectData(data);
                         document.getElementById('InvalidDateTime').classList.add('nodisplay');
                     }
@@ -869,7 +811,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     // Function to show all users
     function fetchAllUsers() {
         console.log("Viewing users");
@@ -879,6 +820,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const title = document.getElementById('TitleHeader');
                 title.innerHTML = translate("All Users");
+                console.log(data);
                 allUsers = data;
                 filterAndSearchUsers();
             })
@@ -896,56 +838,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 title.innerHTML = translate("All Projects");
                 allProjects = data;
                 filterAndSearchProjects();
+
             })
             .catch(error => console.error('Error fetching user data:', error));
     }
-
-    // Function that searches for similar users, to have a defense for botting
-    function searchSimilarUsers(email) {
-        const userEmail = email;
-        const emailPattern = `${userEmail.substring(0, 4)}%`;
-        // Now send the emailPattern to the backend to search for similar users
-
-        fetch(`/similar-users`, {
-            method: 'POST',
-            headers: {
-                'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ emailPattern })
-        })
-            .then(response => response.json())
-            .then(data => {
-                const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("Users with similar credentials (suspected bot accounts)");
-                // Process the response containing similar users
-
-                console.log(data);
-                displayUserData(data);
-                // Display similar users or take any other action as needed
-            })
-            .catch(error => console.error('Error searching similar users:', error));
-
-    }
-    // HIGHER IMPORTANCE USER VIEW
-
-    // Function to show all workers accounts
-    function viewWorkers() {
-
-        console.log("Viewing workers");
-        // Make a fetch request to your backend to retrieve all user data
-
-        fetch('/admin/all-workers')
-            .then(response => response.json())
-            .then(data => {
-                const title = document.getElementById('TitleHeader');
-                title.innerHTML = translate("All Workers");
-                // Call a function to display the user data on the page
-                displayWorkerData(data);
-            })
-            .catch(error => console.error('Error fetching user data:', error));
-    }
-
 
     // Function that displays all projects that have been made by one person (ID)
     function searchProjectsByUserID(idUser) {
@@ -960,11 +856,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
                     title.innerHTML = translate("Users Projects");
+                    document.getElementById("inputNewEndDate").classList.add('nodisplay');
                     displayProjectData(data);
                 }
             })
             .catch(error => console.error('Error fetching user data:', error));
-
     }
 
     // Function that displays fields needed to change project end date
@@ -1007,4 +903,12 @@ document.addEventListener('DOMContentLoaded', function () {
 function translate(key) {
     const lang = window.currentLanguage || 'en';
     return window.translations[lang][key] || key;
+}
+
+function debounce(fn, delay) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(this, args), delay);
+    };
 }
