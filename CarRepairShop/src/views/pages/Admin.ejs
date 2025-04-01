@@ -53,7 +53,8 @@
                           
                           <input id="userSearchInput" class="form-control bg-dark text-white border-white" type="text" placeholder="<%= __('Search by Email, ID or ProjectID') %>">
                           <hr class="text-white">
-                          <button id="addWorkerForm" class="btn btn-outline-success text-white"><%= __('Add Worker') %></button>
+                          <button id="removeWorkerButton" class="btn btn-outline-danger text-white"><%= __('Remove Worker') %></button>
+                          <button id="addWorkerButton" class="btn btn-outline-success text-white"><%= __('Add Worker') %></button>
                         </div>                      
                         <!-- Divider -->
                         <hr class="text-white">
@@ -188,49 +189,45 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <div id="searchUser" class="col-sm-3 m-auto text-center nodisplay pb-4">
-                            <span id="InvalidID" class="nodisplay text-danger"><b><%= __('Invalid ID') %></b></span>
-                            <input type="text" id="userIDInput" class="form-control" placeholder="<%= __('Enter User ID') %>">
-                            <button class="btn btn-outline-primary mt-2" id="searchUserButton"><%= __('Search') %></button>
-                        </div>
-
-                        <div id="searchUserByEmail" class="col-sm-4 m-auto text-center nodisplay pb-4">
-                            <span id="InvalidEmail" class="nodisplay text-danger"><b><%= __('Invalid Email') %></b></span>
-                            <input type="text" id="userEmailInput" class="form-control" placeholder="<%= __('Enter User\'s email') %>">
-                            <button class="btn btn-outline-primary mt-2" id="searchUserByEmailButton"><%= __('Search') %></button>
-                        </div>
-
-                        <div id="searchProject" class="col-sm-3 m-auto text-center nodisplay pb-4">
-                            <span id="InvalidProjectID" class="nodisplay text-danger"><b><%= __('Invalid ID') %></b></span>
-                            <input type="text" id="ProjectIDInput" class="form-control" placeholder="<%= __('Enter Project ID') %>">
-                            <button class="btn btn-outline-primary mt-2" id="searchProjectButton"><%= __('Search') %></button>
-                        </div>
-
-                        <div class="col-md-3 bg-light rounded text-white m-auto nodisplay maxw20" id="registrationForm">
-                            <form class="mt-3">
-                                <label id="email-red" for="email"><%= __('Email') %>:</label>
-                                <span class="ml-1 nodisplay text-danger" id="NoAccount"><b>- <%= __('Account doesn\'t exist') %></b></span>
-                                <span class="ml-1 nodisplay text-danger" id="WorkerExsists"><b>- <%= __('User is already a worker') %></b></span>
-                                <input class="form-control" type="email" id="email" name="email" required><br>
-
-                                <label for="workerType"><%= __('Worker Type') %>:</label>
-                                <input class="form-control" type="text" id="workerType" name="workerType" maxlength="45" required><br>
-
-                                <input class="mt-3" type="checkbox" id="administrator" name="administrator">
-                                <label for="administrator">
-                                    <%= __('Administrator') %>
-                                </label><br>
-
-                                <button id="submitButton" class="btn btn-secondary btn-block mt-2 mb-4" type="submit">
-                                    <%= __('Register worker') %>
-                                </button>
-                            </form>
-                        </div>
                     </div>
+                </div>
+                <div class="col-md-3 rounded text-white m-auto nodisplay  bg-light" id="addWorkerForm">
+                    <form class="mt-3">
+                        <label id="email-red" for="email"><%= __('Email') %>:</label>
+                        <span class="ml-1 nodisplay text-danger" id="NoAccountAdd"><b>- <%= __('Account doesn\'t exist') %></b></span>
+                        <span class="ml-1 nodisplay text-danger" id="WorkerExsists"><b>- <%= __('User is already a worker') %></b></span>
+                        <input class="form-control" type="email" id="email" name="email" required><br>
+        
+                        <label for="workerType"><%= __('Worker Type') %>:</label>
+                        <input class="form-control" type="text" id="workerType" name="workerType" maxlength="45" required><br>
+        
+                        <input class="mt-3" type="checkbox" id="administrator" name="administrator">
+                        <label for="administrator">
+                            <%= __('Administrator') %>
+                        </label><br>
+        
+                        <button id="workerAddSubmitButton" class="btn btn-secondary btn-block mt-2 mb-4" type="submit">
+                            <%= __('Register worker') %>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-3 rounded text-white m-auto nodisplay  bg-light" id="removeWorkerForm">
+                    <form class="mt-3">
+                        <label id="removalEmailDisplay" for="removalEmail"><%= __('Email') %>:</label>
+                        <span class="ml-1 nodisplay text-danger" id="NoAccountRemove"><b>- <%= __('Account doesn\'t exist') %></b></span>
+                        <input class="form-control" type="email" id="removalEmail" name="email" required><br>
+        
+                        <label for="Reason"><%= __('Reason for removal') %>:</label>
+                        <input class="form-control" type="text" id="Reason" name="reason" maxlength="115"><br>
+        
+                        <button id="workerRemoveSubmitButton" class="btn btn-secondary btn-block mt-2 mb-4" type="submit">
+                            <%= __('Remove worker') %>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-
+        
         <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
         <script src="/js/Admin.js" nonce="<%= nonce %>"></script>
 </body>

@@ -507,5 +507,8 @@
 	"Completed Projects": "Completed Projects",
 	"Pending Projects": "Pending Projects",
 	"Cancelled Projects": "Cancelled Projects",
-	"Successfully removed administrator permissions": "Successfully removed administrator permissions"
+	"Successfully removed administrator permissions": "Successfully removed administrator permissions",
+	"Remove Worker": "Remove Worker",
+	"Reason for removal": "Reason for removal",
+	"Remove worker": "Remove worker"
 }

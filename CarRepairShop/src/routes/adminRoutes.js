@@ -3,7 +3,7 @@ import express from 'express';
 import { isAdmin } from '../middleware/isAdmin.js';
 import {
     adminDashboard, adminStatistics, fetchActiveProjects, fetchAllProjects,
-    fetchProjectById, fetchUserById, fetchTodaysProjects, fetchDelayedProjects, changeEndDate, finishProject, fetchAllUsers, registerWorker, fetchProjectByUserId, giveAdmin, removeAdmin
+    fetchProjectById, fetchUserById, fetchTodaysProjects, fetchDelayedProjects, changeEndDate, finishProject, fetchAllUsers, registerWorker, fetchProjectByUserId, giveAdmin, removeAdmin, deleteWorker
 
 } from '../controllers/adminController.js';
 import {validateCSRFToken} from '../middleware/CSRF.js'
@@ -18,6 +18,7 @@ router.get('/Statistics', isAdmin, adminStatistics);
 router.post('/change-end-date', isAdmin,validateCSRFToken, changeEndDate);
 router.post('/remove-delayed', isAdmin, validateCSRFToken, finishProject);
 router.post('/register-worker', isAdmin, validateCSRFToken, registerWorker);
+router.post('/remove-worker', isAdmin, validateCSRFToken, deleteWorker);
 router.post('/give-admin', isAdmin, validateCSRFToken, giveAdmin);
 router.post('/remove-admin', isAdmin, validateCSRFToken, removeAdmin);
 

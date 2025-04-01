@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const projectDateInput = document.getElementById('projectDate');
     const dateFilter = document.getElementById('dateFilter');
     const searchByDate = document.getElementById('searchByDate');
-    const addWorkerButton = document.getElementById('addWorkerForm');
-    const addWorkerFormBtn = document.getElementById('registrationForm');
+    const addWorkerButton = document.getElementById('addWorkerButton');
+    const addWorkerFormBtn = document.getElementById('addWorkerForm');
+    const removeWorkerButton = document.getElementById('removeWorkerButton');
+    const removeWorkerFormBtn = document.getElementById('removeWorkerForm');
     const changeEndDateBtn = document.getElementById('changeEndTimeButton');
-    const searchUserButton = document.getElementById('searchUserButton');
-    const searchProjectButton = document.getElementById('searchProjectButton');
 
     const title = document.getElementById('TitleHeader');
 
@@ -26,7 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
     searchByDate.addEventListener('click', handleProjectDateFilter);
 
     addWorkerButton.addEventListener('click', addWorkerForm);
-    addWorkerFormBtn.addEventListener('keypress', handleWorkerKeyPress);
+    addWorkerFormBtn.addEventListener('keypress', handleAddWorkerKeyPress);
+
+
+    removeWorkerButton.addEventListener('click', removeWorkerForm);
+    removeWorkerFormBtn.addEventListener('keypress', handleRemoveWorkerKeyPress);
 
     changeEndDateBtn.addEventListener('keypress', handleEndDateKeyPress);
     changeEndDateBtn.addEventListener('click', function () {
@@ -36,16 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     });
 
-    // Search User Button
-    searchUserButton.addEventListener('click', function () {
-        searchUserByID(document.getElementById('userIDInput').value);
-    });
+    function handleKeyPressForum(event) {
+        if (event.key === 'Enter') {
+            document.getElementById('workerAddSubmitButton').click();
+        }
+    }
+    document.getElementById('administrator').addEventListener('keypress', handleKeyPressForum);
 
-    // Search Project Button
-    searchProjectButton.addEventListener('click', function () {
-        searchProjectByID(document.getElementById('ProjectIDInput').value);
-    });
-
+    // Functions for filtering and searching functionality
     function filterAndSearchUsers() {
         let filtered = [...allUsers];
         const filterVal = userFilter.value;
@@ -81,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
             displayWorkerData(filtered);
         }
     }
-
     function filterAndSearchProjects() {
         let filtered = [...allProjects];
         const filterVal = projectFilter.value;
@@ -116,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
         displayProjectData(filtered);
     }
 
+    // Date filter core function
     function handleProjectDateFilter() {
         const date = projectDateInput.value;
         const mode = dateFilter.value;
@@ -129,23 +131,10 @@ document.addEventListener('DOMContentLoaded', function () {
         displayProjectData(filtered);
     }
 
-
-    // Function to handle keypress event
-    function handleKeyPressForum(event) {
-        // Check if Enter key is pressed
-        if (event.key === 'Enter') {
-            // Trigger button click
-            document.getElementById('submitButton').click();
-        }
-    }
-
-    // Add event listener to the last input element
-    document.getElementById('administrator').addEventListener('keypress', handleKeyPressForum);
-
     // Add event listener to form submission button
-    document.getElementById('submitButton').addEventListener('click', function (event) {
+    document.getElementById('workerAddSubmitButton').addEventListener('click', function (event) {
         document.getElementById('email-red').style.color = "rgb(255, 255, 255)";
-        document.getElementById('NoAccount').classList.add('nodisplay');
+        document.getElementById('NoAccountAdd').classList.add('nodisplay');
         document.getElementById('WorkerExsists').classList.add('nodisplay');
         document.getElementById('email').classList.remove('form-control-incorrect');
         // Prevent default button behavior
@@ -195,13 +184,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else if (data.type == '2') {
                 document.getElementById('email-red').style.color = "rgb(255, 0, 0)";
-                document.getElementById('NoAccount').classList.add('nodisplay');
+                document.getElementById('NoAccountAdd').classList.add('nodisplay');
                 document.getElementById('WorkerExsists').classList.remove('nodisplay');
                 document.getElementById('email').classList.add('form-control-incorrect');
             }
             else if (data.type == '1') {
                 document.getElementById('email-red').style.color = "rgb(255, 0, 0)";
-                document.getElementById('NoAccount').classList.remove('nodisplay');
+                document.getElementById('NoAccountAdd').classList.remove('nodisplay');
                 document.getElementById('WorkerExsists').classList.add('nodisplay');
                 document.getElementById('email').classList.add('form-control-incorrect');
             }
@@ -211,19 +200,70 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Add event listener to form submission button
+    document.getElementById('workerRemoveSubmitButton').addEventListener('click', function (event) {
+        document.getElementById('removalEmailDisplay').style.color = "rgb(255, 255, 255)";
+        document.getElementById('NoAccountRemove').classList.add('nodisplay');
+        document.getElementById('removalEmail').classList.remove('form-control-incorrect');
+        // Prevent default button behavior
+        event.preventDefault();
+
+        // Create JSON object
+        const userData = {
+            email: document.getElementById('removalEmail').value,
+        };
+
+        console.log('User data:', userData);
+
+        fetch('/admin/remove-worker', {
+            method: 'POST',
+            headers: {
+                'CSRF-Token': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData),
+        })
+            .then(response => handleRemoveWorkerResponses(response))
+            .catch(error => {
+                alert(`Cannot connect to server :P ${error}`);
+            });
+    });
+
+    function handleRemoveWorkerResponses(response) {
+        // If succesful announces it and resets form
+        response.json().then(data => {
+            if (data.status === 'Success') {
+                console.log("Successfully removed worker account for userID:", response.idUser);
+                showSuccessAlert('Successfully removed worker account', () => {
+                    userFilter.value = "workers";
+                    fetchAllUsers();
+                });
+                document.querySelector('form').reset();
+            }
+            else if (data.type == '2') {
+                document.getElementById('removalEmailDisplay').style.color = "rgb(255, 0, 0)";
+                document.getElementById('NoAccountRemove').classList.add('nodisplay');
+                document.getElementById('removalEmail').classList.add('form-control-incorrect');
+            }
+            else {
+                showErrorAlert('Failed to remove worker');
+            }
+        });
+    }
+
     function handleGiveAdminResponses(response) {
         response.json().then(data => {
             if (data.status === 'Success') {
                 console.log("Successfully gave admin to user with id:", data.idUser);
-                showSuccessAlert('Successfully gave administrator permissions', () => {
+                showSuccessAlert('Successfully gave administrator perms', () => {
                     userFilter.value = "admins";
                     fetchAllUsers();
                 });
             } else if (data.type == 2) {
-                showErrorAlert('User does already has admin permissions');
+                showErrorAlert('User already has admin perms');
             }
             else {
-                showErrorAlert('Something went wrong while trying to remove admin permissions');
+                showErrorAlert('Failed to remove administrator perms');
             }
         }).catch(err => {
             console.error('Failed to parse JSON response:', err);
@@ -249,26 +289,30 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     function handleEndDateKeyPress(event) {
         if (event.key === 'Enter') {
             projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
         }
     }
 
-    function handleWorkerKeyPress(event) {
+    function handleAddWorkerKeyPress(event) {
         if (event.key === 'Enter') {
-            console.log(document.getElementById('registrationForm').value);
-            addWorker(document.getElementById('registrationForm').value);
+            console.log(document.getElementById('addWorkerForm').value);
+            addWorker(document.getElementById('addWorkerForm').value);
+        }
+    }
+
+    function handleRemoveWorkerKeyPress(event) {
+        if (event.key === 'Enter') {
+            console.log(document.getElementById('removeWorkerForm').value);
+            removeWorker(document.getElementById('removeWorkerForm').value);
         }
     }
 
     // Function to display the fetched appointment data in a table formatfunction(data) {
     function displayProjectData(data) {
-        document.getElementById("searchUserByEmail").classList.add('nodisplay');
-        document.getElementById('registrationForm').classList.add('nodisplay');
-        document.getElementById('searchProject').classList.add('nodisplay');
-        document.getElementById('searchUser').classList.add('nodisplay');
+        document.getElementById('addWorkerForm').classList.add('nodisplay');
+        document.getElementById('removeWorkerForm').classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
         document.getElementById('adminDataContainer').classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
@@ -531,11 +575,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display user data on the page
     function displayUserData(users) {
+        document.getElementById('addWorkerForm').classList.add('nodisplay');
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
-        document.getElementById("searchUserByEmail").classList.add('nodisplay');
-        document.getElementById('registrationForm').classList.add('nodisplay');
-        document.getElementById('searchProject').classList.add('nodisplay');
-        document.getElementById('searchUser').classList.add('nodisplay');
+        document.getElementById('removeWorkerForm').classList.add('nodisplay');
         document.getElementById('workerDataContainer').classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('adminDataContainer').classList.add('nodisplay');
@@ -595,11 +637,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display user data on the page
     function displayWorkerData(users) {
+        document.getElementById('addWorkerForm').classList.add('nodisplay');
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
-        document.getElementById("searchUserByEmail").classList.add('nodisplay');
-        document.getElementById('registrationForm').classList.add('nodisplay');
-        document.getElementById('searchProject').classList.add('nodisplay');
-        document.getElementById('searchUser').classList.add('nodisplay');
+        document.getElementById('removeWorkerForm').classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('adminDataContainer').classList.add('nodisplay');
         document.getElementById('workerDataContainer').classList.remove('nodisplay');
@@ -669,10 +709,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to display user data on the page
     function displayAdminData(users) {
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
-        document.getElementById("searchUserByEmail").classList.add('nodisplay');
-        document.getElementById('registrationForm').classList.add('nodisplay');
-        document.getElementById('searchProject').classList.add('nodisplay');
-        document.getElementById('searchUser').classList.add('nodisplay');
+        document.getElementById('addWorkerForm').classList.add('nodisplay');
+        document.getElementById('removeWorkerForm').classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('adminDataContainer').classList.remove('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
@@ -769,6 +807,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error:', error);
             });
     }
+    
     // Function that displays projects by ID
     function searchProjectByID(idProjects) {
         if (document.getElementById('ProjectIDInput')) {
@@ -798,21 +837,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to show a singular account by account ID
     function searchUserByID(idUser) {
-        document.getElementById('userIDInput').value = '';
-        document.getElementById('InvalidID').classList.add('nodisplay');
-        console.log("Viewing user by ID:", idUser);
-        // Make a fetch request to your backend to retrieve all user data
         fetch(`/admin/user-by-ID/${idUser}`)
             .then(response => response.json())
             .then(data => {
-                // Call a function to display the user data on the page
                 if (data[0]) {
                     const title = document.getElementById('TitleHeader');
                     const userTitle = translate('UserID');
                     title.innerHTML = `${userTitle}-${idUser}`;
                     displayUserData(data);
                 }
-                else { document.getElementById('InvalidID').classList.remove('nodisplay'); }
+                else { showErrorAlert('Failed to find user'); }
 
             })
             .catch(error => console.error('Error fetching user data:', error));
@@ -944,30 +978,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         searchProjectByID(idProjects);
-        document.getElementById("registrationForm").classList.add('nodisplay');
+        document.getElementById("addWorkerForm").classList.add('nodisplay');
         document.getElementById('InvalidDateTime').classList.add('nodisplay');
-        document.getElementById('InvalidProjectID').classList.add('nodisplay');
-        document.getElementById("searchUser").classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
         document.getElementById('workerDataContainer').classList.add('nodisplay');
-        document.getElementById("searchProject").classList.add('nodisplay');
         document.getElementById("inputNewEndDate").classList.remove('nodisplay');
 
     }
     // Display input field for adding a new worker
     function addWorkerForm() {
-        document.getElementById("searchUserByEmail").classList.add('nodisplay');
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
-        document.getElementById("searchProject").classList.add('nodisplay');
         document.getElementById('ProjectDataContainer').classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
-        document.getElementById("searchUser").classList.add('nodisplay');
-        document.getElementById("registrationForm").classList.remove('nodisplay');
-        document.getElementById('userDataContainer').classList.add('nodisplay');
+        document.getElementById("addWorkerForm").classList.remove('nodisplay');
+        document.getElementById("removeWorkerForm").classList.add('nodisplay');
         document.getElementById('workerDataContainer').classList.add('nodisplay');
         document.getElementById('adminDataContainer').classList.add('nodisplay');
         const title = document.getElementById('TitleHeader');
         title.innerHTML = translate("Adding a new worker");
+    }
+    // Display input field for removing a worker
+    function removeWorkerForm() {
+        document.getElementById("inputNewEndDate").classList.add('nodisplay');
+        document.getElementById('ProjectDataContainer').classList.add('nodisplay');
+        document.getElementById('userDataContainer').classList.add('nodisplay');
+        document.getElementById("addWorkerForm").classList.add('nodisplay');
+        document.getElementById('workerDataContainer').classList.add('nodisplay');
+        document.getElementById('adminDataContainer').classList.add('nodisplay');
+        document.getElementById("removeWorkerForm").classList.remove('nodisplay');
+        const title = document.getElementById('TitleHeader');
+        title.innerHTML = translate("Removing a worker");
     }
     fetchAllProjects();
     fetchAllUsers();

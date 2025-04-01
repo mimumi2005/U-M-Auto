@@ -147,6 +147,36 @@ export const removeAdmin = async (req, res) => {
   }
 };
 
+// Controller function to remove worker
+export const deleteWorker = async (req, res) => {
+  const { email } = req.body;
+  const user = await adminModel.getUserIdByEmail(email);
+  const idUser = user[0].idUser;
+  try {
+    const checkIfValidWorker = await adminModel.isUserAlreadyWorker(idUser);
+    if (!checkIfValidWorker.length) {
+      return res.status(409).json({ status: 'error', type: '2', message: 'User is not a worker' });
+    }
+
+    const checkIfWorkerIsAdmin = await adminModel.isUserAlreadyAdmin(idUser);
+    if (checkIfWorkerIsAdmin.length) {
+      await adminModel.removeAdmin(idUser);
+    }
+
+    // Proceed to remove worker
+    await adminModel.removeWorker(idUser);
+
+    res.json({
+      status: 'Success',
+      message: 'Worker removed successfully',
+      idUser: idUser,
+    });
+  } catch (err) {
+    console.error('Error removing worker:', err);
+    res.status(500).json({ status: 'error', message: 'Internal server error', error: err.message });
+  }
+};
+
 
 
 // Controller function to remove the delayed status from a project

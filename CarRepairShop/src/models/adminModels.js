@@ -216,15 +216,27 @@ export const removeAdmin = (idUser) => {
   });
 };
 
+// Function to remove a worker
+export const removeWorker = (idUser) => {
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM workers WHERE idUser = ?';
+    connection.query(query, [idUser], (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(result);
+    });
+  });
+};
+
 
 export const getProjectsByUserId = (idUser, callback) => {
   const sql_query = `
-    SELECT projects.*, users.UserName
+    SELECT projects.*, users.UserName, project_status.statusName
     FROM projects
     JOIN users ON projects.idUser = users.idUser
+    LEFT JOIN project_status ON projects.idStatus = project_status.idStatus
     WHERE projects.idUser = ?
   `;
-
-  // Execute the query
   connection.query(sql_query, [idUser], callback);
 };
