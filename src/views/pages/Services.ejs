@@ -1,0 +1,277 @@
+<body>
+    <div id="unauthorizedAccess" class="custom-alert text-danger nodisplay">
+        <h4>
+            <%= __('unauthorized_access') %>
+        </h4>
+    </div>
+    <div id="session-message" class="custom-alert nodisplay">
+        <h4>
+            <%= __('session_message') %>
+        </h4>
+    </div>
+
+    <div id="Services" class="mt-4  text-white ">
+        <div class="container p-4 bg-light">
+            <h2 class="text-center ">
+                <%= __('our_services_title') %>
+            </h2>
+            <div class="row justify-content-center">
+                <!-- Service 1 -->
+                <div class="service-item col-md-4 p-3 text-center">
+                    <a href="/Services?scrollTo=Overall_Checkup" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-wrench fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('overall_checkup_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('overall_checkup_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="service-item col-md-4 p-3 text-center">
+                    <a href="/Services?scrollTo=Car_Painting" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-paint-brush fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('car_painting_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('car_painting_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="service-item col-md-4 p-3 text-center">
+                    <a href="/Services?scrollTo=Rust_Removal" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-eraser fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('rust_removal_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('rust_removal_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <!-- Service 4 -->
+                <div class="service-item col-md-6 p-3 text-center">
+                    <a href="/Services?scrollTo=Tuning" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-car fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('tuning_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('tuning_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="service-item col-md-6 p-3 text-center mb-5">
+                    <a href="/Services?scrollTo=Custom_Part_Insertion" class="text-decoration-none">
+                        <div class="rounded bg-light p-4 h-100">
+                            <i class="fa fa-cogs fa-3x text-primary mb-3" aria-hidden="true"></i>
+                            <h4 class="text-white">
+                                <%= __('custom_part_insertion_title') %>
+                            </h4>
+                            <p class="text-muted">
+                                <%= __('custom_part_insertion_description') %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" p-1 mt-5 text-light">
+        <div class="container p-4">
+            <!-- Overall Checkup -->
+            <section id="Overall_Checkup" class="mt-3 p-5 bg-light fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('overall_checkup_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('overall_checkup_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('overall_checkup_engine_title') %></h3>
+                        <p>
+                            <%= __('overall_checkup_engine_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('overall_checkup_safety_title') %></h3>
+                        <p>
+                            <%= __('overall_checkup_safety_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('overall_checkup_tires_title') %></h3>
+                        <p>
+                            <%= __('overall_checkup_tires_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+    
+            <!-- Car Painting -->
+            <section id="Car_Painting" class="mt-5 p-5 bg-light fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('car_painting_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('car_painting_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('car_painting_materials_title') %></h3>
+                        <p>
+                            <%= __('car_painting_materials_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('car_painting_customization_title') %></h3>
+                        <p>
+                            <%= __('car_painting_customization_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('car_painting_protection_title') %></h3>
+                        <p>
+                            <%= __('car_painting_protection_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+    
+            <!-- Rust Removal -->
+            <section id="Rust_Removal" class="mt-5 p-5 bg-light fade-in-hidden">
+                <div class="text-center  text-white mb-4">
+                    <h2><%= __('rust_removal_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('rust_removal_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('rust_removal_process_title') %></h3>
+                        <p>
+                            <%= __('rust_removal_process_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('rust_removal_protection_title') %></h3>
+                        <p>
+                            <%= __('rust_removal_protection_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('rust_removal_benefits_title') %></h3>
+                        <p>
+                            <%= __('rust_removal_benefits_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+    
+            <!-- Tuning -->
+            <section id="Tuning" class="mt-5 p-5 bg-light fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('tuning_title') %></h2>
+                </div>
+                <div class="paragraph">
+                    <p class="lead text-center">
+                        <%= __('tuning_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('tuning_performance_title') %></h3>
+                        <p>
+                            <%= __('tuning_performance_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('tuning_customization_title') %></h3>
+                        <p>
+                            <%= __('tuning_customization_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('tuning_efficiency_title') %></h3>
+                        <p>
+                            <%= __('tuning_efficiency_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+    
+            <!-- Custom Part Insertion -->
+            <section id="Custom_Part_Insertion" class="mt-5 p-5 bg-light  fade-in-hidden">
+                <div class="text-center text-white mb-4">
+                    <h2><%= __('custom_part_insertion_title') %></h2>
+                </div>
+                <div class="paragraph ">
+                    <p class="lead text-center">
+                        <%= __('custom_part_insertion_intro') %>
+                    </p>
+                    <div class="mt-5">
+                        <h3><%= __('custom_part_insertion_high_quality_title') %></h3>
+                        <p>
+                            <%= __('custom_part_insertion_high_quality_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('custom_part_insertion_performance_title') %></h3>
+                        <p>
+                            <%= __('custom_part_insertion_performance_description') %>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h3><%= __('custom_part_insertion_customizable_title') %></h3>
+                        <p>
+                            <%= __('custom_part_insertion_customizable_description') %>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2023 Car Repair Shop - Odre, LV-3285</p>
+            <p class="mb-2">
+                <%= __('contact_us') %>: velderis@gmail.com or <%= __('call_us') %>
+            </p>
+
+            <!-- Language Switcher Links in Footer -->
+            <div class="language-switcher-footer">
+                <a href="/?lang=en" class="footer-link"><span class="flag-icon flag-icon-gb"></span> English</a> |
+                <a href="/?lang=lv" class="footer-link"><span class="flag-icon flag-icon-lv"></span> Latviešu valoda</a>
+                |
+                <a href="/?lang=ru" class="footer-link"><span class="flag-icon flag-icon-ru"></span> Русский язык</a> |
+                <a href="/?lang=de" class="footer-link"><span class="flag-icon flag-icon-de"></span> Deutsche
+                    Sprache</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/Services.js" nonce="<%= nonce %>"></script>
+    <script src="/js/Services.js" nonce="<%= nonce %>"></script>
+</body>

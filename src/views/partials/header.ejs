@@ -1,0 +1,206 @@
+<head>
+    <style nonce="<%= nonce %>">
+        body {
+            background-image: url('/images/main_image2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            height: 300px;
+            margin: 0;
+            background-color: #000000;
+            color: #000000;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        .content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100px;
+        }
+
+        .dropdown-hover:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Additional styling for menu items */
+        .dropdown-item {
+            color: white;
+        }
+
+        .dropdown-item-logout {
+            background-color: transparent;
+            color: red;
+        }
+
+        .text-red {
+            color: red;
+        }
+
+        .custom-divider {
+            height: 1px;
+            /* Adjust as needed */
+            background-color: rgba(255, 255, 255, 0.2);
+            /* Adjust the color */
+            margin: 0.5rem 0;
+            /* Adjust spacing as needed */
+        }
+
+        #scroll-to-top-btn {
+            z-index: 1000;
+            display: none;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        .h5px {
+            height: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="position-relative">
+        <!-- Header navigation -->
+        <nav id="main-nav" class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/"><img src="/images/Icon_gradiant.png" alt="Auto Repair Service icon"
+                    width="150" height="75"></a>
+
+            <button class="navbar-toggler navbar-dark bg-gray" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="<%= __('Toggle navigation') %>">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav" id="defaultNav">
+                    <li class="nav-item">
+                        <a class="nav-link h4 mr-2 text-light" href="/Services">
+                            <%= __('Services') %>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link h4 mr-2 text-light" href="/AboutUs">
+                            <%= __('About us') %>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item nodisplay" id="estimatorButton">
+                        <a class="nav-link h4 mr-2 text-light" href="/Estimator">
+                            <%= __('Price Estimator') %>
+                        </a>
+                    </li>
+                    <li class="nav-item nodisplay" id="timeTableButton">
+                        <a class="nav-link h4 mr-2 text-light" href="/Appointments">
+                            <%= __('Make Appointment') %>
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item nodisplay" id="workerButton">
+                    <li class="nav-item dropdown  dropdown-hover nodisplay" id="WorkerButtonDropDown">
+                        <a class="nav-link h4 mr-2 text-light dropdown-toggle"
+                            alt="<%= __('Click or press enter to expand') %>" id="workerDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <%= __('Check Appointments') %>
+                        </a>
+                        <div class="dropup dropdown-menu " aria-labelledby="workerDropdown">
+                            <a class="dropdown-item text-white" href="/worker/WorkerPage#searchTodaysProjects">
+                                <%= __('View projects to be finished today') %>
+                            </a>
+                            <a class="bg-gray dropdown-item text-white" href="/worker/WorkerPage#searchDelayedProjects">
+                                <%= __('View delayed projects') %>
+                            </a>
+                            <a class="bg-gray dropdown-item text-white" href="/worker/WorkerPage#searchActiveProjects">
+                                <%= __('View active projects') %>
+                            </a>
+                        </div>
+                    </li>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="LoginButton">
+                        <a class="nav-link h4 mr-2 text-light" href="/Login">
+                            <%= __('Login') %>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown dropdown-hover nodisplay" id="LogOutButton">
+                        <a class="nav-link h4 mr-2 text-light dropdown-toggle"
+                            alt="<%= __('Click or press enter to expand') %>" id="accountDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <%= __('Profile') %>
+                        </a>
+                        <div class=" dropdown-menu " aria-labelledby="accountDropdown">
+                            <a class=" dropdown-item text-light pl-3" href="/auth/ProfilePage">
+                                <%= __('Account Info') %>
+                            </a>
+                            <div class="bg-gray ">
+                                <a class="  dropdown-item text-light pl-3 " href="/auth/UserAppointment">
+                                    <%= __('Appointments') %>
+                                </a>
+                                <a class="  dropdown-item text-light pl-3" href="/auth/Settings">
+                                    <%= __('Notifications') %>
+                                </a>
+                                <a id="AdminMenu" class=" pl-3 dropdown-item text-light nodisplay "
+                                    href="/admin/admin-dashboard">
+                                    <%= __('Admin panel') %>
+                                </a>
+                                <a id="Statistics" class=" pl-3   dropdown-item text-light nodisplay "
+                                    href="/admin/Statistics">
+                                    <%= __('Statistics') %>
+                                </a>
+                                <div class=" custom-divider"></div>
+                                <a tabindex=0 class=" pl-3 dropdown-item-logout text-red pointer" id="Log-out-button">
+                                    <b>
+                                        <%= __('Log Out') %>
+                                    </b>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+
+
+
+                    <li class="nav-item dropdown form-select dropdown-hover">
+                        <a class="nav-link h4 mt-1 text-light d-flex align-items-center" id="languageDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="small d-flex align-items-center">
+                                <span id="currentLanguageFlag" class="flag-icon small me-2"></span>&nbsp;
+                                <%= language.toUpperCase() %>
+                            </span>
+                        </a>
+                        <ul id="languageDropdownSelect" class="dropdown-menu text-light"
+                            aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item text-white" href="#" data-lang="en"><span
+                                        class="flag-icon flag-icon-gb"></span>&nbsp;&nbsp;EN</a></li>
+                            <div class="bg-light">
+                                <li><a class="dropdown-item text-white" href="#" data-lang="lv"><span
+                                            class="flag-icon flag-icon-lv"></span>&nbsp;&nbsp;LV</a></li>
+                                <li><a class="dropdown-item text-white" href="#" data-lang="de"><span
+                                            class="flag-icon flag-icon-de"></span>&nbsp;&nbsp;DE</a></li>
+                                <li><a class="dropdown-item text-white" href="#" data-lang="ru"><span
+                                            class="flag-icon flag-icon-ru"></span>&nbsp;&nbsp;RU</a></li>
+                            </div>
+                        </ul>
+                    </li>
+
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </nav>
+
+    </div>
+    <div id="scroll-to-top-btn">↑</div>
+</body>

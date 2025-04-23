@@ -1,0 +1,27 @@
+
+
+<body>
+<div class="appointment-container">
+    <div class="container  bg-light rounded appointment-content ">
+        <h2 class="text-center mb-4 text-white"><%= __('Your Appointments') %></h2>
+
+        <!-- Table to display appointment data -->
+        <div id="appointment-data" class="table-responsive text-white">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="align-middle" scope="col"><%= __('Start Date') %></th>
+                        <th class="align-middle" scope="col"><%= __('Projected End Date') %></th>
+                        <th class="align-middle" scope="col"><%= __('Project Info') %></th>
+                        <th class="align-middle" scope="col"><%= __('Delayed Status') %></th>
+                    </tr>
+                </thead>
+                <tbody id="appointment-table-body">
+                    <!-- Appointment data will be injected here -->
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <script src="/js/UserAppointment.js" nonce="<%= nonce %>"></script>
+</body>
+

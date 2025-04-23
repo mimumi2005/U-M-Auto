@@ -1,0 +1,103 @@
+
+
+<style nonce="<%= nonce %>">
+    /* Custom styles for the table container */
+    .customContainer {
+        float: right;
+        margin-right: 3%;
+    }
+    .overflow-X {
+        overflow-x: auto;
+    }
+    .width50{
+        width:50%;
+    }
+    .width80{
+        width:80%;
+    }
+    .maxw20{
+        max-width:20%;
+    }
+
+    
+</style>
+<body>
+    <div class="container my-4 bg-light rounded">
+        <h2 class="text-center text-white p-3   " id="TitleHeader"><%= __('Projects') %></h2>
+
+        <!-- Table to display appointment data -->
+        <div  id="ProjectDataContainer" class="overflow-X table-responsive text-white">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="align-middle" scope="col" data-column="idUser"><%= __('Username') %></th>
+                        <th class="align-middle" scope="col" data-column="StartDate"><%= __('Start Date') %></th>
+                        <th class="align-middle" scope="col" data-column="EndDateProjection"><%= __('Projected End Date') %></th>
+                        <th class="align-middle" scope="col" data-column="ProjectInfo"><%= __('Project Info') %></th>
+                        <th class="align-middle" scope="col" data-column="Status"><%= __('Overall status') %></th>
+                        <th class="align-middle" scope="col" data-column="Delayed"><%= __('Delay Status') %></th>
+                    </tr>
+                </thead>
+                <tbody id="project-table-body">
+                    <!-- Appointment data will be injected here -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Table to display user data -->
+        <div   id="userDataContainer" class="table-responsive overflow-X text-white">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+
+                        <th class="align-middle" scope="col"><%= __('Name') %></th>
+                        <th class="align-middle" scope="col"><%= __('Username') %></th>
+                        <th class="align-middle" scope="col"><%= __('Email') %></th>
+                        <th class="align-middle" scope="col"><%= __('Check Projects') %></th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    <!-- Appointment data will be injected here -->
+                </tbody>
+            </table>
+        </div>
+
+
+        <div  id="inputNewEndDate" class="table-responsive bg-light overflow-X nodisplay">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th colspan="2" class="text-center text-white">
+                            <%= __('Choose the new end date for project: ID_') %><span id="project_id"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="align-middle text-white width50" >
+                            <p><strong><%= __('!WARNING!') %></strong></p><p><%= __('If the project isn\'t yet tagged as delayed, it will be after any changes to the enddatetime.') %></p>
+                        </td>
+                        <td class="align-middle width50" >
+                            <div class="d-flex flex-column align-items-center">
+                                <input  class="width80" type="datetime-local" id="dateinput"
+                                    class="form-control text-center mb-2">
+                                <button id="changeEndTimeButton" class="btn btn-outline-primary mt-2"><%= __('Change') %></button>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                    <tr id="InvalidDateTime" class="nodisplay">
+                        <td colspan="2" class="text-center">
+                            <span class="text-danger"><b><%= __('Invalid end time') %></b></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    
+    <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
+    <script src="/js/WorkerPage.js" nonce="<%= nonce %>"></script>
+</body>
+
