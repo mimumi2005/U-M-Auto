@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
   build-essential
 
 # Set working directory
-WORKDIR /app
+WORKDIR /src
 
 # Copy files
 COPY . .
