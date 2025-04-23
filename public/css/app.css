@@ -28,17 +28,12 @@
     height: 5px;
     border-radius: 20px;
     background-color: #f0f0f0;
-  
-  
-  
-  
   }
   
   #imageContainer::-webkit-scrollbar-thumb {
     background-color: rgba(41, 40, 40, 0.8);
   
     border-radius: 20px;
-  
   }
   
   #imageContainer::-webkit-scrollbar-thumb:hover {
@@ -59,6 +54,14 @@
     pointer-events: none;
   
   }
+  
+  #map {
+    width: 70%;
+    height: 250px;
+    min-height: 100px;
+    border-radius: 10px;
+  }
+
   
   .pointer-cursor {
     cursor: pointer;
@@ -935,3 +938,4 @@
   font-size: 2rem;
   margin-bottom:10px;
 }
+

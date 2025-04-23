@@ -35,12 +35,12 @@ app.use(helmet({ hidePoweredBy: true }));
 
 app.use(helmet.contentSecurityPolicy({
   directives: {
-    defaultSrc: ["'self'", "https://maps.googleapis.com","carrepairshop.com", "file:"],
-    frameSrc: ["'self'", "https://www.google.com","carrepairshop.com", "https://www.gstatic.com"],
-    connectSrc: ["'self'","carrepairshop.com", "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov"],
+    defaultSrc: ["'self'", "https://maps.googleapis.com", "https://umautorepair.up.railway.app", "file:"],
+    frameSrc: ["'self'", "https://www.google.com", "https://umautorepair.up.railway.app",  "https://www.gstatic.com"],
+    connectSrc: ["'self'", "https://umautorepair.up.railway.app",   "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov"],
     imgSrc: [
       "'self'",
-      "carrepairshop.com",
+      "https://umautorepair.up.railway.app",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/ru.svg",
@@ -51,7 +51,7 @@ app.use(helmet.contentSecurityPolicy({
     ],
     scriptSrc: [
       "'self'",
-      "carrepairshop.com",
+      "https://umautorepair.up.railway.app",
       "https://maps.googleapis.com",
       "https://www.gstatic.com",
       "https://www.google.com/recaptcha/api.js",
@@ -64,12 +64,12 @@ app.use(helmet.contentSecurityPolicy({
       (req, res) => `'nonce-${res.locals.nonce}'`,
       "https://fonts.googleapis.com/css",
       "https://fonts.googleapis.com/css2",
-      "carrepairshop.com",
+      "https://umautorepair.up.railway.app",
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css",
       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
     ],
-    fontSrc: ["'self'", "carrepairshop.com","https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"],
+    fontSrc: ["'self'", "https://umautorepair.up.railway.app","https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"],
     objectSrc: ["'none'"],
     mediaSrc: ["'self'"], 
   },

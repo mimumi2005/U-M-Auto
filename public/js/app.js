@@ -111,7 +111,7 @@ function initMap() {
   var marker = new google.maps.Marker({
     map: map,
     position: myLatLng,
-    title: 'Marker Title' // Replace with your marker title
+    title: 'Garage'
   });
 
   // Optional: Add an info window to the marker
