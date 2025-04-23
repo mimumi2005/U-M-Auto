@@ -1,6 +1,6 @@
 FROM node:18
 
-# Install build tools and dependencies for msnodesqlv8
+# Install required dependencies
 RUN apt-get update && apt-get install -y \
   python3 \
   python3-pip \
@@ -10,14 +10,14 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy all files to the container
+# Copy files
 COPY . .
 
 # Set Python for node-gyp
-RUN npm config set python python3
+ENV PYTHON=python3
 
-# Install Node.js dependencies
+# Install Node dependencies
 RUN npm install
 
-# Start your app directly with Node.js
+# Start your app
 CMD ["node", "app.js"]
