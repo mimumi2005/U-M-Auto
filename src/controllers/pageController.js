@@ -18,7 +18,7 @@ export const getLoginPage = (req, res) => {
     const expiredMessage = req.session.expiredMessage; // Retrieve the message
     req.session.expiredMessage = null; // Clear the message after use
     const csrfTokenValue = req.csrfToken;
-    res.render('pages/login', { expiredMessage, nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Render the login page with the message
+    res.render('pages/Login', { expiredMessage, nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Render the login page with the message
 };
 
 export const getSignUpPage = (req, res) => {
