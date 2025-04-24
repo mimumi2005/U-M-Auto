@@ -18,7 +18,7 @@ const connection = mysql2.createConnection({
 
 connection.connect((err) => {
   if (err) throw err;
-  console.log('Connected to the MySQL database');
+  console.log('✅ Connected to the MySQL database');
 });
 
 export default connection;

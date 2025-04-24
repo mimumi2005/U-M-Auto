@@ -46,6 +46,7 @@ const sessionStore = new MySQLStore({
 const app = express();
 
 // Security Middleware
+app.set('trust proxy', 1);
 app.use(generateNonce);
 app.use(helmet({ hidePoweredBy: true }));
 
@@ -163,7 +164,7 @@ app.use("/", routes);
 const PORT = process.env.PORT || 80;
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
 
 // Saving session info

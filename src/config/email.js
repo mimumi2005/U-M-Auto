@@ -14,6 +14,6 @@ const connection = await mysql2.createConnection({
   database: process.env.DB_NAME
 });
 
-console.log('Connected to MySQL (promise-based).');
+console.log('✅ Connected to MySQL (promise-based).');
 
 export default connection;
