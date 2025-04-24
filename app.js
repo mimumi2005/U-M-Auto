@@ -141,11 +141,6 @@ app.get('*', (req, res, next) => {
   }
 });
 
-app.use((req, res, next) => {
-  console.log('🔍 Incoming session at middleware:', req.session);
-  next();
-});
-
 // Routes
 app.use("/", routes);
 
