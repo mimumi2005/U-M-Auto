@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "main": "database.js",
   "type": "module",
-  "scripts": 
-  {
-    "start": "node src/app.js",
-    "migrate": "npx knex migrate:latest --knexfile src/knexfile.cjs",
-    "seed": "npx knex seed:run --knexfile src/knexfile.cjs",
-    "setup": "npm run migrate && npm run seed"
+  "scripts": {
+    "migrate": "npx knex migrate:latest --knexfile knexfile.cjs",
+    "seed": "npx knex seed:run --knexfile knexfile.cjs",
+    "setup": "npm run migrate && npm run seed",
+    "start": "node src/app.js"
   },
-
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.7.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

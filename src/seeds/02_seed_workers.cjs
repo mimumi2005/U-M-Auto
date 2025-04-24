@@ -1,11 +1,8 @@
-// seeds/seed_workers.js
-const knex = require('knex');
-const dbConfig = require('../knexfile.cjs');
-
-const db = knex(dbConfig.development);
-
-exports.seed = async function () {
-  await db('workers').del();
+/**
+ * @param {import('knex')} knex
+ */
+exports.seed = async function (knex) {
+  await knex('workers').del();
 
   const workers = [
     { idUser: 1, tenure: 3, StartWorkDate: '2024-01-01', WorkerType: 'Main admin' },
@@ -15,8 +12,8 @@ exports.seed = async function () {
   ];
 
   for (const worker of workers) {
-    await db('workers').insert(worker);
+    await knex('workers').insert(worker);
   }
 
-  await db.destroy(); // Close the database connection
+  console.log(`✅ Inserted ${workers.length} workers into the database.`);
 };

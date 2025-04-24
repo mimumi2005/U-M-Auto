@@ -1,16 +1,23 @@
-// seeds/seed_users.js
-const knex = require('knex');
-const dbConfig = require('../knexfile.cjs');
+const { faker } = require('@faker-js/faker');
 const bcrypt = require('bcrypt');
-const db = knex(dbConfig.development);
+
+/**
+ * @param {import('knex')} knex
+ */
 
 // Function to generate a unique username and email
-const generateUserDetails = (index) => {
-  const baseName = `User${index}`;
-  const username = `user${index}`;
-  const email = `user${index}@example.com`;
-  return { Name: baseName, Username: username, Email: email };
-};
+function generateUserDetails() {
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const username = faker.internet.username({ firstName, lastName });
+  const email = faker.internet.email({ firstName, lastName });
+
+  return {
+    Name: firstName,
+    Username: username,
+    Email: email,
+  };
+}
 
 // Function to create a specified number of users
 const createUsers = async (count) => {
@@ -18,7 +25,7 @@ const createUsers = async (count) => {
   const users = [];
 
   for (let i = 1; i <= count; i++) {
-    const { Name, Username, Email } = generateUserDetails(i);
+    const { Name, Username, Email } = generateUserDetails();
     users.push({
       Name,
       Username,
@@ -30,14 +37,13 @@ const createUsers = async (count) => {
   return users;
 };
 
-exports.seed = async function () {
-  await db('users').del();
+exports.seed = async function (knex) {
+  await knex('users').del();
 
-  const userCount = 149; // Specify the number of users to create
+  const userCount = 25;
   const users = await createUsers(userCount);
 
-  // Create the admin user
-  const adminHashedPassword = await bcrypt.hash('abols123', 10);
+  const adminHashedPassword = await bcrypt.hash('password123', 10);
   const adminUser = {
     Name: 'Janis',
     Username: 'Mim05',
@@ -45,9 +51,7 @@ exports.seed = async function () {
     password: adminHashedPassword,
   };
 
-  // Combine admin user with the regular users
-  await db('users').insert([adminUser, ...users]);
-  console.log(`Inserted ${userCount + 1} users into the database (including admin).`);
+  await knex('users').insert([adminUser, ...users]);
 
-  await db.destroy(); // Close the database connection
+  console.log(`✅ Inserted ${userCount + 1} users into the database (including admin).`);
 };
