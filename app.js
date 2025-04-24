@@ -69,6 +69,7 @@ app.use(helmet.contentSecurityPolicy({
     scriptSrc: [
       "'self'",
       "https://umautorepair.up.railway.app",
+      "https://www.googletagmanager.com",
       "https://maps.googleapis.com",
       "https://www.gstatic.com",
       "https://www.google.com/recaptcha/api.js",
