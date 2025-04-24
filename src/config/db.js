@@ -8,13 +8,6 @@ if (!process.env.DATABASE_URL) {
 
 const dbUrl = new URL(process.env.DATABASE_URL);
 
-console.log("Connecting to DB with:", {
-  host: dbUrl.hostname,
-  user: dbUrl.username,
-  password: dbUrl.password,
-  database: dbUrl.pathname.replace('/', ''),
-});
-
 const connection = mysql2.createConnection({
   host: dbUrl.hostname,
   port: dbUrl.port || 3306,
