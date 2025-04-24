@@ -2,7 +2,7 @@
 
 import express from "express";
 import session from "express-session";
-import MySQLStore from 'express-mysql-session';
+import expressMySQLSession from 'express-mysql-session';
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,6 +25,7 @@ import "./src/models/cronJob.js";
 // Replicating __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const MySQLStore = expressMySQLSession(session);
 
 dotenv.config();
 
