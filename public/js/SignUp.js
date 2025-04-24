@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //password validation
         const passwordInput = document.getElementById('password');
         const passwordValue = passwordInput.value.trim();
-        const passwordRegex = /^(?=.*[0-9A-Z!@#$%^&*])(.{5,})$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
         
         if (!passwordRegex.test(passwordValue)) {
             document.getElementById('password').classList.add('form-control-incorrect');

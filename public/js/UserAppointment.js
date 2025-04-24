@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const projectInfoCell = document.createElement('td');
             projectInfoCell.textContent = appointment.ProjectInfo;
             projectInfoCell.classList.add('text-white');
+            projectInfoCell.classList.add('min-width-200px');
             row.appendChild(projectInfoCell);
 
             // Delay Status

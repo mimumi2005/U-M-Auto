@@ -11,7 +11,7 @@
     </div>
 
     <div tabindex="0" id="Services" class=" mt-2 text-light">
-        <div class=" rounded ">
+        <div class="rounded">
             <div id="servicesCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators ">
                     <button type="button " data-bs-target="#servicesCarousel" data-bs-slide-to="0" class="active btn "
@@ -26,23 +26,6 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active ">
                         <div id="carousel" class=" row flex-nowrap  p-1 mr-1 ">
-                            <div class="service-item col-md-4 p-2 m-1">
-                                <div class="rounded text-center " id="PriceEstimatorGuest">
-                                    <a class="text-light ">
-                                        <img class="img rounded " src="/images/Price_Calculation_Guest.jpg"
-                                            alt="Log in to access this function image">
-                                    </a>
-                                </div>
-                                <div class="rounded text-center " id="PriceEstimator">
-                                    <a class="text-light" href="/Estimator">
-                                        <img class="img rounded" src="/images/Price_Calculation.jpg"
-                                            alt="Automatic price estimator image">
-                                        <h4 class="text-center position-absolute overlay-text">
-                                            <%= __('price_estimator_title') %>
-                                        </h4>
-                                    </a>
-                                </div>
-                            </div>
                             <div class="service-item col-md-4 p-2 ml-2 m-1">
                                 <div class="rounded text-center ">
                                     <a class="text-light  " href="/Services?scrollTo=Overall_Checkup">
@@ -97,7 +80,23 @@
                                     </a>
                                 </div>
                             </div>
-
+                            <div class="service-item col-md-4 p-2 m-1">
+                                <div class="rounded text-center " id="PriceEstimatorGuest">
+                                    <a class="text-light ">
+                                        <img class="img rounded " src="/images/Price_Calculation_Guest.jpg"
+                                            alt="Log in to access this function image">
+                                    </a>
+                                </div>
+                                <div class="rounded text-center " id="PriceEstimator">
+                                    <a class="text-light" href="/Estimator">
+                                        <img class="img rounded" src="/images/Price_Calculation.jpg"
+                                            alt="Automatic price estimator image">
+                                        <h4 class="text-center position-absolute overlay-text">
+                                            <%= __('price_estimator_title') %>
+                                        </h4>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -114,13 +113,11 @@
             </div>
         </div>
 
-
-    <div class="container text-white">
-        <div class="rounded m-3">
+        <div id="avdantages-container" class="rounded text-white">
             <h3 class="text-center">
                 <%= __('advantages_title') %>
             </h3>
-            <div class="row ml-5 p-3">
+            <div class="row p-3">
                 <div class="col-md-6 text-left">
                     <ul class="list-unstyled">
                         <li class="mb-3">
@@ -173,82 +170,81 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <section class="news-section mt-5">
-        <h2 class="news-section-title">
-            <%= __('news_title') %>
-        </h2>
+        <section class="news-section mt-5">
+            <h2 class="news-section-title">
+                <%= __('news_title') %>
+            </h2>
 
-        <div class="news-item">
-            <div class="news-title">🚗 <%= __('news_oil_discount_title') %>
+            <div class="news-item">
+                <div class="news-title">🚗 <%= __('news_oil_discount_title') %>
+                </div>
+                <hr class="bg-dark">
+                <div class="news-details">
+                    <%= __('news_oil_discount_details') %>
+                </div>
             </div>
-            <hr class="bg-dark">
-            <div class="news-details">
-                <%= __('news_oil_discount_details') %>
-            </div>
-        </div>
 
-        <div class="news-item"><br>
-            <div class="news-title">📅 <%= __('news_online_booking_title') %>
+            <div class="news-item"><br>
+                <div class="news-title">📅 <%= __('news_online_booking_title') %>
+                </div>
+                <hr class="bg-dark">
+                <div class="news-details">
+                    <%= __('news_online_booking_details') %>
+                </div>
             </div>
-            <hr class="bg-dark">
-            <div class="news-details">
-                <%= __('news_online_booking_details') %>
-            </div>
-        </div>
 
-        <div class="news-item"><br>
-            <div class="news-title">🔧 <%= __('news_new_location_title') %>
+            <div class="news-item"><br>
+                <div class="news-title">🔧 <%= __('news_new_location_title') %>
+                </div>
+                <hr class="bg-dark">
+                <div class="news-details">
+                    <%= __('news_new_location_details') %>
+                </div>
             </div>
-            <hr class="bg-dark">
-            <div class="news-details">
-                <%= __('news_new_location_details') %>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="how-we-work-section mt-5">
-        <h2 class="work-section-title">
-            <%= __('how_we_work_title') %>
-        </h2>
+        <section class="how-we-work-section mt-5">
+            <h2 class="work-section-title">
+                <%= __('how_we_work_title') %>
+            </h2>
 
-        <div class="work-item">
-            <div class="work-title text-white">🌐 <%= __('work_online_appointments_title') %>
+            <div class="work-item">
+                <div class="work-title text-white">🌐 <%= __('work_online_appointments_title') %>
+                </div>
+                <hr class="bg-dark">
+                <div class="work-details">
+                    <%= __('work_online_appointments_details') %>
+                </div>
             </div>
-            <hr class="bg-dark">
-            <div class="work-details">
-                <%= __('work_online_appointments_details') %>
-            </div>
-        </div>
 
-        <div class="work-item"><br>
-            <div class="work-title text-white">📞 <%= __('work_call_to_schedule_title') %>
+            <div class="work-item"><br>
+                <div class="work-title text-white">📞 <%= __('work_call_to_schedule_title') %>
+                </div>
+                <hr class="bg-dark">
+                <div class="work-details">
+                    <%= __('work_call_to_schedule_details') %>
+                </div>
             </div>
-            <hr class="bg-dark">
-            <div class="work-details">
-                <%= __('work_call_to_schedule_details') %>
-            </div>
-        </div>
 
-        <div class="work-item"><br>
-            <div class="work-title text-white">📅 <%= __('work_notifications_title') %>
+            <div class="work-item"><br>
+                <div class="work-title text-white">📅 <%= __('work_notifications_title') %>
+                </div>
+                <hr class="bg-dark">
+                <div class="work-details">
+                    <%= __('work_notifications_details') %>
+                </div>
             </div>
-            <hr class="bg-dark">
-            <div class="work-details">
-                <%= __('work_notifications_details') %>
-            </div>
-        </div>
 
-        <div class="work-item"><br>
-            <div class="work-title text-white">⏱ <%= __('work_arrival_options_title') %>
+            <div class="work-item"><br>
+                <div class="work-title text-white">⏱ <%= __('work_arrival_options_title') %>
+                </div>
+                <hr class="bg-dark">
+                <div class="work-details">
+                    <%= __('work_arrival_options_details') %>
+                </div>
             </div>
-            <hr class="bg-dark">
-            <div class="work-details">
-                <%= __('work_arrival_options_details') %>
-            </div>
-        </div>
-    </section>
+        </section>
 
 
 

@@ -79,6 +79,10 @@
     #imageContainer {
       overflow: hidden;
     }
+    #avdantages-container{
+      max-width: 70%;
+      margin: 0 auto;
+    }
   }
   
   @media (max-width: 900px) {
@@ -90,6 +94,7 @@
       margin-top: 20px;
       /* Add some space between imageContainer and repairForm */
     }
+
   }
   
   .paragraph {
@@ -367,7 +372,10 @@
   
   }
   
-  
+  .min-width-200 {
+    min-width: 200px;
+  }
+
   td {
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -412,28 +420,27 @@
   }
   
   
-  @media (max-width: 500px) {
+  @media (max-width: 768px) {
   
     /* Adjust the max-width as needed */
     #sidebar {
       max-width: 100%;
-      /* Make it full width on mobile */
       width: 100%;
-      /* Ensure it takes full width */
       position: relative;
-      /* Change to relative for mobile view */
       top: 0;
-      /* Reset top position */
       height: auto;
-      /* Let it grow with content */
+    }
+
+    #admin-container{
+      padding:0;
+      width: 100%;
+      max-width:90%;
     }
   }
   
   select option:disabled {
     color: black;
   }
-  
-
   
   .carousel-control-prev {
     left: -5.8%;
@@ -519,39 +526,54 @@
 .carousel-indicators .btn.active {
     background-color: #c0c0c0c9; /* Darker shade for active state */
 }
+
 @media (max-width: 768px) {
-    .carousel-inner {
-        flex-wrap: nowrap;
-        display: flex;
-    }
+  #carousel {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    height: auto !important;
+    margin-bottom: 3vh;
+  }
 
-    .overlay-text {
-        font-size: 1vw;
-        /* Fixed font size */
-        bottom: 5px;
-    }
+  .service-item {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
 
-    .service-item {
-        min-width: 32%;
-    }
-}
+  .carousel-inner {
+    height: auto !important;
+  }
 
-@media (max-width: 480px) {
-    .service-item {
-        min-width: 32%;
-    }
+  .carousel-item {
+    height: auto !important;
+  }
 
-    .carousel-inner {
+  .overlay-text {
+    font-size: 8vw;
+    bottom: 5px;
+  }
 
-        flex-wrap: nowrap;
-        display: flex;
-    }
+  .carousel-control-prev,
+  .carousel-control-next {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(100%);
+  }
 
-    .overlay-text {
-        font-size: 1vw;
-        /* Fixed font size */
-        bottom: 5px;
-    }
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .carousel-indicators {
+    display: none; 
+  }
 }
 
 #carousel {
@@ -685,7 +707,7 @@
   flex-direction: column; /* Stack children vertically */
   align-items: stretch;  /* Allow children to stretch naturally */
   justify-content: flex-start;
-  padding:50px;
+  margin-top:20px;
   height: auto;
   overflow: visible;
   min-height: calc(100vh - 101px);
@@ -696,7 +718,6 @@
 
 /* Appointment Container */
 .appointment-content {
-  width: 80%;
   min-width: 80%;
   padding: 30px;
   background-color: rgba(40, 40, 40, 0.9);
