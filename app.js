@@ -11,21 +11,21 @@ import expressLayouts from "express-ejs-layouts";
 import i18n from "i18n";
 
 // Middleware
-import { cacheControlMiddleware } from "./middleware/preventCaching.js";
-import { attachUser } from "./middleware/attachUser.js";
-import { generateNonce } from "./middleware/nonceGen.js";
+import { cacheControlMiddleware } from "./src/middleware/preventCaching.js";
+import { attachUser } from "./src/middleware/attachUser.js";
+import { generateNonce } from "./src/middleware/nonceGen.js";
 
 // Database & Routes
-import connection from "./config/db.js";
-import routes from "./routes/index.js";
+import connection from "./src/config/db.js";
+import routes from "./src/routes/index.js";
 
-import "./models/cronJob.js";
+import "./src/models/cronJob.js";
 
 // Replicating __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config();
 
 const app = express();
 
@@ -78,20 +78,26 @@ app.use(helmet.contentSecurityPolicy({
 
 
 // Serve static files
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Session Configuration
+// Middleware
+app.use(cookieParser());
+app.use(cacheControlMiddleware);
 app.use(session({
   secret: process.env.SESSION_SECRET || "default_secret",
   resave: false,
   saveUninitialized: false,
   cookie: {
+    path: "/",
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     maxAge: 30 * 60 * 1000 // 30 minutes
   }
 }));
+app.use(attachUser);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Initialize i18n
 i18n.configure({
@@ -104,7 +110,7 @@ i18n.configure({
 
 // View Engine
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(expressLayouts);
 
 // Language Middleware
@@ -120,21 +126,25 @@ app.use((req, res, next) => {
   next();
 });
 
-// Redirect for language changes
-app.get("*", (req, res, next) => {
-  if (req.query.lang) {
-    res.redirect(req.originalUrl.split("?")[0]);
+// Language session middleware
+app.get('*', (req, res, next) => {
+  const lang = req.query.lang;
+
+  if (lang && ['en', 'lv', 'de', 'ru'].includes(lang)) {
+    req.session.language = lang;
+    req.session.save(() => {
+      console.log('🌐 Language set to:', req.session.language);
+      res.redirect(req.originalUrl.split('?')[0]);
+    });
   } else {
     next();
   }
 });
 
-// Middleware
-app.use(attachUser);
-app.use(cacheControlMiddleware);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use((req, res, next) => {
+  console.log('🔍 Incoming session at middleware:', req.session);
+  next();
+});
 
 // Routes
 app.use("/", routes);

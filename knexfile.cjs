@@ -1,8 +1,8 @@
 const dotenv = require('dotenv');
-const path = require('path');
+
 const { URL } = require('url');
 
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config();
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is missing in .env file!");

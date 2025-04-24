@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Fetch user session data
-  fetch('/api/getUserSession') // Assuming you have a route to get user session data
+  fetch('/api/getUserSession', {credentials: 'include'}) // Assuming you have a route to get user session data
     .then(response => {
       if (!response.ok) throw new Error('Failed to fetch user session data');
       return response.json();
