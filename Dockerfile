@@ -20,4 +20,4 @@ ENV PYTHON=python3
 RUN npm install
 
 # Run the app inside the /app/src directory
-CMD ["node", "src/app.js"]
+CMD ["sh", "-c", "npm run setup && npm run start"]

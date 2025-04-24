@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": 
   {
-    "start": "node app.js",
-    "migrate": "npx knex migrate:latest --knexfile knexfile.cjs",
-    "seed": "npx knex seed:run --knexfile knexfile.cjs",
-    "setup": "npm install && npm run migrate && npm run seed"
+    "start": "node src/app.js",
+    "migrate": "npx knex migrate:latest --knexfile src/knexfile.cjs",
+    "seed": "npx knex seed:run --knexfile src/knexfile.cjs",
+    "setup": "npm run migrate && npm run seed"
   },
 
   "author": "",
