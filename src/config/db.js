@@ -3,19 +3,22 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log("Connecting to DB with:", {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    name: process.env.DB_NAME,
-  });
+const dbUrl = new URL(process.env.DATABASE_URL);
 
-  
+console.log("Connecting to DB with:", {
+    host: dbUrl.hostname,
+    user: dbUrl.username,
+    password: dbUrl.password,
+    name: dbUrl.pathname.replace('/', ''),
+});
+
+
 const connection = mysql2.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    host: dbUrl.hostname,
+    port: dbUrl.port,
+    user: dbUrl.username,
+    password: dbUrl.password,
+    database: dbUrl.pathname.replace('/', '')
 });
 
 connection.connect((err) => {
