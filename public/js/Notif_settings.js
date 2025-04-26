@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch('/auth/notification-settings');
             const data = await response.json();
+            console.log(data);
             if (data.status === 'success') {
                 document.getElementById('Notifications').value = data.settings.deal_notifications;
                 document.getElementById('repairType').value = data.settings.appointment_reminders;

@@ -52,22 +52,22 @@
       <form id="change-password-form" class="nodisplay password-edit-container">
         <h3 class="form-title text-center"><%= __('Change your password') %></h3>
         <div class="form-group">
-          <label for="current-password"><%= __('Current password') %></label>
+          <label for="current-password" id="current-password-label"><%= __('Current password') %></label>
           <input type="password" id="current-password" class="form-control" placeholder="<%= __('Enter your current password') %>">
-          <span class="error-message" id="WrongPassword"><%= __('Incorrect current password') %></span>
-          <span class="error-message" id="EmptyOldPassword"><%= __('Enter your current password') %></span>
+          <span class="error-message nodisplay" id="WrongPassword"><%= __('Incorrect current password') %></span>
+          <span class="error-message nodisplay" id="EmptyOldPassword"><%= __('Enter your current password') %></span>
         </div>
         <div class="form-group">
-          <label for="new-password"><%= __('New password') %></label>
+          <label for="new-password" id="new-password-label"><%= __('New password') %></label>
           <input type="password" id="new-password" class="form-control" placeholder="<%= __('Enter your new password') %>">
-          <span class="error-message" id="UnsafeNewPassword"><%= __('Enter a safe password') %></span>
-          <span class="error-message" id="EmptyNewPassword"><%= __('Enter a password') %></span>
+          <span class="error-message nodisplay" id="UnsafeNewPassword"><%= __('Enter a safe password') %></span>
+          <span class="error-message nodisplay" id="EmptyNewPassword"><%= __('Enter a password') %></span>
         </div>
         <div class="form-group">
-          <label for="confirm-new-password"><%= __('Confirm new password') %></label>
+          <label for="confirm-new-password" id="confirm-new-password-label"><%= __('Confirm new password') %></label>
           <input type="password" id="confirm-new-password" class="form-control" placeholder="<%= __('Enter your new password again') %>">
-          <span class="error-message" id="NoMatchPassword"><%= __('Passwords dont match') %></span>
-          <span class="error-message" id="EmptyConfirmPassword"><%= __('Enter a password') %></span>
+          <span class="error-message nodisplay" id="NoMatchPassword"><%= __('Passwords dont match') %></span>
+          <span class="error-message nodisplay" id="EmptyConfirmPassword"><%= __('Enter a password') %></span>
         </div>
         <div class="form-actions ">
           <button type="submit" class="btn-submit mt-3"><%= __('Change Password') %></button>&nbsp;&nbsp;

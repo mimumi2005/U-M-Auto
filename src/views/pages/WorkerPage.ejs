@@ -1,28 +1,6 @@
 
-
-<style nonce="<%= nonce %>">
-    /* Custom styles for the table container */
-    .customContainer {
-        float: right;
-        margin-right: 3%;
-    }
-    .overflow-X {
-        overflow-x: auto;
-    }
-    .width50{
-        width:50%;
-    }
-    .width80{
-        width:80%;
-    }
-    .maxw20{
-        max-width:20%;
-    }
-
-    
-</style>
 <body>
-    <div class="container my-4 bg-light rounded">
+    <div class="container my-4 bg-light rounded worker-content">
         <h2 class="text-center text-white p-3   " id="TitleHeader"><%= __('Projects') %></h2>
 
         <!-- Table to display appointment data -->
@@ -48,7 +26,6 @@
             <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
-
                         <th class="align-middle" scope="col"><%= __('Name') %></th>
                         <th class="align-middle" scope="col"><%= __('Username') %></th>
                         <th class="align-middle" scope="col"><%= __('Email') %></th>

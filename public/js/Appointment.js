@@ -666,7 +666,7 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
             Car Brand- ${carBrand}
             Car Model- ${carModel}
             Car Year- ${carYear}
-            Additional Info- ${additionalInfo}
+          Additional Info: ${additionalInfo}
         `.trim();
     
         return combinedInfo;

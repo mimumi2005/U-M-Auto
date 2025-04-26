@@ -119,20 +119,20 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('form').addEventListener('submit', function (e) {
         e.preventDefault();
         // Reset visuals for current password
-        document.getElementById('current-password-red').style.color = 'rgb(255,255,255)';
+        document.getElementById('current-password-label').style.color = 'rgb(255,255,255)';
         document.getElementById('current-password').classList.remove('form-control-incorrect');
         document.getElementById('EmptyOldPassword').classList.add('nodisplay');
         document.getElementById('WrongPassword').classList.add('nodisplay');
 
         // Resets visuals for new password
-        document.getElementById('new-password-red').style.color = 'rgb(255,255,255)';
+        document.getElementById('new-password-label').style.color = 'rgb(255,255,255)';
         document.getElementById('new-password').classList.remove('form-control-incorrect');
         document.getElementById('EmptyNewPassword').classList.add('nodisplay');
         document.getElementById('UnsafeNewPassword').classList.add('nodisplay');
 
 
         // Resets visuals for confirm new password
-        document.getElementById('confirm-new-password-red').style.color = 'rgb(255,255,255)';
+        document.getElementById('confirm-new-password-label').style.color = 'rgb(255,255,255)';
         document.getElementById('confirm-new-password').classList.remove('form-control-incorrect');
         document.getElementById('EmptyConfirmPassword').classList.add('nodisplay');
         document.getElementById('NoMatchPassword').classList.add('nodisplay');
@@ -145,20 +145,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Checks for empty fields, if empty change forum accordingly and exit the function
         if (currentPassword == '') {
-            document.getElementById('current-password-red').style.color = 'rgb(255,0,0)';
+            document.getElementById('current-password-label').style.color = 'rgb(255,0,0)';
             document.getElementById('current-password').classList.add('form-control-incorrect');
             document.getElementById('EmptyOldPassword').classList.remove('nodisplay');
             return
         }
 
         if (newPassword == '') {
-            document.getElementById('new-password-red').style.color = 'rgb(255,0,0)';
+            document.getElementById('new-password-label').style.color = 'rgb(255,0,0)';
             document.getElementById('new-password').classList.add('form-control-incorrect');
             document.getElementById('EmptyNewPassword').classList.remove('nodisplay');
             return
         }
         if (confirmNewPassword == '') {
-            document.getElementById('confirm-new-password-red').style.color = 'rgb(255,0,0)';
+            document.getElementById('confirm-new-password-label').style.color = 'rgb(255,0,0)';
             document.getElementById('confirm-new-password').classList.add('form-control-incorrect');
             document.getElementById('EmptyConfirmPassword').classList.remove('nodisplay');
             return
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const passwordRegex = /^(?=.*[0-9A-Z!@#$%^&*])(.{5,})$/;
 
         if (!passwordRegex.test(newPassword)) {
-            document.getElementById('new-password-red').style.color = 'rgb(255,0,0)';
+            document.getElementById('new-password-label').style.color = 'rgb(255,0,0)';
             document.getElementById('new-password').classList.add('form-control-incorrect');
             document.getElementById('UnsafeNewPassword').classList.remove('nodisplay');
             return
@@ -176,16 +176,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Checks if confirm password matches newpasword
         if (newPassword != confirmNewPassword) {
-            document.getElementById('confirm-new-password-red').style.color = 'rgb(255,0,0)';
+            document.getElementById('confirm-new-password-label').style.color = 'rgb(255,0,0)';
             document.getElementById('confirm-new-password').classList.add('form-control-incorrect');
             document.getElementById('NoMatchPassword').classList.remove('nodisplay');
             return
         }
-        console.log(JSON.stringify({
-            currentPassword: currentPassword,
-            newPassword: newPassword,
-            UUID: loggedUser.UUID
-        }));
 
         // Communication with API to change password
         fetch('/auth/change-password', {
@@ -213,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     HidePasswordReset();
                 }
                 else {
-                    document.getElementById('current-password-red').style.color = 'rgb(255,0,0)';
+                    document.getElementById('current-password-label').style.color = 'rgb(255,0,0)';
                     document.getElementById('current-password').classList.add('form-control-incorrect');
                     document.getElementById('WrongPassword').classList.remove('nodisplay');
                 }
@@ -237,20 +232,20 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('change-password-form').classList.add('nodisplay');
         document.getElementById('profile-info').classList.remove('nodisplay');
         // Reset visuals for current password
-        document.getElementById('current-password-red').style.color = 'rgb(255,255,255)';
+        document.getElementById('current-password-label').style.color = 'rgb(255,255,255)';
         document.getElementById('current-password').classList.remove('form-control-incorrect');
         document.getElementById('EmptyOldPassword').classList.add('nodisplay');
         document.getElementById('WrongPassword').classList.add('nodisplay');
 
         // Resets visuals for new password
-        document.getElementById('new-password-red').style.color = 'rgb(255,255,255)';
+        document.getElementById('new-password-label').style.color = 'rgb(255,255,255)';
         document.getElementById('new-password').classList.remove('form-control-incorrect');
         document.getElementById('EmptyNewPassword').classList.add('nodisplay');
         document.getElementById('UnsafeNewPassword').classList.add('nodisplay');
 
 
         // Resets visuals for confirm new password
-        document.getElementById('confirm-new-password-red').style.color = 'rgb(255,255,255)';
+        document.getElementById('confirm-new-password-label').style.color = 'rgb(255,255,255)';
         document.getElementById('confirm-new-password').classList.remove('form-control-incorrect');
         document.getElementById('EmptyConfirmPassword').classList.add('nodisplay');
         document.getElementById('NoMatchPassword').classList.add('nodisplay');

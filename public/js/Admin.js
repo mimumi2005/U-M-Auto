@@ -366,19 +366,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Project ID
                 const IDCell = document.createElement('td');
+                IDCell.setAttribute('data-label', translate('User ID'));
                 IDCell.textContent = appointment.idProjects;
-                IDCell.classList.add('text-white'); // By default, since the table is dark mode the text is gray, changing to white
+                IDCell.classList.add('text-white')
                 IDCell.style.fontSize = '1.3rem';
-                IDCell.style.width = "10%";  // Clarify width so when sorting by any of the values it doesnt change column width (since it adds the arrow and that increases size)
+                IDCell.style.width = "10%";
                 row.appendChild(IDCell);
 
 
                 // User ID
                 const userIDcell = document.createElement('td');
+                userIDcell.setAttribute('data-label', translate('User-ID'));
                 const userLink = document.createElement('a');
                 userLink.textContent = appointment.UserName + ` \nUserID:${appointment.idUser}`;
                 userLink.href = '#';
-                userLink.style.width = "15%";
                 userLink.style.color = 'lightblue';
 
 
@@ -392,6 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Start Date
                 const startDateCell = document.createElement('td');
+                startDateCell.setAttribute('data-label', translate('Start Date'));
                 startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString() + `\n${new Date(appointment.StartDate).toLocaleTimeString()}`;
                 startDateCell.classList.add('text-white');
                 startDateCell.style.width = "11%";
@@ -399,6 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Projected End Date
                 const endDateCell = document.createElement('td');
+                endDateCell.setAttribute('data-label', translate('End Date'));
                 endDateCell.textContent = new Date(appointment.EndDateProjection).toLocaleDateString() + `\n${new Date(appointment.EndDateProjection).toLocaleTimeString()}`;
                 endDateCell.classList.add('text-white');
                 endDateCell.style.width = "15%";
@@ -406,6 +409,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Project Info
                 const projectInfoCell = document.createElement('td');
+                projectInfoCell.setAttribute('data-label', translate('Project Info'));
                 projectInfoCell.textContent = appointment.ProjectInfo;
                 projectInfoCell.style.width = "30%";
                 projectInfoCell.classList.add('text-white');
@@ -413,6 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Overall status
                 const statusCell = document.createElement('td');
+                statusCell.setAttribute('data-label', translate('Overall Status'));
                 statusCell.classList.add('text-white', 'text-center');
                 statusCell.style.width = "30%";
 
@@ -492,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Delay Status
                 const delayedCell = document.createElement('td');
+                delayedCell.setAttribute('data-label', translate('Delayed Status'));
                 const DelayLink = document.createElement('a');
                 delayedCell.style.width = "15%";
 
@@ -591,6 +597,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // User ID
             const IDCell = document.createElement('td');
+            IDCell.setAttribute('data-label', translate('User ID'));
             IDCell.textContent = user.idUser;
             IDCell.classList.add('text-white');
             IDCell.style.fontSize = '1rem';
@@ -600,24 +607,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Name
             const NameCell = document.createElement('td');
+            NameCell.setAttribute('data-label', translate('Name'));
             NameCell.textContent = user.Name;
             NameCell.classList.add('text-white');
             row.appendChild(NameCell);
 
             // Username
             const UserNameCell = document.createElement('td');
+            UserNameCell.setAttribute('data-label', translate('Username'));
             UserNameCell.textContent = user.Username;
             UserNameCell.classList.add('text-white');
             row.appendChild(UserNameCell);
 
             // Email
             const EmailCell = document.createElement('td');
+            EmailCell.setAttribute('data-label', translate('Email'));
             EmailCell.textContent = user.Email;
             EmailCell.classList.add('text-white');
             row.appendChild(EmailCell);
 
             // Check projects button
             const ProjectCell = document.createElement('td');
+            ProjectCell.setAttribute('data-label', translate('Project Info'));
             const ProjectLink = document.createElement('a');
             ProjectLink.innerHTML = `${translate('(Click to check all this user\'s appointments)')}`;
             ProjectLink.href = '#';
@@ -653,6 +664,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // ID
             const idCell = document.createElement('td');
+            idCell.setAttribute('data-label', translate('User ID'));
             idCell.textContent = user.idUser;
             idCell.classList.add('text-white');
             idCell.style.fontSize = '1rem';
@@ -661,36 +673,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Name
             const nameCell = document.createElement('td');
+            nameCell.setAttribute('data-label', translate('Name'));
             nameCell.textContent = user.Name;
             nameCell.classList.add('text-white');
             row.appendChild(nameCell);
 
             // Username
             const usernameCell = document.createElement('td');
+            usernameCell.setAttribute('data-label', translate('Username'));
             usernameCell.textContent = user.Username;
             usernameCell.classList.add('text-white');
             row.appendChild(usernameCell);
 
             // Email
             const emailCell = document.createElement('td');
+            emailCell.setAttribute('data-label', translate('Email'));
             emailCell.textContent = user.Email;
             emailCell.classList.add('text-white');
             row.appendChild(emailCell);
 
             // Tenure
             const tenureCell = document.createElement('td');
+            tenureCell.setAttribute('data-label', translate('Tenure'));
             tenureCell.textContent = user.tenure;
             tenureCell.classList.add('text-white');
             row.appendChild(tenureCell);
 
             // Worker Type
             const workerTypeCell = document.createElement('td');
+            workerTypeCell.setAttribute('data-label', translate('Worker Type'));
             workerTypeCell.textContent = user.WorkerType;
             workerTypeCell.classList.add('text-white');
             row.appendChild(workerTypeCell);
 
             // Remove Admin Permissions Link
             const adminPermCell = document.createElement('td');
+            adminPermCell.setAttribute('data-label', translate('Admin Permissions'));
             const adminPermLink = document.createElement('a');
             adminPermLink.innerHTML = translate('(Click to give administrator)');
             adminPermLink.href = '#';
@@ -724,6 +742,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // ID
             const idCell = document.createElement('td');
+            idCell.setAttribute('data-label', translate('User ID'));
             idCell.textContent = user.idUser;
             idCell.classList.add('text-white');
             idCell.style.fontSize = '1rem';
@@ -731,30 +750,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Name
             const nameCell = document.createElement('td');
+            nameCell.setAttribute('data-label', translate('Name'));
             nameCell.textContent = user.Name;
             nameCell.classList.add('text-white');
             row.appendChild(nameCell);
 
             // Username
             const usernameCell = document.createElement('td');
+            usernameCell.setAttribute('data-label', translate('Username'));
             usernameCell.textContent = user.Username;
             usernameCell.classList.add('text-white');
             row.appendChild(usernameCell);
 
             // Email
             const emailCell = document.createElement('td');
+            emailCell.setAttribute('data-label', translate('Email'));
             emailCell.textContent = user.Email;
             emailCell.classList.add('text-white');
             row.appendChild(emailCell);
 
             // Tenure
             const tenureCell = document.createElement('td');
+            tenureCell.setAttribute('data-label', translate('Tenure'));
             tenureCell.textContent = user.tenure;
             tenureCell.classList.add('text-white');
             row.appendChild(tenureCell);
 
             // Tenure
             const adminTenureCell = document.createElement('td');
+            adminTenureCell.setAttribute('data-label', translate('Admin Tenure'));
             adminTenureCell.textContent = user.AdminTenure;
             adminTenureCell.classList.add('text-white');
             row.appendChild(adminTenureCell);
@@ -762,12 +786,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Worker Type
             const workerTypeCell = document.createElement('td');
+            workerTypeCell.setAttribute('data-label', translate('Worker Type'));
             workerTypeCell.textContent = user.WorkerType;
             workerTypeCell.classList.add('text-white');
             row.appendChild(workerTypeCell);
 
             // Remove Admin Permissions Link
             const adminPermCell = document.createElement('td');
+            adminPermCell.setAttribute('data-label', translate('Admin Permissions'));
             const adminPermLink = document.createElement('a');
             adminPermLink.innerHTML = translate('(Click to remove administrator)');
             adminPermLink.href = '#';

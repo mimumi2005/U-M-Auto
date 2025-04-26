@@ -1,336 +1,233 @@
 import { v4 as uuidv4 } from 'uuid';
-import connection from '../config/db.js'; // Importing connection
-import path from 'path'; // Add this line to import the path module
-import * as authModel from '../models/authModels.js'; // Importing model
+import pool from '../config/db.js';
+import * as authModel from '../models/authModels.js';
 import * as notificationModel from '../models/notificationModels.js';
 import i18n from 'i18n';
 
+// Page Rendering
 export const getProfilePage = (req, res) => {
   const csrfTokenValue = req.csrfToken;
-  res.render('pages/Profile', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
+  res.render('pages/Profile', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n, language: req.session.language || 'en' });
 };
 
-export const getUserProfileInfo = (req, res) => {
-  // Fetch user information based on the logged-in user
-  const UUID = req.user.UUID; // Change from req.body to req.query
-
-  const query = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
-  connection.query(query, [UUID], (err, results) => {
-    if (err) {
-      console.error('Error fetching user information from the database:', err);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-    }
-
-    if (results.length === 0) {
+// Get user profile info
+export const getUserProfileInfo = async (req, res) => {
+  const UUID = req.user.UUID;
+  try {
+    const [userInstanceResults] = await pool.query('SELECT idUser FROM user_instance WHERE idInstance = ?', [UUID]);
+    if (userInstanceResults.length === 0) {
       return res.status(404).json({ status: 'error', message: 'User not found' });
     }
 
-    const User = results[0].idUser;
-    const query = 'SELECT * FROM users WHERE idUser = ?';
-    connection.query(query, [User], (err, results) => {
-      if (err) {
-        console.error('Error fetching user information from the database:', err);
-        return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-      }
+    const User = userInstanceResults[0].idUser;
+    const [userResults] = await pool.query('SELECT * FROM users WHERE idUser = ?', [User]);
+    if (userResults.length === 0) {
+      return res.status(404).json({ status: 'error', message: 'User not found' });
+    }
 
-      if (results.length === 0) {
-        return res.status(404).json({ status: 'error', message: 'User not found' });
-      }
-      const userInformation = results[0];
-      res.json({ status: 'success', user: userInformation });
-    });
-  });
+    const userInformation = userResults[0];
+    res.json({ status: 'success', user: userInformation });
+  } catch (err) {
+    console.error('Error fetching user information:', err);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
 };
 
-
-// controllers/authController.js
-export const loginUser = (req, res) => {
-
+// loginUser
+export const loginUser = async (req, res) => {
   const { username, password } = req.body;
   const UUID = uuidv4();
 
-  // Query to check if username or email matches a user in the database
-  const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
-
-  connection.query(query, [username, username], async (err, results) => {
-    if (err) {
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-    }
-
-    if (results.length === 0) {
-      // No user found with the provided username or email
+  try {
+    const [userResults] = await pool.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, username]);
+    if (userResults.length === 0) {
       return res.status(401).json({ status: '1', message: 'Invalid credentials' });
     }
 
-    const user = results[0]; // Assuming only one user record matches the username/email
+    const user = userResults[0];
+    const isMatch = await authModel.verifyPassword(password, user.password);
 
-    try {
-      // Verify the password using bcrypt (verifyPassword is async)
-      const isMatch = await authModel.verifyPassword(password, user.password);
-
-
-      if (!isMatch) {
-        // Passwords do not match
-        return res.status(401).json({ status: '2', message: 'Wrong password' });
-      }
-
-      // Passwords match, login successful
-      const userid = user.idUser;
-
-      // Check if user is an admin
-      authModel.checkAdminStatus(userid, connection, (err, IsAdmin) => {
-        if (err) {
-          console.error('Error checking admin status:', err);
-          return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-        }
-
-        // Check if user is a worker
-        authModel.checkWorkerStatus(userid, connection, (err, IsWorker) => {
-          if (err) {
-            console.error('Error checking worker status:', err);
-            return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-          }
-
-          // Check if user instance already exists
-          const checkInstanceQuery = 'SELECT * FROM user_instance WHERE idUser = ?';
-          connection.query(checkInstanceQuery, [userid], (err, instanceResults) => {
-            if (err) {
-              console.error('Error checking user instance:', err);
-              return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-            }
-
-            // If instance exists, delete the previous instance
-            if (instanceResults.length > 0) {
-              const deleteInstanceQuery = 'DELETE FROM user_instance WHERE idUser = ?';
-              connection.query(deleteInstanceQuery, [userid], (err) => {
-                if (err) {
-                  console.error('Error deleting user instance:', err);
-                  return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-                }
-              });
-            }
-
-            // Insert new login instance
-            const instance_query = 'INSERT INTO user_instance (idInstance, idUser, instanceStart) VALUES (?, ?, ?)';
-            connection.query(instance_query, [UUID, userid, new Date()], (err) => {
-              if (err) {
-                console.error('Error inserting data into the database:', err);
-                return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-              }
-              // Session info
-              console.log('Role', user.role);
-              req.session.userId = user.idUser;
-              req.session.UUID = UUID;
-              req.session.username = user.username;
-              req.session.isAdmin = IsAdmin;
-              req.session.isWorker = IsWorker;
-
-
-              console.log(`\nUser-${username} \nPassword-verified \nLogin instance-${UUID}\n Admin: ${IsAdmin}\n Worker: ${IsWorker}\n`);
-              res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
-            });
-          });
-        });
-      });
-
-    } catch (error) {
-      console.error('Error during login process:', error);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    if (!isMatch) {
+      return res.status(401).json({ status: '2', message: 'Wrong password' });
     }
-  });
+
+    const userid = user.idUser;
+    const IsAdmin = await authModel.checkAdminStatus(userid);
+    const IsWorker = await authModel.checkWorkerStatus(userid);
+
+    const [instanceResults] = await pool.query('SELECT * FROM user_instance WHERE idUser = ?', [userid]);
+    if (instanceResults.length > 0) {
+      await pool.query('DELETE FROM user_instance WHERE idUser = ?', [userid]);
+    }
+
+    await pool.query('INSERT INTO user_instance (idInstance, idUser, instanceStart) VALUES (?, ?, ?)', [UUID, userid, new Date()]);
+
+    req.session.userId = user.idUser;
+    req.session.UUID = UUID;
+    req.session.username = user.username;
+    req.session.isAdmin = IsAdmin;
+    req.session.isWorker = IsWorker;
+
+    res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
+  } catch (err) {
+    console.error('Error during login process:', err);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
 };
 
+// handleSignUp
 export const handleSignUp = async (req, res) => {
-
   const { name, email, username, password } = req.body;
-
   try {
-    // Call the signup model function
     await authModel.signupUser(name, email, username, password);
-
-    // Login the user after successful signup
-    loginUser(req, res); // Adjusted to use the response object directly
+    await loginUser(req, res);
   } catch (error) {
     if (error.message === 'Email is already taken') {
       return res.status(409).json({ status: 'error', message: 'Email is already taken' });
     }
-
     if (error.message === 'Username is already taken') {
       return res.status(409).json({ status: 'error', message: 'Username is already taken' });
     }
-
     console.error('Error during signup process:', error);
-    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };
 
-
-// Controller function to handle the logout request
+// handleLogout
 export const handleLogout = (req, res) => {
-  const UUID = req.session.UUID; // Extract the UUID from the request body
-
-  // First, destroy the session
+  const UUID = req.session.UUID;
   req.session.destroy(async (err) => {
     if (err) {
       return res.status(500).json({ message: 'Error during logout' });
     }
-
-    console.log("Session deleted");
-
     try {
-      await authModel.logoutUser(UUID); // Call the model function to handle any additional logout logic
+      await authModel.logoutUser(UUID);
       res.clearCookie('userData', { path: '/' });
       res.json({ status: 'success', message: 'Logout successful!' });
     } catch (error) {
       console.error('Error logging out user:', error);
-      return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
   });
 };
 
-// Function for making new appointments
+// handleCreateAppointment
 export const handleCreateAppointment = async (req, res) => {
-
   const { idUser, StartDate, EndDateProjection, ProjectInfo } = req.body;
-
   try {
-    // Call the model function to create an appointment
     await authModel.createAppointment(idUser, StartDate, EndDateProjection, ProjectInfo);
     res.status(201).json({ status: 'success', message: "Project registered successfully!" });
   } catch (err) {
-    return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };
 
-
-
+// changePassword
 export const changePassword = async (req, res) => {
-
   const { currentPassword, newPassword, UUID } = req.body;
-
   try {
-    // Check user based on UUID
     const userResults = await authModel.getUserByUUID(UUID);
     if (userResults.length === 0) {
       return res.status(401).json({ status: 'error', message: 'Invalid UUID' });
     }
     const loggedInUser = userResults[0].idUser;
-    // Retrieve the current hashed password from the database
     const passwordResults = await authModel.getPasswordByIdUser(loggedInUser);
     if (passwordResults.length === 0) {
       return res.status(401).json({ status: 'error', message: 'User not found' });
     }
 
     const hashedPassword = passwordResults[0].password;
-
-    // Verify if the current password matches the one in the database
     const isMatch = await authModel.verifyPassword(currentPassword, hashedPassword);
     if (!isMatch) {
       return res.status(401).json({ status: 'error', message: 'Incorrect current password' });
     }
 
-    // Hash the new password
     const hashedNewPassword = await authModel.hashPassword(newPassword);
-
-    // Update the user's password in the database
     await authModel.updatePassword(loggedInUser, hashedNewPassword);
 
     res.json({ status: 'success', message: 'Password updated successfully!' });
-
   } catch (error) {
     console.error('Error during password change process:', error);
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };
 
-
-
-// Controller function to get projects by user ID
+// getUserAppointments 
 export const getUserAppointments = async (req, res) => {
   const { idUser } = req.body;
-
   try {
     const projects = await authModel.getProjectsByUserId(idUser);
-
-    // If you need to return the HTML page
-    res.render('pages/UserAppointment', { nonce: res.locals.nonce, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
+    res.render('pages/UserAppointment', { nonce: res.locals.nonce, i18n, projects, language: req.session.language || 'en' });
   } catch (error) {
     console.error('Error fetching projects:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
+// getUserSettings
 export const getUserSettings = (req, res) => {
-
   const csrfTokenValue = req.csrfToken;
-  res.render('pages/Notif_settings', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
+  res.render('pages/Notif_settings', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n, language: req.session.language || 'en' });
 };
 
-
+// handleGetUserByUUID
 export const handleGetUserByUUID = async (req, res) => {
   const UUID = req.params.UUID;
   try {
     const idUser = await authModel.getUserByUUID(UUID);
     res.json({ status: 'success', idUser: idUser[0].idUser });
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-}
+};
 
-
-
-// Controller to update the username
+// updateUsername
 export const updateUsername = async (req, res) => {
   try {
-      const userId = req.user.id; // Assuming user ID is stored in session
-      const newUsername = req.body.username; // Get the new username from the request body
-
-      await authModel.updateUsername(userId, newUsername);
-      
-      res.json({ success: true, message: 'Username updated successfully!' });
+    const userId = req.user.id;
+    const newUsername = req.body.username;
+    await authModel.updateUsername(userId, newUsername);
+    res.json({ success: true, message: 'Username updated successfully!' });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: 'Failed to update username.' });
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Failed to update username.' });
   }
 };
 
-// Controller to update the name
-export const  updateName = async (req, res) => {
+// updateName
+export const updateName = async (req, res) => {
   try {
-      const userId = req.user.id; // Assuming user ID is stored in session
-      const newName = req.body.name; // Get the new name from the request body
-
-      await authModel.updateName(userId, newName);
-      
-      res.json({ success: true, message: 'Name updated successfully!' });
+    const userId = req.user.id;
+    const newName = req.body.name;
+    await authModel.updateName(userId, newName);
+    res.json({ success: true, message: 'Name updated successfully!' });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: 'Failed to update name.' });
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Failed to update name.' });
   }
 };
 
-
+// Notification settings
 export const getNotificationSettings = async (req, res) => {
   try {
-      const userId = req.user.id;
-      const settings = await notificationModel.getNotificationSettings(userId);
-      res.json({ status: 'success', settings });
+    const userId = req.user.id;
+    const settings = await notificationModel.getNotificationSettings(userId);
+    res.json({ status: 'success', settings });
   } catch (error) {
-      console.error('Error fetching notification settings:', error);
-      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    console.error('Error fetching notification settings:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };
 
 export const updateNotificationSettings = async (req, res) => {
   try {
-      const userId = req.user.id;
-      const { dealNotifications, appointmentReminders } = req.body;
-      await notificationModel.updateNotificationSettings(userId, dealNotifications, appointmentReminders);
-      res.json({ status: 'success', message: 'Settings updated successfully' });
+    const userId = req.user.id;
+    const { dealNotifications, appointmentReminders } = req.body;
+    await notificationModel.updateNotificationSettings(userId, dealNotifications, appointmentReminders);
+    res.json({ status: 'success', message: 'Settings updated successfully' });
   } catch (error) {
-      console.error('Error updating notification settings:', error);
-      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    console.error('Error updating notification settings:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };

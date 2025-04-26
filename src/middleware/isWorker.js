@@ -1,23 +1,22 @@
-import connection from '../config/db.js'; // Import your DB connection
-import { checkWorkerStatus } from '../models/workerModels.js'; // Assuming you have this function in your model
+import { checkWorkerStatus } from '../models/workerModels.js';
 
-export function isWorker(req, res, next) {
-    
+export async function isWorker(req, res, next) {
     if (!req.user) {
-        // Redirect to homepage with a 'sessionEnded' query parameter
         return res.redirect('/?sessionEnded=true');
     }
-    const userId = req.user.id; // Assuming you have user info stored in req.user from session or JWT
-    checkWorkerStatus(userId, connection, (err, callback) => {
-        if (err) {
-            console.error('Error checking admin status:', err);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
 
-        if (callback) {
-            return next(); // User is an admin, proceed to the next middleware or route handler
+    const userId = req.user.id;
+
+    try {
+        const isWorker = await checkWorkerStatus(userId);
+
+        if (isWorker) {
+            return next();
         } else {
             return res.redirect('/?unauthorizedAccess=true');
         }
-    });
+    } catch (err) {
+        console.error('Error checking worker status:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
 }

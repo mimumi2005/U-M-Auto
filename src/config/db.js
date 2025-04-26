@@ -1,4 +1,4 @@
-import mysql2 from 'mysql2';
+import mysql2 from 'mysql2/promise';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -8,17 +8,16 @@ if (!process.env.DATABASE_URL) {
 
 const dbUrl = new URL(process.env.DATABASE_URL);
 
-const connection = mysql2.createConnection({
+// Create a connection pool (instead of a single connection)
+const pool = mysql2.createPool({
   host: dbUrl.hostname,
   port: dbUrl.port || 3306,
   user: dbUrl.username,
   password: dbUrl.password,
-  database: dbUrl.pathname.replace('/', '')
+  database: dbUrl.pathname.replace('/', ''),
+  waitForConnections: true,
+  connectionLimit: 10,     // up to 10 connections
+  queueLimit: 0            // unlimited queue
 });
 
-connection.connect((err) => {
-  if (err) throw err;
-  console.log('✅ Connected to the MySQL database');
-});
-
-export default connection;
+export default pool;

@@ -1,51 +1,39 @@
-import connection from '../config/db.js';
+import pool from '../config/db.js';
 
-
-// Function to fetch projects by user ID
-export const getUserAppointments = (UUID) => {
-  return new Promise((resolve, reject) => {
-    // Query to get the user ID from the UUID
+export const getUserAppointments = async (UUID) => {
     const getUserIDQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
+    const [userResults] = await pool.query(getUserIDQuery, [UUID]);
 
-    connection.query(getUserIDQuery, [UUID], (err, results) => {
-      if (err) {
-        console.error('Error fetching user ID from UUID:', err);
-        return reject(err);
-      }
+    if (userResults.length === 0) {
+        throw new Error('User not found');
+    }
 
-      if (results.length === 0) {
-        return reject(new Error('User not found'));
-      }
+    const idUser = userResults[0].idUser;
 
-      const idUser = results[0].idUser;
-      console.log(`User ID for UUID ${UUID}: ${idUser}`);
-
-      // Now query the projects table with the idUser
-      const getProjectsQuery = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE projects.idUser = ?';
-
-      connection.query(getProjectsQuery, [idUser], (err, projects) => {
-        if (err) {
-          console.error('Error fetching projects for user:', err);
-          return reject(err);
-        }
-
-        // Return the projects to the caller
-        resolve(projects);
-      });
-    });
-  });
+    const getProjectsQuery = `
+        SELECT projects.*, users.UserName 
+        FROM projects 
+        JOIN users ON projects.idUser = users.idUser 
+        WHERE projects.idUser = ?
+    `;
+    const [projects] = await pool.query(getProjectsQuery, [idUser]);
+    return projects;
 };
 
-export const getProjectDates = (MonthSelected, YearSelected, callback) => {
-  const sql_query = `
-    SELECT StartDate, EndDateProjection 
-    FROM projects 
-    WHERE 
-      (YEAR(StartDate) = ? AND MONTH(StartDate) = ?) OR 
-      (YEAR(EndDateProjection) = ? AND MONTH(EndDateProjection) = ?) OR
-      (StartDate < LAST_DAY(CONCAT(?, '-', ?, '-01')) AND EndDateProjection > LAST_DAY(CONCAT(?, '-', ?, '-01')))
-  `;
-
-  // Ensure correct mapping of parameters
-  connection.query(sql_query, [YearSelected, MonthSelected, YearSelected, MonthSelected, YearSelected, MonthSelected, YearSelected, MonthSelected], callback);
+export const getProjectDates = async (MonthSelected, YearSelected) => {
+    const sql_query = `
+        SELECT StartDate, EndDateProjection 
+        FROM projects 
+        WHERE 
+          (YEAR(StartDate) = ? AND MONTH(StartDate) = ?) OR 
+          (YEAR(EndDateProjection) = ? AND MONTH(EndDateProjection) = ?) OR
+          (StartDate < LAST_DAY(CONCAT(?, '-', ?, '-01')) AND EndDateProjection > LAST_DAY(CONCAT(?, '-', ?, '-01')))
+    `;
+    const [results] = await pool.query(sql_query, [
+        YearSelected, MonthSelected,
+        YearSelected, MonthSelected,
+        YearSelected, MonthSelected,
+        YearSelected, MonthSelected
+    ]);
+    return results;
 };

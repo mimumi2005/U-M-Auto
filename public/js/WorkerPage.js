@@ -18,10 +18,8 @@ function handleHashChange() {
         window[hash](); // Dynamically call the function
     }
 }
-// Call the function when the page loads
-document.addEventListener('DOMContentLoaded', handleHashChange);
 
-// Optionally, handle the hash change event (if the hash changes while the page is loaded)
+document.addEventListener('DOMContentLoaded', handleHashChange);
 window.addEventListener('hashchange', handleHashChange);
 
 function deleteProject(ProjectID) {
@@ -78,6 +76,29 @@ function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
 
             });
     }
+}
+
+function renderShowMoreButton(totalRows, initialDisplayCount) {
+    const existingButton = document.getElementById('show-more-projects-button');
+    if (existingButton) existingButton.remove(); // Remove old button if it exists
+
+    if (totalRows <= initialDisplayCount) return; // No button needed if everything fits
+
+    const button = document.createElement('button');
+    button.textContent = translate('Show More');
+    button.classList.add('btn', 'btn-primary', 'my-3');
+    button.style.display = 'block';
+    button.style.margin = '0 auto';
+    button.id = 'show-more-projects-button';
+
+    document.getElementById('ProjectDataContainer').appendChild(button);
+
+    button.addEventListener('click', () => {
+        document.querySelectorAll('.project-row.d-none').forEach(row => {
+            row.classList.remove('d-none');
+        });
+        button.style.display = 'none';
+    });
 }
 
 
@@ -148,13 +169,36 @@ function displayProjectDataForWorker(data) {
     }
 
     function renderTable(sortedData) {
-        tableBody.innerHTML = ''; // Clear any previous content
+        tableBody.innerHTML = ''; // Clear old content
+        const initialDisplayCount = window.innerWidth < 768 ? 1 : 3;
 
-        sortedData.forEach(appointment => {
+        // Check if no data
+        if (sortedData.length === 0) {
+            const noDataRow = document.createElement('tr');
+            const noDataCell = document.createElement('td');
+            noDataCell.colSpan = 6; 
+            noDataCell.classList.add('text-center', 'text-muted', 'p-4', 'h1');
+            noDataCell.textContent = translate('No projects found.');
+            noDataRow.appendChild(noDataCell);
+            tableBody.appendChild(noDataRow);
+
+            const existingButton = document.getElementById('show-more-projects-button');
+            if (existingButton) existingButton.remove();
+
+            return;
+        }  
+
+        sortedData.forEach((appointment, index) => {
             const row = document.createElement('tr');
+            row.classList.add('project-row');
 
+            if (index >= initialDisplayCount) {
+                row.classList.add('d-none'); // Hide rows beyond initial limit
+            }
             // User ID
+
             const userIDcell = document.createElement('td');
+            userIDcell.setAttribute('data-label', translate('Username'));
             const userLink = document.createElement('a');
             userIDcell.style.width = "12.5%";
             userLink.textContent = appointment.UserName + ` (${appointment.idUser})`;
@@ -171,24 +215,28 @@ function displayProjectDataForWorker(data) {
 
             // Start Date
             const startDateCell = document.createElement('td');
+            startDateCell.setAttribute('data-label', translate('Start Date'));
             startDateCell.textContent = new Date(appointment.StartDate).toLocaleDateString() + `\n${new Date(appointment.StartDate).toLocaleTimeString()}`;
             startDateCell.classList.add('text-white');
             row.appendChild(startDateCell);
 
             // Projected End Date
             const endDateCell = document.createElement('td');
+            endDateCell.setAttribute('data-label', translate('Projected End Date'));
             endDateCell.textContent = new Date(appointment.EndDateProjection).toLocaleDateString() + `\n${new Date(appointment.EndDateProjection).toLocaleTimeString()}`;
             endDateCell.classList.add('text-white');
             row.appendChild(endDateCell);
 
             // Project Info
             const projectInfoCell = document.createElement('td');
+            projectInfoCell.setAttribute('data-label', translate('Project Info'));
             projectInfoCell.textContent = appointment.ProjectInfo;
             projectInfoCell.classList.add('text-white');
             row.appendChild(projectInfoCell);
 
             // Overall status
             const statusCell = document.createElement('td');
+            statusCell.setAttribute('data-label', translate('Overall Status'));
             statusCell.classList.add('text-white', 'text-center');
             statusCell.style.width = "20%";
 
@@ -201,6 +249,7 @@ function displayProjectDataForWorker(data) {
             statusText.textContent = translate(`${appointment.statusName}`);
             statusContainer.appendChild(statusText); // Add status text to container
             statusCell.appendChild(statusContainer); // Add container to cell
+            statusCell.setAttribute('data-label', translate('Overall Status'));
 
             // Function to update the status
             function updateStatus(newStatus) {
@@ -224,10 +273,10 @@ function displayProjectDataForWorker(data) {
                     })
                     .catch(error => {
                         console.error('Error:', error);
-            
+
                     });
 
-               
+
             }
 
             // Function to render buttons based on the current status
@@ -271,6 +320,7 @@ function displayProjectDataForWorker(data) {
 
             // Delay Status
             const delayedCell = document.createElement('td');
+            delayedCell.setAttribute('data-label', translate('Delayed Status'));
             const DelayLink = document.createElement('a');
 
             if (appointment.Delayed === 1) {
@@ -291,6 +341,7 @@ function displayProjectDataForWorker(data) {
 
             tableBody.appendChild(row);
         });
+        renderShowMoreButton(sortedData.length, initialDisplayCount);
     }
 
     function sortData(column) {
@@ -363,18 +414,21 @@ function displayUserDataForWorker(users) {
 
         // Name
         const NameCell = document.createElement('td');
+        NameCell.setAttribute('data-label', translate('Name'));
         NameCell.textContent = (users.Name);
         NameCell.classList.add('text-white');
         row.appendChild(NameCell);
 
         // Username
         const UserNameCell = document.createElement('td');
+        UserNameCell.setAttribute('data-label', translate('Username'));
         UserNameCell.textContent = users.Username;
         UserNameCell.classList.add('text-white');
         row.appendChild(UserNameCell);
 
         // Email
         const EmailCell = document.createElement('td');
+        EmailCell.setAttribute('data-label', translate('Email'));
         EmailCell.textContent = users.Email;
         EmailCell.classList.add('text-white');
         row.appendChild(EmailCell);
@@ -382,6 +436,7 @@ function displayUserDataForWorker(users) {
 
         // Check projects button
         const ProjectCell = document.createElement('td');
+        ProjectCell.setAttribute('data-label', translate('Check Projects'));
 
         // Create the anchor element
         const ProjectLink = document.createElement('a');
@@ -437,6 +492,7 @@ function searchActiveProjects() {
         })
         .catch(error => console.error('Error fetching user data:', error));
 }
+
 // Function that shows all delayed projects
 function searchDelayedProjects() {
     document.getElementById("inputNewEndDate").classList.add('nodisplay');

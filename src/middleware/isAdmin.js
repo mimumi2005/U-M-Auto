@@ -1,26 +1,22 @@
-import connection from '../config/db.js'; // Import your DB connection
-import { checkAdminStatus } from '../models/adminModels.js'; // Assuming you have this function in your model
+import { checkAdminStatus } from '../models/adminModels.js';
 
-export function isAdmin(req, res, next) {
-    // Check if req.user exists before proceeding
+export async function isAdmin(req, res, next) {
     if (!req.user) {
-        // Redirect to homepage with a 'sessionEnded' query parameter
         return res.redirect('/?sessionEnded=true');
     }
 
-    const userId = req.user.id; // Assuming you have user info stored in req.user from session or JWT
+    const userId = req.user.id;
 
-    // Query the database to check if the user is an admin
-    checkAdminStatus(userId, connection, (err, callback) => {
-        if (err) {
-            console.error('Error checking admin status:', err);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
+    try {
+        const isAdmin = await checkAdminStatus(userId);
 
-        if (callback) {
-            return next(); // User is an admin, proceed to the next middleware or route handler
+        if (isAdmin) {
+            return next();
         } else {
             return res.redirect('/?unauthorizedAccess=true');
         }
-    });
+    } catch (err) {
+        console.error('Error checking admin status:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
 }
