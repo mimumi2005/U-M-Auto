@@ -72,7 +72,7 @@
                     </h4>
 
                     <!-- Car Brand Selection -->
-                    <div class="form-group mt-4 p-2">
+                    <div class="form-group p-2 my-0">
                         <select class="form-control form-control-select" id="carBrand" name="carBrand" required>
                             <option value="" disabled selected>
                                 <%= __('choose_brand') %>
@@ -81,7 +81,7 @@
                         </select>
                     </div>
                     <!-- Car Model Selection -->
-                    <div class="form-group  p-2">
+                    <div class="form-group p-2 my-0">
                         <label class="form-label text-danger hidden-visibility" id="carBrandWarning">
                             <%= __('select_brand_first') %>
                         </label>
@@ -95,7 +95,7 @@
                     </div>
 
                     <!-- Car Year Selection -->
-                    <div class="form-group p-2">
+                    <div class="form-group p-2 my-0">
                         <label class="form-label text-danger hidden-visibility" id="carModelWarning">
                             <%= __('select_model_first') %>
                         </label>
@@ -112,8 +112,8 @@
                         <label class="form-label" for="additionalInfo">
                             <%= __('additional_info') %>
                         </label>
-                        <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="3"
-                            placeholder="<%= __('additional_info_placeholder') %>"></textarea>
+                        <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="6"
+                            placeholder="<%= __('additional_info_placeholder') %>" maxlength="300"></textarea>
                     </div>
                 </div>
 

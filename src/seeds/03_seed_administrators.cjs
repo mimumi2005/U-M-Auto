@@ -6,9 +6,6 @@ exports.seed = async function (knex) {
 
   const administrators = [
     { idUser: 1, AdminTenure: 3 },
-    { idUser: 2, AdminTenure: 5 },
-    { idUser: 3, AdminTenure: 2 },
-    { idUser: 4, AdminTenure: 1 },
   ];
 
   for (const admin of administrators) {

@@ -11,9 +11,10 @@ export const getUserAppointments = async (UUID) => {
     const idUser = userResults[0].idUser;
 
     const getProjectsQuery = `
-        SELECT projects.*, users.UserName 
+        SELECT projects.*, users.UserName, project_status.statusName
         FROM projects 
-        JOIN users ON projects.idUser = users.idUser 
+        JOIN users ON projects.idUser = users.idUser
+        JOIN project_status ON projects.idStatus = project_status.idStatus
         WHERE projects.idUser = ?
     `;
     const [projects] = await pool.query(getProjectsQuery, [idUser]);
@@ -36,4 +37,14 @@ export const getProjectDates = async (MonthSelected, YearSelected) => {
         YearSelected, MonthSelected
     ]);
     return results;
+};
+
+export const cancelAppointment = async (idProjects) => {
+    const [result] = await pool.query(
+        `UPDATE projects 
+       SET idStatus = (SELECT idStatus FROM project_status WHERE statusName = 'Cancelled' LIMIT 1) 
+       WHERE idProjects = ?`,
+        [idProjects]
+    );
+    return result;
 };

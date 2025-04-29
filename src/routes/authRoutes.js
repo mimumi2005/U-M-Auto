@@ -30,7 +30,7 @@ router.get('/userID/:UUID',checkSession, handleGetUserByUUID);
 router.get('/log-out',checkSession,generateCSRFToken, handleLogout);
 router.get('/ProfilePage',checkSession,generateCSRFToken, getProfilePage);
 router.get('/ProfileInfo',checkSession, getUserProfileInfo)
-router.get('/UserAppointment',checkSession, getUserAppointments)
+router.get('/UserAppointment',checkSession, generateCSRFToken, getUserAppointments)
 
 router.get('/Settings',checkSession, generateCSRFToken, getUserSettings)
 

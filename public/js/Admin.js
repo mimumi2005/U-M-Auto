@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
             filtered = filtered.filter(p => p.Delayed === 1);
             title.innerHTML = translate("Delayed projects");
         } else if (filterVal === 'active') {
-            filtered = filtered.filter(p => p.statusName === 'In Progress');
+            filtered = filtered.filter(p => p.statusName === 'In Progress' || p.statusName === 'Pending');
             title.innerHTML = translate("Projects in progress");
         } else if (filterVal === 'completed') {
             filtered = filtered.filter(p => p.statusName === 'Completed');
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Define button sets based on status
                     const buttonConfigs = {
-                        Pending: [
+                        'Pending': [
                             { name: 'Start', class: 'btn-success', action: 'In Progress' },
                             { name: 'No arrival', class: 'btn-secondary', action: 'No Arrival' },
                             { name: 'Cancel', class: 'btn-danger', action: 'Cancelled' }
@@ -479,7 +479,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     };
 
                     // Get the buttons to show for the current status
-                    const buttonsToShow = buttonConfigs[appointment.statusName] || [];
+                    let buttonsToShow = buttonConfigs[appointment.statusName] || [];
+
+                    // If the project is delayed, remove the 'Finish' button
+                    if (appointment.Delayed) {
+                        buttonsToShow = buttonsToShow.filter(button => button.name !== 'Finish');
+                    }
 
                     // Create a small button for each status option
                     buttonsToShow.forEach(buttonConfig => {
@@ -502,15 +507,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 delayedCell.style.width = "15%";
 
                 if (appointment.Delayed === 1) {
-                    DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to finish project)')}</a>`;
-                    delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project end date has changed due to delay')}</span>` + DelayLink.innerHTML;
+                    DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to continue project)')}</a>`;
+                    delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project has been delayed')}</span>` + DelayLink.innerHTML;
                     delayedCell.onclick = function () {
                         removeDelayed(appointment.idProjects);
                     };
-                } else {
+                }
+                else if (appointment.statusName == 'Completed') {
+                    delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project is finished')}</span>` + DelayLink.innerHTML;
+                }
+                else {
 
                     DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate("(Click to delay)")}</a>`;
-                    delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
+                    delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
                     delayedCell.onclick = function () {
                         changeEndDate(appointment.idProjects);
                     };
@@ -833,7 +842,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error:', error);
             });
     }
-    
+
     // Function that displays projects by ID
     function searchProjectByID(idProjects) {
         if (document.getElementById('ProjectIDInput')) {

@@ -7,13 +7,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const changeUsernameButton = document.getElementById('change-username-button');
 
     // Function to replace text with input field
-    function replaceWithInput(fieldId, defaultValue) {
+    function replaceWithInput(fieldId, defaultValue, maxLength) {
         const field = document.getElementById(fieldId);
         const inputField = document.createElement('input');
 
         inputField.type = 'text';
         inputField.value = defaultValue;
-        inputField.className = 'form-control'; // Bootstrap class for styling
+        inputField.maxLength = maxLength;
+        inputField.className = 'form-control '; // Bootstrap class for styling
         // Replace the text with input field
         field.parentNode.replaceChild(inputField, field);
 
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Replace the input field with the new text
             const newText = document.createElement('a');
+            newText.className = 'profile-value'; // Bootstrap class for styling
             newText.id = fieldId; // Restore the original ID
             newText.textContent = newValue;
 
@@ -73,14 +75,14 @@ document.addEventListener('DOMContentLoaded', function () {
     changeNameButton.addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('name').focus();
-        replaceWithInput('name', document.getElementById('name').textContent);
+        replaceWithInput('name', document.getElementById('name').textContent, 25);
         changeNameButton.classList.add('d-none');
     });
 
     changeUsernameButton.addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('username').focus();
-        replaceWithInput('username', document.getElementById('username').textContent);
+        replaceWithInput('username', document.getElementById('username').textContent, 35);
         changeUsernameButton.classList.add('d-none');
     });
 

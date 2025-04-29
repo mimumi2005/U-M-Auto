@@ -154,10 +154,11 @@ export const changePassword = async (req, res) => {
 
 // getUserAppointments 
 export const getUserAppointments = async (req, res) => {
+  const csrfTokenValue = req.csrfToken;
   const { idUser } = req.body;
   try {
     const projects = await authModel.getProjectsByUserId(idUser);
-    res.render('pages/UserAppointment', { nonce: res.locals.nonce, i18n, projects, language: req.session.language || 'en' });
+    res.render('pages/UserAppointment', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n, projects, language: req.session.language || 'en' });
   } catch (error) {
     console.error('Error fetching projects:', error);
     res.status(500).json({ message: 'Internal Server Error' });

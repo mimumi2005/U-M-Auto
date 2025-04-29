@@ -1,27 +1,39 @@
 <body>
-    <div class="appointment-container">
-        <div class="container  bg-light rounded appointment-content ">
-            <h2 class="text-center mb-4 text-white">
-                <%= __('Your Appointments') %>
-            </h2>
+  <div class="appointment-container">
+    <div class="container  bg-light rounded appointment-content ">
+      <h2 class="text-center mb-4 text-white">
+        <%= __('Your Appointments') %>
+      </h2>
 
-            <!-- Table to display appointment data -->
-            <div id="appointment-data" class="table-responsive text-white">
-                <table class="table table-bordered table-hover" id="appointments-table">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th><%= __('Start Date') %></th>
-                      <th><%= __('Projected End Date') %></th>
-                      <th><%= __('Project Info') %></th>
-                      <th><%= __('Delayed Status') %></th>
-                    </tr>
-                  </thead>
-                  <tbody id="appointment-table-body">
-                    <!-- JS will inject rows here -->
-                  </tbody>
-                </table>
-              </div>
-              
-        </div>
-        <script src="/js/UserAppointment.js" nonce="<%= nonce %>"></script>
+      <!-- Table to display appointment data -->
+      <div id="appointment-data" class="table-responsive text-white">
+        <table class="table table-bordered table-hover" id="appointments-table">
+          <thead class="thead-dark">
+            <tr>
+              <th>
+                <%= __('Start Date') %>
+              </th>
+              <th>
+                <%= __('Projected End Date') %>
+              </th>
+              <th>
+                <%= __('Project Info') %>
+              </th>
+              <th>
+                <%= __('Delayed Status') %>
+              </th>
+              <th>
+                <%= __('Overall Status') %>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="appointment-table-body">
+            <!-- JS will inject rows here -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
+    <script src="/js/UserAppointment.js" nonce="<%= nonce %>"></script>
 </body>

@@ -501,8 +501,6 @@
 	"Filter: All Projects": "Filter: All Projects",
 	"Search by Project ID, User ID, Username, or Status": "Search by Project ID, User ID, Username, or Status",
 	"Search Projects": "Search Projects",
-	"Search by ID, Email, or ProjectID": "Search by ID, Email, or ProjectID",
-	"Search by Email, ID or ProjectID": "Search by Email, ID or ProjectID",
 	"Search by ID, Username, or Info": "Search by ID, Username, or Info",
 	"Completed Projects": "Completed Projects",
 	"Pending Projects": "Pending Projects",
@@ -510,5 +508,15 @@
 	"Successfully removed administrator permissions": "Successfully removed administrator permissions",
 	"Remove Worker": "Remove Worker",
 	"Reason for removal": "Reason for removal",
-	"Remove worker": "Remove worker"
+	"Remove worker": "Remove worker",
+	"Search by Email or ID": "Search by Email or ID",
+	"Overall Status": "Overall Status",
+	"Forgot password?": "Forgot password?",
+	"Create an account instead?": "Create an account instead?",
+	"Delayed projects": "Delayed projects",
+	"No projects found.": "No projects found.",
+	"Project is finished": "Project is finished",
+	"Project statistics by type": "Project statistics by type",
+	"Project statistics by status": "Project statistics by status",
+	"Project count per user": "Project count per user"
 }

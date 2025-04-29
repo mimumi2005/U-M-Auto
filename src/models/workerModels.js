@@ -7,16 +7,17 @@ export async function checkWorkerStatus(userid) {
 
 export const getActiveProjects = async (curdate) => {
     const sql_query = `
-        SELECT projects.*, users.UserName, project_status.statusName
-        FROM projects
-        JOIN users ON projects.idUser = users.idUser
-        JOIN project_status ON projects.idStatus = project_status.idStatus
-        WHERE ? < projects.StartDate OR projects.Delayed = true
+      SELECT projects.*, users.UserName, project_status.statusName
+      FROM projects
+      JOIN users ON projects.idUser = users.idUser
+      JOIN project_status ON projects.idStatus = project_status.idStatus
+      WHERE (? < projects.StartDate OR projects.Delayed = true)
+        AND project_status.statusName != 'Cancelled'
     `;
     const [results] = await pool.query(sql_query, [curdate]);
     return results;
-};
-
+  };
+  
 export const getTodaysProjects = async (year, month, day) => {
     const sql_query = `
         SELECT projects.*, users.UserName, project_status.statusName

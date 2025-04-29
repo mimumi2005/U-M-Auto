@@ -361,7 +361,18 @@ function ViewProjectStatistics() {
       // Call a function to display the user data on the page
       displayProjectStatistics(data);
     })
-    .catch(error => console.error('Error fetching user data:', error));
+    .catch(error => console.error('Error fetching project data:', error));
+}
+
+// Function to show statistics about projects
+function ViewProjectStatusStatistics() {
+  fetch('/project-status-statistics')
+    .then(response => response.json())
+    .then(data => {
+      // Call a function to display the user data on the page
+      displayProjectStatusStatistics(data);
+    })
+    .catch(error => console.error('Error fetching project data:', error));
 }
 
 // Remove a worker from the worker table
@@ -499,6 +510,109 @@ function displayDelayedProjectData(projects) {
   });
 }
 
+// Function to display user statistics on the page
+function displayUserStatistics(userStats) {
+  document.getElementById('UserStatisticsContainer').classList.remove('nodisplay');
+
+  userStats.sort((b, a) => b.ProjectsCount - a.ProjectsCount);
+
+  const ctx = document.getElementById('userStatisticsChart').getContext('2d');
+
+  const labels = [];
+  const data = [];
+  // Uses the data from database to display correct graph data
+  userStats.forEach(stat => {
+    const projectLabel = stat.ProjectsCount === 1 ? translate('Project') : translate('Projects');
+    labels.push(`${stat.ProjectsCount} ${projectLabel}`);
+    data.push(stat.UsersCount);
+  });
+
+  // Formats how the data looks when displayed
+  const chartData = {
+    labels: labels,
+    datasets: [{
+      label: '',
+      data: data,
+      backgroundColor: [
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(153, 102, 255, 0.6)',
+        'rgba(255, 159, 64, 0.6)'
+      ],
+      borderColor: 'rgba(255, 255, 255, 1)',
+      borderWidth: 2
+    }]
+  };
+
+  // Configuration of the pie chart
+  const config = {
+    type: 'pie',
+    data: chartData,
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: translate('Project count per user'),
+          color: 'lightgrey',
+          font: {
+            size: 25,
+            weight: 'bold'
+          },
+          padding: {
+            bottom: 30
+          }
+        },
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: 'lightgrey',
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            title: function(context) {
+              return context[0].label;
+            },
+            label: function(context) {
+              const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+              const value = context.raw;
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${value} ${translate('Users')} (${percentage}%)`;
+            }
+          }
+        },
+        datalabels: {
+          formatter: (value, context) => {
+            const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+            const percentage = ((value / total) * 100).toFixed(1);
+            return `${percentage}%`;
+          },
+          color: 'white',
+          font: {
+            weight: 'bold',
+            size: 14
+          }
+        }
+      },
+      layout: {
+        padding: {
+          top: 20,
+          bottom: 20
+        }
+      }
+    }
+  };
+
+  new Chart(ctx, config);
+}
+
+
 // Function to display project statistics on the page
 function displayProjectStatistics(projects) {
   document.getElementById('ProjectStatisticsContainer').classList.remove('nodisplay');
@@ -515,76 +629,65 @@ function displayProjectStatistics(projects) {
     labels.push(translate(project.TimeRange));
     data.push(project.ProjectsCount);
   });
+
   // Formats how the data looks when displayed
   const chartData = {
     labels: labels,
     datasets: [{
-      label: translate('Number of Projects'),
+      label: '',
       data: data,
-      backgroundColor: 'rgba(75, 192, 192, 0.4)',
-      borderColor: 'rgba(90, 210, 210, 1)',
-      borderWidth: 1
+      backgroundColor: [
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(153, 102, 255, 0.6)',
+        'rgba(255, 159, 64, 0.6)'
+      ],
+      borderColor: 'rgba(255, 255, 255, 1)',
+      borderWidth: 2
     }]
   };
 
-  // Configuration of the graph itself, text format etc.
+  // Configuration of the pie chart
   const config = {
-    type: 'bar',
+    type: 'pie',
     data: chartData,
     options: {
       plugins: {
-        legend: {
-          labels: {
-            color: 'lightgray',
-            font: {
-              size: 16,
-              weight: 'bold'
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: 'lightgray',
-            font: {
-              size: 14,
-              weight: 'bold'
-            }
+        title: {
+          display: true,
+          text: translate('Project statistics by type'),
+          color: 'lightgrey',
+          font: {
+            size: 25,
+            weight: 'bold'
           },
-          title: {
-            display: true,
-            text: translate('Number of Projects'),
-            color: 'lightgray',
-            font: {
-              size: 16,
-              weight: 'bold'
-            }
-          },
-          grid: {
-            color: 'lightgray'
+          padding: {
+            bottom: 30
           }
         },
-        x: {
-          ticks: {
-            color: 'lightgray',
-            font: {
-              size: 14,
-              weight: 'bold'
-            }
-          },
-          title: {
-            display: true,
-            text: translate('Type of project'),
-            color: 'lightgray',
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: 'lightgrey',
             font: {
               size: 16,
               weight: 'bold'
             }
-          },
-          grid: {
-            color: 'lightgray'
+          }
+        },
+        tooltip: {
+          callbacks: {
+            title: function(context) {
+              return context[0].label;
+            },
+            label: function(context) {
+              const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+              const value = context.raw;
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${value} ${translate('Projects')} (${percentage}%)`;
+            }
           }
         }
       },
@@ -596,46 +699,62 @@ function displayProjectStatistics(projects) {
       }
     }
   };
+
   new Chart(ctx, config);
 }
 
+function displayProjectStatusStatistics(statusStats) {
+  document.getElementById('ProjectStatusStatisticsContainer').classList.remove('nodisplay');
 
+  statusStats.sort((a, b) => b.ProjectsCount - a.ProjectsCount);
 
-
-// Function to display user statistics on the page
-function displayUserStatistics(userStats) {
-  document.getElementById('UserStatisticsContainer').classList.remove('nodisplay');
-
-  userStats.sort((b, a) => b.ProjectsCount - a.ProjectsCount);
-
-  const ctx = document.getElementById('userStatisticsChart').getContext('2d');
+  const ctx = document.getElementById('projectStatusStatisticsChart').getContext('2d');
 
   const labels = [];
   const data = [];
-  // Uses the data from database to display correct graph data
-  userStats.forEach(stat => {
-    labels.push(stat.ProjectsCount);
-    data.push(stat.UsersCount);
+
+  statusStats.forEach(status => {
+    labels.push(translate(status.StatusName));
+    data.push(status.ProjectsCount);
   });
 
-  // Formats how the data looks when displayed
   const chartData = {
     labels: labels,
     datasets: [{
-      label: translate('Number of Users'),
+      label: '',
       data: data,
-      backgroundColor: 'rgba(75, 192, 192, 0.4)',
-      borderColor: 'rgba(90, 210, 210, 1)',
-      borderWidth: 1
+      backgroundColor: [
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(153, 102, 255, 0.6)',
+        'rgba(255, 159, 64, 0.6)'
+      ],
+      borderColor: 'rgba(255, 255, 255, 1)',
+      borderWidth: 2
     }]
   };
-  // Configuration of the graph itself, text format etc.
+
   const config = {
-    type: 'bar',
+    type: 'pie',
     data: chartData,
     options: {
       plugins: {
+        title: {
+          display: true,
+          text: translate('Project statistics by status'),
+          color: 'lightgrey',
+          font: {
+            size: 25,
+            weight: 'bold'
+          },
+          padding: {
+            bottom: 30
+          }
+        },
         legend: {
+          position: 'bottom',
           labels: {
             color: 'lightgrey',
             font: {
@@ -643,50 +762,18 @@ function displayUserStatistics(userStats) {
               weight: 'bold'
             }
           }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: 'lightgrey',
-            font: {
-              size: 14,
-              weight: 'bold'
-            }
-          },
-          title: {
-            display: true,
-            text: translate('Number of Users'),
-            color: 'lightgrey',
-            font: {
-              size: 16,
-              weight: 'bold'
-            }
-          },
-          grid: {
-            color: 'lightgrey'
-          }
         },
-        x: {
-          ticks: {
-            color: 'lightgrey',
-            font: {
-              size: 14,
-              weight: 'bold'
+        tooltip: {
+          callbacks: {
+            title: function(context) {
+              return context[0].label;
+            },
+            label: function(context) {
+              const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+              const value = context.raw;
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${value} ${translate('Projects')} (${percentage}%)`;
             }
-          },
-          title: {
-            display: true,
-            text: translate('Number of Projects'),
-            color: 'lightgrey',
-            font: {
-              size: 16,
-              weight: 'bold'
-            }
-          },
-          grid: {
-            color: 'lightgrey'
           }
         }
       },
@@ -698,6 +785,7 @@ function displayUserStatistics(userStats) {
       }
     }
   };
+
   new Chart(ctx, config);
 }
 
@@ -714,6 +802,19 @@ const getCookie = (name) => {
 }
 
 function translate(key) {
-  const lang = window.currentLanguage || 'en';
-  return window.translations[lang][key] || key;
+  const lang = window.currentLanguage || "en";
+  const value = window.translations?.[lang]?.[key];
+
+  if (!value) {
+    // Notify server to write missing key
+    fetch("/add-missing-key", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key }),
+    });
+
+    return key;
+  }
+
+  return value;
 }

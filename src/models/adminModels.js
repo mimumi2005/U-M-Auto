@@ -17,15 +17,17 @@ export const getAllAdminIds = async () => {
 
 export const getActiveProjects = async (curdate) => {
     const sql_query = `
-        SELECT projects.*, users.UserName, project_status.statusName
-        FROM projects
-        JOIN users ON projects.idUser = users.idUser
-        JOIN project_status ON projects.idStatus = project_status.idStatus
-        WHERE ? < projects.StartDate OR projects.Delayed = true
+      SELECT projects.*, users.UserName, project_status.statusName
+      FROM projects
+      JOIN users ON projects.idUser = users.idUser
+      JOIN project_status ON projects.idStatus = project_status.idStatus
+      WHERE (? < projects.StartDate OR projects.Delayed = true)
+        AND project_status.statusName != 'Cancelled'
     `;
     const [results] = await pool.query(sql_query, [curdate]);
     return results;
-};
+  };
+  
 
 export const getProjectById = async (idProjects) => {
     const sql_query = `

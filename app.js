@@ -54,7 +54,7 @@ app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'", "https://maps.googleapis.com", "https://umautorepair.up.railway.app", "file:"],
     frameSrc: ["'self'", "https://www.google.com", "https://umautorepair.up.railway.app",  "https://www.gstatic.com"],
-    connectSrc: ["'self'", "https://umautorepair.up.railway.app",   "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov"],
+    connectSrc: ["'self'", "https://umautorepair.up.railway.app", "https://region1.google-analytics.com",   "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov"],
     imgSrc: [
       "'self'",
       "https://umautorepair.up.railway.app",
@@ -167,6 +167,13 @@ const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
+
+app.post("/add-missing-key", (req, res) => {
+  const { key } = req.body;
+  i18n.__({ phrase: key, locale: req.session.language });
+  res.sendStatus(200);
+});
+
 
 // Saving session info
 app.get('/api/getUserSession', (req, res) => {
@@ -288,6 +295,26 @@ app.get("/project-statistics", async (req, res) => {
     res.status(500).json({ message: "Error retrieving project statistics" });
   }
 });
+
+app.get("/project-status-statistics", async (req, res) => {
+  const sql_query = `
+    SELECT 
+      project_status.statusName AS StatusName,
+      COUNT(*) AS ProjectsCount
+    FROM projects
+    JOIN project_status ON projects.idStatus = project_status.idStatus
+    GROUP BY project_status.statusName
+    ORDER BY project_status.statusName ASC
+  `;
+  try {
+    const [result] = await pool.query(sql_query);
+    res.json(result);
+  } catch (err) {
+    console.error("Error retrieving project status statistics:", err);
+    res.status(500).json({ message: "Error retrieving project status statistics" });
+  }
+});
+
 
 // User statistics
 app.get("/user-statistics", async (req, res) => {

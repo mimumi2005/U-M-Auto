@@ -662,13 +662,12 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
     
         // Combine all the information
         const combinedInfo = `
-            Car info:
-            Car Brand- ${carBrand}
-            Car Model- ${carModel}
-            Car Year- ${carYear}
-          Additional Info: ${additionalInfo}
+        Car Info:
+          Car Brand- ${carBrand}
+          Car Model- ${carModel}
+          Car Year- ${carYear}\n\nAdditional Info: \n${additionalInfo}
         `.trim();
-    
+        
         return combinedInfo;
     }
 

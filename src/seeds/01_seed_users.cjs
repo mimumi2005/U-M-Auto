@@ -40,7 +40,7 @@ const createUsers = async (count) => {
 exports.seed = async function (knex) {
   await knex('users').del();
 
-  const userCount = 25;
+  const userCount = 99;
   const users = await createUsers(userCount);
 
   const adminHashedPassword = await bcrypt.hash('password123', 10);

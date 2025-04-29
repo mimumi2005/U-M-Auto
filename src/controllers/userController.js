@@ -28,3 +28,20 @@ export const fetchAllProjectDATES = async (req, res) => {
     res.status(500).send("An error occurred while fetching project dates.");
   }
 };
+
+export const cancelAppointment = async (req, res) => {
+  const { idProject } = req.params;
+
+  try {
+    const result = await userModel.cancelAppointment(idProject);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Appointment not found.' });
+    }
+
+    res.json({ success: true, message: 'Appointment successfully cancelled.' });
+  } catch (error) {
+    console.error('Error cancelling appointment:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};

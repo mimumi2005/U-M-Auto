@@ -157,6 +157,15 @@
       margin:0 auto;
       min-width:250px;
     }
+    .profile-container {
+      justify-content:initial !important;
+      margin: 0 auto !important;
+      padding:50px 0 0 0 !important;
+    }
+
+    .profile-content{
+      margin:0 auto;
+    }
   }
   @media (max-width: 350px) {
     #calendar-container {
@@ -208,6 +217,18 @@
     font-size: 0.8em;
   }
 
+  .chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-height: 500px;
+  }
+  
+  .gapcontainer {
+    gap: 20px;
+    row-gap: 50px;
+  }
 
   #scroll-to-top-btn {
     position: fixed;
@@ -799,14 +820,14 @@
 
   /* Appointment Container */
   .appointment-content {
-    min-width: 80%;
+    min-width: 70%;
     padding: 30px;
     background-color: rgba(40, 40, 40, 0.9);
     border-radius: 15px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
     text-align: left;
     height: auto;
-    /* Ensures it grows to fit content */
+    width:fit-content;
     overflow: visible;
     /* Ensures no scrollbars are shown */
   }
@@ -861,7 +882,7 @@
     background-color: rgba(40, 40, 40, 0.9);
     border-radius: 15px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
-    text-align: left;
+    text-align: center;
   }
 
   /* Profile Title */
@@ -893,6 +914,8 @@
 
   .profile-value {
     color: #f1f1f1;
+    margin-top:0.44rem;
+    margin-bottom:0.44rem;
   }
 
   /* Profile Content */
@@ -928,6 +951,7 @@
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
+    margin: 0 auto;
     transition: background-color 0.3s ease;
   }
 

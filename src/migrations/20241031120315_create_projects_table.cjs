@@ -18,7 +18,7 @@ exports.up = function (knex) {
       .inTable('project_status')
       .onDelete('CASCADE');
     
-    table.string('ProjectInfo', 255).defaultTo(null);
+    table.string('ProjectInfo', 700).defaultTo(null);
   });
 };
 
