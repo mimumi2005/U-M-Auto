@@ -292,3 +292,21 @@ function fetchUserInfo() {
             console.error('Error fetching user information:', error);
         });
 }
+
+document.getElementById('deleteAccountButton').addEventListener('click', async function () {
+    try {
+      const UUID = loggedUser.UUID; // replace `user.idUser` with however you're passing the user ID
+      const response = await fetch(`/user-delete/${UUID}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        window.location.href = '/goodbye'; // or redirect to a goodbye page
+      }
+    } catch (err) {
+      console.error('Error deleting account:', err);
+    }
+  });

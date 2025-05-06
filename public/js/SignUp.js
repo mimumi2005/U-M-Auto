@@ -33,45 +33,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Name validation
         const NameValue = document.getElementById('name').value.trim();
-        if(NameValue==''){
+        if (NameValue == '') {
             document.getElementById('name-red').classList.add('text-danger');
             document.getElementById('name').classList.add('form-control-incorrect')
             document.getElementById('EmptyName').classList.remove('nodisplay');
             return
         }
-        
+
 
         // Email validation
         const EmailInput = document.getElementById('email');
         const EmailPattern = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
         const EmailValue = EmailInput.value.trim();
-        if ((!EmailPattern.test(EmailValue))){
+        if ((!EmailPattern.test(EmailValue))) {
             document.getElementById('email').classList.add('form-control-incorrect');
             document.getElementById('BadEmail').classList.remove('nodisplay');
             document.getElementById('email-red').classList.add('text-danger');
             return;
         }
-        if(EmailValue==''){
+        if (EmailValue == '') {
             document.getElementById('email').classList.add('form-control-incorrect');
             document.getElementById('EmptyEmail').classList.remove('nodisplay');
             document.getElementById('email-red').classList.add('text-danger');
             return;
-        }     
+        }
 
         // Username validation
         const UsernameValue = document.getElementById("username").value.trim();
-        if (UsernameValue==''){
+        if (UsernameValue == '') {
             document.getElementById('username').classList.add('form-control-incorrect ');
             document.getElementById('EmptyUsername').classList.remove('nodisplay');
             document.getElementById('username-red').classList.add('text-danger');
             return;
         }
-        
+
         //password validation
         const passwordInput = document.getElementById('password');
         const passwordValue = passwordInput.value.trim();
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-        
+
         if (!passwordRegex.test(passwordValue)) {
             document.getElementById('password').classList.add('form-control-incorrect');
             document.getElementById('BadPassword').classList.remove('nodisplay');
@@ -79,12 +79,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        if(passwordValue==''){
+        if (passwordValue == '') {
             document.getElementById('password').classList.add('form-control-incorrect');
             document.getElementById('EmptyPassword').classList.remove('nodisplay');
             document.getElementById('password-red').classList.add('text-danger');
             return;
-        }     
+        }
 
         // Collect form data
         const formData = {
@@ -93,12 +93,14 @@ document.addEventListener('DOMContentLoaded', function () {
             username: document.getElementById('username').value,
             password: document.getElementById('password').value,
             'g-recaptcha-response': document.querySelector('.g-recaptcha-response').value // Get the reCAPTCHA response
-        // Add other form fields as needed
+            // Add other form fields as needed
         };
         document.getElementById('password').value = '';
+        
+        // Reset captcha
+        grecaptcha.reset();
+
         // Make a POST request to the backend
-
-
         fetch('/auth/sign-up', {
             method: 'POST',
             headers: {
@@ -107,15 +109,13 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(formData),
         })
-        .then(response => response.json())
-        .then(data => handleResponse(data))
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    
-    
-    
+            .then(response => response.json())
+            .then(data => handleResponse(data))
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
+
     function handleResponse(response) {
         // On success announces it 
         if (response.status === 'success') {
@@ -125,37 +125,37 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             console.error('Error:', response);
 
-        // Divides errors
-        if(response.message=='Email is already taken'){
+            // Divides errors
+            if (response.message == 'Email is already taken') {
                 document.getElementById('TakenEmail').classList.remove('nodisplay');
                 document.getElementById('email-red').classList.add('text-danger');
                 document.getElementById('email').classList.add('form-control-incorrect');
 
-                
-        
+
+
             }
-        if(response.message=='Username is already taken'){
-            document.getElementById('TakenUsername').classList.remove('nodisplay');
-            document.getElementById('username-red').classList.add('text-danger');
-            document.getElementById('username').classList.add('form-control-incorrect');
-            
+            if (response.message == 'Username is already taken') {
+                document.getElementById('TakenUsername').classList.remove('nodisplay');
+                document.getElementById('username-red').classList.add('text-danger');
+                document.getElementById('username').classList.add('form-control-incorrect');
+
+            }
         }
     }
-}
 
-// Removes red border of form input when user clicks that part of form
-    document.getElementById('email').addEventListener('focus', function() {
-            document.getElementById('email').classList.remove('form-control-incorrect');
+    // Removes red border of form input when user clicks that part of form
+    document.getElementById('email').addEventListener('focus', function () {
+        document.getElementById('email').classList.remove('form-control-incorrect');
     });
-    document.getElementById('username').addEventListener('focus', function() {
+    document.getElementById('username').addEventListener('focus', function () {
         document.getElementById('username').classList.remove('form-control-incorrect');
     });
-    document.getElementById('name').addEventListener('focus', function() {
+    document.getElementById('name').addEventListener('focus', function () {
         document.getElementById('name').classList.remove('form-control-incorrect')
     });
 
-    
-    
+
+
     document.addEventListener("DOMContentLoaded", function () {
         const acceptPolicyCheckbox = document.getElementById("acceptPolicy");
         const termsConditionsLink = document.getElementById("termsConditionsLink");

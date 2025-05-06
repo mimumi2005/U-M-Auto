@@ -202,3 +202,47 @@ checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', calculatePrice);
     checkbox.addEventListener('keydown', handleCheckboxKeydown);
 });
+
+function updateEstimatorUIByHash() {
+    const hash = window.location.hash;
+
+    const carImageSection = document.getElementById('imageContainer');
+    const mapSection = document.querySelector('map');
+    const selectButtons = document.getElementById('select-all-button').parentElement;
+    const canvasOverlay = document.getElementById('overlayCanvas');
+
+    const paintDetails = document.getElementById('paintJobPricing');
+    const weldingDetails = document.getElementById('weldingPricing');
+    const repairsTable = document.getElementById('repairsTable');
+
+    const sectionTitle = document.querySelector('h2');
+
+    if (hash === '#paintjob' || hash === '#rustwork') {
+        carImageSection.classList.remove("nodisplay");
+        mapSection.classList.remove("nodisplay");
+        canvasOverlay.classList.remove("nodisplay");
+        selectButtons.classList.remove("nodisplay");
+
+        sectionTitle.innerText = hash === '#paintjob' ? translate('Paint Job Estimation') : translate('Rust Work Estimation');
+
+        paintDetails.classList.remove("nodisplay");
+        weldingDetails.classList.add("nodisplay");
+        repairsTable.classList.add("nodisplay");
+    } 
+    else{
+        carImageSection.classList.add("nodisplay");
+        mapSection.classList.add("nodisplay");
+        canvasOverlay.classList.add("nodisplay");
+        selectButtons.classList.add("nodisplay");
+        paintDetails.classList.add("nodisplay");
+
+        sectionTitle.innerText = translate('Repairs Estimate');
+
+        repairsTable.classList.remove("nodisplay");
+        weldingDetails.classList.add("nodisplay");
+
+    }
+}
+
+window.addEventListener('DOMContentLoaded', updateEstimatorUIByHash);
+window.addEventListener('hashchange', updateEstimatorUIByHash);

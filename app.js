@@ -53,11 +53,12 @@ app.use(helmet({ hidePoweredBy: true }));
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'", "https://maps.googleapis.com", "https://umautorepair.up.railway.app", "file:"],
-    frameSrc: ["'self'", "https://www.google.com", "https://umautorepair.up.railway.app",  "https://www.gstatic.com"],
-    connectSrc: ["'self'", "https://umautorepair.up.railway.app", "https://region1.google-analytics.com",   "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov"],
+    frameSrc: ["'self'", "https://www.google.com", "https://umautorepair.up.railway.app",  "https://www.gstatic.com", "https://www.google.com https://www.gstatic.com"],
+    connectSrc: ["'self'", "https://umautorepair.up.railway.app", "https://region1.google-analytics.com",   "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov", "https://www.google.com https://www.gstatic.com"],
     imgSrc: [
       "'self'",
       "https://umautorepair.up.railway.app",
+      "https://www.google.com https://www.gstatic.com",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
       "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/ru.svg",
@@ -75,6 +76,7 @@ app.use(helmet.contentSecurityPolicy({
       "https://www.google.com/recaptcha/api.js",
       "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+      "https://www.google.com https://www.gstatic.com",
       (req, res) => `'nonce-${res.locals.nonce}'`
     ],
     styleSrc: [
@@ -361,14 +363,15 @@ async function deleteProjects(userID) {
 }
 
 // Delete user and associated data
-app.delete('/user-delete/:userID', async (req, res) => {
-  const userID = req.params.userID;
+app.delete('/user-delete/:UUID', async (req, res) => {
+  const UUID = req.params.UUID;
 
   try {
-    const [uuidResult] = await pool.query('SELECT idInstance FROM user_instance WHERE idUser = ?', [userID]);
+    const [uuidResult] = await pool.query('SELECT idInstance FROM user_instance WHERE idInstance = ?', [UUID]);
     if (uuidResult.length > 0) {
       await logoutUser(uuidResult[0].idInstance);
     }
+    const userID = uuidResult[0].idUser
 
     await pool.query('DELETE FROM workers WHERE idUser = ?', [userID]);
     await pool.query('DELETE FROM administrators WHERE idUser = ?', [userID]);

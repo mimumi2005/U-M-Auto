@@ -20,7 +20,7 @@ router.post('/login', (req, res) => {
 router.get('/notification-settings', checkSession, getNotificationSettings);
 
 router.post('/update-notification-settings', checkSession, validateCSRFToken, updateNotificationSettings);
-router.post('/sign-up', verifyRecaptcha,validateCSRFToken, sanitizeInputUsers, handleSignUp);
+router.post('/sign-up', verifyRecaptcha, validateCSRFToken, sanitizeInputUsers, handleSignUp);
 router.post('/createAppointment',checkSession,validateCSRFToken, sanitizeInputProjects, handleCreateAppointment);
 router.post('/change-password',checkSession,validateCSRFToken, sanitizeInputUsers, changePassword);
 router.post('/update-username',checkSession,validateCSRFToken, sanitizeInputUsers, updateUsername);

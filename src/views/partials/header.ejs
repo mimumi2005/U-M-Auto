@@ -95,11 +95,25 @@
                         </a>
                     </li>
                 </ul>
+                
                 <ul class="navbar-nav">
-                    <li class="nav-item nodisplay" id="estimatorButton">
-                        <a class="nav-link h4 mr-2 text-light" href="/Estimator">
+                    <li class="nav-item dropdown  dropdown-hover nodisplay" id="estimatorButton">
+                        <a class="nav-link h4 mr-2 text-light dropdown-toggle"
+                            alt="<%= __('Click or press enter to expand') %>" id="estimatorDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <%= __('Price Estimator') %>
                         </a>
+                        <div class="dropup dropdown-menu " aria-labelledby="estimatorDropdown">
+                            <a class="dropdown-item text-white" href="/estimator#paintjob">
+                                <%= __('Paint job price calculator') %>
+                            </a>
+                            <a class="bg-gray dropdown-item text-white" href="/estimator#rustwork">
+                                <%= __('Rustwork price calculator') %>
+                            </a>
+                            <a class="bg-gray dropdown-item text-white" href="/estimator#repair">
+                                <%= __('Other service prices') %>
+                            </a>
+                        </div>
                     </li>
                     <li class="nav-item nodisplay" id="timeTableButton">
                         <a class="nav-link h4 mr-2 text-light" href="/Appointments">
