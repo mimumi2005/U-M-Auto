@@ -44,12 +44,6 @@ exports.seed = async function (knex) {
   const users = await createUsers(userCount);
 
   const hashedPassword = await bcrypt.hash('DrosaParole#123', 10);
-  const normalUser = {
-    Name: 'JanaGaile',
-    Username: 'Mazanarina2',
-    Email: 'Mazanarina2g@gmail.com',
-    password: hashedPassword,
-  };
   const workerUser = {
     Name: 'Marcis',
     Username: 'Jaukais49',
@@ -63,6 +57,14 @@ exports.seed = async function (knex) {
     Email: 'janiskrisjanis.g@inbox.lv',
     password: hashedPassword,
   };
+
+  const normalUser = {
+    Name: 'JanaGaile',
+    Username: 'Mazanarina2',
+    Email: 'Mazanarina2g@gmail.com',
+    password: hashedPassword,
+  };
+
   const adminHashedPassword = await bcrypt.hash('password123', 10);
   const adminUser = {
     Name: 'Janis',
@@ -71,7 +73,7 @@ exports.seed = async function (knex) {
     password: adminHashedPassword,
   };
 
-  await knex('users').insert([adminUser, normalUser, workerUser, normalAdmin, ...users]);
+  await knex('users').insert([adminUser, normalAdmin, workerUser, normalUser, ...users]);
 
   console.log(`✅ Inserted ${userCount + 1} users into the database (including admin).`);
 };
