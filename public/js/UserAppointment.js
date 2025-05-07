@@ -112,8 +112,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     cancelAppointment(appointment.idProjects);
                 };
             }
+            else if (appointment.statusName == 'In Progress') {
+                delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project is in progress')}</span>`;
+            }
             else {
-                delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has been cancelled')}</span>`;
+                delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project has been cancelled')}</span>`;
             }
             row.appendChild(delayedCell);
 
