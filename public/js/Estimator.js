@@ -70,8 +70,7 @@ function createRedOverlayPolygons() {
         document.getElementById('paintPrice').textContent = repairPrice.toFixed(2);
         document.getElementById('materialPrice').textContent = materialPrice.toFixed(2);
         document.getElementById('totalPrice').textContent = totalPriceDisplay.toFixed(2);
-        document.getElementById('Pricing').value = `${formattedTotalPrice} `;
-        calculatePrice()
+
     }
 
     // Function to toggle the activation of a specific overlay

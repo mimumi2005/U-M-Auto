@@ -50,52 +50,45 @@ app.set('trust proxy', 1);
 app.use(generateNonce);
 app.use(helmet({ hidePoweredBy: true }));
 
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'", "https://maps.googleapis.com", "https://umautorepair.up.railway.app", "file:"],
-    frameSrc: ["'self'", "https://www.google.com", "https://umautorepair.up.railway.app",  "https://www.gstatic.com", "https://www.google.com https://www.gstatic.com"],
-    connectSrc: ["'self'", "https://umautorepair.up.railway.app", "https://region1.google-analytics.com",   "https://maps.googleapis.com", "https://vpic.nhtsa.dot.gov", "https://www.google.com https://www.gstatic.com"],
-    imgSrc: [
-      "'self'",
-      "https://umautorepair.up.railway.app",
-      "https://www.google.com https://www.gstatic.com",
-      "https://maps.googleapis.com",
-      "https://maps.gstatic.com",
-      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/ru.svg",
-      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/gb.svg",
-      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/lv.svg",
-      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/de.svg",
-      "data:"
-    ],
-    scriptSrc: [
-      "'self'",
-      "https://umautorepair.up.railway.app",
-      "https://www.googletagmanager.com",
-      "https://maps.googleapis.com",
-      "https://www.gstatic.com",
-      "https://www.google.com/recaptcha/api.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js",
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
-      "https://www.google.com https://www.gstatic.com",
-      (req, res) => `'nonce-${res.locals.nonce}'`
-    ],
-    styleSrc: [
-      "'self'",
-      (req, res) => `'nonce-${res.locals.nonce}'`,
-      "https://fonts.googleapis.com/css",
-      "https://fonts.googleapis.com/css2",
-      "https://umautorepair.up.railway.app",
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
-      "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css",
-      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
-    ],
-    fontSrc: ["'self'", "https://umautorepair.up.railway.app","https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"],
-    objectSrc: ["'none'"],
-    mediaSrc: ["'self'"], 
-  },
-  reportOnly: false,
-}));
+const commonCDNs = [
+  "https://umautorepair.up.railway.app",
+  "https://www.google.com",
+  "https://www.gstatic.com",
+  "https://www.googletagmanager.com",
+  "https://maps.googleapis.com"
+];
 
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", ...commonCDNs],
+      frameSrc: ["'self'", ...commonCDNs],
+      connectSrc: [
+        "'self'",
+        ...commonCDNs,
+        "https://region1.google-analytics.com",
+        "https://vpic.nhtsa.dot.gov"
+      ],
+      imgSrc: ["'self'", ...commonCDNs, "https://maps.gstatic.com https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/", "data:"],
+      scriptSrc: [
+        "'self'",
+        ...commonCDNs,
+        "https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+        (req, res) => `'nonce-${res.locals.nonce}'`
+      ],
+      styleSrc: [
+        "'self'",
+        (req, res) => `'nonce-${res.locals.nonce}'`,
+        "https://fonts.googleapis.com",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/ https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      ],
+      fontSrc: ["'self'", ...commonCDNs, "https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"]
+    },
+    reportOnly: false
+  })
+);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
