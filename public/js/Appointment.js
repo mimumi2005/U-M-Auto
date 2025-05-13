@@ -330,7 +330,7 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
     function GetCalendarInfo() {
         const Month = currentDate.getMonth() + 1;
         const Year = currentDate.getFullYear();
-        fetch(`/user/all-project-dates/${Month}/${Year}`)
+        fetch(`/api/all-project-dates/${Month}/${Year}`)
             .then(response => response.json())
             .then(data => {
                 // Starts rendering the calendar, taking into count which days cant be used because of the already exsisting projects

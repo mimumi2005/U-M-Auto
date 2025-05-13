@@ -1,7 +1,10 @@
 // routes/userRoutes.js
 import express from 'express';
 import { isWorker } from '../middleware/isWorker.js';
-import { workerDashboard, fetchActiveProjects, fetchTodaysProjects, fetchDelayedProjects, removeDelayedProject, fetchProjectById, changeEndDate, fetchProjectByUserId,fetchUserById, changeStatus } from '../controllers/workerController.js';
+import { 
+    workerDashboard, fetchActiveProjects, fetchTodaysProjects, fetchDelayedProjects, fetchProjectById,fetchUserById, fetchProjectByUserId,
+    changeStatus, removeDelayedProject, changeEndDate 
+} from '../controllers/workerController.js';
 import {generateCSRFToken} from '../middleware/CSRF.js'
 import {validateCSRFToken} from '../middleware/CSRF.js'
 const router = express.Router();

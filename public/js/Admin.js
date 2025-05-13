@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const compareDate = new Date(mode === 'started' ? p.StartDate : p.EndDateProjection);
             return compareDate.toISOString().split('T')[0] === date;
         });
+        title.innerHTML = translate("Projects on") + ` ${date}`; 
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
         displayProjectData(filtered);
     }
@@ -1047,11 +1048,6 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchAllProjects();
     fetchAllUsers();
 });
-
-function translate(key) {
-    const lang = window.currentLanguage || 'en';
-    return window.translations[lang][key] || key;
-}
 
 function showSuccessAlert(messageKey, callbackAfter) {
     const alertBox = document.getElementById('successAlert');

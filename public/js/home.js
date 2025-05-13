@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-
   document.querySelectorAll('.faq-question').forEach(question => {
     question.addEventListener('click', () => {
       const answer = question.nextElementSibling.nextElementSibling; // Answer element

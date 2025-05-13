@@ -39,7 +39,11 @@ export const loginUser = async (req, res) => {
   const UUID = uuidv4();
 
   try {
-    const [userResults] = await pool.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, username]);
+    const [userResults] = await pool.query(
+      'SELECT * FROM users WHERE username = ? OR email = ?',
+      [username, username]
+    );
+
     if (userResults.length === 0) {
       return res.status(401).json({ status: '1', message: 'Invalid credentials' });
     }
@@ -51,24 +55,29 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ status: '2', message: 'Wrong password' });
     }
 
-    const userid = user.idUser;
-    const IsAdmin = await authModel.checkAdminStatus(userid);
-    const IsWorker = await authModel.checkWorkerStatus(userid);
+    const userId = user.idUser;
 
-    const [instanceResults] = await pool.query('SELECT * FROM user_instance WHERE idUser = ?', [userid]);
-    if (instanceResults.length > 0) {
-      await pool.query('DELETE FROM user_instance WHERE idUser = ?', [userid]);
-    }
+    // Reset existing instance
+    await pool.query('DELETE FROM user_instance WHERE idUser = ?', [userId]);
 
-    await pool.query('INSERT INTO user_instance (idInstance, idUser, instanceStart) VALUES (?, ?, ?)', [UUID, userid, new Date()]);
+    // Insert new instance
+    await pool.query(
+      'INSERT INTO user_instance (idInstance, idUser, instanceStart) VALUES (?, ?, ?)',
+      [UUID, userId, new Date()]
+    );
 
-    req.session.userId = user.idUser;
+    req.session.userId = userId;
     req.session.UUID = UUID;
-    req.session.username = user.username;
-    req.session.isAdmin = IsAdmin;
-    req.session.isWorker = IsWorker;
 
-    res.json({ status: 'success', message: 'Login successful!', data: { UUID, IsAdmin, IsWorker } });
+    res.json({
+      status: 'success',
+      message: 'Login successful!',
+      data: {
+        userId,
+        username: user.username,
+        UUID
+      }
+    });
   } catch (err) {
     console.error('Error during login process:', err);
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
@@ -152,12 +161,12 @@ export const changePassword = async (req, res) => {
   }
 };
 
-// getUserAppointments 
+// getUserAppointmentsPage
 export const getUserAppointments = async (req, res) => {
   const csrfTokenValue = req.csrfToken;
-  const { idUser } = req.body;
+  const UUID = req.user.UUID;
   try {
-    const projects = await authModel.getProjectsByUserId(idUser);
+    const projects = await authModel.getProjectsByUserUUID(UUID);
     res.render('pages/UserAppointment', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n, projects, language: req.session.language || 'en' });
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -166,7 +175,7 @@ export const getUserAppointments = async (req, res) => {
 };
 
 // getUserSettings
-export const getUserSettings = (req, res) => {
+export const getUserSettingsPage = (req, res) => {
   const csrfTokenValue = req.csrfToken;
   res.render('pages/Notif_settings', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n, language: req.session.language || 'en' });
 };
@@ -230,5 +239,22 @@ export const updateNotificationSettings = async (req, res) => {
   } catch (error) {
     console.error('Error updating notification settings:', error);
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+};
+
+export const cancelAppointment = async (req, res) => {
+  const { idProject } = req.params;
+
+  try {
+    const result = await authModel.cancelAppointment(idProject);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Appointment not found.' });
+    }
+
+    res.json({ success: true, message: 'Appointment successfully cancelled.' });
+  } catch (error) {
+    console.error('Error cancelling appointment:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
   }
 };

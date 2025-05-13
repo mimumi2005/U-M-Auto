@@ -60,6 +60,25 @@ export const getProjectsByUserId = async (idUser) => {
     return results;
 };
 
+export const getProjectsByUserUUID = async (UUID) => {
+    const getUserIDQuery = 'SELECT idUser FROM user_instance WHERE idInstance = ?';
+    const [userResults] = await pool.query(getUserIDQuery, [UUID]);
+    if (userResults.length === 0) {
+        throw new Error('User not found');
+    }
+    const idUser = userResults[0].idUser;
+
+    const getProjectsQuery = `
+        SELECT projects.*, users.UserName, project_status.statusName
+        FROM projects 
+        JOIN users ON projects.idUser = users.idUser
+        JOIN project_status ON projects.idStatus = project_status.idStatus
+        WHERE projects.idUser = ?
+    `;
+    const [projects] = await pool.query(getProjectsQuery, [idUser]);
+    return projects;
+};
+
 export async function checkWorkerStatus(userid) {
     const [results] = await pool.query('SELECT * FROM workers WHERE idUser = ?', [userid]);
     return results.length > 0 || userid === 1;
@@ -78,4 +97,14 @@ export const updateUsername = async (userId, newUsername) => {
 export const updateName = async (userId, newName) => {
     const query = 'UPDATE users SET name = ? WHERE idUser = ?';
     await pool.query(query, [newName, userId]);
+};
+
+export const cancelAppointment = async (idProjects) => {
+    const [result] = await pool.query(
+        `UPDATE projects 
+       SET idStatus = (SELECT idStatus FROM project_status WHERE statusName = 'Cancelled' LIMIT 1) 
+       WHERE idProjects = ?`,
+        [idProjects]
+    );
+    return result;
 };

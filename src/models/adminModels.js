@@ -181,3 +181,52 @@ export const getProjectsByUserId = async (idUser) => {
     const [results] = await pool.query(sql_query, [idUser]);
     return results;
 };
+
+export const getProjectStatistics = async () => {
+  const sql_query = `
+    SELECT 
+      CASE
+        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 1 THEN 'Oil change/project discussion'
+        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 4 THEN 'Overall checkup/tuning'
+        WHEN TIMESTAMPDIFF(DAY, StartDate, EndDateProjection) >= 5 THEN 'Paint job'
+        ELSE 'Projects'
+      END AS TimeRange,
+      COUNT(*) AS ProjectsCount
+    FROM projects
+    GROUP BY TimeRange
+  `;
+  const [results] = await pool.query(sql_query);
+  return results;
+};
+
+export const getProjectStatusStatistics = async () => {
+  const sql_query = `
+    SELECT 
+      project_status.statusName AS StatusName,
+      COUNT(*) AS ProjectsCount
+    FROM projects
+    JOIN project_status ON projects.idStatus = project_status.idStatus
+    GROUP BY project_status.statusName
+    ORDER BY project_status.statusName ASC
+  `;
+  const [results] = await pool.query(sql_query);
+  return results;
+};
+
+export const getUserStatistics = async () => {
+  const sql_query = `
+    SELECT 
+      ProjectsCount,
+      COUNT(*) AS UsersCount
+    FROM (
+      SELECT 
+        idUser,
+        COUNT(*) AS ProjectsCount
+      FROM projects
+      GROUP BY idUser
+    ) AS UserProjects
+    GROUP BY ProjectsCount
+  `;
+  const [results] = await pool.query(sql_query);
+  return results;
+};

@@ -2,9 +2,10 @@
 import express from 'express';
 import { isAdmin } from '../middleware/isAdmin.js';
 import {
-    adminDashboard, adminStatistics, fetchActiveProjects, fetchAllProjects,
-    fetchProjectById, fetchUserById, fetchTodaysProjects, fetchDelayedProjects, changeEndDate, finishProject, fetchAllUsers, registerWorker, fetchProjectByUserId, giveAdmin, removeAdmin, deleteWorker
-
+    adminDashboard, adminStatistics,
+    changeEndDate, finishProject, fetchAllUsers, registerWorker, giveAdmin, removeAdmin, deleteWorker,
+    fetchActiveProjects, fetchAllProjects, fetchProjectById, fetchUserById, fetchTodaysProjects, fetchDelayedProjects, fetchProjectByUserId, 
+    fetchProjectStatistics, fetchProjectStatusStatistics, fetchUserStatistics
 } from '../controllers/adminController.js';
 import {validateCSRFToken} from '../middleware/CSRF.js'
 import {generateCSRFToken} from '../middleware/CSRF.js'
@@ -31,6 +32,11 @@ router.get('/all-users', isAdmin, fetchAllUsers);
 router.get('/project-by-ID/:id', isAdmin, fetchProjectById);
 router.get('/user-by-ID/:id', isAdmin, fetchUserById);
 router.get('/project-by-user-id/:userId', isAdmin, fetchProjectByUserId);
+
+router.get('/project-statistics', isAdmin, fetchProjectStatistics);
+router.get('/project-status-statistics', isAdmin, fetchProjectStatusStatistics);
+router.get('/user-statistics', isAdmin, fetchUserStatistics);
+
 
 
 

@@ -16,11 +16,6 @@
           "src": "/images/icon2.png",
           "type": "image/png",
           "sizes": "32x32"
-      },
-      {
-          "src": "/images/icon_gradiant.png",
-          "type": "image/png",
-          "sizes": "192x192"
       }
   ],
   "id": "/?source=pwa",

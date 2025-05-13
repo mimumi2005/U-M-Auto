@@ -108,10 +108,10 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24, // 1 day
   }
 }));
-app.use(attachUser);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(attachUser);
 // Initialize i18n
 i18n.configure({
   locales: ["en", "lv", "de", "ru"],
@@ -169,223 +169,47 @@ app.post("/add-missing-key", (req, res) => {
   res.sendStatus(200);
 });
 
-
 // Saving session info
 app.get('/api/getUserSession', (req, res) => {
-  if (req.session && req.session.userId) {
+  if (req.user) {
     res.json({
       isLoggedIn: true,
-      isAdmin: req.session.isAdmin,
-      isWorker: req.session.isWorker
+      userId: req.user.id,
+      username: req.user.username,
+      UUID: req.user.UUID,
+      isAdmin: req.user.isAdmin,
+      isWorker: req.user.isWorker
     });
   } else {
-    res.json({ isLoggedIn: false, isAdmin: null, isWorker: null });
-  }
-});
-
-// Fetch all users
-app.get("/all-users", async (req, res) => {
-  try {
-    const [result] = await pool.query('SELECT * FROM users');
-    res.json(result);
-  } catch (err) {
-    console.error('Error fetching users:', err);
-    res.status(500).json({ message: 'Error fetching users' });
-  }
-});
-
-// Give admin to a user
-app.post("/give-admin", async (req, res) => {
-  const { idUser } = req.body;
-  try {
-    const [result] = await pool.query('INSERT INTO administrators (idUser) VALUES (?)', [idUser]);
-    res.json(result);
-  } catch (err) {
-    console.error('Error giving admin:', err);
-    res.status(500).json({ message: 'Error giving admin' });
-  }
-});
-
-// Remove admin from a user
-app.post("/remove-admin", async (req, res) => {
-  const { idUser } = req.body;
-  try {
-    const [result] = await pool.query('DELETE FROM administrators WHERE idUser = ?', [idUser]);
-    res.json(result);
-  } catch (err) {
-    console.error('Error removing admin:', err);
-    res.status(500).json({ message: 'Error removing admin' });
-  }
-});
-
-// Remove worker status from a user
-app.post("/remove-worker", async (req, res) => {
-  const { idUser } = req.body;
-  try {
-    const [result] = await pool.query('DELETE FROM workers WHERE idUser = ?', [idUser]);
-    res.json(result);
-  } catch (err) {
-    console.error('Error removing worker:', err);
-    res.status(500).json({ message: 'Error removing worker' });
-  }
-});
-
-// Function to add a new worker
-app.post("/register-worker", async (req, res) => {
-  const { email, workerType, isAdmin } = req.body;
-  try {
-    const [userResult] = await pool.query('SELECT idUser FROM users WHERE email = ?', [email]);
-    if (userResult.length === 0) {
-      return res.status(404).json({ type: '1', message: 'User not found' });
-    }
-    const idUser = userResult[0].idUser;
-
-    const [checkResult] = await pool.query('SELECT * FROM workers WHERE idUser = ?', [idUser]);
-    if (checkResult.length > 0) {
-      return res.status(409).json({ type: '2', message: 'User already registered as a worker' });
-    }
-
-    const currentDate = new Date().toISOString().slice(0, 10);
-    const tenure = 0;
-
-    await pool.query('INSERT INTO workers (idUser, workerType, StartWorkDate, tenure) VALUES (?, ?, ?, ?)', [idUser, workerType, currentDate, tenure]);
-
-    if (isAdmin) {
-      await pool.query('INSERT INTO administrators (idUser) VALUES (?)', [idUser]);
-    }
-
-    res.json({
-      status: 'Success',
-      message: 'Worker registered successfully',
-      idUser,
-      workerType,
-      StartWorkDate: currentDate,
-      tenure
-    });
-  } catch (err) {
-    console.error('Error registering worker:', err);
-    res.status(500).json({ message: 'Error registering worker' });
-  }
-});
-
-// Project statistics
-app.get("/project-statistics", async (req, res) => {
-  const sql_query = `
-    SELECT 
-      CASE
-        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 1 THEN 'Oil change/project discussion'
-        WHEN TIMESTAMPDIFF(HOUR, StartDate, EndDateProjection) <= 4 THEN 'Overall checkup/tuning'
-        WHEN TIMESTAMPDIFF(DAY, StartDate, EndDateProjection) >= 5 THEN 'Paint job'
-        ELSE 'Projects'
-      END AS TimeRange,
-      COUNT(*) AS ProjectsCount
-    FROM projects
-    GROUP BY TimeRange
-  `;
-  try {
-    const [result] = await pool.query(sql_query);
-    res.json(result);
-  } catch (err) {
-    console.error("Error retrieving project statistics:", err);
-    res.status(500).json({ message: "Error retrieving project statistics" });
-  }
-});
-
-app.get("/project-status-statistics", async (req, res) => {
-  const sql_query = `
-    SELECT 
-      project_status.statusName AS StatusName,
-      COUNT(*) AS ProjectsCount
-    FROM projects
-    JOIN project_status ON projects.idStatus = project_status.idStatus
-    GROUP BY project_status.statusName
-    ORDER BY project_status.statusName ASC
-  `;
-  try {
-    const [result] = await pool.query(sql_query);
-    res.json(result);
-  } catch (err) {
-    console.error("Error retrieving project status statistics:", err);
-    res.status(500).json({ message: "Error retrieving project status statistics" });
+    res.json({ isLoggedIn: false });
   }
 });
 
 
-// User statistics
-app.get("/user-statistics", async (req, res) => {
-  const sql_query = `
-    SELECT 
-      ProjectsCount,
-      COUNT(*) AS UsersCount
-    FROM (
-      SELECT 
-        idUser,
-        COUNT(*) AS ProjectsCount
-      FROM projects
-      GROUP BY idUser
-    ) AS UserProjects
-    GROUP BY ProjectsCount
-  `;
-  try {
-    const [result] = await pool.query(sql_query);
-    res.json(result);
-  } catch (err) {
-    console.error("Error retrieving user statistics:", err);
-    res.status(500).json({ message: "Error retrieving user statistics" });
-  }
-});
+// Getting all project dates for calendar
+app.get('/api/all-project-dates/:month/:year', async (req, res) => {
+  const MonthSelected = req.params.month;
+  const YearSelected = req.params.year;
 
-// Find similar users
-app.post("/similar-users", async (req, res) => {
-  const { emailPattern } = req.body;
   try {
-    const [results] = await pool.query('SELECT * FROM users WHERE Email LIKE ?', [emailPattern]);
-    if (results.length === 0) {
-      return res.status(404).json({ status: 'error', message: 'No similar users found' });
-    }
+    const sql_query = `
+        SELECT StartDate, EndDateProjection 
+        FROM projects 
+        WHERE 
+          (YEAR(StartDate) = ? AND MONTH(StartDate) = ?) OR 
+          (YEAR(EndDateProjection) = ? AND MONTH(EndDateProjection) = ?) OR
+          (StartDate < LAST_DAY(CONCAT(?, '-', ?, '-01')) AND EndDateProjection > LAST_DAY(CONCAT(?, '-', ?, '-01')))
+    `;
+    const [results] = await pool.query(sql_query, [
+        YearSelected, MonthSelected,
+        YearSelected, MonthSelected,
+        YearSelected, MonthSelected,
+        YearSelected, MonthSelected
+    ]);
+
     res.json(results);
-  } catch (err) {
-    console.error('Error fetching similar users:', err);
-    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-  }
-});
-
-// Delete all projects for a user
-async function deleteProjects(userID) {
-  await pool.query('DELETE FROM projects WHERE idUser = ?', [userID]);
-}
-
-// Delete user and associated data
-app.delete('/user-delete/:UUID', async (req, res) => {
-  const UUID = req.params.UUID;
-
-  try {
-    const [uuidResult] = await pool.query('SELECT idInstance FROM user_instance WHERE idInstance = ?', [UUID]);
-    if (uuidResult.length > 0) {
-      await logoutUser(uuidResult[0].idInstance);
-    }
-    const userID = uuidResult[0].idUser
-
-    await pool.query('DELETE FROM workers WHERE idUser = ?', [userID]);
-    await pool.query('DELETE FROM administrators WHERE idUser = ?', [userID]);
-    await deleteProjects(userID);
-    await pool.query('DELETE FROM users WHERE idUser = ?', [userID]);
-
-    res.status(200).json({ message: 'User deleted successfully' });
-  } catch (err) {
-    console.error('Error deleting user:', err);
-    res.status(500).json({ message: 'Error deleting user', error: err.message });
-  }
-});
-
-// Delete a project
-app.delete('/project-delete/:ProjectID', async (req, res) => {
-  const ProjectID = req.params.ProjectID;
-  try {
-    await pool.query('DELETE FROM projects WHERE idProjects = ?', [ProjectID]);
-    res.status(200).json({ message: 'Project deleted successfully' });
   } catch (error) {
-    console.error('Error deleting project:', error);
-    res.status(500).json({ message: 'Error deleting project', error: error.message });
+    console.error("Error fetching project dates:", error);
+    res.status(500).send("An error occurred while fetching project dates.");
   }
 });

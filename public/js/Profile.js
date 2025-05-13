@@ -14,42 +14,37 @@ document.addEventListener('DOMContentLoaded', function () {
         inputField.type = 'text';
         inputField.value = defaultValue;
         inputField.maxLength = maxLength;
-        inputField.className = 'form-control '; // Bootstrap class for styling
-        // Replace the text with input field
+        inputField.className = 'form-control ';
+
         field.parentNode.replaceChild(inputField, field);
 
-        // Focus on the input field immediately after replacing
         inputField.focus();
 
-        // Handle saving the new value on blur and Enter key
         const saveNewValue = () => {
             changeUsernameButton.classList.remove('d-none');
             changeNameButton.classList.remove('d-none');
             const newValue = inputField.value;
 
-            // Replace the input field with the new text
-            const newText = document.createElement('a');
-            newText.className = 'profile-value'; // Bootstrap class for styling
-            newText.id = fieldId; // Restore the original ID
-            newText.textContent = newValue;
 
-            // Reinsert the new text
+            const newText = document.createElement('a');
+            newText.className = 'profile-value';
+            newText.id = fieldId;
+            newText.textContent = newValue;
             inputField.parentNode.replaceChild(newText, inputField);
 
-            // AJAX POST request to save the new value to the server
-            fetch(`/auth/update-${fieldId}`, { // Adjust the URL as needed
+            fetch(`/auth/update-${fieldId}`, {
                 method: 'POST',
                 headers: {
-                    'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+                    'CSRF-Token': csrfToken,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ [fieldId]: newValue }) // Sending the new value
+                body: JSON.stringify({ [fieldId]: newValue })
             })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json(); // Parse JSON response
+                    return response.json();
                 })
                 .then(data => {
                     console.log(`${fieldId} updated to: ${newValue}`, data);
@@ -62,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         inputField.addEventListener('blur', saveNewValue);
 
-        // Add event listener for Enter key press
         inputField.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
                 inputField.blur();
@@ -70,8 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
-    // Add click event listeners
     changeNameButton.addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('name').focus();

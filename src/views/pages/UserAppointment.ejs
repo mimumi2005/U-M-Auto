@@ -35,5 +35,6 @@
 
     </div>
     <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
+    <script nonce="<%= nonce %>">const PROJECTS_DATA = <%- JSON.stringify(projects) %>;</script>
     <script src="/js/UserAppointment.js" nonce="<%= nonce %>"></script>
 </body>

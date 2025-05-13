@@ -1,41 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    const UserID = JSON.parse(getCookie("userData"))
-    function UserAppointment(UserID) {
-        const UserUUID = UserID.UUID;
-        fetch(`/user/appointment/${UserUUID}`)
+    function cancelAppointment(idProjects) {
+        fetch(`/auth/cancel-appointment/${idProjects}`, { // <-- id in URL now
+            method: 'PATCH',
+            headers: {
+                'CSRF-Token': csrfToken,
+                'Content-Type': 'application/json'
+            }
+        })
             .then(response => response.json())
             .then(data => {
-                // Call a function to display the user data on the page
-                displayAppointmentData(data);
-
+                if (data.success) {
+                    console.log('Appointment successfully cancelled.');
+                    location.reload();
+                } else {
+                    console.error('Cancellation failed:', data.message);
+                }
             })
-            .catch(error => console.error('Error fetching user data:', error));
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
-
-    function cancelAppointment(idProjects) {
-        fetch(`/user/cancel-appointment/${idProjects}`, { // <-- id in URL now
-          method: 'PATCH',
-          headers: {
-            'CSRF-Token': csrfToken,
-            'Content-Type': 'application/json'
-          }
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              console.log('Appointment successfully cancelled.');
-              UserAppointment(UserID);
-            } else {
-              console.error('Cancellation failed:', data.message);
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-      }
-      
-
 
     function renderShowMoreButton(totalAppointments, initialDisplayCount) {
         if (totalAppointments <= initialDisplayCount) return; // No need for button if everything fits
@@ -141,7 +126,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
         renderShowMoreButton(data.length, initialDisplayCount);
     }
-
-
-    UserAppointment(UserID);
+    displayAppointmentData(PROJECTS_DATA);
 });

@@ -231,3 +231,34 @@ export const fetchProjectByUserId = async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 };
+
+
+export const fetchProjectStatistics = async (req, res) => {
+  try {
+    const result = await adminModel.getProjectStatistics();
+    res.json(result);
+  } catch (err) {
+    console.error("Error retrieving project statistics:", err);
+    res.status(500).json({ message: "Error retrieving project statistics" });
+  }
+};
+
+export const fetchProjectStatusStatistics = async (req, res) => {
+  try {
+    const result = await adminModel.getProjectStatusStatistics();
+    res.json(result);
+  } catch (err) {
+    console.error("Error retrieving project status statistics:", err);
+    res.status(500).json({ message: "Error retrieving project status statistics" });
+  }
+};
+
+export const fetchUserStatistics = async (req, res) => {
+  try {
+    const result = await adminModel.getUserStatistics();
+    res.json(result);
+  } catch (err) {
+    console.error("Error retrieving user statistics:", err);
+    res.status(500).json({ message: "Error retrieving user statistics" });
+  }
+};

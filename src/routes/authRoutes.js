@@ -4,7 +4,11 @@ import {sanitizeInputProjects} from '../middleware/escapeHTMLproject.js';
 import {sanitizeInputUsers} from '../middleware/escapeHTMLusers.js';
 import {checkSession} from '../middleware/checkSession.js';
 import {verifyRecaptcha} from '../middleware/verifyRecaptcha.js';
-import { updateNotificationSettings, getNotificationSettings, handleGetUserByUUID, loginUser, handleLogout, handleSignUp, handleCreateAppointment, changePassword, getProfilePage, getUserAppointments, getUserSettings, getUserProfileInfo, updateUsername, updateName } from '../controllers/authController.js';
+import { 
+    loginUser, updateNotificationSettings, handleLogout, handleSignUp, handleCreateAppointment, changePassword, updateUsername, updateName, cancelAppointment,
+    getProfilePage, getUserSettingsPage,
+    getNotificationSettings, handleGetUserByUUID, getUserAppointments, getUserProfileInfo
+} from '../controllers/authController.js';
 import {generateCSRFToken} from '../middleware/CSRF.js'
 import {validateCSRFToken} from '../middleware/CSRF.js'
 
@@ -17,8 +21,6 @@ router.post('/login', (req, res) => {
     loginUser(req, res);
 });
 
-router.get('/notification-settings', checkSession, getNotificationSettings);
-
 router.post('/update-notification-settings', checkSession, validateCSRFToken, updateNotificationSettings);
 router.post('/sign-up', verifyRecaptcha, validateCSRFToken, sanitizeInputUsers, handleSignUp);
 router.post('/createAppointment',checkSession,validateCSRFToken, sanitizeInputProjects, handleCreateAppointment);
@@ -26,12 +28,15 @@ router.post('/change-password',checkSession,validateCSRFToken, sanitizeInputUser
 router.post('/update-username',checkSession,validateCSRFToken, sanitizeInputUsers, updateUsername);
 router.post('/update-name',checkSession,validateCSRFToken, sanitizeInputUsers,updateName);
 
+router.patch('/cancel-appointment/:idProject', checkSession, validateCSRFToken, cancelAppointment);
+
 router.get('/userID/:UUID',checkSession, handleGetUserByUUID);
 router.get('/log-out',checkSession,generateCSRFToken, handleLogout);
 router.get('/ProfilePage',checkSession,generateCSRFToken, getProfilePage);
 router.get('/ProfileInfo',checkSession, getUserProfileInfo)
 router.get('/UserAppointment',checkSession, generateCSRFToken, getUserAppointments)
 
-router.get('/Settings',checkSession, generateCSRFToken, getUserSettings)
+router.get('/Settings',checkSession, generateCSRFToken, getUserSettingsPage)
+router.get('/notification-settings', checkSession, getNotificationSettings);
 
 export default router;

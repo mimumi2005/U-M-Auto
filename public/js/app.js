@@ -1,6 +1,4 @@
-
 // CORE PROJECT JS
-
 document.addEventListener("DOMContentLoaded", function () {
   // Set up event listeners for scroll to top button
   window.onscroll = function () {
@@ -57,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const isLoggedIn = userSessionData.isLoggedIn;
       const isAdmin = userSessionData.isAdmin;
       const isWorker = userSessionData.isWorker;
-
       updateButtonVisibility(isLoggedIn, isAdmin, isWorker);
     })
     .catch(error => {
@@ -204,14 +201,7 @@ function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
 function loginUser(response) {
   showCustomLoginAlert();
   setTimeout(function () {
-    const userData = {
-      UUID: response.UUID,
-      IsAdmin: response.IsAdmin,
-      IsWorker: response.IsWorker
-    };
-    setCookie('userData', userData, 1); // Expires in 7 days
-
-    // Log the document cookie after setting to verify
+    setCookie('userData', response.UUID, 1); 
 
     updateButtonVisibility();
     window.location.href = '/';
@@ -290,10 +280,8 @@ function showCustomAppointmentAlert() {
     alertBox.classList.remove('nodisplay');
   }
 
-  // Use setTimeout to wait for 2 seconds before redirecting
   setTimeout(function () {
-    // Redirect the user to the home page
-    window.location.href = '/auth/UserAppointment'; // Change this to your home page route if different
+    window.location.href = '/auth/UserAppointment';
   }, 2000);
 }
 
@@ -344,7 +332,7 @@ function slowScrollTo(targetOffset, duration) {
 function ViewUserStatistics() {
   // Make a fetch request to your backend to retrieve all user data
 
-  fetch('/user-statistics')
+  fetch('/admin/user-statistics')
     .then(response => response.json())
     .then(data => {
       // Call a function to display the user data on the page
@@ -355,7 +343,7 @@ function ViewUserStatistics() {
 
 // Function to show statistics about projects
 function ViewProjectStatistics() {
-  fetch('/project-statistics')
+  fetch('/admin/project-statistics')
     .then(response => response.json())
     .then(data => {
       // Call a function to display the user data on the page
@@ -366,7 +354,7 @@ function ViewProjectStatistics() {
 
 // Function to show statistics about projects
 function ViewProjectStatusStatistics() {
-  fetch('/project-status-statistics')
+  fetch('/admin/project-status-statistics')
     .then(response => response.json())
     .then(data => {
       // Call a function to display the user data on the page
@@ -375,30 +363,9 @@ function ViewProjectStatusStatistics() {
     .catch(error => console.error('Error fetching project data:', error));
 }
 
-// Remove a worker from the worker table
-function removeWorker(idUser) {
-  console.log("Removing worker info from ID:", idUser);
-  fetch('/remove-worker', {
-    method: 'POST',
-    headers: {
-      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ idUser: idUser })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // TODO Announce properly that it was a success
-      console.log('successfully removed worker');
-      viewWorkers();
-
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
 // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function WorkerRemoveDelayed(idProjects) {
-  fetch('/remove-delayed', {
+  fetch('/worker/remove-delayed', {
     method: 'POST',
     headers: {
       'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
@@ -422,51 +389,6 @@ function WorkerRemoveDelayed(idProjects) {
 }
 
 // Displaying functions (DISPLAY)
-
-// Function that displays the Worker info
-function displayWorkerData(users) {
-  document.getElementById("registrationForm").classList.add('nodisplay');
-  document.getElementById("inputNewEndDate").classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.remove('nodisplay');
-  document.getElementById('admin-view').classList.remove('nodisplay');
-  const userDataContainer = document.getElementById('userDataContainer');
-  userDataContainer.innerHTML = `
-    <div class="container mt-4">
-              <div class="row row-cols-1 row-cols-md-3">
-                  <!-- User cards will be dynamically added here -->
-              </div>
-          </div>
-    `;
-  // Loop through each user and create HTML elements to display their data
-  users.forEach((user, index) => {
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
-
-    // Create the user card HTML
-    column.innerHTML = `
-        <div id="Users_div${user.idUser}" class="card bg-light mb-3">
-            <div class="card-body text-white">
-                <h3 class="card-title">Worker: ${user.Username}</h3>
-                <p class="card-text">ID: ${user.idUser}</p>
-                <p class="card-text">Name: ${user.Name}</p>
-                <p class="card-text">Email: ${user.Email}</p>
-                <p class="card-text">Tenure: ${user.tenure} years</p>
-                <p class="card-text">Worker type: ${user.WorkerType}</p>
-  
-                <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="giveAdmin('${user.idUser}')">Give administrator permissions</button>
-                <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="removeWorker(${user.idUser})">Remove worker</button>
-            </div>
-        </div>
-    `;
-
-    // Append the user card to the current row
-    document.querySelector('#userDataContainer .row:last-child').appendChild(column);
-
-  });
-}
 
 // Function to display delayed project data on the page
 function displayDelayedProjectData(projects) {
