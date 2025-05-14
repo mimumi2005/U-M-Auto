@@ -1,32 +1,36 @@
 // CORE PROJECT JS
 document.addEventListener("DOMContentLoaded", function () {
-  // Set up event listeners for scroll to top button
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.type = 'image/png';
+
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    link.href = '/images/Icon.png';
+  } else {
+    link.href = '/images/Icon2.png';
+  }
+
+  document.head.appendChild(link);
   window.onscroll = function () {
     toggleScrollToTopButton();
   };
-
-  // Variables for langauge links
   const languageLinks = document.querySelectorAll('#languageDropdownSelect .dropdown-item');
   const currentLanguageFlag = document.getElementById('currentLanguageFlag');
 
-  // Set the initial flag
   setFlag(window.currentLanguage, currentLanguageFlag);
 
-  // Loop through language links and add event listeners
   languageLinks.forEach(link => {
     link.addEventListener('click', function (event) {
       event.preventDefault();
       const lang = this.getAttribute('data-lang');
-      console.log('Selected language:', lang); // Debugging
       setLanguage(lang);
     });
   });
 
-  // Loop through dropdown items and hide the one matching the current language
   languageLinks.forEach(item => {
     const lang = item.getAttribute('data-lang');
     if (lang === currentLanguage.toLowerCase()) {
-      item.style.display = 'none'; // Hide the current language item
+      item.style.display = 'none';
     }
   });
 
@@ -46,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Fetch user session data
-  fetch('/api/getUserSession', {credentials: 'include'}) // Assuming you have a route to get user session data
+  fetch('/api/getUserSession', { credentials: 'include' })
     .then(response => {
       if (!response.ok) throw new Error('Failed to fetch user session data');
       return response.json();
@@ -59,69 +63,33 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(error => {
       console.error('Error fetching user session data:', error);
-      // Handle error (e.g., user is not logged in, or fetch failed)
       updateButtonVisibility(false, false, false);
     });
 });
 
-// Setting language function
-function setLanguage(lang) {
-  const url = new URL(window.location.href);
-  url.searchParams.set('lang', lang);
-  window.location.href = url.toString();
-}
-
-// Function to set the flag based on the current language
-function setFlag(lang, flag) {
-  flag.className = 'flag-icon';
-  switch (lang) {
-    case 'en':
-      flag.classList.add('flag-icon-gb');
-      break;
-    case 'lv':
-      flag.classList.add('flag-icon-lv');
-      break;
-    case 'de':
-      flag.classList.add('flag-icon-de');
-      break;
-    case 'ru':
-      flag.classList.add('flag-icon-ru');
-      break;
-    default:
-      flag.className = '';
-  }
-}
-
 // Initialize the map
-
 function initMap() {
-  // Location coordinates (latitude and longitude)
-  var myLatLng = { lat: 57.234165, lng: 22.707727 }; // Replace with your desired coordinates
+  var myLatLng = { lat: 57.234165, lng: 22.707727 };
 
-  // Create a map object and set its properties
   var map = new google.maps.Map(document.getElementById('map'), {
     center: myLatLng,
-    zoom: 11 // Adjust the zoom level as needed
+    zoom: 11
   });
 
-  // Create a marker and set its position
   var marker = new google.maps.Marker({
     map: map,
     position: myLatLng,
-    title: 'Garage'
+    title: 'U&M Auto'
   });
 
-  // Optional: Add an info window to the marker
   var infowindow = new google.maps.InfoWindow({
-    content: 'This is an interactive map marker!' // Replace with your info window content
+    content: 'This is the location of the service!'
   });
 
-  // Attach a click event to open the info window when the marker is clicked
   marker.addListener('click', function () {
     infowindow.open(map, marker);
   });
 }
-
 
 // Price estimator
 function calculatePrice() {
@@ -136,9 +104,6 @@ function calculatePrice() {
   totalPriceElement.textContent = `Estimated Price: $${totalPrice.toFixed(2)}`;
 }
 
-
-
-
 // Function to update button visibility depending of login status
 function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
   if (isLoggedIn) {
@@ -150,8 +115,6 @@ function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
       document.getElementById('AdminMenu').classList.add('nodisplay');
       document.getElementById('Statistics').classList.add('nodisplay');
     }
-    // Show buttons for logged-in users
-    // But workers see a different button instead of Make Appointments
     if (isWorker) {
       document.getElementById('defaultNav').classList.add('nodisplay');
       document.getElementById('workerButton').classList.remove('nodisplay');
@@ -177,7 +140,6 @@ function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
 
   }
   else {
-    // Hide buttons for non-logged-in users
     document.getElementById('timeTableButton').classList.add('nodisplay');
     document.getElementById('estimatorButton').classList.add('nodisplay');
     document.getElementById('LogOutButton').classList.add('nodisplay');
@@ -199,15 +161,14 @@ function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
 
 // Login main function
 function loginUser(response) {
-  showCustomLoginAlert();
+  showSuccessAlert('Successfully logged in');
   setTimeout(function () {
-    setCookie('userData', response.UUID, 1); 
+    setCookie('userData', response.UUID, 1);
 
     updateButtonVisibility();
     window.location.href = '/';
   }, 650);
 }
-
 
 // LogOut main function
 function LogOut() {
@@ -216,7 +177,7 @@ function LogOut() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      return response.json(); // Await here
+      return response.json();
     })
     .then(data => {
       isLoggedIn = false;
@@ -228,8 +189,6 @@ function LogOut() {
       alert(`Cannot connect to server: ${error}`);
     });
 }
-
-
 
 function toggleScrollToTopButton() {
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 700) {
@@ -248,62 +207,36 @@ function scrollToTop() {
   });
 }
 
-// Cookies
-function clearCookies() {
-  var cookies = document.cookie.split(";");
 
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i];
-    var eqPos = cookie.indexOf("=");
-    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-  }
-}
 
-// Custom alerts for everything
-function showCustomLoginAlert() {
-  if (document.getElementById('customLoginAlert')) {
-    const alertBox = document.getElementById('customLoginAlert');
+function showSuccessAlert(messageKey, callbackAfter) {
+  const alertBox = document.getElementById('successAlert');
+  const alertText = document.getElementById('successAlertMessage');
+
+  if (alertBox && alertText) {
+    alertText.textContent = translate(messageKey);
     alertBox.classList.remove('nodisplay');
+
+    setTimeout(() => {
+      alertBox.classList.add('nodisplay');
+      if (typeof callbackAfter === 'function') callbackAfter();
+    }, 2000);
   }
 }
 
-function showCustomSignUpAlert() {
-  const alertBox = document.getElementById('customSignUpAlert');
-  alertBox.classList.remove('nodisplay');
-}
+function showErrorAlert(messageKey) {
+  const alertBox = document.getElementById('errorAlert');
+  const alertText = document.getElementById('errorAlertMessage');
 
-function showCustomAppointmentAlert() {
-  // Show the alert box
-  if (document.getElementById('customAppointmentAlert')) {
-    const alertBox = document.getElementById('customAppointmentAlert');
+  if (alertBox && alertText) {
+    alertText.textContent = translate(messageKey);
     alertBox.classList.remove('nodisplay');
-  }
 
-  setTimeout(function () {
-    window.location.href = '/auth/UserAppointment';
-  }, 2000);
+    setTimeout(() => {
+      alertBox.classList.add('nodisplay');
+    }, 2000);
+  }
 }
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const link = document.createElement('link');
-  link.rel = 'icon';
-  link.type = 'image/png';
-
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    // Dark mode is enabled
-    link.href = '/images/Icon.png'; // Use absolute path
-  } else {
-    // Dark mode is not enabled
-    link.href = '/images/Icon2.png'; // Use absolute path
-  }
-
-  document.head.appendChild(link);
-});
-
-
 
 // Custom scroll function, used for services page
 function slowScrollTo(targetOffset, duration) {
@@ -328,47 +261,12 @@ function slowScrollTo(targetOffset, duration) {
   requestAnimationFrame(animation);
 }
 
-// Function to show statistics about projects
-function ViewUserStatistics() {
-  // Make a fetch request to your backend to retrieve all user data
-
-  fetch('/admin/user-statistics')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      displayUserStatistics(data);
-    })
-    .catch(error => console.error('Error fetching user data:', error));
-}
-
-// Function to show statistics about projects
-function ViewProjectStatistics() {
-  fetch('/admin/project-statistics')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      displayProjectStatistics(data);
-    })
-    .catch(error => console.error('Error fetching project data:', error));
-}
-
-// Function to show statistics about projects
-function ViewProjectStatusStatistics() {
-  fetch('/admin/project-status-statistics')
-    .then(response => response.json())
-    .then(data => {
-      // Call a function to display the user data on the page
-      displayProjectStatusStatistics(data);
-    })
-    .catch(error => console.error('Error fetching project data:', error));
-}
-
 // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
 function WorkerRemoveDelayed(idProjects) {
   fetch('/worker/remove-delayed', {
     method: 'POST',
     headers: {
-      'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
+      'CSRF-Token': csrfToken,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -377,7 +275,6 @@ function WorkerRemoveDelayed(idProjects) {
   })
     .then(response => response.json())
     .then(data => {
-      // Call a function to display the user data on the page
       if (data[0]) {
         displayProjectDataForWorker(data);
       }
@@ -498,10 +395,10 @@ function displayUserStatistics(userStats) {
         },
         tooltip: {
           callbacks: {
-            title: function(context) {
+            title: function (context) {
               return context[0].label;
             },
-            label: function(context) {
+            label: function (context) {
               const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
               const value = context.raw;
               const percentage = ((value / total) * 100).toFixed(1);
@@ -601,10 +498,10 @@ function displayProjectStatistics(projects) {
         },
         tooltip: {
           callbacks: {
-            title: function(context) {
+            title: function (context) {
               return context[0].label;
             },
-            label: function(context) {
+            label: function (context) {
               const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
               const value = context.raw;
               const percentage = ((value / total) * 100).toFixed(1);
@@ -687,10 +584,10 @@ function displayProjectStatusStatistics(statusStats) {
         },
         tooltip: {
           callbacks: {
-            title: function(context) {
+            title: function (context) {
               return context[0].label;
             },
-            label: function(context) {
+            label: function (context) {
               const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
               const value = context.raw;
               const percentage = ((value / total) * 100).toFixed(1);
@@ -709,6 +606,18 @@ function displayProjectStatusStatistics(statusStats) {
   };
 
   new Chart(ctx, config);
+}
+
+// Cookies
+function clearCookies() {
+  var cookies = document.cookie.split(";");
+
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i];
+    var eqPos = cookie.indexOf("=");
+    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+  }
 }
 
 // Function to set cookie with JSON data
@@ -739,4 +648,32 @@ function translate(key) {
   }
 
   return value;
+}
+
+// Setting language function
+function setLanguage(lang) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('lang', lang);
+  window.location.href = url.toString();
+}
+
+// Function to set the flag based on the current language
+function setFlag(lang, flag) {
+  flag.className = 'flag-icon';
+  switch (lang) {
+    case 'en':
+      flag.classList.add('flag-icon-gb');
+      break;
+    case 'lv':
+      flag.classList.add('flag-icon-lv');
+      break;
+    case 'de':
+      flag.classList.add('flag-icon-de');
+      break;
+    case 'ru':
+      flag.classList.add('flag-icon-ru');
+      break;
+    default:
+      flag.className = '';
+  }
 }

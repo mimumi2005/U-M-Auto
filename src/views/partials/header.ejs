@@ -1,4 +1,5 @@
 <head>
+    <!-- Custom css JUST for the header, all other css is in app.css-->
     <style nonce="<%= nonce %>">
         body {
             background-image: url('/images/main_image2.jpg');
@@ -30,8 +31,6 @@
         .dropdown-hover:hover .dropdown-menu {
             display: block;
         }
-
-        /* Additional styling for menu items */
         .dropdown-item {
             color: white;
         }
@@ -47,22 +46,17 @@
 
         .custom-divider {
             height: 1px;
-            /* Adjust as needed */
             background-color: rgba(255, 255, 255, 0.2);
-            /* Adjust the color */
             margin: 0.5rem 0;
-            /* Adjust spacing as needed */
         }
 
         #scroll-to-top-btn {
             z-index: 1000;
             display: none;
         }
-
         .pointer {
             cursor: pointer;
         }
-
         .h5px {
             height: 5px;
         }
@@ -214,7 +208,12 @@
                 </ul>
             </div>
         </nav>
-
+    <div id="successAlert" class="custom-alert nodisplay">
+        <h2 id="successAlertMessage"></h2>
+    </div>
+    <div id="errorAlert" class="custom-alert nodisplay">
+        <h2 class="text-danger" id="errorAlertMessage"></h2>
+    </div>
     </div>
     <div id="scroll-to-top-btn">↑</div>
 </body>

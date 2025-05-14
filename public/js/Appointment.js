@@ -29,9 +29,6 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
     let previousSelectedButtons = []; // To keep track of the previously selected buttons
     let previousButtonStates = []; // To keep track of the original classes of the previously selected buttons
 
-    const loggedUser = JSON.parse(getCookie("userData"));
-    const UUID = loggedUser.UUID;
-
     const repairTypeSelect = document.getElementById('repairType');
 
     repairTypeSelect.addEventListener('change', function () {
@@ -130,7 +127,7 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
         const additionalInfo = getAdditionalInfo();
 
         // Fetch user information from the server
-        fetch(`/auth/userID/${UUID}`, {
+        fetch(`/auth/userID`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -183,7 +180,10 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
                         })
                         .then(data => {
 
-                            showCustomAppointmentAlert();
+                            showSuccessAlert("Appointment registered successfully");
+                            setTimeout(() => {
+                                window.location.href = '/auth/UserAppointment';
+                            }, 2000);
 
                         })
                         .catch(error => {
@@ -262,7 +262,6 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
         GetCalendarInfo();
         let FreeHours = Array;
         const repairType = document.getElementById('repairType').value;
-        console.log(repairType);
         // Clear the previous content
         const timeContainer = document.getElementById('time-container');
         timeContainer.innerHTML = ''; // Clear previous content

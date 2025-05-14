@@ -587,5 +587,11 @@
 	"Removing a worker": "Einen Arbeiter entfernen",
 	"Successfully removed worker account": "Erfolgreich entferntes Arbeiterkonto entfernt",
 	"Successfully made worker account": "Erfolgreich gemachtes Arbeiterkonto",
-	"Successfully gave administrator perms": "Erfolgreich den Administrator -Perm"
+	"Successfully gave administrator perms": "Erfolgreich den Administrator -Perm",
+	"Users Projects": "Users Projects",
+	"contact_form_fill_all_fields": "contact_form_fill_all_fields",
+	"Fill all contact form fields": "Fill all contact form fields",
+	"Conctact form error": "Conctact form error",
+	"Password changed successfully": "Password changed successfully",
+	"Information updated succesfully": "Information updated succesfully"
 }

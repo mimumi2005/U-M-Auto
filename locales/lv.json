@@ -581,5 +581,11 @@
 	"Successfully removed worker account": "Veiksmīgi noņemts darbinieka konts",
 	"Successfully made worker account": "Veiksmīgi izveidots darbinieka konts",
 	"Successfully gave administrator perms": "Veiksmīgi piešķirtas administratora atļaujas",
-	"Rust Work Estimation": "Rust Work Estimation"
+	"Rust Work Estimation": "Rust Work Estimation",
+	"Users Projects": "Users Projects",
+	"contact_form_fill_all_fields": "contact_form_fill_all_fields",
+	"Fill all contact form fields": "Fill all contact form fields",
+	"Conctact form error": "Conctact form error",
+	"Password changed successfully": "Password changed successfully",
+	"Information updated succesfully": "Information updated succesfully"
 }

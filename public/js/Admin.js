@@ -148,8 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
             administrator: document.getElementById('administrator').checked
         };
 
-        console.log('User data:', userData);
-
         fetch('/admin/register-worker', {
             method: 'POST',
             headers: {
@@ -168,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // If succesful announces it and resets form
         response.json().then(data => {
             if (data.status === 'Success') {
-                console.log("Successfully made worker account for userID:", response.idUser);
                 if (isAdmin) {
                     showSuccessAlert('Successfully made worker account', () => {
                         userFilter.value = "admins";
@@ -214,8 +211,6 @@ document.addEventListener('DOMContentLoaded', function () {
             email: document.getElementById('removalEmail').value,
         };
 
-        console.log('User data:', userData);
-
         fetch('/admin/remove-worker', {
             method: 'POST',
             headers: {
@@ -234,7 +229,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // If succesful announces it and resets form
         response.json().then(data => {
             if (data.status === 'Success') {
-                console.log("Successfully removed worker account for userID:", response.idUser);
                 showSuccessAlert('Successfully removed worker account', () => {
                     userFilter.value = "workers";
                     fetchAllUsers();
@@ -255,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleGiveAdminResponses(response) {
         response.json().then(data => {
             if (data.status === 'Success') {
-                console.log("Successfully gave admin to user with id:", data.idUser);
                 showSuccessAlert('Successfully gave administrator perms', () => {
                     userFilter.value = "admins";
                     fetchAllUsers();
@@ -274,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleRemoveAdminResponses(response) {
         response.json().then(data => {
             if (data.status === 'Success') {
-                console.log("Successfully removed admin from user with id:", data.idUser);
                 showSuccessAlert('Successfully removed administrator permissions', () => {
                     userFilter.value = "workers";
                     fetchAllUsers();
@@ -298,14 +290,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleAddWorkerKeyPress(event) {
         if (event.key === 'Enter') {
-            console.log(document.getElementById('addWorkerForm').value);
             addWorker(document.getElementById('addWorkerForm').value);
         }
     }
 
     function handleRemoveWorkerKeyPress(event) {
         if (event.key === 'Enter') {
-            console.log(document.getElementById('removeWorkerForm').value);
             removeWorker(document.getElementById('removeWorkerForm').value);
         }
     }
@@ -852,8 +842,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (document.getElementById('InvalidProjectID')) {
             document.getElementById('InvalidProjectID').classList.add('nodisplay');
         }
-        console.log("Viewing project by ID:", idProjects);
-        // Make a fetch request to your backend to retrieve all user data
 
         fetch(`/admin/project-by-ID/${idProjects}`)
             .then(response => response.json())
@@ -892,7 +880,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function projectChangeEndTime(idProjects, NewEndDateTime) {
         NewDate = new Date(NewEndDateTime);
         const EndDate = NewDate.toISOString();
-        console.log(EndDate);
 
         if (EndDate) {
             fetch('/admin/change-end-date', {
@@ -939,7 +926,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Remove admin from a worker
     function removeAdmin(idUser) {
-        console.log("Removing admin permissions from ID:", idUser);
         // Make a fetch request to your backend to retrieve all user data
 
         fetch('/admin/remove-admin', {
@@ -956,14 +942,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to show all users
     function fetchAllUsers() {
-        console.log("Viewing users");
         // Make a fetch request to your backend to retrieve all user data
         fetch('/admin/all-users')
             .then(response => response.json())
             .then(data => {
                 const title = document.getElementById('TitleHeader');
                 title.innerHTML = translate("All Users");
-                console.log(data);
                 allUsers = data;
                 filterAndSearchUsers();
             })
@@ -972,7 +956,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to show all users
     function fetchAllProjects() {
-        console.log("Viewing projects");
         // Make a fetch request to your backend to retrieve all user data
         fetch('/admin/all-projects')
             .then(response => response.json())
@@ -988,7 +971,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function that displays all projects that have been made by one person (ID)
     function searchProjectsByUserID(idUser) {
-        console.log("Viewing user by ID:", idUser);
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
         document.getElementById('userDataContainer').classList.add('nodisplay');
         // Make a fetch request to your backend to retrieve all user data
@@ -1048,35 +1030,6 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchAllProjects();
     fetchAllUsers();
 });
-
-function showSuccessAlert(messageKey, callbackAfter) {
-    const alertBox = document.getElementById('successAlert');
-    const alertText = document.getElementById('successAlertMessage');
-
-    if (alertBox && alertText) {
-        alertText.textContent = translate(messageKey);
-        alertBox.classList.remove('nodisplay');
-
-        setTimeout(() => {
-            alertBox.classList.add('nodisplay');
-            if (typeof callbackAfter === 'function') callbackAfter();
-        }, 2000);
-    }
-}
-
-function showErrorAlert(messageKey) {
-    const alertBox = document.getElementById('errorAlert');
-    const alertText = document.getElementById('errorAlertMessage');
-
-    if (alertBox && alertText) {
-        alertText.textContent = translate(messageKey);
-        alertBox.classList.remove('nodisplay');
-
-        setTimeout(() => {
-            alertBox.classList.add('nodisplay');
-        }, 2000);
-    }
-}
 
 function debounce(fn, delay) {
     let timeout;

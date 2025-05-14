@@ -63,8 +63,8 @@
 
   #calendar-container {
     padding: 15px;
-    min-width:275px;
-    max-width:325px;
+    min-width: 275px;
+    max-width: 325px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -98,8 +98,8 @@
   @media (max-width: 900px) {
     .worker-content {
       flex-direction: column;
-      min-width:90%;
-      margin:0 auto;
+      min-width: 90%;
+      margin: 0 auto;
     }
 
     #repairForm {
@@ -116,14 +116,16 @@
 
   @media (max-width: 768px) {
     table thead {
-      display: none; /* Hide header only on small screens */
+      display: none;
+      /* Hide header only on small screens */
     }
+
     .container {
       padding: 0;
       margin: 0 auto;
-      min-width:95%;
+      min-width: 95%;
     }
-  
+
     table tbody tr {
       display: block;
       margin-bottom: 1rem;
@@ -132,16 +134,16 @@
       background-color: #2e343a;
       padding: 10px;
     }
-  
+
     table tbody td {
-      width:100% !important;
+      width: 100% !important;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       padding: 8px;
       border: none;
     }
-  
+
     table tbody td::before {
       content: attr(data-label);
       font-weight: bold;
@@ -154,23 +156,25 @@
 
   @media (max-width: 500px) {
     #calendar-container {
-      margin:0 auto;
-      min-width:250px;
-    }
-    .profile-container {
-      justify-content:initial !important;
-      margin: 0 auto !important;
-      padding:50px 0 0 0 !important;
+      margin: 0 auto;
+      min-width: 250px;
     }
 
-    .profile-content{
-      margin:0 auto;
+    .profile-container {
+      justify-content: initial !important;
+      margin: 0 auto !important;
+      padding: 50px 0 0 0 !important;
+    }
+
+    .profile-content {
+      margin: 0 auto;
     }
   }
+
   @media (max-width: 350px) {
     #calendar-container {
-      min-width:280px;
-      margin:0px;
+      min-width: 280px;
+      margin: 0px;
     }
   }
 
@@ -224,7 +228,7 @@
     height: 100%;
     max-height: 500px;
   }
-  
+
   .gapcontainer {
     gap: 20px;
     row-gap: 50px;
@@ -827,7 +831,7 @@
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
     text-align: left;
     height: auto;
-    width:fit-content;
+    width: fit-content;
     overflow: visible;
     /* Ensures no scrollbars are shown */
   }
@@ -914,8 +918,8 @@
 
   .profile-value {
     color: #f1f1f1;
-    margin-top:0.44rem;
-    margin-bottom:0.44rem;
+    margin-top: 0.44rem;
+    margin-bottom: 0.44rem;
   }
 
   /* Profile Content */
@@ -1065,4 +1069,9 @@
   .service-page-list i {
     font-size: 2rem;
     margin-bottom: 10px;
+  }
+
+  .customContainer {
+    float: right;
+    margin-right: 3%;
   }

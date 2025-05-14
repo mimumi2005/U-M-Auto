@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const sessionEnded = urlParams.get('sessionEnded');
     const unauthorizedAccess = urlParams.get('unauthorizedAccess')
     if (sessionEnded) {
-      document.getElementById('session-message').classList.remove('nodisplay');
+      showErrorAlert('unauthorized_access');
     }
     if (unauthorizedAccess) {
-      document.getElementById('unauthorizedAccess').classList.remove('nodisplay');
+      showErrorAlert('session_message');
     }
   });
 });

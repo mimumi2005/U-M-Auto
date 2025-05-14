@@ -104,7 +104,7 @@ export const handleSignUp = async (req, res) => {
 
 // handleLogout
 export const handleLogout = (req, res) => {
-  const UUID = req.session.UUID;
+  const UUID = req.user.UUID;
   req.session.destroy(async (err) => {
     if (err) {
       return res.status(500).json({ message: 'Error during logout' });
@@ -133,7 +133,8 @@ export const handleCreateAppointment = async (req, res) => {
 
 // changePassword
 export const changePassword = async (req, res) => {
-  const { currentPassword, newPassword, UUID } = req.body;
+  const { currentPassword, newPassword } = req.body;
+  const UUID = req.user.UUID;
   try {
     const userResults = await authModel.getUserByUUID(UUID);
     if (userResults.length === 0) {
@@ -182,7 +183,7 @@ export const getUserSettingsPage = (req, res) => {
 
 // handleGetUserByUUID
 export const handleGetUserByUUID = async (req, res) => {
-  const UUID = req.params.UUID;
+  const UUID = req.user.UUID;
   try {
     const idUser = await authModel.getUserByUUID(UUID);
     res.json({ status: 'success', idUser: idUser[0].idUser });

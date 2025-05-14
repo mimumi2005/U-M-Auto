@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch('/auth/notification-settings');
             const data = await response.json();
-            console.log(data);
             if (data.status === 'success') {
                 document.getElementById('Notifications').value = data.settings.deal_notifications;
                 document.getElementById('repairType').value = data.settings.appointment_reminders;
@@ -35,14 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const data = await response.json();
             if (data.status === 'success') {
-                const alertBox = document.getElementById('customNotificationAlert');
-                alertBox.classList.remove('nodisplay');
-                setTimeout(() => {
-                    alertBox.classList.add('nodisplay');
-                }, 2000);
+                showSuccessAlert("Notification settings updated", 2000);
             }
         } catch (error) {
-            console.error('Error:', error);
+            showErrorAlert("Failed to update notification settings", 2000);
         }
     };
 

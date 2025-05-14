@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleResponse(response) {
         // On success announces it 
         if (response.status === 'success') {
-            showCustomSignUpAlert();
+            showSuccessAlert("SuccessSignUp");
             loginUser(response.data);
             document.querySelector('form').reset();
         } else {

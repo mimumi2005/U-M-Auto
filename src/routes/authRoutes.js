@@ -30,7 +30,7 @@ router.post('/update-name',checkSession,validateCSRFToken, sanitizeInputUsers,up
 
 router.patch('/cancel-appointment/:idProject', checkSession, validateCSRFToken, cancelAppointment);
 
-router.get('/userID/:UUID',checkSession, handleGetUserByUUID);
+router.get('/userID',checkSession, handleGetUserByUUID);
 router.get('/log-out',checkSession,generateCSRFToken, handleLogout);
 router.get('/ProfilePage',checkSession,generateCSRFToken, getProfilePage);
 router.get('/ProfileInfo',checkSession, getUserProfileInfo)

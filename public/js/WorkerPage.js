@@ -117,7 +117,6 @@ function searchProjectByIDByWorker(idProjects) {
         .then(data => {
             // Call a function to display the user data on the page
             if (data[0]) {
-                console.log(data);
                 displayProjectDataForWorker(data);
             }
             else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }

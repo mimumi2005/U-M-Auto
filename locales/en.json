@@ -563,7 +563,7 @@
 	"Show More": "Show More",
 	"(Click to cancel)": "(Click to cancel)",
 	"Project has been cancelled": "Project has been cancelled",
-	"Estimator is only an estimate": "Estimator is only an estimate",
+	"Estimator is only an estimate": "Estimator is only an estimate for prices, for more precise pricing please contact us directly",
 	"All projects": "All projects",
 	"User-ID": "User-ID",
 	"End Date": "End Date",
@@ -584,5 +584,11 @@
 	"Removing a worker": "Removing a worker",
 	"Successfully removed worker account": "Successfully removed worker account",
 	"Successfully made worker account": "Successfully made worker account",
-	"Successfully gave administrator perms": "Successfully gave administrator perms"
+	"Successfully gave administrator perms": "Successfully gave administrator perms",
+	"Users Projects": "Users Projects",
+	"Fill all contact form fields": "Aizpildiet visus laukus",
+	"Conctact form error": "Neizdevās nosūtīt ziņu",
+	"Contact form success": "Ziņa nosūtīta veiksmīgi",
+	"Password changed successfully": "Password changed successfully",
+	"Information updated succesfully": "Information updated succesfully"
 }

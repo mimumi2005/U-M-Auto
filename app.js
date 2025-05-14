@@ -146,7 +146,6 @@ app.get('*', (req, res, next) => {
   if (lang && ['en', 'lv', 'de', 'ru'].includes(lang)) {
     req.session.language = lang;
     req.session.save(() => {
-      console.log('🌐 Language set to:', req.session.language);
       res.redirect(req.originalUrl.split('?')[0]);
     });
   } else {

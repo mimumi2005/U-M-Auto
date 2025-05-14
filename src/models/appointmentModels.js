@@ -32,8 +32,7 @@ export const getAppointmentsForTomorrow = async () => {
         if (!Array.isArray(rows)) {
             throw new Error('Expected rows to be an array');
         }
-        console.log(rows);
-        return rows; // Return the fetched rows
+        return rows; 
     } catch (error) {
         console.error('Error fetching appointments:', error);
         throw error; // Rethrow the error for further handling

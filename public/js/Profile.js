@@ -1,4 +1,4 @@
-const loggedUser = JSON.parse(getCookie("userData"));
+const loggedUser = getCookie("userData");
 const form = document.getElementById('change-password-form');
 const inputs = form.querySelectorAll('input');
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    console.log(`${fieldId} updated to: ${newValue}`, data);
+                    showSuccessAlert('Information updated succesfully');
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
@@ -185,8 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({
                 currentPassword: currentPassword,
-                newPassword: newPassword,
-                UUID: loggedUser.UUID
+                newPassword: newPassword
             }),
         })
             .then(response => response.json())
@@ -194,10 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // Handle the response from the server
                 if (data.status === 'success') {
-                    document.getElementById('customPasswordChangeAlert').classList.remove('nodisplay');
-                    setTimeout(function () {
-                        document.getElementById('customPasswordChangeAlert').classList.add('nodisplay');
-                    }, 2000);
+                    showSuccessAlert('Password changed successfully', 2000);
                     document.querySelector('form').reset();
                     HidePasswordReset();
                 }
@@ -287,8 +283,7 @@ function fetchUserInfo() {
 
 document.getElementById('deleteAccountButton').addEventListener('click', async function () {
     try {
-      const UUID = loggedUser.UUID; // replace `user.idUser` with however you're passing the user ID
-      const response = await fetch(`/user-delete/${UUID}`, {
+      const response = await fetch(`/user-delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

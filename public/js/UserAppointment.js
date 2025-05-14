@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Appointment successfully cancelled.');
+                    showSuccessAlert('Appointment successfully cancelled.', 2000);
                     location.reload();
                 } else {
                     console.error('Cancellation failed:', data.message);

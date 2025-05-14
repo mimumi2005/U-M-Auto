@@ -23,8 +23,6 @@ export async function verifyRecaptcha(req, res, next) {
 
         const result = await response.json(); // Parse the JSON response
 
-        console.log('Response from reCAPTCHA:', result); // Log the response for debugging
-
         if (result.success) {
             next(); // Proceed if verification is successful
         } else {

@@ -6,8 +6,7 @@ import {checkSession} from '../middleware/checkSession.js';
 import authRoutes from './authRoutes.js';
 import adminRoutes from './adminRoutes.js';
 import workerRoutes from './workerRoutes.js';
-
-
+import serviceRoutes from './serviceRoutes.js';
 
 const router = express.Router();
 
@@ -29,7 +28,6 @@ router.get('/SignUp',generateCSRFToken, getSignUpPage);
 router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
 router.use('/worker', workerRoutes);
-
-
+router.use("/api", serviceRoutes);
 
 export default router;
