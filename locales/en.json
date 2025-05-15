@@ -586,9 +586,9 @@
 	"Successfully made worker account": "Successfully made worker account",
 	"Successfully gave administrator perms": "Successfully gave administrator perms",
 	"Users Projects": "Users Projects",
-	"Fill all contact form fields": "Aizpildiet visus laukus",
-	"Conctact form error": "Neizdevās nosūtīt ziņu",
-	"Contact form success": "Ziņa nosūtīta veiksmīgi",
+	"contact_form_fill_all_fields": "Fill all contact form fields",
+	"Fill all contact form fields": "Fill all contact form fields",
+	"Conctact form error": "Conctact form error",
 	"Password changed successfully": "Password changed successfully",
 	"Information updated succesfully": "Information updated succesfully"
 }
