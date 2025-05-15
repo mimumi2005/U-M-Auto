@@ -17,7 +17,7 @@ export const getAllAdminIds = async () => {
 
 export const getActiveProjects = async (curdate) => {
     const sql_query = `
-      SELECT projects.*, users.UserName, project_status.statusName
+      SELECT projects.*, users.Username, project_status.statusName
       FROM projects
       JOIN users ON projects.idUser = users.idUser
       JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -31,7 +31,7 @@ export const getActiveProjects = async (curdate) => {
 
 export const getProjectById = async (idProjects) => {
     const sql_query = `
-        SELECT projects.*, users.UserName, users.Email, project_status.statusName
+        SELECT projects.*, users.Username, users.Email, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -60,7 +60,7 @@ export const getAllUsers = async () => {
 
 export const getAllProjects = async () => {
     const sql_query = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -77,7 +77,7 @@ export const getUserById = async (idUser) => {
 
 export const getTodaysProjects = async (year, month, day) => {
     const sql_query = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -92,7 +92,7 @@ export const getTodaysProjects = async (year, month, day) => {
 
 export const getDelayedProjects = async () => {
     const sql_query = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -107,7 +107,7 @@ export const updateProjectEndDate = async (EndDate, idProjects) => {
     await pool.query(updateQuery, [EndDate, idProjects]);
 
     const selectQuery = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -122,7 +122,7 @@ export const updateProjectDelayedStatus = async (idProjects) => {
     await pool.query(updateQuery, [idProjects]);
 
     const selectQuery = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
