@@ -55,6 +55,7 @@ export const getAppointmentsForHour = async () => {
     // SQL query to fetch appointments in the next hour
     const query = `
         SELECT 
+            u.idUser,
             u.Username,
             u.Email,
             p.StartDate,

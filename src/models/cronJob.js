@@ -49,19 +49,17 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Schedule a job to run every hour
-cron.schedule('0 * * * *', async () => {
-    console.log('Checking for appointments for next hour...');
+cron.schedule('* * * * *', async () => {
+    console.log('\nChecking for appointments for next hour...');
     try {
         const appointments = await getAppointmentsForHour();
-
         for (const appointment of appointments) {
             // Check user's notification preferences
             const notifSettings = await getNotificationSettings(appointment.idUser);
-            
             // Only send if they want hourly notifications (Hour or Both)
             if (notifSettings && (notifSettings.appointment_reminders === 'Hour' || 
                 notifSettings.appointment_reminders === 'Both')) {
-                
+
                 const StartDate = appointment.StartDate;
                 const date = new Date(StartDate);
                 const readableDate = date.toLocaleString('en-US', {
