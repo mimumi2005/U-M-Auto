@@ -47,15 +47,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const sessionEnded = urlParams.get('sessionEnded');
   const unauthorizedAccess = urlParams.get('unauthorizedAccess')
   if (sessionEnded) {
-    document.getElementById('session-message').classList.remove('nodisplay');
+    showSuccessAlert('session_message');
   }
   if (unauthorizedAccess) {
-    document.getElementById('unauthorizedAccess').classList.remove('nodisplay');
+    showSuccessAlert('session_message');
   }
 
   // Add scroll event listener
   document.addEventListener('scroll', handleScroll);
-
 });
 
 

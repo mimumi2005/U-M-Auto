@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const sessionEnded = urlParams.get('sessionEnded');
     const unauthorizedAccess = urlParams.get('unauthorizedAccess')
     if (sessionEnded) {
-      showErrorAlert('unauthorized_access');
+      showErrorAlert('session_message');
     }
     if (unauthorizedAccess) {
       showErrorAlert('session_message');

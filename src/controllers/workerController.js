@@ -1,5 +1,6 @@
 import * as workerModel from '../models/workerModels.js';
 import i18n from 'i18n';
+import { sendAppointmentDateUpdateAlert,sendAppointmentStatusUpdateAlert  } from '../models/emailService.js';
 
 export const workerDashboard = (req, res) => {
   const csrfTokenValue = req.csrfToken;
@@ -62,6 +63,20 @@ export const changeEndDate = async (req, res) => {
   try {
     const { EndDate, idProjects } = req.body;
     const result = await workerModel.updateProjectEndDate(EndDate, idProjects);
+
+    const date = new Date(EndDate);
+    const readableDate = date.toLocaleString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    const appointment = await workerModel.getProjectById(idProjects);
+    await sendAppointmentDateUpdateAlert(appointment, readableDate);
     res.json(result);
   } catch (err) {
     console.error('Error updating end date:', err);
@@ -74,6 +89,9 @@ export const changeStatus = async (req, res) => {
   try {
     const { newStatus, idProjects } = req.body;
     const result = await workerModel.updateProjectStatus(newStatus, idProjects);
+
+    const appointment = await workerModel.getProjectById(idProjects);
+    await sendAppointmentStatusUpdateAlert(appointment, newStatus);
     res.json(result);
   } catch (err) {
     console.error('Error updating status:', err);

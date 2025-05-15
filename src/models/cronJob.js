@@ -1,9 +1,11 @@
 // cronJob.js
 import cron from 'node-cron';
-import { sendEmail } from './emailService.js';
-import { getAppointmentsForTomorrow, getAppointmentsForHour } from './appointmentModels.js';
+import { sendAppointmentReminder } from './emailService.js';
+import { getAppointmentsForTomorrow, getAppointmentsForHour, getAppointmentsForLastHour } from './appointmentModels.js';
+import { sendAppointmentStatusUpdateAlert  } from '../models/emailService.js';
 import { updateTenureForAllWorkers } from './updateTenure.js';
-import { getNotificationSettings } from './notificationModels.js';
+import { getNotificationSettings } from './notificationModels.js';  
+import * as workerModel from '../models/workerModels.js';
 
 // Schedule a job to run every day at midnight
 cron.schedule('0 0 * * *', async () => {
@@ -16,11 +18,11 @@ cron.schedule('0 0 * * *', async () => {
         for (const appointment of appointments) {
             // Check user's notification preferences
             const notifSettings = await getNotificationSettings(appointment.idUser);
-            
+
             // Only send if they want daily notifications (Day or Both)
-            if (notifSettings && (notifSettings.appointment_reminders === 'Day' || 
+            if (notifSettings && (notifSettings.appointment_reminders === 'Day' ||
                 notifSettings.appointment_reminders === 'Both')) {
-                
+
                 const StartDate = appointment.StartDate;
                 const date = new Date(StartDate);
                 const readableDate = date.toLocaleString('en-US', {
@@ -49,7 +51,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Schedule a job to run every hour
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
     console.log('\nChecking for appointments for next hour...');
     try {
         const appointments = await getAppointmentsForHour();
@@ -57,7 +59,7 @@ cron.schedule('* * * * *', async () => {
             // Check user's notification preferences
             const notifSettings = await getNotificationSettings(appointment.idUser);
             // Only send if they want hourly notifications (Hour or Both)
-            if (notifSettings && (notifSettings.appointment_reminders === 'Hour' || 
+            if (notifSettings && (notifSettings.appointment_reminders === 'Hour' ||
                 notifSettings.appointment_reminders === 'Both')) {
 
                 const StartDate = appointment.StartDate;
@@ -72,14 +74,21 @@ cron.schedule('* * * * *', async () => {
                     hour12: true
                 });
 
-                const emailText = `Dear ${appointment.Username},\n\n` +
-                    `You have an appointment scheduled in one hour at ${readableDate}. ` +
-                    `Please be sure to arrive at least 5 minutes before your scheduled time to ensure everything runs smoothly.\n\n` +
-                    `Appointment:\n${appointment.ProjectInfo}\n\n` +
-                    `Thank you for choosing our service! We look forward to seeing you soon.\n\n` +
-                    `Best regards,\nAuto Repair Service`;
+                await sendAppointmentReminder(appointment, readableDate);
+            }
+        }
+    } catch (error) {
+        console.error('Error checking appointments:', error);
+    }
 
-                await sendEmail(appointment.Email, 'Appointment Reminder', emailText);
+    console.log('\ Finishing projects that arent delayed...');
+    try {
+        const appointments = await getAppointmentsForLastHour();
+        for (const appointment of appointments) {
+            console.log('Finishing project:', appointment);
+            if (appointment.Delayed != true) {
+                await workerModel.updateProjectStatus("Finished", appointment.idProjects);
+                await sendAppointmentStatusUpdateAlert(appointment, "Finished");
             }
         }
     } catch (error) {

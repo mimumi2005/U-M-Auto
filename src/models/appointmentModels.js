@@ -76,7 +76,54 @@ export const getAppointmentsForHour = async () => {
         if (!Array.isArray(rows)) {
             throw new Error('Expected rows to be an array');
         }
-        console.log('Next hour appointments:', rows);
+        console.log('Next hour appointment:', rows);
+        return rows;
+    } catch (error) {
+        console.error('Error fetching next hour appointments:', error);
+        throw error;
+    }
+};
+
+
+export const getAppointmentsForLastHour = async () => {
+    // Get current time and add one hour
+    const now = new Date();
+    const lastHour = new Date(now);
+    lastHour.setHours(lastHour.getHours() - 1, 0, 0, 0); // Set to start of next hour
+    const hourEnd = new Date(lastHour);
+    hourEnd.setMinutes(59, 59, 999); // End of the hour
+
+    // Convert to ISO strings for the query
+    const hourStartISO = lastHour.toISOString();
+    const hourEndISO = hourEnd.toISOString();
+
+    // SQL query to fetch appointments in the next hour
+    const query = `
+        SELECT 
+            u.idUser,
+            u.Username,
+            u.Email,
+            p.StartDate,
+            p.EndDateProjection,
+            p.ProjectInfo,
+            p.Delayed,
+            p.idProjects
+        FROM 
+            projects p
+        JOIN 
+            users u ON p.idUser = u.idUser
+        WHERE 
+            p.EndDateProjection BETWEEN ? AND ?`;
+
+    try {
+        // Execute the query
+        const [rows] = await connection.execute(query, [hourStartISO, hourEndISO]);
+
+        // Ensure rows is an array
+        if (!Array.isArray(rows)) {
+            throw new Error('Expected rows to be an array');
+        }
+        console.log('Appointment finished in last hour:', rows);
         return rows;
     } catch (error) {
         console.error('Error fetching next hour appointments:', error);

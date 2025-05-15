@@ -1,6 +1,6 @@
 import * as adminModel from '../models/adminModels.js';
 import i18n from 'i18n';
-
+import { sendAppointmentDateUpdateAlert  } from '../models/emailService.js';
 export const adminDashboard = (req, res) => {
   const csrfTokenValue = req.csrfToken;
   res.render('pages/Admin', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n, language: req.session.language || 'en' });
@@ -74,6 +74,19 @@ export const changeEndDate = async (req, res) => {
   try {
     const { EndDate, idProjects } = req.body;
     const result = await adminModel.updateProjectEndDate(EndDate, idProjects);
+    const date = new Date(EndDate);
+    const readableDate = date.toLocaleString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    const appointment = await adminModel.getProjectById(idProjects);
+    await sendAppointmentDateUpdateAlert(appointment, readableDate);
     res.json(result);
   } catch (err) {
     console.error('Error updating end date:', err);

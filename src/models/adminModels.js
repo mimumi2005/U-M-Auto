@@ -31,14 +31,14 @@ export const getActiveProjects = async (curdate) => {
 
 export const getProjectById = async (idProjects) => {
     const sql_query = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.UserName, users.Email, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
         WHERE idProjects = ?
     `;
     const [results] = await pool.query(sql_query, [idProjects]);
-    return results;
+    return results[0];
 };
 
 export const getAllUsers = async () => {
