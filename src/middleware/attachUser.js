@@ -10,7 +10,7 @@ export async function attachUser(req, res, next) {
       `SELECT 
          ui.idInstance, 
          u.idUser, 
-         u.UserName, 
+         u.Username, 
          u.email,
          a.idUser AS isAdmin,
          w.idUser AS isWorker
@@ -31,7 +31,7 @@ export async function attachUser(req, res, next) {
     } else {
       req.user = {
         id: user.idUser,
-        username: user.UserName,
+        username: user.Username,
         email: user.email,
         UUID: user.idInstance,
         isAdmin: !!user.isAdmin,

@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (search) {
             filtered = filtered.filter(p =>
                 p.idProjects.toString().includes(search) ||
-                p.UserName.toLowerCase().includes(search) ||
+                p.Username.toLowerCase().includes(search) ||
                 p.ProjectInfo.toLowerCase().includes(search)
             );
         }
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const compareDate = new Date(mode === 'started' ? p.StartDate : p.EndDateProjection);
             return compareDate.toISOString().split('T')[0] === date;
         });
-        title.innerHTML = translate("Projects on") + ` ${date}`; 
+        title.innerHTML = translate("Projects on") + ` ${date}`;
         document.getElementById("inputNewEndDate").classList.add('nodisplay');
         displayProjectData(filtered);
     }
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const userIDcell = document.createElement('td');
                 userIDcell.setAttribute('data-label', translate('User-ID'));
                 const userLink = document.createElement('a');
-                userLink.textContent = appointment.UserName + ` \nUserID:${appointment.idUser}`;
+                userLink.textContent = appointment.Username + ` \nUserID:${appointment.idUser}`;
                 userLink.href = '#';
                 userLink.style.color = 'lightblue';
 
@@ -441,6 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             appointment.statusName = newStatus;
                             statusText.textContent = newStatus; // Update the displayed status text
                             renderButtons(); // Re-render buttons based on the new status
+                            showSuccessAlert('Status updated successfully');
                         })
                         .catch(error => {
                             console.error('Error:', error);
@@ -613,11 +614,11 @@ document.addEventListener('DOMContentLoaded', function () {
             row.appendChild(NameCell);
 
             // Username
-            const UserNameCell = document.createElement('td');
-            UserNameCell.setAttribute('data-label', translate('Username'));
-            UserNameCell.textContent = user.Username;
-            UserNameCell.classList.add('text-white');
-            row.appendChild(UserNameCell);
+            const UsernameCell = document.createElement('td');
+            UsernameCell.setAttribute('data-label', translate('Username'));
+            UsernameCell.textContent = user.Username;
+            UsernameCell.classList.add('text-white');
+            row.appendChild(UsernameCell);
 
             // Email
             const EmailCell = document.createElement('td');
@@ -827,6 +828,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Call a function to display the user data on the page
                 if (data[0]) {
                     displayProjectData(data);
+                    showSuccessAlert("Project finished successfully");
                 }
             })
             .catch(error => {
@@ -897,9 +899,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     // Call a function to display the user data on the page
                     if (data[0]) {
-                        ;
                         displayProjectData(data);
                         document.getElementById('InvalidDateTime').classList.add('nodisplay');
+                        showSuccessAlert('End date changed successfully');
                     }
                 })
                 .catch(error => {

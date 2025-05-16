@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
         inputField.maxLength = maxLength;
         inputField.className = 'form-control ';
 
+        inputField.setAttribute('data-original', defaultValue);
+
         field.parentNode.replaceChild(inputField, field);
 
         inputField.focus();
@@ -23,8 +25,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const saveNewValue = () => {
             changeUsernameButton.classList.remove('d-none');
             changeNameButton.classList.remove('d-none');
-            const newValue = inputField.value;
 
+            const newValue = inputField.value.trim();
+            const originalValue = inputField.getAttribute('data-original');
+
+            // If no changes, just replace input with old static element
+            if (newValue == originalValue) {
+                const revertText = document.createElement('a');
+                revertText.className = 'profile-value';
+                revertText.id = fieldId;
+                revertText.textContent = originalValue;
+                inputField.parentNode.replaceChild(revertText, inputField);
+                return;
+            }
 
             const newText = document.createElement('a');
             newText.className = 'profile-value';
@@ -47,13 +60,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    showSuccessAlert('Information updated succesfully');
+                    console.log(data);
+                    if (data.success === true) {
+                        showSuccessAlert('Information updated successfully');
+                    }
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
                 });
         };
-
 
         inputField.addEventListener('blur', saveNewValue);
 
@@ -112,6 +127,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     document.querySelector('form').addEventListener('submit', function (e) {
         e.preventDefault();
+        var submitButton = form.querySelector('button[type="submit"]');
+
         // Reset visuals for current password
         document.getElementById('current-password-label').style.color = 'rgb(255,255,255)';
         document.getElementById('current-password').classList.remove('form-control-incorrect');
@@ -175,7 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('NoMatchPassword').classList.remove('nodisplay');
             return
         }
-
+        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
         // Communication with API to change password
         fetch('/auth/change-password', {
             method: 'POST',
@@ -282,18 +300,22 @@ function fetchUserInfo() {
 }
 
 document.getElementById('deleteAccountButton').addEventListener('click', async function () {
+    this.disabled = true;
+    this.classList.add('disabled');
     try {
-      const response = await fetch(`/user-delete`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+        const response = await fetch(`/user-delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-      if (response.ok) {
-        window.location.href = '/goodbye'; // or redirect to a goodbye page
-      }
+        if (response.ok) {
+            window.location.href = '/goodbye'; // or redirect to a goodbye page
+        }
     } catch (err) {
-      console.error('Error deleting account:', err);
+        console.error('Error deleting account:', err);
+        this.disabled = false;
+        this.classList.remove('disabled');
     }
-  });
+});

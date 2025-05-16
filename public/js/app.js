@@ -161,13 +161,9 @@ function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
 
 // Login main function
 function loginUser(response) {
-  showSuccessAlert('Successfully logged in');
-  setTimeout(function () {
-    setCookie('userData', response.UUID, 1);
-
-    updateButtonVisibility();
-    window.location.href = '/';
-  }, 650);
+  setCookie('userData', response.UUID, 1);
+  updateButtonVisibility();
+  window.location.href = '/?loggedIn=true';
 }
 
 // LogOut main function
@@ -182,8 +178,11 @@ function LogOut() {
     .then(data => {
       isLoggedIn = false;
       updateButtonVisibility();
-      clearCookies();
-      window.location.href = '/';
+      showSuccessAlert('Successfully logged out');
+
+      setTimeout(function () {
+        window.location.href = '/?loggedOut=true';
+      }, 200);
     })
     .catch(error => {
       alert(`Cannot connect to server: ${error}`);
@@ -606,18 +605,6 @@ function displayProjectStatusStatistics(statusStats) {
   };
 
   new Chart(ctx, config);
-}
-
-// Cookies
-function clearCookies() {
-  var cookies = document.cookie.split(";");
-
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i];
-    var eqPos = cookie.indexOf("=");
-    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-  }
 }
 
 // Function to set cookie with JSON data

@@ -594,5 +594,14 @@
 	"Conctact form error": "Conctact form error",
 	"Password changed successfully": "Password changed successfully",
 	"Information updated succesfully": "Information updated succesfully",
-	"Appointment successfully cancelled.": "Appointment successfully cancelled."
+	"Appointment successfully cancelled.": "Appointment successfully cancelled.",
+	"Choose an appointment date": "Choose an appointment date",
+	"Successfully logged out": "Successfully logged out",
+	"Contact form success": "Contact form success",
+	"Attempting to send email...": "Attempting to send email...",
+	"Message sent succesfully": "Message sent succesfully",
+	"Please select a date and time": "Please select a date and time",
+	"Please select an appointment type": "Please select an appointment type",
+	"Information updated successfully": "Information updated successfully",
+	"Back to login": "Back to login"
 }

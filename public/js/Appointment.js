@@ -1,33 +1,33 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-// Show or hide the brand warning
-document.getElementById('carModel').addEventListener('mouseenter', function () {
-    const carBrandWarning = document.getElementById('carBrandWarning');
-    if (document.getElementById('carBrand').value === '') {
-        carBrandWarning.classList.remove('hidden-visibility');
-        carBrandWarning.classList.add('visible-visibility');
-    } else {
-        carBrandWarning.classList.remove('visible-visibility');
-        carBrandWarning.classList.add('hidden-visibility');
-    }
-});
+    // Show or hide the brand warning
+    document.getElementById('carModel').addEventListener('mouseenter', function () {
+        const carBrandWarning = document.getElementById('carBrandWarning');
+        if (document.getElementById('carBrand').value === '') {
+            carBrandWarning.classList.remove('hidden-visibility');
+            carBrandWarning.classList.add('visible-visibility');
+        } else {
+            carBrandWarning.classList.remove('visible-visibility');
+            carBrandWarning.classList.add('hidden-visibility');
+        }
+    });
 
-// Show or hide the model warning
-document.getElementById('carYear').addEventListener('mouseenter', function () {
-    const carModelWarning = document.getElementById('carModelWarning');
-    if (document.getElementById('carModel').value === '') {
-        carModelWarning.classList.remove('hidden-visibility');
-        carModelWarning.classList.add('visible-visibility');
-    } else {
-        carModelWarning.classList.remove('visible-visibility');
-        carModelWarning.classList.add('hidden-visibility');
-    }
-});
-    let selectedDateTime = null; // Variable to store the selected datetime
-    let selectedDate = null; // Variable to store the selected date
+    // Show or hide the model warning
+    document.getElementById('carYear').addEventListener('mouseenter', function () {
+        const carModelWarning = document.getElementById('carModelWarning');
+        if (document.getElementById('carModel').value === '') {
+            carModelWarning.classList.remove('hidden-visibility');
+            carModelWarning.classList.add('visible-visibility');
+        } else {
+            carModelWarning.classList.remove('visible-visibility');
+            carModelWarning.classList.add('hidden-visibility');
+        }
+    });
+    let selectedDateTime = null;
+    let selectedDate = null;
     let user = null;
-    let previousSelectedButtons = []; // To keep track of the previously selected buttons
-    let previousButtonStates = []; // To keep track of the original classes of the previously selected buttons
+    let previousSelectedButtons = [];
+    let previousButtonStates = [];
 
     const repairTypeSelect = document.getElementById('repairType');
 
@@ -123,9 +123,23 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
 
     document.getElementById('appointmentForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent default form submission
+        const repairTypeSelect = document.getElementById('repairType');
+        submitButton = this.querySelector('button[type="submit"]');
+        const repairTypeDuration = parseInt(repairTypeSelect.value);
+        console.log(repairTypeDuration);
+        if (repairTypeDuration == 0) {
+            showErrorAlert('Please select an appointment type');
+            return;
+        }
+
+        if (selectedDateTime === null && repairTypeDuration < 120) {
+            showErrorAlert('Please select a date and time');
+            return;
+        }
         // Retrieve form data
         const additionalInfo = getAdditionalInfo();
-
+        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
         // Fetch user information from the server
         fetch(`/auth/userID`, {
             method: 'GET',
@@ -139,11 +153,8 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
 
                     user = data.idUser;
 
-                    const repairTypeSelect = document.getElementById('repairType');
-                    const repairTypeDuration = parseInt(repairTypeSelect.value); // Convert the value to an integer
                     if (repairTypeDuration < 120) {
                         endDateTime = new Date(selectedDateTime.getTime());
-
                     }
                     else {
 
@@ -187,19 +198,24 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
 
                         })
                         .catch(error => {
-                            console.error('Error creating appointment:', error);
+
+                            showErrorAlert('Error creating appointment');
+                        })
+                        .finally(() => {
+                            submitButton.disabled = true;
+                            submitButton.classList.add('disabled');
                         });
                 } else {
-                    console.error('Error fetching user information:', data.message);
+                    showErrorAlert('Error fetching user information');
                 }
             })
-
             .catch(error => {
                 console.error('Error fetching user information:', error);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.classList.remove('disabled');
             });
-
-
-
     });
     function generateTimeButtons(hours, FreeHoursArray, repairtype) {
         const RepairType = repairtype;
@@ -208,12 +224,10 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
         // Check if all values in FreeHours are false
         const allHoursTaken = FreeHours.every(hour => !hour); // True if all are false
 
-        // Create a document fragment to hold the buttons
         const buttonContainer = document.createDocumentFragment();
 
         if (allHoursTaken) {
-            // Return an empty document fragment if all hours are taken
-            return buttonContainer; // Returning an empty fragment instead of an empty string
+            return buttonContainer;
         }
 
         hours.forEach((hour) => {
@@ -342,6 +356,13 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
 
     // Determine available hours in the day
     function getAvailableHourlySlots(dayOfMonth, takenDateTimes) {
+
+        // Check if the day is today for custom logic
+        const currentDate = new Date();
+        const isToday = currentDate.getDate() === dayOfMonth &&
+            currentDate.getMonth() === new Date().getMonth() &&
+            currentDate.getFullYear() === new Date().getFullYear();
+
         // Define working hours
         const WORK_DAY_START = new Date(currentDate.getFullYear(), currentDate.getMonth());
         WORK_DAY_START.setDate(dayOfMonth);
@@ -367,13 +388,21 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
             }
         });
 
+        if (isToday) {
+            const blockUntil = new Date(currentDate.getTime() + 60 * 60 * 1000);
+            blockUntil.setMinutes(0, 0, 0);
+
+            if (blockUntil < WORK_DAY_END) {
+                intervals.push([WORK_DAY_START, blockUntil]);
+            }
+        }
+
         // Sort intervals by start time
         intervals.sort((a, b) => a[0] - b[0]);
 
         // Create an array to mark which hours are taken
         const FreeHourArray = new Array(9).fill(true); // 9 hours in the workday
 
-        // Mark intervals
         intervals.forEach(([start, end]) => {
             // Ensure we are only working within the 9 AM to 6 PM window
             let intervalStart = Math.max(start, WORK_DAY_START);
@@ -549,9 +578,6 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
         }
     }
 
-
-
-
     function openTimeMenuForDay(event, day, array) {
         const clickedButton = event.target; // Store the clicked button
         // Add the active class to the clicked button
@@ -658,7 +684,7 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
         const carModel = document.getElementById('carModel').value || 'No model selected';
         const carYear = document.getElementById('carYear').value || 'No year selected';
         const additionalInfo = document.getElementById('additionalInfo').value || 'No additional info provided';
-    
+
         // Combine all the information
         const combinedInfo = `
         Car Info:
@@ -666,7 +692,7 @@ document.getElementById('carYear').addEventListener('mouseenter', function () {
           Car Model- ${carModel}
           Car Year- ${carYear}\n\nAdditional Info: \n${additionalInfo}
         `.trim();
-        
+
         return combinedInfo;
     }
 

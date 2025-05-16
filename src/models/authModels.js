@@ -55,7 +55,7 @@ export async function updatePassword(idUser, hashedNewPassword) {
 }
 
 export const getProjectsByUserId = async (idUser) => {
-    const sql_query = 'SELECT projects.*, users.UserName FROM projects JOIN users ON projects.idUser = users.idUser WHERE projects.idUser = ?';
+    const sql_query = 'SELECT projects.*, users.Username FROM projects JOIN users ON projects.idUser = users.idUser WHERE projects.idUser = ?';
     const [results] = await pool.query(sql_query, [idUser]);
     return results;
 };
@@ -69,7 +69,7 @@ export const getProjectsByUserUUID = async (UUID) => {
     const idUser = userResults[0].idUser;
 
     const getProjectsQuery = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects 
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus

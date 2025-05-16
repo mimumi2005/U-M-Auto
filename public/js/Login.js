@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
     document.querySelector('form').addEventListener('submit', function (e) {
+        var submitButton = form.querySelector('button[type="submit"]');
         // Resets visuals for all error messages/styles
         document.getElementById('WrongUsername').classList.add('nodisplay');
         document.getElementById('WrongPassword').classList.add('nodisplay');
@@ -55,6 +57,8 @@ document.addEventListener('DOMContentLoaded', function () {
             password: document.getElementById('password').value
         };
         document.getElementById('password').value = '';
+        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
         // Communicates with API to login to account
         fetch('/auth/login', {
             method: 'POST',
@@ -65,18 +69,28 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         })
             .then(response => response.json())
-            .then(data => handleResponse(data))
+            .then(data => {
+                handleResponse(data);
+                if (data.status !== 'success') {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('disabled');
+                }
+            })
             .catch(error => {
-                alert(`Cannot connect to server :P ${error}`);
-            });
+                showErrorAlert(`Cannot connect to server  ${error}`);
+                submitButton.disabled = false;
+                submitButton.classList.remove('disabled');
+            })
     });
+
     function handleResponse(response) {
         // If succesful announces it and resets form
         if (response.status === 'success') {
-            loginUser(response.data);
+            showSuccessAlert("Successfully logged in");
             setTimeout(function () {
+                loginUser(response.data);
                 document.querySelector('form').reset();
-            }, 3000);
+            }, 200);
 
         } else {
             //Else divides errors to wrong username or wrong password

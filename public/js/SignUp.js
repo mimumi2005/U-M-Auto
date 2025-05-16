@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector('form').addEventListener('submit', function (e) {
+        var submitButton = form.querySelector('button[type="submit"]');
+
         // Prevent the default form submission
         e.preventDefault();
 
@@ -96,10 +98,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add other form fields as needed
         };
         document.getElementById('password').value = '';
-        
+
         // Reset captcha
         grecaptcha.reset();
-
+        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
         // Make a POST request to the backend
         fetch('/auth/sign-up', {
             method: 'POST',
@@ -110,9 +113,19 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         })
             .then(response => response.json())
-            .then(data => handleResponse(data))
+            .then(data => {
+                handleResponse(data);
+                if (data.status !== 'success') {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('disabled');
+                }
+            })
             .catch(error => {
                 console.error('Error:', error);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.classList.remove('disabled');
             });
     });
 
@@ -120,8 +133,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // On success announces it 
         if (response.status === 'success') {
             showSuccessAlert("SuccessSignUp");
-            loginUser(response.data);
-            document.querySelector('form').reset();
+            setTimeout(function () {
+                loginUser(response.data);
+                document.querySelector('form').reset();
+            }, 200);
         } else {
             console.error('Error:', response);
 

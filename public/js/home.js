@@ -65,12 +65,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // Check for the 'sessionEnded' query parameter
     const urlParams = new URLSearchParams(window.location.search);
     const sessionEnded = urlParams.get('sessionEnded');
-    const unauthorizedAccess = urlParams.get('unauthorizedAccess')
-    if (sessionEnded) {
-      showErrorAlert('session_message');
+    const unauthorizedAccess = urlParams.get('unauthorizedAccess');
+    const loggedOut = urlParams.get('loggedOut');
+    const loggedIn = urlParams.get('loggedIn');
+
+    switch (true) {
+      case !!sessionEnded:
+        showSuccessAlert('Session ended');
+        break;
+      case !!unauthorizedAccess:
+        showSuccessAlert('Unauthorized access');
+        break;
+      case !!loggedOut:
+        showSuccessAlert('Successfully logged out');
+        break;
+      case !!loggedIn:
+        showSuccessAlert('Successfully logged in');
+        break;
     }
-    if (unauthorizedAccess) {
-      showErrorAlert('session_message');
+
+    if (loggedOut || loggedIn || sessionEnded || unauthorizedAccess) {
+      history.replaceState(null, '', window.location.pathname);
     }
   });
 });

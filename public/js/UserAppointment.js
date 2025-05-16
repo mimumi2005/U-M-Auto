@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    function cancelAppointment(idProjects) {
+    function cancelAppointment(idProjects, button) {
+        button.classList.add('disabled');
+        button.disabled = true;
         fetch(`/auth/cancel-appointment/${idProjects}`, { // <-- id in URL now
             method: 'PATCH',
             headers: {
@@ -14,10 +16,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     showSuccessAlert('Appointment successfully cancelled.', 2000);
                     location.reload();
                 } else {
-                    console.error('Cancellation failed:', data.message);
+                    button.classList.remove('disabled');
+                    button.disabled = false;
+                    showErrorAlert('Cancellation failed: ' + data.message);
                 }
             })
             .catch(error => {
+                button.classList.remove('disabled');
+                button.disabled = false;
                 console.error('Error:', error);
             });
     }
@@ -94,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate("(Click to cancel)")}</a>`;
                 delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
                 delayedCell.onclick = function () {
-                    cancelAppointment(appointment.idProjects);
+                    cancelAppointment(appointment.idProjects, this);
                 };
             }
             else if (appointment.statusName == 'In Progress') {

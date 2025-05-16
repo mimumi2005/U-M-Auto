@@ -97,7 +97,7 @@ export const updateProjectDelayedStatus = async (idProjects) => {
     await pool.query(updateQuery, [idProjects]);
 
     const selectQuery = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -109,7 +109,7 @@ export const updateProjectDelayedStatus = async (idProjects) => {
 
 export const getProjectsByUserId = async (idUser) => {
     const sql_query = `
-        SELECT projects.*, users.UserName, project_status.statusName
+        SELECT projects.*, users.Username, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus

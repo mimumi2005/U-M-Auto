@@ -175,7 +175,7 @@ function displayProjectDataForWorker(data) {
         if (sortedData.length === 0) {
             const noDataRow = document.createElement('tr');
             const noDataCell = document.createElement('td');
-            noDataCell.colSpan = 6; 
+            noDataCell.colSpan = 6;
             noDataCell.classList.add('text-center', 'text-muted', 'p-4', 'h1');
             noDataCell.textContent = translate('No projects found.');
             noDataRow.appendChild(noDataCell);
@@ -185,7 +185,7 @@ function displayProjectDataForWorker(data) {
             if (existingButton) existingButton.remove();
 
             return;
-        }  
+        }
 
         sortedData.forEach((appointment, index) => {
             const row = document.createElement('tr');
@@ -200,7 +200,7 @@ function displayProjectDataForWorker(data) {
             userIDcell.setAttribute('data-label', translate('Username'));
             const userLink = document.createElement('a');
             userIDcell.style.width = "12.5%";
-            userLink.textContent = appointment.UserName + ` (${appointment.idUser})`;
+            userLink.textContent = appointment.Username + ` (${appointment.idUser})`;
             userLink.href = '#';
             userLink.style.color = 'lightblue';
 
@@ -269,6 +269,7 @@ function displayProjectDataForWorker(data) {
                         appointment.statusName = newStatus;
                         statusText.textContent = newStatus; // Update the displayed status text
                         renderButtons(); // Re-render buttons based on the new status
+                        showSuccessAlert('Status updated successfully');
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -419,11 +420,11 @@ function displayUserDataForWorker(users) {
         row.appendChild(NameCell);
 
         // Username
-        const UserNameCell = document.createElement('td');
-        UserNameCell.setAttribute('data-label', translate('Username'));
-        UserNameCell.textContent = users.Username;
-        UserNameCell.classList.add('text-white');
-        row.appendChild(UserNameCell);
+        const UsernameCell = document.createElement('td');
+        UsernameCell.setAttribute('data-label', translate('Username'));
+        UsernameCell.textContent = users.Username;
+        UsernameCell.classList.add('text-white');
+        row.appendChild(UsernameCell);
 
         // Email
         const EmailCell = document.createElement('td');
@@ -563,6 +564,7 @@ function removeDelayed(idProjects) {
             // Call a function to display the user data on the page
             if (data[0]) {
                 displayProjectDataForWorker(data);
+                showSuccessAlert('Project finished successfully');
             }
         })
         .catch(error => {

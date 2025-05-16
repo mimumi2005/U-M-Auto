@@ -588,5 +588,12 @@
 	"Contact form success": "Ziņa nosūtīta veiksmīgi",
 	"Password changed successfully": "Parole veiksmīgi nomainīta",
 	"Information updated succesfully": "Dati veiksmīgi atjaunoti",
-	"Appointment successfully cancelled.": "Appointment successfully cancelled."
+	"Appointment successfully cancelled.": "Veiksmīgi atcelts remonts.",
+	"Choose an appointment date": "Izvēlaties tikšanās datumu",
+	"Successfully logged out": "Veikzmīgi izrakstījies",
+	"Attempting to send email...": "Mēģina nosūtīt ziņu...",
+	"Message sent succesfully": "Ziņa veiksmīgi nosūtīta",
+	"Please select a date and time": "Izvēlaties datumu un laiku",
+	"Please select an appointment type": "Izvēlaties remonta veidu",
+	"Information updated successfully": "Veiksmīgi atjaunota informācija"
 }

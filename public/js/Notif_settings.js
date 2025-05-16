@@ -1,12 +1,34 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    const submitButton = document.querySelector('button[type="submit"]');
+    const dealNotificationsEl = document.getElementById('Notifications');
+    const appointmentRemindersEl = document.getElementById('repairType');
+
+    let originalDeal = '';
+    let originalReminder = '';
+
+    // Enable button only if values changed
+    const checkForChanges = () => {
+        const currentDeal = dealNotificationsEl.value;
+        const currentReminder = appointmentRemindersEl.value;
+
+        const changed = currentDeal !== originalDeal || currentReminder !== originalReminder;
+        submitButton.disabled = !changed;
+        submitButton.classList.toggle('disabled', !changed);
+    };
+
     // Fetch current settings
     const fetchSettings = async () => {
         try {
             const response = await fetch('/auth/notification-settings');
             const data = await response.json();
             if (data.status === 'success') {
-                document.getElementById('Notifications').value = data.settings.deal_notifications;
-                document.getElementById('repairType').value = data.settings.appointment_reminders;
+                originalDeal = data.settings.deal_notifications;
+                originalReminder = data.settings.appointment_reminders;
+
+                dealNotificationsEl.value = originalDeal;
+                appointmentRemindersEl.value = originalReminder;
+
+                checkForChanges(); // Ensure button is initially disabled
             }
         } catch (error) {
             console.error('Error fetching settings:', error);
@@ -16,8 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const dealNotifications = document.getElementById('Notifications').value;
-        const appointmentReminders = document.getElementById('repairType').value;
+
+        const dealNotifications = dealNotificationsEl.value;
+        const appointmentReminders = appointmentRemindersEl.value;
+
+        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
 
         try {
             const response = await fetch('/auth/update-notification-settings', {
@@ -35,13 +61,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             if (data.status === 'success') {
                 showSuccessAlert("Notification settings updated", 2000);
+                // Update original values
+                originalDeal = dealNotifications;
+                originalReminder = appointmentReminders;
+                checkForChanges();
             }
         } catch (error) {
             showErrorAlert("Failed to update notification settings", 2000);
         }
     };
 
+    // Listen for changes to re-check
+    dealNotificationsEl.addEventListener('change', checkForChanges);
+    appointmentRemindersEl.addEventListener('change', checkForChanges);
+
     // Initialize
     fetchSettings();
-    document.querySelector('button[type="submit"]').addEventListener('click', handleSubmit);
+    submitButton.addEventListener('click', handleSubmit);
 });
