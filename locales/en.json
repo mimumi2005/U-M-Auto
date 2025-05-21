@@ -600,5 +600,7 @@
 	"Please select a date and time": "Please select a date and time",
 	"Please select an appointment type": "Please select an appointment type",
 	"Information updated successfully": "Information updated successfully",
-	"Back to login": "Back to login"
+	"Back to login": "Back to login",
+	"Choose an appointment type first": "Choose an appointment type first",
+	"Password reset email sent": "Password reset email sent"
 }

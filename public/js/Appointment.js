@@ -82,7 +82,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${brand}?format=json`);
             const data = await response.json();
-            carModelSelect.innerHTML = '<option value="" disabled selected>Choose a model</option>';
+            var chooseModel = translate("Choose a model");
+            carModelSelect.innerHTML = `<option value="" disabled selected>${chooseModel}</option>`;
             data.Results.forEach(model => {
                 const option = document.createElement('option');
                 option.value = model.Model_Name;
@@ -112,7 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchCarModels(this.value);
         carModelSelect.disabled = true;
         carYearSelect.disabled = true;
-        carYearSelect.innerHTML = '<option value="" disabled selected>Choose a year</option>';
+        var chooseYear = translate("Choose a year");
+        carYearSelect.innerHTML = `<option value="" disabled selected>${chooseYear}</option>`;
     });
 
     carModelSelect.addEventListener('change', populateYears);
@@ -283,15 +285,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const label = document.createElement('label');
         if (repairType == 0) {
             label.className = 'mt-2 mb-4 text-danger';
-            label.textContent = 'Choose an appointment type first';
+            label.textContent = translate('Choose an appointment type first');
         }
         else if (FreeHours.some(hour => hour)) {
             label.className = 'mt-2';
-            label.textContent = 'Choose Appointment Time';
+            label.textContent = translate('Choose Appointment Time');
         }
         else {
             label.className = 'mt-2 mb-4 text-danger';
-            label.textContent = 'Choose a date first';
+            label.textContent = translate('Choose a date first');
         }
         // Create a div to hold the time buttons
         const timeContainerDiv = document.createElement('div');
@@ -639,9 +641,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (selectedDateRangeInfo) {
                 const endDate = new Date(selectedDate);
                 endDate.setDate(endDate.getDate() + 5); // Add 5 days
+                var dateRange = translate("Selected Date Range");
                 selectedDateRangeInfo.innerHTML = `
             <div tabindex="0" class="mt-4">
-                Selected Date Range:<b> ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}</b>
+                ${dateRange}:<b> ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}</b>
             </div>
         `;
             }

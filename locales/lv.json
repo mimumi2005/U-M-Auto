@@ -595,5 +595,7 @@
 	"Message sent succesfully": "Ziņa veiksmīgi nosūtīta",
 	"Please select a date and time": "Izvēlaties datumu un laiku",
 	"Please select an appointment type": "Izvēlaties remonta veidu",
-	"Information updated successfully": "Veiksmīgi atjaunota informācija"
+	"Information updated successfully": "Veiksmīgi atjaunota informācija",
+	"Choose an appointment type first": "Vispirms izvēlieties remonta veidu",
+	"Password reset email sent": "Paroles maiņas e-pasts nosūtīts"
 }

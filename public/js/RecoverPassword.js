@@ -9,21 +9,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         document.getElementById('InvalidEmail').classList.add('nodisplay');
-        document.getElementById('EmptyEmail').classList.add('nodisplay');
 
         if (emailValue === '') {
-            document.getElementById('EmptyEmail').classList.remove('nodisplay');
+            document.getElementById('email-red').classList.add('text-danger');
             return;
         }
         if (!emailRegex.test(emailValue)) {
             document.getElementById('InvalidEmail').classList.remove('nodisplay');
+            document.getElementById('email-red').classList.add('text-danger');
             return;
         }
-        document.getElementById('customResetAlert').classList.remove('nodisplay');
-        // Simulating an API request
-        setTimeout(function () {
+        document.getElementById('email-red').classList.remove('text-danger');
+        showSuccessAlert(
+            'Password reset email sent', 
+            setTimeout(function () {
             form.reset();
             window.location.href = '/Login';
-        }, 3000);
+        }, 1000));
     });
 });
