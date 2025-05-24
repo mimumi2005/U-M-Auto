@@ -1,7 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-
     document.getElementById('name').focus();
+    const form = document.getElementById('signupForm');
+    const inputs = form.querySelectorAll('input');
+
+    inputs.forEach(function (input, index) {
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                if (index != 3) { // If the current input field is the third one (index 2)S
+                    event.preventDefault();
+                    const nextIndex = (index + 1) % inputs.length;
+                    inputs[nextIndex].focus();
+                }
+            }
+        });
+    });
 
     document.getElementById('acceptPolicy').addEventListener('change', () => {
         if (document.getElementById('acceptPolicy').checked) {

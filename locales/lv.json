@@ -597,5 +597,6 @@
 	"Please select an appointment type": "Izvēlaties remonta veidu",
 	"Information updated successfully": "Veiksmīgi atjaunota informācija",
 	"Choose an appointment type first": "Vispirms izvēlieties remonta veidu",
-	"Password reset email sent": "Paroles maiņas e-pasts nosūtīts"
+	"Password reset email sent": "Paroles maiņas e-pasts nosūtīts",
+	"End date changed successfully": "End date changed successfully"
 }

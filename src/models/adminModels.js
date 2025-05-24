@@ -38,7 +38,7 @@ export const getProjectById = async (idProjects) => {
         WHERE idProjects = ?
     `;
     const [results] = await pool.query(sql_query, [idProjects]);
-    return results[0];
+    return results;
 };
 
 export const getAllUsers = async () => {
