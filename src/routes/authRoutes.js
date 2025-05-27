@@ -21,6 +21,7 @@ router.post('/login', (req, res) => {
     loginUser(req, res);
 });
 
+// Routes updating data (POST requests need CSRF)
 router.post('/update-notification-settings', checkSession, validateCSRFToken, updateNotificationSettings);
 router.post('/sign-up', verifyRecaptcha, validateCSRFToken, sanitizeInputUsers, handleSignUp);
 router.post('/createAppointment',checkSession,validateCSRFToken, sanitizeInputProjects, handleCreateAppointment);
@@ -28,14 +29,17 @@ router.post('/change-password',checkSession,validateCSRFToken, sanitizeInputUser
 router.post('/update-username',checkSession,validateCSRFToken, sanitizeInputUsers, updateUsername);
 router.post('/update-name',checkSession,validateCSRFToken, sanitizeInputUsers,updateName);
 
+// Routes for updating data (PATCH requests need CSRF)
 router.patch('/cancel-appointment/:idProject', checkSession, validateCSRFToken, cancelAppointment);
 
+// Routes for data fetching (GET requests don’t need CSRF)
 router.get('/userID',checkSession, handleGetUserByUUID);
 router.get('/log-out',checkSession,generateCSRFToken, handleLogout);
 router.get('/ProfilePage',checkSession,generateCSRFToken, getProfilePage);
 router.get('/ProfileInfo',checkSession, getUserProfileInfo)
 router.get('/UserAppointment',checkSession, generateCSRFToken, getUserAppointments)
 
+// Routes for pages (GET requests don’t need CSRF)
 router.get('/Settings',checkSession, generateCSRFToken, getUserSettingsPage)
 router.get('/notification-settings', checkSession, getNotificationSettings);
 

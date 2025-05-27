@@ -55,7 +55,7 @@ const commonCDNs = [
   "https://www.google.com",
   "https://www.gstatic.com",
   "https://www.googletagmanager.com",
-  "https://maps.googleapis.com"
+  "https://maps.googleapis.com",
 ];
 
 app.use(

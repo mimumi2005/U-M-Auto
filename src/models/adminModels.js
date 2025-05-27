@@ -1,20 +1,24 @@
 import pool from '../config/db.js';
 
+// Check if a user is an admin (admins table or is the super user with ID 1)
 export async function checkAdminStatus(userid) {
     const [results] = await pool.query('SELECT * FROM administrators WHERE idUser = ?', [userid]);
     return results.length > 0 || userid === 1;
 }
 
+// Retrieve all worker IDs
 export const getAllWorkerIds = async () => {
     const [results] = await pool.query('SELECT idUser FROM workers');
     return results;
 };
 
+// Retrieve all admin IDs
 export const getAllAdminIds = async () => {
     const [results] = await pool.query('SELECT idUser FROM administrators');
     return results;
 };
 
+// Retrieve active projects (future or delayed, not cancelled)
 export const getActiveProjects = async (curdate) => {
     const sql_query = `
       SELECT projects.*, users.Username, project_status.statusName
@@ -26,9 +30,9 @@ export const getActiveProjects = async (curdate) => {
     `;
     const [results] = await pool.query(sql_query, [curdate]);
     return results;
-  };
-  
+};
 
+// Retrieve a project by its ID with related user and status info
 export const getProjectById = async (idProjects) => {
     const sql_query = `
         SELECT projects.*, users.Username, users.Email, project_status.statusName
@@ -41,6 +45,7 @@ export const getProjectById = async (idProjects) => {
     return results;
 };
 
+// Get all users along with their roles, project info and instance data
 export const getAllUsers = async () => {
     const sql_query = `
         SELECT users.*, user_instance.idInstance, workers.tenure, administrators.AdminTenure, p.idProjects, workers.WorkerType
@@ -58,6 +63,7 @@ export const getAllUsers = async () => {
     return results;
 };
 
+// Get all projects with user and status info
 export const getAllProjects = async () => {
     const sql_query = `
         SELECT projects.*, users.Username, project_status.statusName
@@ -69,12 +75,14 @@ export const getAllProjects = async () => {
     return results;
 };
 
+// Retrieve user details by their ID
 export const getUserById = async (idUser) => {
     const user_query = 'SELECT * FROM users WHERE idUser = ?';
     const [results] = await pool.query(user_query, [idUser]);
     return results;
 };
 
+// Get projects for a specific date
 export const getTodaysProjects = async (year, month, day) => {
     const sql_query = `
         SELECT projects.*, users.Username, project_status.statusName
@@ -90,6 +98,7 @@ export const getTodaysProjects = async (year, month, day) => {
     return results;
 };
 
+// Get delayed projects
 export const getDelayedProjects = async () => {
     const sql_query = `
         SELECT projects.*, users.Username, project_status.statusName
@@ -102,10 +111,12 @@ export const getDelayedProjects = async () => {
     return results;
 };
 
+// Update a project's projected end date and mark as delayed
 export const updateProjectEndDate = async (EndDate, idProjects) => {
     const updateQuery = 'UPDATE projects SET EndDateProjection = ?, `Delayed` = true WHERE idProjects = ?';
     await pool.query(updateQuery, [EndDate, idProjects]);
 
+    // Return updated project data for confirmation
     const selectQuery = `
         SELECT projects.*, users.Username, project_status.statusName
         FROM projects
@@ -117,6 +128,7 @@ export const updateProjectEndDate = async (EndDate, idProjects) => {
     return results;
 };
 
+// Remove delayed flag from a project
 export const updateProjectDelayedStatus = async (idProjects) => {
     const updateQuery = 'UPDATE projects SET `Delayed` = false WHERE idProjects = ?';
     await pool.query(updateQuery, [idProjects]);
@@ -132,44 +144,52 @@ export const updateProjectDelayedStatus = async (idProjects) => {
     return results;
 };
 
+// Find a user's ID by their email address
 export const getUserIdByEmail = async (email) => {
     const query = 'SELECT idUser FROM users WHERE email = ?';
     const [results] = await pool.query(query, [email]);
     return results;
 };
 
+// Check if a user is already marked as a worker
 export const isUserAlreadyWorker = async (idUser) => {
     const query = 'SELECT * FROM workers WHERE idUser = ?';
     const [results] = await pool.query(query, [idUser]);
     return results;
 };
 
+// Check if a user is already an admin
 export const isUserAlreadyAdmin = async (idUser) => {
     const query = 'SELECT * FROM administrators WHERE idUser = ?';
     const [results] = await pool.query(query, [idUser]);
     return results;
 };
 
+// Add a user as a worker
 export const insertWorker = async (idUser, workerType, startWorkDate, tenure) => {
     const query = 'INSERT INTO workers (idUser, workerType, StartWorkDate, tenure) VALUES (?, ?, ?, ?)';
     await pool.query(query, [idUser, workerType, startWorkDate, tenure]);
 };
 
+// Add a user as an admin
 export const insertAdmin = async (idUser) => {
     const query = 'INSERT INTO administrators (idUser, AdminTenure) VALUES (?, 0)';
     await pool.query(query, [idUser]);
 };
 
+// Remove a user from admin role
 export const removeAdmin = async (idUser) => {
     const query = 'DELETE FROM administrators WHERE idUser = ?';
     await pool.query(query, [idUser]);
 };
 
+// Remove a user from worker role
 export const removeWorker = async (idUser) => {
     const query = 'DELETE FROM workers WHERE idUser = ?';
     await pool.query(query, [idUser]);
 };
 
+// Retrieve all projects of a user
 export const getProjectsByUserId = async (idUser) => {
     const sql_query = `
         SELECT projects.*, users.Username, project_status.statusName
@@ -182,6 +202,7 @@ export const getProjectsByUserId = async (idUser) => {
     return results;
 };
 
+// Get project statistics based on project duration
 export const getProjectStatistics = async () => {
   const sql_query = `
     SELECT 
@@ -199,6 +220,7 @@ export const getProjectStatistics = async () => {
   return results;
 };
 
+// Get count of projects by status
 export const getProjectStatusStatistics = async () => {
   const sql_query = `
     SELECT 
@@ -213,6 +235,7 @@ export const getProjectStatusStatistics = async () => {
   return results;
 };
 
+// Get user count by number of projects they've done
 export const getUserStatistics = async () => {
   const sql_query = `
     SELECT 

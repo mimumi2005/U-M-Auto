@@ -11,10 +11,6 @@ import {validateCSRFToken} from '../middleware/CSRF.js'
 import {generateCSRFToken} from '../middleware/CSRF.js'
 const router = express.Router();
 
-// Routes for pages (GET requests don’t need CSRF)
-router.get('/admin-dashboard',generateCSRFToken, isAdmin, adminDashboard);
-router.get('/Statistics', isAdmin, adminStatistics);
-
 // Routes for admin panel (POST requests need CSRF)
 router.post('/change-end-date', isAdmin,validateCSRFToken, changeEndDate);
 router.post('/remove-delayed', isAdmin, validateCSRFToken, finishProject);
@@ -33,11 +29,13 @@ router.get('/project-by-ID/:id', isAdmin, fetchProjectById);
 router.get('/user-by-ID/:id', isAdmin, fetchUserById);
 router.get('/project-by-user-id/:userId', isAdmin, fetchProjectByUserId);
 
+// Routes for statistics (GET requests don’t need CSRF)
 router.get('/project-statistics', isAdmin, fetchProjectStatistics);
 router.get('/project-status-statistics', isAdmin, fetchProjectStatusStatistics);
 router.get('/user-statistics', isAdmin, fetchUserStatistics);
 
-
-
+// Routes for pages (GET requests don’t need CSRF)
+router.get('/admin-dashboard',generateCSRFToken, isAdmin, adminDashboard);
+router.get('/Statistics', isAdmin, adminStatistics);
 
 export default router;
