@@ -4,10 +4,11 @@
   "main": "database.js",
   "type": "module",
   "scripts": {
+    "migrate-back": "npx knex migrate:rollback --knexfile knexfile.cjs",
     "migrate": "npx knex migrate:latest --knexfile knexfile.cjs",
     "seed": "npx knex seed:run --knexfile knexfile.cjs",
-    "setup": "npm run migrate && npm run seed",
-    "start": "node app.js"
+    "setup": "npm run migrate-back && npm run migrate && npm run seed",
+    "start": "node app.js"  
   },
   "author": "",
   "license": "ISC",
