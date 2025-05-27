@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 submitButton.disabled = false;
                 submitButton.classList.remove('disabled');
-                alert(data.message || 'Error sending reset email');
+                showErrorAlert(data.message || 'Error sending reset email');
             }
         } catch (err) {
             console.error('Error:', err);

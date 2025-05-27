@@ -618,5 +618,6 @@
 	"Passwords do not match": "Passwords do not match",
 	"Password changed successfully!": "Password changed successfully!",
 	"Sending reset email...": "Sending reset email...",
-	"Reset token is invalid or expired": "Reset token is invalid or expired"
+	"Reset token is invalid or expired": "Reset token is invalid or expired",
+	"User not found": "User not found"
 }

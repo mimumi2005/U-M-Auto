@@ -10,7 +10,7 @@ export const requestPasswordReset = async (req, res) => {
 
     // Check if user exists
     const [users] = await authModel.getUserByEmail(email);
-    if (users.length === 0) {
+    if (users == null) {
         return res.status(404).json({ message: 'User not found' });
     }
 
