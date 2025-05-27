@@ -182,6 +182,7 @@ function LogOut() {
 
       setTimeout(function () {
         window.location.href = '/?loggedOut=true';
+        window.setLanguage(window.currentLanguage);
       }, 200);
     })
     .catch(error => {
@@ -196,6 +197,7 @@ function toggleScrollToTopButton() {
     document.getElementById("scroll-to-top-btn").style.display = 'none'
   }
 }
+
 function scrollToTop() {
   const scrollToTopElement = document.documentElement || document.body;
 
@@ -208,30 +210,40 @@ function scrollToTop() {
 
 
 
+// Alert display functions
+
+// Function to display a success alert for the user
 function showSuccessAlert(messageKey, callbackAfter) {
+	// Gets the elements in the page
   const alertBox = document.getElementById('successAlert');
   const alertText = document.getElementById('successAlertMessage');
 
   if (alertBox && alertText) {
+	  // Adds the desired message to the element and displays it
     alertText.textContent = translate(messageKey);
     alertBox.classList.remove('nodisplay');
 
     setTimeout(() => {
+		// After element has been shown optional callback (a function called after the alert)
       alertBox.classList.add('nodisplay');
       if (typeof callbackAfter === 'function') callbackAfter();
     }, 2000);
   }
 }
 
+// Function to display an error alert
 function showErrorAlert(messageKey) {
+	// Gets the elements in the page
   const alertBox = document.getElementById('errorAlert');
   const alertText = document.getElementById('errorAlertMessage');
 
   if (alertBox && alertText) {
+	  // Adds the message to the element and displays it
     alertText.textContent = translate(messageKey);
     alertBox.classList.remove('nodisplay');
 
     setTimeout(() => {
+		// Hides it after 2 seconds
       alertBox.classList.add('nodisplay');
     }, 2000);
   }

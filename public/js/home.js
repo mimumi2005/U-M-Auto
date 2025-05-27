@@ -62,13 +62,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateCarousel();
 
-    // Check for the 'sessionEnded' query parameter
+    // Show  alert if the URL contains a specific path
+    const pathname = window.location.pathname;
+    if (pathname.includes('/ResetPassword')) {
+      showSuccessAlert('Reset token is invalid or expired');
+    }
+
+    // Check for query parameters and show alerts accordingly
     const urlParams = new URLSearchParams(window.location.search);
     const sessionEnded = urlParams.get('sessionEnded');
     const unauthorizedAccess = urlParams.get('unauthorizedAccess');
     const loggedOut = urlParams.get('loggedOut');
     const loggedIn = urlParams.get('loggedIn');
-
     switch (true) {
       case !!sessionEnded:
         showSuccessAlert('Session ended');

@@ -311,7 +311,7 @@ document.getElementById('deleteAccountButton').addEventListener('click', async f
         });
 
         if (response.ok) {
-            window.location.href = '/goodbye'; // or redirect to a goodbye page
+            window.location.href = '/goodbye';
         }
     } catch (err) {
         console.error('Error deleting account:', err);

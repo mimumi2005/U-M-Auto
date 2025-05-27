@@ -598,5 +598,17 @@
 	"Information updated successfully": "Veiksmīgi atjaunota informācija",
 	"Choose an appointment type first": "Vispirms izvēlieties remonta veidu",
 	"Password reset email sent": "Paroles maiņas e-pasts nosūtīts",
-	"End date changed successfully": "End date changed successfully"
+	"End date changed successfully": "End date changed successfully",
+	"dasfds": "dasfds",
+	"Project finished successfully": "Project finished successfully",
+	"Reset email sent": "Reset email sent",
+	"New Password": "New Password",
+	"Password must be at least 8 characters": "Password must be at least 8 characters",
+	"Enter a new password": "Enter a new password",
+	"Enter new password": "Enter new password",
+	"Confirm Password": "Confirm Password",
+	"Passwords do not match": "Passwords do not match",
+	"Password changed successfully!": "Password changed successfully!",
+	"Sending reset email...": "Sending reset email...",
+	"Reset token is invalid or expired": "Reset token is invalid or expired"
 }

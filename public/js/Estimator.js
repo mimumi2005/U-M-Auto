@@ -210,6 +210,7 @@ checkboxes.forEach((checkbox) => {
 
 function updateEstimatorUIByHash() {
     const hash = window.location.hash;
+    console.log("Current hash:", hash);
 
     const carImageSection = document.getElementById('imageContainer');
     const mapSection = document.querySelector('map');
@@ -220,15 +221,15 @@ function updateEstimatorUIByHash() {
     const weldingDetails = document.getElementById('weldingPricing');
     const repairsTable = document.getElementById('repairsTable');
 
-    const sectionTitle = document.querySelector('h2');
+    const sectionTitle = document.getElementById('mainTitle');
 
-    if (hash === '#paintjob' || hash === '#rustwork') {
+    if (hash == '#paintjob' || hash == '#rustwork') {
         carImageSection.classList.remove("nodisplay");
         mapSection.classList.remove("nodisplay");
         canvasOverlay.classList.remove("nodisplay");
         selectButtons.classList.remove("nodisplay");
 
-        sectionTitle.innerText = hash === '#paintjob' ? translate('Paint Job Estimation') : translate('Rust Work Estimation');
+        sectionTitle.innerText = hash == '#paintjob' ? translate('Paint Job Estimation') : translate('Rust Work Estimation');
 
         paintDetails.classList.remove("nodisplay");
         weldingDetails.classList.add("nodisplay");
