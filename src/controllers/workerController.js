@@ -62,8 +62,7 @@ export const fetchProjectById = async (req, res) => {
 export const changeEndDate = async (req, res) => {
   try {
     const { EndDate, idProjects } = req.body;
-    const result = await workerModel.updateProjectEndDate(EndDate, idProjects);
-
+    const appointment = await workerModel.updateProjectEndDate(EndDate, idProjects);
     const date = new Date(EndDate);
     const readableDate = date.toLocaleString('en-US', {
       weekday: 'long',
@@ -75,9 +74,8 @@ export const changeEndDate = async (req, res) => {
       hour12: true
     });
 
-    const appointment = await workerModel.getProjectById(idProjects);
     await sendAppointmentDateUpdateAlert(appointment[0], readableDate);
-    res.json(result);
+    res.json(appointment);
   } catch (err) {
     console.error('Error updating end date:', err);
     res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
@@ -88,11 +86,10 @@ export const changeEndDate = async (req, res) => {
 export const changeStatus = async (req, res) => {
   try {
     const { newStatus, idProjects } = req.body;
-    const result = await workerModel.updateProjectStatus(newStatus, idProjects);
+    const appointment = await workerModel.updateProjectStatus(newStatus, idProjects);
 
-    const appointment = await workerModel.getProjectById(idProjects);
-    await sendAppointmentStatusUpdateAlert(appointment, newStatus);
-    res.json(result);
+    await sendAppointmentStatusUpdateAlert(appointment[0], newStatus);
+    res.json(appointment);
   } catch (err) {
     console.error('Error updating status:', err);
     res.status(500).json({ status: 'error', message: 'Error updating status', error: err.message });
@@ -104,7 +101,9 @@ export const removeDelayedProject = async (req, res) => {
   try {
     const { idProjects } = req.body;
     const result = await workerModel.updateProjectDelayedStatus(idProjects);
-    res.json(result);
+    const appointment = await workerModel.updateProjectStatus("Completed", idProjects);
+    await sendAppointmentStatusUpdateAlert(appointment[0], "Completed");
+    res.json(appointment);
   } catch (err) {
     console.error('Error updating project status:', err);
     res.status(500).json({ status: 'error', message: 'Error updating project status', error: err.message });

@@ -645,5 +645,6 @@
 	"This will give administrator permissions to user with email:": "This will give administrator permissions to user with email:",
 	"No users match the filters.": "No users match the filters.",
 	"This will delete users ": "This will delete users ",
-	"worker account": "worker account"
+	"worker account": "worker account",
+	"This will update the end date projection and set the project to \"Delayed\"": "This will update the end date projection and set the project to \"Delayed\""
 }

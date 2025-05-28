@@ -3,7 +3,7 @@ import express from 'express';
 import { isAdmin } from '../middleware/isAdmin.js';
 import {
     adminDashboard, adminStatistics,
-    changeEndDate, finishProject, fetchAllUsers, registerWorker, giveAdmin, removeAdmin, deleteWorker,
+    fetchAllUsers, registerWorker, giveAdmin, removeAdmin, deleteWorker,
     fetchActiveProjects, fetchAllProjects, fetchProjectById, fetchUserById, fetchTodaysProjects, fetchDelayedProjects, fetchProjectByUserId, 
     fetchProjectStatistics, fetchProjectStatusStatistics, fetchUserStatistics
 } from '../controllers/adminController.js';
@@ -12,8 +12,6 @@ import {generateCSRFToken} from '../middleware/CSRF.js'
 const router = express.Router();
 
 // Routes for admin panel (POST requests need CSRF)
-router.post('/change-end-date', isAdmin,validateCSRFToken, changeEndDate);
-router.post('/remove-delayed', isAdmin, validateCSRFToken, finishProject);
 router.post('/register-worker', isAdmin, validateCSRFToken, registerWorker);
 router.post('/remove-worker', isAdmin, validateCSRFToken, deleteWorker);
 router.post('/give-admin', isAdmin, validateCSRFToken, giveAdmin);

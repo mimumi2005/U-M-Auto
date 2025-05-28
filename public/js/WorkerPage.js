@@ -1,3 +1,14 @@
+// Function to call the appropriate function based on the hash
+function handleHashChange() {
+    const hash = window.location.hash.substring(1); // Remove the '#' from the hash
+    if (hash && typeof window[hash] === 'function') {
+        window[hash](); // Dynamically call the function
+    }
+}
+
+document.addEventListener('DOMContentLoaded', handleHashChange);
+window.addEventListener('hashchange', handleHashChange);
+
 
 // WORKER Function that displays fields needed to change project end date 
 function changeEndDateByWorker(idProjects) {
@@ -9,18 +20,6 @@ function changeEndDateByWorker(idProjects) {
     document.getElementById('userDataContainer').classList.add('nodisplay');
     document.getElementById("inputNewEndDate").classList.remove('nodisplay');
 }
-
-
-// Function to call the appropriate function based on the hash
-function handleHashChange() {
-    const hash = window.location.hash.substring(1); // Remove the '#' from the hash
-    if (hash && typeof window[hash] === 'function') {
-        window[hash](); // Dynamically call the function
-    }
-}
-
-document.addEventListener('DOMContentLoaded', handleHashChange);
-window.addEventListener('hashchange', handleHashChange);
 
 function deleteProject(ProjectID) {
     fetch(`/worker/project-delete/${ProjectID}`, {
@@ -262,10 +261,7 @@ function displayProjectDataForWorker(data) {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        // Call a function to display the user data on the page
-                        appointment.statusName = newStatus;
-                        statusText.textContent = newStatus; // Update the displayed status text
-                        renderButtons(); // Re-render buttons based on the new status
+                        searchActiveProjects();
                         showSuccessAlert('Status updated successfully');
                     })
                     .catch(error => {
@@ -330,13 +326,18 @@ function displayProjectDataForWorker(data) {
                     showConfirmationPopup(popupInnerHtml, () => {
                         removeDelayed(appointment.idProjects);
                     });
-            } else {
-
-                DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to delay)')}</a>`;
-                delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
-                delayedCell.onclick = function () {
-                    changeEndDateByWorker(appointment.idProjects);
-                };
+            }
+            else {
+                if (appointment.statusName == "In Progress") {
+                    DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to delay)')}</a>`;
+                    delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
+                    delayedCell.onclick = function () {
+                        changeEndDateByWorker(appointment.idProjects);
+                    };
+                }
+                else {
+                    delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has no delays')}</span>`;
+                }
             }
             row.appendChild(delayedCell);
 

@@ -19,7 +19,6 @@ router.get('/delayed-projects', isWorker, fetchDelayedProjects);
 
 //Project custom calls
 router.post('/change-status',validateCSRFToken, isWorker, changeStatus);
-
 router.post('/remove-delayed',validateCSRFToken, isWorker, removeDelayedProject);
 router.post('/change-end-date',validateCSRFToken, isWorker, changeEndDate);
 

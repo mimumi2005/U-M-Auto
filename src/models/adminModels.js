@@ -111,39 +111,6 @@ export const getDelayedProjects = async () => {
     return results;
 };
 
-// Update a project's projected end date and mark as delayed
-export const updateProjectEndDate = async (EndDate, idProjects) => {
-    const updateQuery = 'UPDATE projects SET EndDateProjection = ?, `Delayed` = true WHERE idProjects = ?';
-    await pool.query(updateQuery, [EndDate, idProjects]);
-
-    // Return updated project data for confirmation
-    const selectQuery = `
-        SELECT projects.*, users.Username, project_status.statusName
-        FROM projects
-        JOIN users ON projects.idUser = users.idUser
-        JOIN project_status ON projects.idStatus = project_status.idStatus
-        WHERE idProjects = ?
-    `;
-    const [results] = await pool.query(selectQuery, [idProjects]);
-    return results;
-};
-
-// Remove delayed flag from a project
-export const updateProjectDelayedStatus = async (idProjects) => {
-    const updateQuery = 'UPDATE projects SET `Delayed` = false WHERE idProjects = ?';
-    await pool.query(updateQuery, [idProjects]);
-
-    const selectQuery = `
-        SELECT projects.*, users.Username, project_status.statusName
-        FROM projects
-        JOIN users ON projects.idUser = users.idUser
-        JOIN project_status ON projects.idStatus = project_status.idStatus
-        WHERE idProjects = ?
-    `;
-    const [results] = await pool.query(selectQuery, [idProjects]);
-    return results;
-};
-
 // Find a user's ID by their email address
 export const getUserIdByEmail = async (email) => {
     const query = 'SELECT idUser FROM users WHERE email = ?';

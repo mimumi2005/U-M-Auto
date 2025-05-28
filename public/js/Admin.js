@@ -1,6 +1,5 @@
 let allUsers = [];
 let allProjects = [];
-
 document.addEventListener('DOMContentLoaded', function () {
     const userFilter = document.getElementById('userFilter');
     const userSearchInput = document.getElementById('userSearchInput');
@@ -32,12 +31,15 @@ document.addEventListener('DOMContentLoaded', function () {
     removeWorkerButton.addEventListener('click', removeWorkerForm);
     removeWorkerFormBtn.addEventListener('keypress', handleRemoveWorkerKeyPress);
 
+    const endDatePopupInnerHtml = `<p>${translate('This will update the end date projection and set the project to "Delayed"')}!</p>`;
     changeEndDateBtn.addEventListener('keypress', handleEndDateKeyPress);
     changeEndDateBtn.addEventListener('click', function () {
-        projectChangeEndTime(
-            document.getElementById('project_id').textContent,
-            document.getElementById('dateinput').value
-        );
+        showConfirmationPopup(endDatePopupInnerHtml, () => {
+            projectChangeEndTime(
+                document.getElementById('project_id').textContent,
+                document.getElementById('dateinput').value
+            );
+        });
     });
 
     function handleKeyPressForum(event) {
@@ -60,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 u.Username.toString().includes(search)
             );
         }
-
         if (filterVal === 'all') {
             title.innerHTML = translate("All users");
             displayUserData(filtered);
@@ -87,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let filtered = [...allProjects];
         const filterVal = projectFilter.value;
         const search = projectSearchInput.value.trim().toLowerCase();
-
         title.innerHTML = translate("All projects");
         if (filterVal === 'delayed') {
             filtered = filtered.filter(p => p.Delayed === 1);
@@ -300,7 +300,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleEndDateKeyPress(event) {
         if (event.key === 'Enter') {
-            projectChangeEndTime(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
+            showConfirmationPopup(endDatePopupInnerHtml, () => {
+                projectChangeEndTime(
+                    document.getElementById('project_id').textContent,
+                    document.getElementById('dateinput').value
+                );
+            });
         }
     }
 
@@ -472,6 +477,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             appointment.statusName = newStatus;
                             statusText.textContent = newStatus; // Update the displayed status text
                             renderButtons(); // Re-render buttons based on the new status
+                            fetchAllProjects();
                             showSuccessAlert('Status updated successfully');
                         })
                         .catch(error => {
@@ -547,12 +553,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 else if (appointment.statusName == 'Completed') {
                     delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project is finished')}</span>` + DelayLink.innerHTML;
                 }
-                else {
+                else if (appointment.statusName == "In Progress") {
                     DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate("(Click to delay)")}</a>`;
                     delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
                     delayedCell.onclick = function () {
                         changeEndDate(appointment.idProjects);
                     };
+                }
+                else {
+                    delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has no delays')}</span>`;
                 }
                 row.appendChild(delayedCell);
 
@@ -907,7 +916,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
     function removeDelayed(idProjects) {
 
-        fetch('/admin/remove-delayed', {
+        fetch('/worker/remove-delayed', {
             method: 'POST',
             headers: {
                 'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
@@ -921,6 +930,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // Call a function to display the user data on the page
                 if (data[0]) {
+                    fetchAllProjects();
                     displayProjectData(data);
                     showSuccessAlert("Project finished successfully");
                 }
@@ -978,7 +988,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const EndDate = NewDate.toISOString();
 
         if (EndDate) {
-            fetch('/admin/change-end-date', {
+            fetch('/worker/change-end-date', {
                 method: 'POST',
                 headers: {
                     'CSRF-Token': csrfToken, // The token from the cookie or as passed in your view
@@ -993,6 +1003,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     // Call a function to display the user data on the page
                     if (data[0]) {
+                        fetchAllProjects();
                         displayProjectData(data);
                         document.getElementById('InvalidDateTime').classList.add('nodisplay');
                         showSuccessAlert('End date changed successfully');

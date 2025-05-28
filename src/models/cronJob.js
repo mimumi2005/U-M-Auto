@@ -81,17 +81,17 @@ cron.schedule('0 * * * *', async () => {
         console.error('Error checking appointments:', error);
     }
 
-    console.log('\ Finishing projects that arent delayed...');
-    try {
-        const appointments = await getAppointmentsForLastHour();
-        for (const appointment of appointments) {
-            console.log('Finishing project:', appointment);
-            if (appointment.Delayed != true) {
-                await workerModel.updateProjectStatus("Finished", appointment.idProjects);
-                await sendAppointmentStatusUpdateAlert(appointment, "Finished");
-            }
-        }
-    } catch (error) {
-        console.error('Error checking appointments:', error);
-    }
+    // console.log('\ Finishing projects that arent delayed...');
+    // try {
+    //     const appointments = await getAppointmentsForLastHour();
+    //     for (const appointment of appointments) {
+    //         console.log('Finishing project:', appointment);
+    //         if (appointment.Delayed != true) {
+    //             await workerModel.updateProjectStatus("Finished", appointment.idProjects);
+    //             await sendAppointmentStatusUpdateAlert(appointment, "Finished");
+    //         }
+    //     }
+    // } catch (error) {
+    //     console.error('Error checking appointments:', error);
+    // }
 });

@@ -62,7 +62,7 @@ export const updateProjectEndDate = async (EndDate, idProjects) => {
     await pool.query(updateQuery, [EndDate, idProjects]);
 
     const selectQuery = `
-        SELECT projects.*, users.Username, project_status.statusName
+        SELECT projects.*, users.Username, users.Email, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
@@ -82,13 +82,14 @@ export const updateProjectStatus = async (newStatus, idProjects) => {
     await pool.query(updateQuery, [newStatus, idProjects]);
 
     const selectQuery = `
-        SELECT projects.*, users.Username, project_status.statusName
+        SELECT projects.*, users.Username, users.Email, project_status.statusName
         FROM projects
         JOIN users ON projects.idUser = users.idUser
         JOIN project_status ON projects.idStatus = project_status.idStatus
         WHERE idProjects = ?
     `;
     const [results] = await pool.query(selectQuery, [idProjects]);
+    console.log(results);
     return results;
 };
 
