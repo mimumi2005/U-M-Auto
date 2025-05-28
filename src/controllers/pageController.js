@@ -1,5 +1,9 @@
 
 import i18n from 'i18n'; // Import i18n for internationalization
+export const goodbyePage = (req, res) => {
+  res.render('pages/Goodbye', { layout: false });
+};
+
 export const getHomePage = (req, res) => {
     res.render('pages/home', { nonce: res.locals.nonce, i18n: i18n,  language: req.session.language || 'en' }); // Pass nonce to EJS template
 };

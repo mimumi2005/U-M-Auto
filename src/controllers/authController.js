@@ -282,3 +282,24 @@ export const cancelAppointment = async (req, res) => {
   }
 };
 
+
+
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    await authModel.deleteUserById(userId);
+
+    // Destroy the session and clear the cookie
+    req.session.destroy(() => {
+      res.clearCookie('connect.sid'); // express-session cookie cleanup
+      return res.status(200).json({
+        status: 'success',
+        message: 'Your account has been deleted successfully.',
+      });
+    });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+};

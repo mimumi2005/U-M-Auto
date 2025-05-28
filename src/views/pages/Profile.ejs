@@ -1,109 +1,117 @@
-
-
 <body>
   <div class="profile-container">
     <div class="profile-content" id="profile-info">
-      <h2 class="profile-title"><%= __('User Profile') %></h2>
+      <h2 class="profile-title">
+        <%= __('User Profile') %>
+      </h2>
       <hr class="bg-white">
-        <p class="profile-item">
-          <span class="profile-label"><%= __('Name') %>:</span>
-          <span class="d-flex align-items-center"><span id="name" class="profile-value selectable"></span>&nbsp;&nbsp;<a type="button" class=" text-white mt-n3" tabindex="0"
-          id="change-name-button"><svg  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-        </svg>
-        </a>
+      <p class="profile-item">
+        <span class="profile-label">
+          <%= __('Name') %>:
         </span>
-          
-        </p>
-        <p class="profile-item">
-          <span class="profile-label"><%= __('Username') %>:</span>
-          <span class="d-flex align-items-center"><span id="username" class="profile-value selectable"></span>&nbsp;&nbsp;<a type="button" class=" text-white mt-n3" tabindex="0"
-          id="change-username-button"><svg  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-        </svg>
-        </a>
+        <span class="d-flex align-items-center"><span id="name" class="profile-value selectable"></span>&nbsp;&nbsp;<a
+            type="button" class=" text-white mt-n3" tabindex="0" id="change-name-button"><svg
+              xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+            </svg>
+          </a>
         </span>
-        </p>
-        <p class="profile-item">
-          <span class="profile-label"><%= __('Email') %>:</span>&nbsp;&nbsp;
-          <span id="email" class="profile-value selectable"></span>
-        </p>
-        <p class="profile-item">
-          <span class="profile-label"><%= __('Password') %>:</span>
-          <span class="d-flex align-items-center"><span class="profile-value">********</span>&nbsp;&nbsp;<a type="button" class="text-white mt-n4" tabindex="0"
-          id="change-password-button"><svg  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-        </svg>
-        </a>
+
+      </p>
+      <p class="profile-item">
+        <span class="profile-label">
+          <%= __('Username') %>:
         </span>
-        </p>
-        <button type="button" id="deleteAccountBtn" class="delete-account-button" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-          <%= __('Delete account') %>
+        <span class="d-flex align-items-center"><span id="username"
+            class="profile-value selectable"></span>&nbsp;&nbsp;<a type="button" class=" text-white mt-n3" tabindex="0"
+            id="change-username-button"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+              viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+            </svg>
+          </a>
+        </span>
+      </p>
+      <p class="profile-item">
+        <span class="profile-label">
+          <%= __('Email') %>:
+        </span>&nbsp;&nbsp;
+        <span id="email" class="profile-value selectable"></span>
+      </p>
+      <p class="profile-item">
+        <span class="profile-label">
+          <%= __('Password') %>:
+        </span>
+        <span class="d-flex align-items-center"><span class="profile-value">********</span>&nbsp;&nbsp;<a type="button"
+            class="text-white mt-n4" tabindex="0" id="change-password-button"><svg xmlns="http://www.w3.org/2000/svg"
+              width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM22.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+            </svg>
+          </a>
+        </span>
+      </p>
+      <button type="button" id="deleteAccountBtn" class="delete-account-button">
+        <%= __('Delete account') %>
+      </button>
+    </div>
+
+    <!-- Change Password Form -->
+    <form id="change-password-form" class="nodisplay password-edit-container">
+      <h3 class="form-title text-center">
+        <%= __('Change your password') %>
+      </h3>
+      <div class="form-group">
+        <label for="current-password" id="current-password-label">
+          <%= __('Current password') %>
+        </label>
+        <input type="password" id="current-password" class="form-control"
+          placeholder="<%= __('Enter your current password') %>">
+        <span class="error-message nodisplay" id="WrongPassword">
+          <%= __('Incorrect current password') %>
+        </span>
+        <span class="error-message nodisplay" id="EmptyOldPassword">
+          <%= __('Enter your current password') %>
+        </span>
+      </div>
+      <div class="form-group">
+        <label for="new-password" id="new-password-label">
+          <%= __('New password') %>
+        </label>
+        <input type="password" id="new-password" class="form-control"
+          placeholder="<%= __('Enter your new password') %>">
+        <span class="error-message nodisplay" id="UnsafeNewPassword">
+          <%= __('Enter a safe password') %>
+        </span>
+        <span class="error-message nodisplay" id="EmptyNewPassword">
+          <%= __('Enter a password') %>
+        </span>
+      </div>
+      <div class="form-group">
+        <label for="confirm-new-password" id="confirm-new-password-label">
+          <%= __('Confirm new password') %>
+        </label>
+        <input type="password" id="confirm-new-password" class="form-control"
+          placeholder="<%= __('Enter your new password again') %>">
+        <span class="error-message nodisplay" id="NoMatchPassword">
+          <%= __('Passwords dont match') %>
+        </span>
+        <span class="error-message nodisplay" id="EmptyConfirmPassword">
+          <%= __('Enter a password') %>
+        </span>
+      </div>
+      <div class="form-actions ">
+        <button type="submit" class="btn-submit mt-3">
+          <%= __('Change Password') %>
+        </button>&nbsp;&nbsp;
+        <button type="button" class="btn-cancel mt-3" id="cancel-password-reset-button">
+          <%= __('Cancel') %>
         </button>
       </div>
-  
-      <!-- Change Password Form -->
-      <form id="change-password-form" class="nodisplay password-edit-container">
-        <h3 class="form-title text-center"><%= __('Change your password') %></h3>
-        <div class="form-group">
-          <label for="current-password" id="current-password-label"><%= __('Current password') %></label>
-          <input type="password" id="current-password" class="form-control" placeholder="<%= __('Enter your current password') %>">
-          <span class="error-message nodisplay" id="WrongPassword"><%= __('Incorrect current password') %></span>
-          <span class="error-message nodisplay" id="EmptyOldPassword"><%= __('Enter your current password') %></span>
-        </div>
-        <div class="form-group">
-          <label for="new-password" id="new-password-label"><%= __('New password') %></label>
-          <input type="password" id="new-password" class="form-control" placeholder="<%= __('Enter your new password') %>">
-          <span class="error-message nodisplay" id="UnsafeNewPassword"><%= __('Enter a safe password') %></span>
-          <span class="error-message nodisplay" id="EmptyNewPassword"><%= __('Enter a password') %></span>
-        </div>
-        <div class="form-group">
-          <label for="confirm-new-password" id="confirm-new-password-label"><%= __('Confirm new password') %></label>
-          <input type="password" id="confirm-new-password" class="form-control" placeholder="<%= __('Enter your new password again') %>">
-          <span class="error-message nodisplay" id="NoMatchPassword"><%= __('Passwords dont match') %></span>
-          <span class="error-message nodisplay" id="EmptyConfirmPassword"><%= __('Enter a password') %></span>
-        </div>
-        <div class="form-actions ">
-          <button type="submit" class="btn-submit mt-3"><%= __('Change Password') %></button>&nbsp;&nbsp;
-          <button type="button" class="btn-cancel mt-3" id="cancel-password-reset-button"><%= __('Cancel') %></button>
-        </div>
-      </form>
-    </div>
+    </form>
   </div>
-  
 
-  <!-- Modal Structure -->
-  <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h5 class="modal-title" id="deleteAccountModalLabel">
-            <%= __('Confirm Account Deletion') %>
-          </h5>
-          <button data-bs-dismiss="modal" aria-label="<%= __('Close') %>">X</button>
-        </div>
-
-        <!-- Modal Body -->
-        <div class="modal-body">
-          <%= __('Are you sure you want to delete your account? This action cannot be undone.') %>
-        </div>
-
-        <!-- Modal Footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            <%= __('Cancel') %>
-          </button>
-
-          <button id="deleteAccountButton" class="btn btn-danger">
-            <%= __('Delete Account') %>
-          </button>          
-          
-        </div>
-      </div>
-    </div>
-  </div>
   <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
   <script src="/js/Profile.js" nonce="<%= nonce %>"></script>
 </body>

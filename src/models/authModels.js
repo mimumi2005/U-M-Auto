@@ -155,3 +155,25 @@ export const SetNewResetToken = async (email, expires, resetToken) => {
     ]);
     return result;
 };
+
+export const deleteUserById = async (idUser) => {
+  try {
+    // Remove user from user_instance (active sessions)
+    await pool.query('DELETE FROM user_instance WHERE idUser = ?', [idUser]);
+
+    // Remove from workers if present
+    await pool.query('DELETE FROM workers WHERE idUser = ?', [idUser]);
+
+    // Remove from administrators if present
+    await pool.query('DELETE FROM administrators WHERE idUser = ?', [idUser]);
+
+    // Remove all notifications saved for the user if present
+    await pool.query('DELETE FROM notification_settings WHERE idUser = ?', [idUser]);
+
+    // Finally, delete user
+    await pool.query('DELETE FROM users WHERE idUser = ?', [idUser]);
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    throw err;
+  }
+};

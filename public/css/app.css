@@ -280,7 +280,7 @@
   }
 
   .nodisplay {
-    display: none;
+    display: none !important;
   }
 
   .text-red {
@@ -602,8 +602,8 @@
     margin-left: 5px;
     border-color: #6d6e6e9c;
     /* Change border color to match theme */
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     border-radius: 100%;
 
     background-color: #0000005b;
@@ -816,7 +816,7 @@
     margin-top: 20px;
     height: auto;
     overflow: visible;
-    min-height: calc(100vh - 101px);
+    min-height: calc(100vh - 125px);
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgb(24, 24, 24));
     color: #ffffff;
   }
@@ -1074,4 +1074,85 @@
   .customContainer {
     float: right;
     margin-right: 3%;
+  }
+
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(15, 15, 15, 0.7);
+    /* dark overlay with slight transparency */
+    z-index: 1050;
+  }
+
+  .popup-content {
+    background-color: #1e1e1e;
+    /* darker background for popup */
+    color: #e0e0e0;
+    /* light text for contrast */
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .popup-content h4 {
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .darken-background::before {
+    pointer-events: none;
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 15, 15, 0.4);
+    z-index: -1;
+  }
+
+
+  .goodbye-page {
+    background-color: #1c1c1c;
+    /* Dark background */
+    color: #f0f0f0;
+    /* Light text */
+    min-height: 100vh;
+    /* Fill viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .goodbye-heading {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .goodbye-text {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .goodbye-btn {
+    cursor: pointer;
+    border: 1px solid #f0f0f0;
+    color: #f0f0f0;
+  }
+
+  .goodbye-btn:hover {
+    background-color: #f0f0f0;
+    color: #1c1c1c;
   }

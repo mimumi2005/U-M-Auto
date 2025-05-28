@@ -99,8 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
             else if (appointment.statusName == 'Pending') {
                 DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate("(Click to cancel)")}</a>`;
                 delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
+                const popupInnerHtml = `<p>${translate("This will cancel your project for")} <b>${startDateCell.textContent}</b>!</p>`;
                 delayedCell.onclick = function () {
-                    cancelAppointment(appointment.idProjects, this);
+                    showConfirmationPopup(popupInnerHtml, () => {
+                        cancelAppointment(appointment.idProjects, this);
+                    });
                 };
             }
             else if (appointment.statusName == 'In Progress') {

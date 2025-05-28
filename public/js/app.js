@@ -82,14 +82,32 @@ function initMap() {
     title: 'U&M Auto'
   });
 
-  var infowindow = new google.maps.InfoWindow({
-    content: 'This is the location of the service!'
+  const infowindow = new google.maps.InfoWindow({
+    ariaLabel: "U&M Auto",
+    content: `
+      <h6 class=text-dark>${translate("Find us at this location")}!</h6>
+      <a 
+        href="https://www.google.com/maps/dir/?api=1&destination=${myLatLng.lat},${myLatLng.lng}" 
+        target="_blank" , class="text-center"
+      >
+        <b>${translate("Help me get there")}!</b>
+      </a>
+  `
   });
+
+  infowindow.addListener('domready', function() {
+  const headerContainer = document.querySelector('.gm-style-iw-ch');
+  if (headerContainer) {
+    headerContainer.innerHTML = '<h4 class="text-dark">U&M Auto</h4>';
+  }
+});
 
   marker.addListener('click', function () {
     infowindow.open(map, marker);
   });
 }
+
+
 
 // Price estimator
 function calculatePrice() {
@@ -214,17 +232,17 @@ function scrollToTop() {
 
 // Function to display a success alert for the user
 function showSuccessAlert(messageKey, callbackAfter) {
-	// Gets the elements in the page
+  // Gets the elements in the page
   const alertBox = document.getElementById('successAlert');
   const alertText = document.getElementById('successAlertMessage');
 
   if (alertBox && alertText) {
-	  // Adds the desired message to the element and displays it
+    // Adds the desired message to the element and displays it
     alertText.textContent = translate(messageKey);
     alertBox.classList.remove('nodisplay');
 
     setTimeout(() => {
-		// After element has been shown optional callback (a function called after the alert)
+      // After element has been shown optional callback (a function called after the alert)
       alertBox.classList.add('nodisplay');
       if (typeof callbackAfter === 'function') callbackAfter();
     }, 2000);
@@ -233,21 +251,60 @@ function showSuccessAlert(messageKey, callbackAfter) {
 
 // Function to display an error alert
 function showErrorAlert(messageKey) {
-	// Gets the elements in the page
+  // Gets the elements in the page
   const alertBox = document.getElementById('errorAlert');
   const alertText = document.getElementById('errorAlertMessage');
 
   if (alertBox && alertText) {
-	  // Adds the message to the element and displays it
+    // Adds the message to the element and displays it
     alertText.textContent = translate(messageKey);
     alertBox.classList.remove('nodisplay');
 
     setTimeout(() => {
-		// Hides it after 2 seconds
+      // Hides it after 2 seconds
       alertBox.classList.add('nodisplay');
     }, 2000);
   }
 }
+
+// Show confirmation popup function
+function showConfirmationPopup(descriptionHTML, confirmCallback) {
+  const popup = document.getElementById('confirmationPopup');
+  const popupContent = popup.querySelector('.popup-content'); // Get the content area
+  const description = document.getElementById('confirmationDescription');
+  const confirmButton = document.getElementById('confirmButton');
+  const cancelButton = document.getElementById('cancelButton');
+
+  description.innerHTML = descriptionHTML;
+
+  // Show the popup
+  popup.classList.remove('nodisplay');
+
+  // Remove any previous click listeners on the confirm button
+  const newConfirmButton = confirmButton.cloneNode(true);
+  confirmButton.parentNode.replaceChild(newConfirmButton, confirmButton);
+
+  // Confirm button: execute the callback and hide
+  newConfirmButton.addEventListener('click', () => {
+    popup.classList.add('nodisplay');
+    if (typeof confirmCallback === 'function') {
+      confirmCallback();
+    }
+  });
+
+  // Cancel button: just hide the popup
+  cancelButton.addEventListener('click', () => {
+    popup.classList.add('nodisplay');
+  });
+
+  // Clicking outside the content area: hide the popup
+  popup.addEventListener('click', (event) => {
+    if (!popupContent.contains(event.target)) {
+      popup.classList.add('nodisplay');
+    }
+  });
+}
+
 
 // Custom scroll function, used for services page
 function slowScrollTo(targetOffset, duration) {
@@ -654,6 +711,7 @@ function setLanguage(lang) {
   const url = new URL(window.location.href);
   url.searchParams.set('lang', lang);
   window.location.href = url.toString();
+  window.currentLanguage = lang;
 }
 
 // Function to set the flag based on the current language

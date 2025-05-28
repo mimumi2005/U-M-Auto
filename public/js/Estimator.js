@@ -1,8 +1,10 @@
 const flags = []; // Array of flags for each coordinate set
-const overlayPrices = [50, 50, 50, 75, 75, 75, 75, 100, 100, 100, 100, 50, 50];
+const paintPrice = [100, 125, 75, 75, 75, 75, 75, 100, 100, 100, 100, 75, 75];
+const rustWorkPrice = [200, 250, 150, 150, 150, 150, 150, 200, 200, 200, 200, 150, 150];
 let activeOverlayIndex = -1; // Index of the currently active overlay
 
-function createRedOverlayPolygons() {
+function createOverlayPolygons() {
+    const isPaintJob = window.location.hash === '#paintjob' ? true : false;
     // Get the map image element
     const mapImage = document.getElementById('carImage');
 
@@ -29,7 +31,8 @@ function createRedOverlayPolygons() {
         "18,199,18,171,26,164,32,162,38,157,45,160,48,162,60,163,70,167,69,183,69,209,64,214,64,282,69,289,69,310,69,333,57,336,50,336,42,342,36,338,24,334,19,325,21,260,18,236" // Front Bumper map
     ]
 
-    ctx.fillStyle = 'rgba(50, 50, 50, 0.5)'; // Red color with 50% opacity
+
+    ctx.fillStyle = isPaintJob ? 'rgba(50, 50, 50, 0.5)' : 'rgba(138, 42, 42, 0.5)';
 
     // Initialize flags
     coordinates.forEach(() => {
@@ -56,7 +59,7 @@ function createRedOverlayPolygons() {
         let totalPrice = 0;
         flags.forEach((isActive, index) => {
             if (isActive) {
-                totalPrice += overlayPrices[index];
+                totalPrice += isPaintJob ? paintPrice[index] : rustWorkPrice[index];
 
             }
         });
@@ -153,7 +156,7 @@ window.addEventListener('beforeunload', function (event) {
 });
 
 window.addEventListener('load', () => {
-    createRedOverlayPolygons();
+    createOverlayPolygons();
 });
 
 
@@ -209,6 +212,7 @@ checkboxes.forEach((checkbox) => {
 });
 
 function updateEstimatorUIByHash() {
+    createOverlayPolygons();
     const hash = window.location.hash;
     console.log("Current hash:", hash);
 

@@ -134,12 +134,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add event listener to form submission button
     document.getElementById('workerAddSubmitButton').addEventListener('click', function (event) {
+        event.preventDefault();
         document.getElementById('email-red').style.color = "rgb(255, 255, 255)";
         document.getElementById('NoAccountAdd').classList.add('nodisplay');
         document.getElementById('WorkerExsists').classList.add('nodisplay');
         document.getElementById('email').classList.remove('form-control-incorrect');
-        // Prevent default button behavior
-        event.preventDefault();
 
         // Create JSON object
         const userData = {
@@ -148,6 +147,14 @@ document.addEventListener('DOMContentLoaded', function () {
             administrator: document.getElementById('administrator').checked
         };
 
+        const popupInnerHtml = `<p>${translate("This will give ")} <b>${userData.email}'s</b> ${translate("worker permissions")}</b>!</p>`;
+        showConfirmationPopup(popupInnerHtml, () => {
+            addWorker(userData);
+        });
+    });
+
+    // Api call to add worker
+    async function addWorker(userData) {
         fetch('/admin/register-worker', {
             method: 'POST',
             headers: {
@@ -160,8 +167,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 alert(`Cannot connect to server :P ${error}`);
             });
-    });
+    }
 
+    // Function to handle the response from add worker API call
     function handleAddWorkerResponses(response, isAdmin) {
         // If succesful announces it and resets form
         response.json().then(data => {
@@ -200,17 +208,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add event listener to form submission button
     document.getElementById('workerRemoveSubmitButton').addEventListener('click', function (event) {
+        event.preventDefault();
         document.getElementById('removalEmailDisplay').style.color = "rgb(255, 255, 255)";
         document.getElementById('NoAccountRemove').classList.add('nodisplay');
         document.getElementById('removalEmail').classList.remove('form-control-incorrect');
-        // Prevent default button behavior
-        event.preventDefault();
 
         // Create JSON object
         const userData = {
             email: document.getElementById('removalEmail').value,
         };
 
+        const popupInnerHtml = `<p>${translate("This will delete users ")} <b>${userData.email}'s</b> ${translate("worker account")}</b>!</p>`;
+        showConfirmationPopup(popupInnerHtml, () => {
+            removeWorker(userData);
+        });
+    });
+
+    // APi call to remove worker
+    async function removeWorker(userData) {
         fetch('/admin/remove-worker', {
             method: 'POST',
             headers: {
@@ -223,8 +238,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 alert(`Cannot connect to server :P ${error}`);
             });
-    });
+    };
 
+    // Function to handle the response from remove worker API call
     function handleRemoveWorkerResponses(response) {
         // If succesful announces it and resets form
         response.json().then(data => {
@@ -350,6 +366,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function renderTable(sortedData) {
             tableBody.innerHTML = ''; // Clear any previous content
+            // Check if no data
+            if (sortedData.length === 0) {
+                const noDataRow = document.createElement('tr');
+                const noDataCell = document.createElement('td');
+                noDataCell.colSpan = 7;
+                noDataCell.classList.add('text-center', 'text-muted', 'p-4', 'h1');
+                noDataCell.textContent = translate('No projects found.');
+                noDataRow.appendChild(noDataCell);
+                tableBody.appendChild(noDataRow);
+
+                const existingButton = document.getElementById('show-more-projects-button');
+                if (existingButton) existingButton.remove();
+
+                return;
+            }
 
             sortedData.forEach(appointment => {
                 const row = document.createElement('tr');
@@ -480,10 +511,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Create a small button for each status option
                     buttonsToShow.forEach(buttonConfig => {
+                        const popupInnerHtml = `<p>${translate("This will change")} <b>${appointment.Username}'s</b> ${translate("projects status to")} <b>"${buttonConfig.action}"</b>!</p>`;
                         const statusButton = document.createElement('button');
                         statusButton.textContent = translate(buttonConfig.name);
-                        statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
-                        statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
+                        statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn');
+
+                        statusButton.onclick = () =>
+                            showConfirmationPopup(popupInnerHtml, () => {
+                                updateStatus(buttonConfig.action);
+                            }); // Open confirmation popup before changing status
+
                         statusCell.appendChild(statusButton);
                     });
                 }
@@ -499,17 +536,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 delayedCell.style.width = "15%";
 
                 if (appointment.Delayed === 1) {
-                    DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to continue project)')}</a>`;
-                    delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project has been delayed')}</span>` + DelayLink.innerHTML;
-                    delayedCell.onclick = function () {
-                        removeDelayed(appointment.idProjects);
-                    };
+                    DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to finish project)')}</a>`;
+                    delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project end date has changed due to delay')}</span>` + DelayLink.innerHTML;
+                    const popupInnerHtml = `<p>${translate("This will finish")} <b>${appointment.Username}'s</b> ${translate("project and send an email to them")}</b>!</p>`;
+                    delayedCell.onclick = () =>
+                        showConfirmationPopup(popupInnerHtml, () => {
+                            removeDelayed(appointment.idProjects);
+                        });
                 }
                 else if (appointment.statusName == 'Completed') {
                     delayedCell.innerHTML = `<span class="badge bg-success">${translate('Project is finished')}</span>` + DelayLink.innerHTML;
                 }
                 else {
-
                     DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate("(Click to delay)")}</a>`;
                     delayedCell.innerHTML = `<span class="badge bg-secondary">${translate('Project has no delays')}</span>` + DelayLink.innerHTML;
                     delayedCell.onclick = function () {
@@ -592,7 +630,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const tableBody = document.getElementById('user-table-body');
         tableBody.innerHTML = ''; // Clear any previous content
 
+        // Check if no data
+        if (users.length === 0) {
+            const noDataRow = document.createElement('tr');
+            const noDataCell = document.createElement('td');
+            noDataCell.colSpan = 7;
+            noDataCell.classList.add('text-center', 'text-muted', 'p-4', 'h1');
+            noDataCell.textContent = translate('No users match the filters.');
+            noDataRow.appendChild(noDataCell);
+            tableBody.appendChild(noDataRow);
+
+            const existingButton = document.getElementById('show-more-users-button');
+            if (existingButton) existingButton.remove();
+
+            return;
+        }
+
         users.forEach(user => {
+
             // Create a new row for each user
             const row = document.createElement('tr');
 
@@ -659,6 +714,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const tableBody = document.getElementById('worker-table-body');
         tableBody.innerHTML = ''; // Clear any previous content
 
+        // Check if no data
+        if (users.length === 0) {
+            const noDataRow = document.createElement('tr');
+            const noDataCell = document.createElement('td');
+            noDataCell.colSpan = 7;
+            noDataCell.classList.add('text-center', 'text-muted', 'p-4', 'h1');
+            noDataCell.textContent = translate('No users match the filters.');
+            noDataRow.appendChild(noDataCell);
+            tableBody.appendChild(noDataRow);
+
+            const existingButton = document.getElementById('show-more-users-button');
+            if (existingButton) existingButton.remove();
+
+            return;
+        }
+
         users.forEach(user => {
             // Create a new row for each user
             const row = document.createElement('tr');
@@ -714,8 +785,11 @@ document.addEventListener('DOMContentLoaded', function () {
             adminPermLink.innerHTML = translate('(Click to give administrator)');
             adminPermLink.href = '#';
             adminPermLink.classList.add('text-danger');
+            const popupInnerHtml = `<p>${translate("This will give administrator permissions to user with email:")} <b>${emailCell.textContent}</b>!</p>`;
             adminPermLink.onclick = function () {
-                giveAdmin(user.idUser);
+                showConfirmationPopup(popupInnerHtml, () => {
+                    giveAdmin(user.idUser);
+                });
             };
             adminPermCell.appendChild(adminPermLink);
             row.appendChild(adminPermCell);
@@ -736,6 +810,22 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('workerDataContainer').classList.add('nodisplay');
         const tableBody = document.getElementById('admin-table-body');
         tableBody.innerHTML = ''; // Clear any previous content
+
+        // Check if no data
+        if (users.length === 0) {
+            const noDataRow = document.createElement('tr');
+            const noDataCell = document.createElement('td');
+            noDataCell.colSpan = 8;
+            noDataCell.classList.add('text-center', 'text-muted', 'p-4', 'h1');
+            noDataCell.textContent = translate('No users match the filters.');
+            noDataRow.appendChild(noDataCell);
+            tableBody.appendChild(noDataRow);
+
+            const existingButton = document.getElementById('show-more-users-button');
+            if (existingButton) existingButton.remove();
+
+            return;
+        }
 
         users.forEach(user => {
             // Create a new row for each user
@@ -799,9 +889,13 @@ document.addEventListener('DOMContentLoaded', function () {
             adminPermLink.innerHTML = translate('(Click to remove administrator)');
             adminPermLink.href = '#';
             adminPermLink.classList.add('text-danger');
+            const popupInnerHtml = `<p>${translate("This will remove administrator permissions from user with email:")} <b>${emailCell.textContent}</b>!</p>`;
             adminPermLink.onclick = function () {
-                removeAdmin(user.idUser);
+                showConfirmationPopup(popupInnerHtml, () => {
+                    removeAdmin(user.idUser);
+                });
             };
+
             adminPermCell.appendChild(adminPermLink);
             row.appendChild(adminPermCell);
 

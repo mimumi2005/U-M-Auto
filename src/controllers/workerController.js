@@ -76,7 +76,7 @@ export const changeEndDate = async (req, res) => {
     });
 
     const appointment = await workerModel.getProjectById(idProjects);
-    await sendAppointmentDateUpdateAlert(appointment, readableDate);
+    await sendAppointmentDateUpdateAlert(appointment[0], readableDate);
     res.json(result);
   } catch (err) {
     console.error('Error updating end date:', err);

@@ -299,23 +299,28 @@ function fetchUserInfo() {
         });
 }
 
-document.getElementById('deleteAccountButton').addEventListener('click', async function () {
-    this.disabled = true;
-    this.classList.add('disabled');
+document.getElementById('deleteAccountBtn').addEventListener('click', async function () {
+    const popupInnerHtml = `<p>${translate("This will permanently delete")} <b>${translate("your account")}</b>!</p>`;
+    showConfirmationPopup(popupInnerHtml, () => {
+        DeleteAccount();
+    });
+});
+async function DeleteAccount(){
     try {
-        const response = await fetch(`/user-delete`, {
+        const response = await fetch(`/auth/user-delete`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'csrf-token': csrfToken
             }
         });
-
         if (response.ok) {
-            window.location.href = '/goodbye';
+            window.location.href = '/Goodbye';
+        }
+        else{
+            showErrorAlert(translate("Failed to delete account. Please try again later."), 3000);
         }
     } catch (err) {
         console.error('Error deleting account:', err);
-        this.disabled = false;
-        this.classList.remove('disabled');
     }
-});
+}

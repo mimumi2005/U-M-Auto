@@ -46,6 +46,21 @@
     <!-- End Google Tag Manager (noscript) -->
     <%- include('./partials/header') %>
     <main>
+    <div id="confirmationPopup" class="popup-overlay nodisplay">
+        <div class="rounded p-4 popup-content text-white">
+            <h4 class="mb-3"><%= __('Are you sure?') %></h4>
+            <hr class="Divider bg-white"> 
+            <p id="confirmationDescription"></p>
+            <div class="  p-3 mt-3">
+                <button id="cancelButton" class="btn btn-outline-secondary float-left">
+                    <%= __('Cancel') %>
+                </button>
+                <button id="confirmButton" class="btn btn-outline-danger float-right">
+                    <%= __('Confirm') %>
+                </button>
+            </div>
+        </div>
+    </div>
         <%- body %>
     </main>
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage, getAppointmentPage,getServicesPage, getRecoverPage  } from '../controllers/pageController.js';
+import { getHomePage, getEstimatorPage, getAboutUsPage, getLoginPage, getSignUpPage, getAppointmentPage,getServicesPage, getRecoverPage, goodbyePage  } from '../controllers/pageController.js';
 
 import {generateCSRFToken} from '../middleware/CSRF.js'
 import {checkSession} from '../middleware/checkSession.js';
@@ -14,6 +14,7 @@ const router = express.Router();
 
 // Route for basic pages
 router.get('/', getHomePage);
+router.get('/goodbye', goodbyePage);
 
 // Logged user only pages
 router.get('/Appointments',generateCSRFToken, checkSession, getAppointmentPage);

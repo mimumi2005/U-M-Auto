@@ -5,7 +5,7 @@ import {sanitizeInputUsers} from '../middleware/escapeHTMLusers.js';
 import {checkSession} from '../middleware/checkSession.js';
 import {verifyRecaptcha} from '../middleware/verifyRecaptcha.js';
 import { 
-    loginUser, updateNotificationSettings, handleLogout, handleSignUp, handleCreateAppointment, changePassword, updateUsername, updateName, cancelAppointment,
+    loginUser, updateNotificationSettings, handleLogout, handleSignUp, handleCreateAppointment, changePassword, updateUsername, updateName, cancelAppointment, deleteUser,
     getProfilePage, getUserSettingsPage,
     getNotificationSettings, handleGetUserByUUID, getUserAppointments, getUserProfileInfo
 } from '../controllers/authController.js';
@@ -29,8 +29,10 @@ router.post('/change-password',checkSession,validateCSRFToken, sanitizeInputUser
 router.post('/update-username',checkSession,validateCSRFToken, sanitizeInputUsers, updateUsername);
 router.post('/update-name',checkSession,validateCSRFToken, sanitizeInputUsers,updateName);
 
-// Routes for updating data (PATCH requests need CSRF)
+// Routes for updating data (PATCH and DELETE requests need CSRF)
 router.patch('/cancel-appointment/:idProject', checkSession, validateCSRFToken, cancelAppointment);
+router.delete('/user-delete', checkSession, validateCSRFToken, deleteUser);
+
 
 // Routes for data fetching (GET requests don’t need CSRF)
 router.get('/userID',checkSession, handleGetUserByUUID);

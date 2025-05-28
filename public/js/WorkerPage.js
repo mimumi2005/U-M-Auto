@@ -107,9 +107,6 @@ function searchProjectByIDByWorker(idProjects) {
     if (document.getElementById('ProjectIDInput')) {
         document.getElementById('ProjectIDInput').value = '';
     }
-    if (document.getElementById('InvalidProjectID')) {
-        document.getElementById('InvalidProjectID').classList.add('nodisplay');
-    }
     // Make a fetch request to your backend to retrieve all user data
 
     fetch(`/worker/project-by-ID/${idProjects}`)
@@ -119,7 +116,7 @@ function searchProjectByIDByWorker(idProjects) {
             if (data[0]) {
                 displayProjectDataForWorker(data);
             }
-            else { document.getElementById('InvalidProjectID').classList.remove('nodisplay'); }
+            else { showErrorAlert('Project not found'); }
 
         })
         .catch(error => console.error('Error fetching user data:', error));
@@ -303,20 +300,22 @@ function displayProjectDataForWorker(data) {
 
                 // Create a small button for each status option
                 buttonsToShow.forEach(buttonConfig => {
+                    const popupInnerHtml = `<p>${translate("This will change")} <b>${appointment.Username}'s</b> ${translate("projects status to")} <b>"${buttonConfig.action}"</b>!</p>`;
                     const statusButton = document.createElement('button');
                     statusButton.textContent = translate(buttonConfig.name);
-                    statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn'); // Styling buttons btn-sm  
-                    statusButton.onclick = () => updateStatus(buttonConfig.action); // Set new status on click
+                    statusButton.classList.add('btn', buttonConfig.class, 'btn-sm', 'm-1', 'time-button', 'text-white', 'status-btn');
+
+                    statusButton.onclick = () =>
+                        showConfirmationPopup(popupInnerHtml, () => {
+                            updateStatus(buttonConfig.action);
+                        }); // Open confirmation popup before changing status
+
                     statusCell.appendChild(statusButton);
                 });
             }
-
             // Initial render of buttons based on current status
             renderButtons();
             row.appendChild(statusCell);
-
-
-
 
             // Delay Status
             const delayedCell = document.createElement('td');
@@ -324,11 +323,13 @@ function displayProjectDataForWorker(data) {
             const DelayLink = document.createElement('a');
 
             if (appointment.Delayed === 1) {
+                const popupInnerHtml = `<p>${translate("This will finish")} <b>${appointment.Username}'s</b> ${translate("project and send an email to them")}</b>!</p>`;
                 DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to finish project)')}</a>`;
                 delayedCell.innerHTML = `<span class="badge bg-danger">${translate('Project end date has changed due to delay')}</span>` + DelayLink.innerHTML;
-                delayedCell.onclick = function () {
-                    removeDelayed(appointment.idProjects);
-                };
+                delayedCell.onclick = () =>
+                    showConfirmationPopup(popupInnerHtml, () => {
+                        removeDelayed(appointment.idProjects);
+                    });
             } else {
 
                 DelayLink.innerHTML = delayedCell.innerHTML + `<br><a class="text-light" href="#">${translate('(Click to delay)')}</a>`;
@@ -575,13 +576,19 @@ function removeDelayed(idProjects) {
 
 function handleEndDateKeyPress(event) {
     if (event.key === 'Enter') { // Assuming you want to handle 'Enter' key press
-        projectChangeEndTimeByWorker(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
+        const popupInnerHtml = `<p>${translate('This will update the end date projection and set the project to "Delayed"')}!</p>`;
+        showConfirmationPopup(popupInnerHtml, () => {
+            projectChangeEndTimeByWorker(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
+        });
     }
 }
 
 // Add event listener to the button
 document.getElementById('changeEndTimeButton').addEventListener('click', function () {
-    projectChangeEndTimeByWorker(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
+    const popupInnerHtml = `<p>${translate('This will update the end date projection and set the project to "Delayed"')}!</p>`;
+    showConfirmationPopup(popupInnerHtml, () => {
+        projectChangeEndTimeByWorker(document.getElementById('project_id').textContent, document.getElementById('dateinput').value);
+    });
 });
 
 // Add event listener to the datetime input
