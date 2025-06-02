@@ -646,5 +646,14 @@
 	"No users match the filters.": "No users match the filters.",
 	"This will delete users ": "This will delete users ",
 	"worker account": "worker account",
-	"This will update the end date projection and set the project to \"Delayed\"": "This will update the end date projection and set the project to \"Delayed\""
+	"This will update the end date projection and set the project to \"Delayed\"": "This will update the end date projection and set the project to \"Delayed\"",
+	"Car Info:": "Car Info:",
+	"Additional Info": "Additional Info",
+	"Car Brand": "Car Brand",
+	"Car Model": "Car Model",
+	"Car Year": "Car Year",
+	"Car Brand- FORD": "Car Brand- FORD",
+	"Additional Info:": "Additional Info:",
+	"Selected Date Range": "Selected Date Range",
+	"Creating appointment...": "Creating appointment..."
 }

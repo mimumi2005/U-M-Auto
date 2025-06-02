@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchCarBrands();
 
 
-    document.getElementById('appointmentForm').addEventListener('submit', function (event) {
+    document.getElementById('appointmentForm').addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent default form submission
         const repairTypeSelect = document.getElementById('repairType');
         submitButton = this.querySelector('button[type="submit"]');
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         // Retrieve form data
-        const additionalInfo = getAdditionalInfo();
+        const additionalInfo = await getAdditionalInfo();
         submitButton.disabled = true;
         submitButton.classList.add('disabled');
         // Fetch user information from the server
@@ -191,8 +191,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                             return response.json();
                         })
-                        .then(data => {
-
+                        .then(async data => {
+                            showSuccessAlert("Creating appointment...");
+                            submitButton.disabled = true;
+                            submitButton.classList.add('disabled');
+                            const translatable = document.getElementById('additionalInfo').value
+                            await translateDynamicFromEnglish(translatable, 'lv');
+                            await translateDynamicFromEnglish(translatable, 'ru');
+                            await translateDynamicFromEnglish(translatable, 'de');
                             showSuccessAlert("Appointment registered successfully");
                             setTimeout(() => {
                                 window.location.href = '/auth/UserAppointment';
@@ -331,7 +337,6 @@ document.addEventListener('DOMContentLoaded', function () {
         timeContainer.appendChild(label);
         timeContainer.appendChild(timeContainerDiv);
     }
-
 
     /* Scripts for calendar */
     const daysOfWeekElement = document.getElementById('daysOfWeek');
@@ -682,7 +687,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add the selected time paragraph to the timeContainer
         timeContainer.insertAdjacentHTML('beforeend', selectedTimeHTML);
     }
-    function getAdditionalInfo() {
+    async function getAdditionalInfo() {
         const carBrand = document.getElementById('carBrand').value || 'No brand selected';
         const carModel = document.getElementById('carModel').value || 'No model selected';
         const carYear = document.getElementById('carYear').value || 'No year selected';
@@ -693,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function () {
         Car Info:
           Car Brand- ${carBrand}
           Car Model- ${carModel}
-          Car Year- ${carYear}\n\nAdditional Info: \n${additionalInfo}
+          Car Year- ${carYear}\n\nAdditional Info: \n${await translateDynamicToEnglish(additionalInfo)}
         `.trim();
 
         return combinedInfo;

@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import expressLayouts from "express-ejs-layouts";
 import i18n from "i18n";
+import fs from 'fs';
 
 // Middleware
 import { cacheControlMiddleware } from "./src/middleware/preventCaching.js";
@@ -20,7 +21,7 @@ import { generateNonce } from "./src/middleware/nonceGen.js";
 import pool from './src/config/db.js';
 import routes from "./src/routes/index.js";
 
-import "./src/models/cronJob.js";
+import "./src/helpers/cronJob.js";
 
 // Replicating __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -56,6 +57,7 @@ const commonCDNs = [
   "https://www.gstatic.com",
   "https://www.googletagmanager.com",
   "https://maps.googleapis.com",
+  "https://api.mymemory.translated.net"
 ];
 
 app.use(
@@ -112,10 +114,13 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(attachUser);
+
 // Initialize i18n
+const staticLocalesPath = path.join('locales', 'static');
+const dynamicLocalesPath = path.join('locales', 'dynamic');
 i18n.configure({
   locales: ["en", "lv", "de", "ru"],
-  directory: path.join(__dirname, "locales"),
+  directory: staticLocalesPath,
   defaultLocale: "en",
   autoReload: true,
   syncFiles: true
@@ -128,13 +133,35 @@ app.use(expressLayouts);
 
 // Language Middleware
 app.use((req, res, next) => {
+  const lang = req.query.lang || req.session.language || 'en';
+
+  // Load static translations
+  const staticFile = path.join(staticLocalesPath, `${lang}.json`);
+  const staticTranslations = fs.existsSync(staticFile)
+    ? JSON.parse(fs.readFileSync(staticFile, 'utf-8'))
+    : {};
+
+  // Load dynamic translations
+  const dynamicFile = path.join(dynamicLocalesPath, `${lang}.json`);
+  const dynamicTranslations = fs.existsSync(dynamicFile)
+    ? JSON.parse(fs.readFileSync(dynamicFile, 'utf-8'))
+    : {};
+
+  // Merge them (dynamic overrides static if same key)
+  const mergedTranslations = {
+    ...staticTranslations,
+    ...dynamicTranslations
+  };
+
+  // Initialize i18n for this request
   i18n.init(req, res);
-  const lang = req.query.lang || req.session.language || "en";
+
   req.session.language = lang;
   i18n.setLocale(req, lang);
 
+  // Provide custom __ function using merged translations
+  res.locals.__ = (key) => mergedTranslations[key] || key;
   res.locals.language = lang;
-  res.locals.__ = res.__;
 
   next();
 });
@@ -160,55 +187,4 @@ const PORT = process.env.PORT || 80;
 
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
-});
-
-app.post("/add-missing-key", (req, res) => {
-  const { key } = req.body;
-  i18n.__({ phrase: key, locale: req.session.language });
-  res.sendStatus(200);
-});
-
-// Saving session info
-app.get('/api/getUserSession', (req, res) => {
-  if (req.user) {
-    res.json({
-      isLoggedIn: true,
-      userId: req.user.id,
-      username: req.user.username,
-      UUID: req.user.UUID,
-      isAdmin: req.user.isAdmin,
-      isWorker: req.user.isWorker
-    });
-  } else {
-    res.json({ isLoggedIn: false });
-  }
-});
-
-
-// Getting all project dates for calendar
-app.get('/api/all-project-dates/:month/:year', async (req, res) => {
-  const MonthSelected = req.params.month;
-  const YearSelected = req.params.year;
-
-  try {
-    const sql_query = `
-        SELECT StartDate, EndDateProjection 
-        FROM projects 
-        WHERE 
-          (YEAR(StartDate) = ? AND MONTH(StartDate) = ?) OR 
-          (YEAR(EndDateProjection) = ? AND MONTH(EndDateProjection) = ?) OR
-          (StartDate < LAST_DAY(CONCAT(?, '-', ?, '-01')) AND EndDateProjection > LAST_DAY(CONCAT(?, '-', ?, '-01')))
-    `;
-    const [results] = await pool.query(sql_query, [
-        YearSelected, MonthSelected,
-        YearSelected, MonthSelected,
-        YearSelected, MonthSelected,
-        YearSelected, MonthSelected
-    ]);
-
-    res.json(results);
-  } catch (error) {
-    console.error("Error fetching project dates:", error);
-    res.status(500).send("An error occurred while fetching project dates.");
-  }
 });

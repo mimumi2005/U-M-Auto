@@ -1,4 +1,4 @@
-import { sendEmail } from '../models/emailService.js';
+import { sendEmail } from '../helpers/emailService.js';
 import i18n from 'i18n'; // Import i18n for internationalization
 import { verifyResetToken } from '../models/authModels.js';
 import * as authModel from '../models/authModels.js';

@@ -9,6 +9,7 @@ import userRoutes from './userRoutes.js';
 import adminRoutes from './adminRoutes.js';
 import workerRoutes from './workerRoutes.js';
 import serviceRoutes from './serviceRoutes.js';
+import translationRoutes from './translationRoutes.js';
 
 const router = express.Router();
 
@@ -35,6 +36,7 @@ router.use('/auth', authRoutes);
 router.use('/user', userRoutes);
 router.use('/admin', adminRoutes);
 router.use('/worker', workerRoutes);
+router.use('/translation', translationRoutes);
 router.use("/api", serviceRoutes);
 
 export default router;

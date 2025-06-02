@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            sortedData.forEach(appointment => {
+            sortedData.forEach(async appointment => {
                 const row = document.createElement('tr');
 
 
@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Project Info
                 const projectInfoCell = document.createElement('td');
                 projectInfoCell.setAttribute('data-label', translate('Project Info'));
-                projectInfoCell.textContent = appointment.ProjectInfo;
+                projectInfoCell.textContent = await extractAndTranslateCarInfo(appointment.ProjectInfo);
                 projectInfoCell.style.width = "30%";
                 projectInfoCell.classList.add('text-white');
                 row.appendChild(projectInfoCell);

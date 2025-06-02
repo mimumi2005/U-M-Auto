@@ -50,3 +50,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// Initialize the map
+function initMap() {
+  var myLatLng = { lat: 57.234165, lng: 22.707727 };
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: myLatLng,
+    zoom: 11
+  });
+
+  var marker = new google.maps.Marker({
+    map: map,
+    position: myLatLng,
+    title: 'U&M Auto'
+  });
+
+  const infowindow = new google.maps.InfoWindow({
+    ariaLabel: "U&M Auto",
+    content: `
+      <h6 class=text-dark>${translate("Find us at this location")}!</h6>
+      <a 
+        href="https://www.google.com/maps/dir/?api=1&destination=${myLatLng.lat},${myLatLng.lng}" 
+        target="_blank" , class="text-center"
+      >
+        <b>${translate("Help me get there")}!</b>
+      </a>
+  `
+  });
+
+  infowindow.addListener('domready', function () {
+    const headerContainer = document.querySelector('.gm-style-iw-ch');
+    if (headerContainer) {
+      headerContainer.innerHTML = '<h4 class="text-dark">U&M Auto</h4>';
+    }
+  });
+
+  marker.addListener('click', function () {
+    infowindow.open(map, marker);
+  });
+}

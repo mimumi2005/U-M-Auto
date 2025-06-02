@@ -254,5 +254,18 @@ function updateEstimatorUIByHash() {
     }
 }
 
+// Price estimator
+function calculatePrice() {
+  const checkboxes = document.querySelectorAll('.form-check-input');
+  const totalPriceElement = document.getElementById('totalPrice');
+  let totalPrice = 0;
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      totalPrice += parseFloat(checkbox.value);
+    }
+  });
+  totalPriceElement.textContent = `Estimated Price: $${totalPrice.toFixed(2)}`;
+}
+
 window.addEventListener('DOMContentLoaded', updateEstimatorUIByHash);
 window.addEventListener('hashchange', updateEstimatorUIByHash);

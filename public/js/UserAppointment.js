@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Determine how many to show initially
         const initialDisplayCount = window.innerWidth < 768 ? 1 : 3;
 
-        data.forEach((appointment, index) => {
+        data.forEach(async(appointment, index) => {
             const row = document.createElement('tr');
             row.classList.add('appointment-row');
 
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const projectInfoCell = document.createElement('td');
             projectInfoCell.setAttribute('data-label', translate('Project Info'));
-            projectInfoCell.textContent = appointment.ProjectInfo;
+            projectInfoCell.textContent = await extractAndTranslateCarInfo(appointment.ProjectInfo);
             projectInfoCell.classList.add('text-white', 'min-width-200px');
             row.appendChild(projectInfoCell);
 

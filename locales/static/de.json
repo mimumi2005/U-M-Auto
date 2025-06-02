@@ -625,5 +625,14 @@
 	"No users match the filters.": "Es wurde kein Benutzer mit bestimmten Filtern gefunden.",
 	"This will delete users ": "Wird vom Benutzer gelöscht ",
 	"worker account": "Mitarbeiterkonto",
-	"Back to login": "Back to login"
+	"Back to login": "Back to login",
+	"Car Info:": "Car Info:",
+	"Additional Info": "Additional Info",
+	"Car Brand": "Car Brand",
+	"Car Model": "Car Model",
+	"Car Year": "Car Year",
+	"Car Brand- FORD": "Car Brand- FORD",
+	"Additional Info:": "Additional Info:",
+	"Selected Date Range": "Selected Date Range",
+	"Creating appointment...": "Creating appointment..."
 }

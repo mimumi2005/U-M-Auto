@@ -1,13 +1,11 @@
 // cronJob.js
 import cron from 'node-cron';
-import { sendAppointmentReminder } from './emailService.js';
-import { getAppointmentsForTomorrow, getAppointmentsForHour, getAppointmentsForLastHour } from './appointmentModels.js';
-import { sendAppointmentStatusUpdateAlert  } from '../models/emailService.js';
+import { sendAppointmentReminder, sendEmail } from './emailService.js';
+import { getAppointmentsForTomorrow, getAppointmentsForHour } from '../models/appointmentModels.js';
 import { updateTenureForAllWorkers } from './updateTenure.js';
-import { getNotificationSettings } from './notificationModels.js';  
-import * as workerModel from '../models/workerModels.js';
+import { getNotificationSettings } from '../models/notificationModels.js';  
 
-// Schedule a job to run every day at midnight
+// Schedule a job to run every day at midnights
 cron.schedule('0 0 * * *', async () => {
     console.log('Updating tenure...');
     updateTenureForAllWorkers();
@@ -80,18 +78,4 @@ cron.schedule('0 * * * *', async () => {
     } catch (error) {
         console.error('Error checking appointments:', error);
     }
-
-    // console.log('\ Finishing projects that arent delayed...');
-    // try {
-    //     const appointments = await getAppointmentsForLastHour();
-    //     for (const appointment of appointments) {
-    //         console.log('Finishing project:', appointment);
-    //         if (appointment.Delayed != true) {
-    //             await workerModel.updateProjectStatus("Finished", appointment.idProjects);
-    //             await sendAppointmentStatusUpdateAlert(appointment, "Finished");
-    //         }
-    //     }
-    // } catch (error) {
-    //     console.error('Error checking appointments:', error);
-    // }
 });

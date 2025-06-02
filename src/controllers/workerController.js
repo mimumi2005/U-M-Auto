@@ -1,6 +1,6 @@
 import * as workerModel from '../models/workerModels.js';
 import i18n from 'i18n';
-import { sendAppointmentDateUpdateAlert,sendAppointmentStatusUpdateAlert  } from '../models/emailService.js';
+import { sendAppointmentDateUpdateAlert,sendAppointmentStatusUpdateAlert  } from '../helpers/emailService.js';
 
 export const workerDashboard = (req, res) => {
   const csrfTokenValue = req.csrfToken;

@@ -134,10 +134,10 @@ exports.seed = async function (knex) {
     const futureEnd = addHours(futureStart, futureType.duration);
 
     const futureProjectInfo = `Car Info:\n` +
-      `      Car Brand- ${getRandomItem(carBrands)}\n` +
-      `      Car Model- ${getRandomItem(carModels)}\n` +
-      `      Car Year- ${2010 + Math.floor(Math.random() * 15)}\n` +
-      `\nAdditional Info: \n${futureType.description}`;
+      `    Car Brand- ${getRandomItem(carBrands)}\n` +
+      `    Car Model- ${getRandomItem(carModels)}\n` +
+      `    Car Year- ${2010 + Math.floor(Math.random() * 15)}\n` +
+      `\nAdditional Info: \n    ${futureType.description}`;
 
     projects.push({
       idUser: Math.ceil(Math.random() * 30),

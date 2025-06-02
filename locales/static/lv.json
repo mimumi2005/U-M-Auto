@@ -177,7 +177,7 @@
 	"Remind me 1 hour before": "Atgādināt man 1 stundu iepriekš",
 	"Remind me both 1 day and 1 hour before": "Atgādināt man gan 1 dienu, gan 1 stundu iepriekš",
 	"Notifications are sent by email": "Paziņojumi tiek nosūtīti pa e-pastu",
-	"Save settings": "Saglabājiet iestatījumus",
+	"Save settings": "Saglabāt iestatījumus",
 	"Select Car Areas to Paint": "Izvēlieties krāsojamās automašīnu zonas",
 	"Your Image": "Jūsu attēls",
 	"Hood": "Kapuce",
@@ -639,5 +639,14 @@
 	"This will give administrator permissions to user with email:": "Tiks sniegtas administratora atļaujas lietotājam ar E-pastu:",
 	"No users match the filters.": "Netika atrasts neviens lietotājs ar dotajiem filtriem.",
 	"This will delete users ": "Tiks dzēsts lietotāja ",
-	"worker account": "Darbinieka konts"
+	"worker account": "Darbinieka konts",
+	"Car Info:": "Car Info:",
+	"Additional Info": "Additional Info",
+	"Car Brand": "Car Brand",
+	"Car Model": "Car Model",
+	"Car Year": "Car Year",
+	"Car Brand- FORD": "Car Brand- FORD",
+	"Additional Info:": "Additional Info:",
+	"Selected Date Range": "Selected Date Range",
+	"Creating appointment...": "Creating appointment..."
 }

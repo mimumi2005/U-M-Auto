@@ -183,7 +183,7 @@ function displayProjectDataForWorker(data) {
             return;
         }
 
-        sortedData.forEach((appointment, index) => {
+        sortedData.forEach(async (appointment, index) => {
             const row = document.createElement('tr');
             row.classList.add('project-row');
 
@@ -225,7 +225,7 @@ function displayProjectDataForWorker(data) {
             // Project Info
             const projectInfoCell = document.createElement('td');
             projectInfoCell.setAttribute('data-label', translate('Project Info'));
-            projectInfoCell.textContent = appointment.ProjectInfo;
+            projectInfoCell.textContent = await extractAndTranslateCarInfo(appointment.ProjectInfo);
             projectInfoCell.classList.add('text-white');
             row.appendChild(projectInfoCell);
 
@@ -268,8 +268,6 @@ function displayProjectDataForWorker(data) {
                         console.error('Error:', error);
 
                     });
-
-
             }
 
             // Function to render buttons based on the current status
@@ -527,6 +525,49 @@ function searchUserByID(idUser) {
             }
         })
         .catch(error => console.error('Error fetching user data:', error));
+}
+
+
+// Function to display delayed project data on the page
+function displayDelayedProjectData(projects) {
+    document.getElementById("registrationForm").classList.add('nodisplay');
+    document.getElementById("searchProject").classList.add('nodisplay');
+    document.getElementById("searchUser").classList.add('nodisplay');
+    document.getElementById('userDataContainer').classList.add('nodisplay');
+    document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
+
+    const userDataContainer = document.getElementById('ProjectDataContainer');
+    userDataContainer.innerHTML = `
+    <div class="container mt-4">
+              <div class="row row-cols-1 row-cols-md-3">
+                  <!-- User cards will be dynamically added here -->
+              </div>
+          </div>
+    `;
+    // Loop through each project and create HTML elements to display their data
+    projects.forEach((project, index) => {
+        // Create a column for the user card
+        const column = document.createElement('div');
+        column.classList.add('col-lg-4');
+        // Create the user card HTML
+        column.innerHTML = `
+            <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
+                <div class="card-body text-white">
+                  <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
+                    <p class="card-text">User: ${project.idUser}</p>
+                    <p class="card-text">Start date: ${project.StartDate ? new Date(project.StartDate).toLocaleString() : 'Invalid Date'}</p>
+                    <p class="card-text">End date: ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleString() : 'Invalid Date'}</p>
+                    <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
+                    <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="viewProjectUser(${project.idProjects})">View project user info</button>
+                    <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="removeDelayed(${project.idProjects})">Finish project</button>
+                    <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteProject(${project.idProjects})">Delete project</button>
+                </div>
+            </div>
+        `;
+
+        // Append the user card to the current row
+        document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
+    });
 }
 
 

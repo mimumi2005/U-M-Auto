@@ -67,61 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Initialize the map
-function initMap() {
-  var myLatLng = { lat: 57.234165, lng: 22.707727 };
-
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: myLatLng,
-    zoom: 11
-  });
-
-  var marker = new google.maps.Marker({
-    map: map,
-    position: myLatLng,
-    title: 'U&M Auto'
-  });
-
-  const infowindow = new google.maps.InfoWindow({
-    ariaLabel: "U&M Auto",
-    content: `
-      <h6 class=text-dark>${translate("Find us at this location")}!</h6>
-      <a 
-        href="https://www.google.com/maps/dir/?api=1&destination=${myLatLng.lat},${myLatLng.lng}" 
-        target="_blank" , class="text-center"
-      >
-        <b>${translate("Help me get there")}!</b>
-      </a>
-  `
-  });
-
-  infowindow.addListener('domready', function() {
-  const headerContainer = document.querySelector('.gm-style-iw-ch');
-  if (headerContainer) {
-    headerContainer.innerHTML = '<h4 class="text-dark">U&M Auto</h4>';
-  }
-});
-
-  marker.addListener('click', function () {
-    infowindow.open(map, marker);
-  });
-}
-
-
-
-// Price estimator
-function calculatePrice() {
-  const checkboxes = document.querySelectorAll('.form-check-input');
-  const totalPriceElement = document.getElementById('totalPrice');
-  let totalPrice = 0;
-  checkboxes.forEach(checkbox => {
-    if (checkbox.checked) {
-      totalPrice += parseFloat(checkbox.value);
-    }
-  });
-  totalPriceElement.textContent = `Estimated Price: $${totalPrice.toFixed(2)}`;
-}
-
 // Function to update button visibility depending of login status
 function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
   if (isLoggedIn) {
@@ -176,7 +121,7 @@ function updateButtonVisibility(isLoggedIn, isAdmin, isWorker) {
     }
   }
 }
-
+// SESSION RELATED
 // Login main function
 function loginUser(response) {
   setCookie('userData', response.UUID, 1);
@@ -208,6 +153,8 @@ function LogOut() {
     });
 }
 
+// SCROLLING FUNCTIONS
+// Function to show to scroll to top button
 function toggleScrollToTopButton() {
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 700) {
     document.getElementById("scroll-to-top-btn").style.display = 'flex';
@@ -215,7 +162,7 @@ function toggleScrollToTopButton() {
     document.getElementById("scroll-to-top-btn").style.display = 'none'
   }
 }
-
+// Scroll to top function
 function scrollToTop() {
   const scrollToTopElement = document.documentElement || document.body;
 
@@ -226,9 +173,30 @@ function scrollToTop() {
   });
 }
 
+// Service page scroll into view
+function slowScrollTo(targetOffset, duration) {
+  var startPosition = window.pageYOffset;
+  var startTime = null;
 
+  function animation(currentTime) {
+    if (startTime === null) startTime = currentTime;
+    var timeElapsed = currentTime - startTime;
+    var scrollAmount = Math.round(easeInOutQuad(timeElapsed, startPosition, targetOffset - startPosition, duration));
+    window.scrollTo(0, scrollAmount);
+    if (timeElapsed < duration) requestAnimationFrame(animation);
+  }
 
-// Alert display functions
+  // Easing function - use easeInOutQuad for smooth acceleration and deceleration
+  function easeInOutQuad(t, b, c, d) {
+    t /= d / 2;
+    if (t < 1) return c / 2 * t * t + b;
+    t--;
+    return -c / 2 * (t * (t - 2) - 1) + b;
+  }
+  requestAnimationFrame(animation);
+}
+
+// ALERTS AND POPUPS
 
 // Function to display a success alert for the user
 function showSuccessAlert(messageKey, callbackAfter) {
@@ -305,377 +273,6 @@ function showConfirmationPopup(descriptionHTML, confirmCallback) {
   });
 }
 
-
-// Custom scroll function, used for services page
-function slowScrollTo(targetOffset, duration) {
-  var startPosition = window.pageYOffset;
-  var startTime = null;
-
-  function animation(currentTime) {
-    if (startTime === null) startTime = currentTime;
-    var timeElapsed = currentTime - startTime;
-    var scrollAmount = Math.round(easeInOutQuad(timeElapsed, startPosition, targetOffset - startPosition, duration));
-    window.scrollTo(0, scrollAmount);
-    if (timeElapsed < duration) requestAnimationFrame(animation);
-  }
-
-  // Easing function - use easeInOutQuad for smooth acceleration and deceleration
-  function easeInOutQuad(t, b, c, d) {
-    t /= d / 2;
-    if (t < 1) return c / 2 * t * t + b;
-    t--;
-    return -c / 2 * (t * (t - 2) - 1) + b;
-  }
-  requestAnimationFrame(animation);
-}
-
-// Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
-function WorkerRemoveDelayed(idProjects) {
-  fetch('/worker/remove-delayed', {
-    method: 'POST',
-    headers: {
-      'CSRF-Token': csrfToken,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      idProjects: idProjects
-    }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data[0]) {
-        displayProjectDataForWorker(data);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-
-    });
-}
-
-// Displaying functions (DISPLAY)
-
-// Function to display delayed project data on the page
-function displayDelayedProjectData(projects) {
-  document.getElementById("registrationForm").classList.add('nodisplay');
-  document.getElementById("searchProject").classList.add('nodisplay');
-  document.getElementById("searchUser").classList.add('nodisplay');
-  document.getElementById('userDataContainer').classList.add('nodisplay');
-  document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
-
-  const userDataContainer = document.getElementById('ProjectDataContainer');
-  userDataContainer.innerHTML = `
-    <div class="container mt-4">
-              <div class="row row-cols-1 row-cols-md-3">
-                  <!-- User cards will be dynamically added here -->
-              </div>
-          </div>
-    `;
-  // Loop through each project and create HTML elements to display their data
-  projects.forEach((project, index) => {
-    // Create a column for the user card
-    const column = document.createElement('div');
-    column.classList.add('col-lg-4');
-    // Create the user card HTML
-    column.innerHTML = `
-            <div id="Project_div${project.idProjects}" class="card bg-light mb-3">
-                <div class="card-body text-white">
-                  <h3 class="card-title">ProjectID: ${project.idProjects}</h3>
-                    <p class="card-text">User: ${project.idUser}</p>
-                    <p class="card-text">Start date: ${project.StartDate ? new Date(project.StartDate).toLocaleString() : 'Invalid Date'}</p>
-                    <p class="card-text">End date: ${project.EndDateProjection ? new Date(project.EndDateProjection).toLocaleString() : 'Invalid Date'}</p>
-                    <p class="card-text">${project.Delayed ? 'Is delayed' : 'Is not delayed'}</p>
-                    <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="viewProjectUser(${project.idProjects})">View project user info</button>
-                    <button class="btn btn-outline-secondary text-white mb-2" style="width:100%" onclick="removeDelayed(${project.idProjects})">Finish project</button>
-                    <button class="btn btn-outline-danger text-white mb-2" style="width:100%" onclick="deleteProject(${project.idProjects})">Delete project</button>
-                </div>
-            </div>
-        `;
-
-    // Append the user card to the current row
-    document.querySelector('#ProjectDataContainer .row:last-child').appendChild(column);
-  });
-}
-
-// Function to display user statistics on the page
-function displayUserStatistics(userStats) {
-  document.getElementById('UserStatisticsContainer').classList.remove('nodisplay');
-
-  userStats.sort((b, a) => b.ProjectsCount - a.ProjectsCount);
-
-  const ctx = document.getElementById('userStatisticsChart').getContext('2d');
-
-  const labels = [];
-  const data = [];
-  // Uses the data from database to display correct graph data
-  userStats.forEach(stat => {
-    const projectLabel = stat.ProjectsCount === 1 ? translate('Project') : translate('Projects');
-    labels.push(`${stat.ProjectsCount} ${projectLabel}`);
-    data.push(stat.UsersCount);
-  });
-
-  // Formats how the data looks when displayed
-  const chartData = {
-    labels: labels,
-    datasets: [{
-      label: '',
-      data: data,
-      backgroundColor: [
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(255, 206, 86, 0.6)',
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(153, 102, 255, 0.6)',
-        'rgba(255, 159, 64, 0.6)'
-      ],
-      borderColor: 'rgba(255, 255, 255, 1)',
-      borderWidth: 2
-    }]
-  };
-
-  // Configuration of the pie chart
-  const config = {
-    type: 'pie',
-    data: chartData,
-    options: {
-      plugins: {
-        title: {
-          display: true,
-          text: translate('Project count per user'),
-          color: 'lightgrey',
-          font: {
-            size: 25,
-            weight: 'bold'
-          },
-          padding: {
-            bottom: 30
-          }
-        },
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: 'lightgrey',
-            font: {
-              size: 16,
-              weight: 'bold'
-            }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            title: function (context) {
-              return context[0].label;
-            },
-            label: function (context) {
-              const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-              const value = context.raw;
-              const percentage = ((value / total) * 100).toFixed(1);
-              return `${value} ${translate('Users')} (${percentage}%)`;
-            }
-          }
-        },
-        datalabels: {
-          formatter: (value, context) => {
-            const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            return `${percentage}%`;
-          },
-          color: 'white',
-          font: {
-            weight: 'bold',
-            size: 14
-          }
-        }
-      },
-      layout: {
-        padding: {
-          top: 20,
-          bottom: 20
-        }
-      }
-    }
-  };
-
-  new Chart(ctx, config);
-}
-
-
-// Function to display project statistics on the page
-function displayProjectStatistics(projects) {
-  document.getElementById('ProjectStatisticsContainer').classList.remove('nodisplay');
-
-  projects.sort((a, b) => b.ProjectsCount - a.ProjectsCount);
-
-  const ctx = document.getElementById('projectStatisticsChart').getContext('2d');
-
-  const labels = [];
-  const data = [];
-
-  // Uses the data from database to display correct graph data
-  projects.forEach(project => {
-    labels.push(translate(project.TimeRange));
-    data.push(project.ProjectsCount);
-  });
-
-  // Formats how the data looks when displayed
-  const chartData = {
-    labels: labels,
-    datasets: [{
-      label: '',
-      data: data,
-      backgroundColor: [
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(255, 206, 86, 0.6)',
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(153, 102, 255, 0.6)',
-        'rgba(255, 159, 64, 0.6)'
-      ],
-      borderColor: 'rgba(255, 255, 255, 1)',
-      borderWidth: 2
-    }]
-  };
-
-  // Configuration of the pie chart
-  const config = {
-    type: 'pie',
-    data: chartData,
-    options: {
-      plugins: {
-        title: {
-          display: true,
-          text: translate('Project statistics by type'),
-          color: 'lightgrey',
-          font: {
-            size: 25,
-            weight: 'bold'
-          },
-          padding: {
-            bottom: 30
-          }
-        },
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: 'lightgrey',
-            font: {
-              size: 16,
-              weight: 'bold'
-            }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            title: function (context) {
-              return context[0].label;
-            },
-            label: function (context) {
-              const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-              const value = context.raw;
-              const percentage = ((value / total) * 100).toFixed(1);
-              return `${value} ${translate('Projects')} (${percentage}%)`;
-            }
-          }
-        }
-      },
-      layout: {
-        padding: {
-          top: 20,
-          bottom: 20
-        }
-      }
-    }
-  };
-
-  new Chart(ctx, config);
-}
-
-function displayProjectStatusStatistics(statusStats) {
-  document.getElementById('ProjectStatusStatisticsContainer').classList.remove('nodisplay');
-
-  statusStats.sort((a, b) => b.ProjectsCount - a.ProjectsCount);
-
-  const ctx = document.getElementById('projectStatusStatisticsChart').getContext('2d');
-
-  const labels = [];
-  const data = [];
-
-  statusStats.forEach(status => {
-    labels.push(translate(status.StatusName));
-    data.push(status.ProjectsCount);
-  });
-
-  const chartData = {
-    labels: labels,
-    datasets: [{
-      label: '',
-      data: data,
-      backgroundColor: [
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(255, 206, 86, 0.6)',
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(153, 102, 255, 0.6)',
-        'rgba(255, 159, 64, 0.6)'
-      ],
-      borderColor: 'rgba(255, 255, 255, 1)',
-      borderWidth: 2
-    }]
-  };
-
-  const config = {
-    type: 'pie',
-    data: chartData,
-    options: {
-      plugins: {
-        title: {
-          display: true,
-          text: translate('Project statistics by status'),
-          color: 'lightgrey',
-          font: {
-            size: 25,
-            weight: 'bold'
-          },
-          padding: {
-            bottom: 30
-          }
-        },
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: 'lightgrey',
-            font: {
-              size: 16,
-              weight: 'bold'
-            }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            title: function (context) {
-              return context[0].label;
-            },
-            label: function (context) {
-              const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-              const value = context.raw;
-              const percentage = ((value / total) * 100).toFixed(1);
-              return `${value} ${translate('Projects')} (${percentage}%)`;
-            }
-          }
-        }
-      },
-      layout: {
-        padding: {
-          top: 20,
-          bottom: 20
-        }
-      }
-    }
-  };
-
-  new Chart(ctx, config);
-}
-
 // Function to set cookie with JSON data
 function setCookie(name, value, days) {
   const expires = new Date();
@@ -683,28 +280,91 @@ function setCookie(name, value, days) {
   document.cookie = `${name}=${JSON.stringify(value)};expires=${expires.toUTCString()};path=/`;
 }
 
+// Function to get the cookie value
 const getCookie = (name) => {
   const cookieValue = (document.cookie.match('(^|;\\s*)' + name + '=([^;]*)') || [])[2];
   return cookieValue ? decodeURIComponent(cookieValue) : null;
 }
 
-function translate(key) {
-  const lang = window.currentLanguage || "en";
-  const value = window.translations?.[lang]?.[key];
+// TRANSLATION RELATED 
 
-  if (!value) {
-    // Notify server to write missing key
-    fetch("/add-missing-key", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key }),
-    });
+// Function to tranlsate the project info part 
+async function extractAndTranslateCarInfo(text) {
+  // Split lines and trim
+  const lines = text.split('\n').map(line => line.trim()).filter(line => line);
 
-    return key;
+  const translatedLines = await Promise.all(lines.map(async (line, index) => {
+    // Translate the additional info part dynamically, since it was written by user
+    if (index === 5)
+      return `    ${await translateDynamicFromEnglish(line)}`;
+    // Default translate the first line
+    else if (index === 0)
+      return translate(line);
+    // The rest translate with gap or newline
+    else {
+      const labelPart = line.includes('-') ? line.split('-')[0].trim() : line;
+      const textAfterHyphen = line.split('-')[1] != null ? '- ' + line.split('-')[1].trim() : '';
+      return (index === 1 || index === 2 || index === 3) ? `    ${translate(labelPart)}${textAfterHyphen}` : `\n${translate(labelPart)}${textAfterHyphen}`;
+    }
+
+  }));
+
+  // Join back with newline separator
+  const finalText = translatedLines.join('\n');
+  return finalText;
+}
+
+// Function to translate text from english dynamically
+async function translateDynamicFromEnglish(text, responseLang = window.currentLanguage) {
+  if (responseLang === 'en') return text;
+
+  // Checks if it already exists in local dynamic translations
+  const existingTranslation = await getTranslationFromDynamic(text, responseLang);
+  if (existingTranslation) {
+    return existingTranslation;
   }
 
-  return value;
+  // if not found, call the translation API
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=EN|${responseLang}&de=umautodarbnica@inbox.lv`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const translatedText = data.responseData.translatedText;
+
+    // Save the new translation in your dynamic locale file
+    await saveTranslationToDynamic(text, translatedText, responseLang);
+
+    return translatedText;
+  } catch (err) {
+    console.error('Error with MyMemory API:', err);
+    return text;
+  }
 }
+
+// Function to translate text to english dynamically
+async function translateDynamicToEnglish(text, sourceLang = window.currentLanguage) {
+  if (sourceLang === 'en') return text;
+
+  const existingTranslation = await getTranslationFromDynamic(text, 'en');
+  if (existingTranslation) {
+    return existingTranslation;
+  }
+
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|EN&de=umautodarbnica@inbox.lv`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const translatedText = data.responseData.translatedText;
+
+    await saveTranslationToDynamic(text, translatedText, 'en');
+
+    return translatedText;
+  } catch (err) {
+    console.error('Error with MyMemory API:', err);
+    return text;
+  }
+}
+
 
 // Setting language function
 function setLanguage(lang) {
@@ -733,4 +393,67 @@ function setFlag(lang, flag) {
     default:
       flag.className = '';
   }
+}
+
+// FETCH
+// Function that removes a project from delayed aka, finishes the project, since if it was marked as delayed the default project finish doesnt work (as in when end date projection is reached)
+function finishDelayedProject(idProjects) {
+  fetch('/worker/remove-delayed', {
+    method: 'POST',
+    headers: {
+      'CSRF-Token': csrfToken,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      idProjects: idProjects
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data[0]) {
+        displayProjectDataForWorker(data);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+
+    });
+}
+
+// Fetch dynamic translations
+async function getTranslationFromDynamic(key, lang) {
+  const translations = await fetch(`/translation/get-translation/${encodeURIComponent(key)}`);
+  if (translations.ok) {
+    const data = await translations.json();
+    return data?.[lang] || null;
+  }
+  return null;
+}
+
+// Fetch for adding the dynamic translation to files
+async function saveTranslationToDynamic(key, translation, lang) {
+  await fetch('/translation/add-dynamic-translation', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key, translation, lang })
+  });
+}
+
+// Default translate for static page text
+function translate(key) {
+  const lang = window.currentLanguage || "en";
+  const value = window.translations?.[lang]?.[key];
+
+  if (!value) {
+    // Notify server to write missing key
+    fetch("/api/add-missing-key", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key }),
+    });
+
+    return key;
+  }
+
+  return value;
 }
