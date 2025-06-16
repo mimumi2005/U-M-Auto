@@ -62,6 +62,15 @@ export const fetchProjectById = async (req, res) => {
 export const changeEndDate = async (req, res) => {
   try {
     const { EndDate, idProjects } = req.body;
+
+    const isAvailable = await workerModel.canUpdateProject(idProjects, EndDate);
+    if (!isAvailable) {
+      return res.status(401).json({
+        status: 'conflict',
+        message: 'The new end date conflicts with another scheduled project.'
+      });
+    }
+
     const appointment = await workerModel.updateProjectEndDate(EndDate, idProjects);
     const date = new Date(EndDate);
     const readableDate = date.toLocaleString('en-US', {
@@ -81,6 +90,7 @@ export const changeEndDate = async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Error updating end date', error: err.message });
   }
 };
+
 
 // Change status of a project
 export const changeStatus = async (req, res) => {

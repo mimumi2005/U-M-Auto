@@ -72,6 +72,28 @@ export const updateProjectEndDate = async (EndDate, idProjects) => {
     return results;
 };
 
+export const canUpdateProject = async (idProjects, newEndDate) => {
+  const [[project]] = await pool.query('SELECT StartDate FROM projects WHERE idProjects = ?', [idProjects]);
+  if (!project) {
+    throw new Error('Project not found');
+  }
+
+  const { StartDate } = project;
+
+  const sql_query = `
+    SELECT COUNT(*) as count
+    FROM projects
+    WHERE idProjects != ?
+      AND NOT (
+        EndDateProjection <= ? OR StartDate >= ?
+      )
+  `;
+  const [rows] = await pool.query(sql_query, [idProjects, StartDate, newEndDate]);
+  return rows[0].count === 0;
+};
+
+
+
 export const updateProjectStatus = async (newStatus, idProjects) => {
     const updateQuery = `
         UPDATE projects p

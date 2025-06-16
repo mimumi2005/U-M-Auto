@@ -45,6 +45,20 @@ export const createAppointment = async (idUser, StartDate, EndDateProjection, Pr
     await pool.query(sql_query, [idUser, StartDate, EndDateProjection, ProjectInfo]);
 };
 
+// Function to validate the chosen date range for an appointment
+export const isDateRangeAvailable = async (StartDate, EndDateProjection) => {
+    const sql_query = `
+        SELECT COUNT(*) as count
+        FROM projects
+        WHERE NOT (
+            EndDateProjection <= ? OR StartDate >= ?
+        )
+    `;
+    const [rows] = await pool.query(sql_query, [StartDate, EndDateProjection]);
+    return rows[0].count === 0;
+};
+
+
 // Hashing function for passwords
 export async function hashPassword(password) {
     const saltRounds = 10;
