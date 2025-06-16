@@ -1,9 +1,9 @@
-const flags = []; // Array of flags for each coordinate set
 const paintPrice = [100, 125, 75, 75, 75, 75, 75, 100, 100, 100, 100, 75, 75];
 const rustWorkPrice = [200, 250, 150, 150, 150, 150, 150, 200, 200, 200, 200, 150, 150];
 let activeOverlayIndex = -1; // Index of the currently active overlay
 
 function createOverlayPolygons() {
+    const flags = [];
     const isPaintJob = window.location.hash === '#paintjob' ? true : false;
     // Get the map image element
     const mapImage = document.getElementById('carImage');
@@ -39,7 +39,7 @@ function createOverlayPolygons() {
         flags.push(false);
     });
 
-    // Function to draw the red overlay polygon
+    // Function to draw the overlay polygon
     function drawOverlay() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -65,6 +65,7 @@ function createOverlayPolygons() {
         });
         const formattedTotalPrice = totalPrice.toFixed(2);
 
+
         const repairPrice = parseFloat(formattedTotalPrice);
         const materialPrice = parseFloat((repairPrice / 2).toFixed(2));
         const totalPriceDisplay = parseFloat((repairPrice + materialPrice).toFixed(2));
@@ -78,7 +79,6 @@ function createOverlayPolygons() {
 
     // Function to toggle the activation of a specific overlay
     window.toggleOverlay = function (index) {
-        calculatePrice()
         if (index >= 0 && index < flags.length) {
             flags[index] = !flags[index]; // Toggle the flag
             activeOverlayIndex = flags[index] ? index : -1; // Set activeOverlayIndex

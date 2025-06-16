@@ -10,5 +10,6 @@
   "whats going on guys": "kas notiek puišiem",
   "sadsad": "sadsad",
   "": "NO QUERY SPECIFIED. EXAMPLE REQUEST: GET?Q=HELLO&LANGPAIR=EN|IT",
-  "No additional info provided": "Nav sniegta papildu informācija"
+  "No additional info provided": "Nav sniegta papildu informācija",
+  "[object Promise]": "[Object Promise]"
 }

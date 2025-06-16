@@ -657,5 +657,6 @@
 	"Car Brand- FORD": "Car Brand- FORD",
 	"Additional Info:": "Additional Info:",
 	"Selected Date Range": "Selected Date Range",
-	"Creating appointment...": "Creating appointment..."
+	"Creating appointment...": "Creating appointment...",
+	"Error creating appointment": "Error creating appointment"
 }

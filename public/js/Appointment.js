@@ -124,24 +124,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     document.getElementById('appointmentForm').addEventListener('submit', async function (event) {
+        submitButton = this.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
+
         event.preventDefault(); // Prevent default form submission
         const repairTypeSelect = document.getElementById('repairType');
-        submitButton = this.querySelector('button[type="submit"]');
+
         const repairTypeDuration = parseInt(repairTypeSelect.value);
         console.log(repairTypeDuration);
         if (repairTypeDuration == 0) {
             showErrorAlert('Please select an appointment type');
+            submitButton.disabled = false;
+            submitButton.classList.remove('disabled');
             return;
         }
 
         if (selectedDateTime === null && repairTypeDuration < 120) {
             showErrorAlert('Please select a date and time');
+            submitButton.disabled = false;
+            submitButton.classList.remove('disabled');
             return;
         }
         // Retrieve form data
         const additionalInfo = await getAdditionalInfo();
-        submitButton.disabled = true;
-        submitButton.classList.add('disabled');
         // Fetch user information from the server
         fetch(`/auth/userID`, {
             method: 'GET',
@@ -193,8 +199,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         })
                         .then(async data => {
                             showSuccessAlert("Creating appointment...");
-                            submitButton.disabled = true;
-                            submitButton.classList.add('disabled');
                             const translatable = document.getElementById('additionalInfo').value
                             await translateDynamicFromEnglish(translatable, 'lv');
                             await translateDynamicFromEnglish(translatable, 'ru');
@@ -206,24 +210,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         })
                         .catch(error => {
-
                             showErrorAlert('Error creating appointment');
+                            submitButton.disabled = false;
+                            submitButton.classList.remove('disabled');
                         })
-                        .finally(() => {
-                            submitButton.disabled = true;
-                            submitButton.classList.add('disabled');
-                        });
                 } else {
                     showErrorAlert('Error fetching user information');
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('disabled');
                 }
             })
             .catch(error => {
                 console.error('Error fetching user information:', error);
             })
-            .finally(() => {
-                submitButton.disabled = false;
-                submitButton.classList.remove('disabled');
-            });
     });
     function generateTimeButtons(hours, FreeHoursArray, repairtype) {
         const RepairType = repairtype;
@@ -649,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var dateRange = translate("Selected Date Range");
                 selectedDateRangeInfo.innerHTML = `
             <div tabindex="0" class="mt-4">
-                ${dateRange}:<b> ${selectedDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}</b>
+                ${dateRange}:<b> ${selectedDate.toLocaleDateString()} -> ${endDate.toLocaleDateString()}</b>
             </div>
         `;
             }

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
 
     function cancelAppointment(idProjects, button) {
         button.classList.add('disabled');
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function displayAppointmentData(data) {
+    async function displayAppointmentData(data) {
         const tableBody = document.getElementById('appointment-table-body');
         tableBody.innerHTML = '';
 
@@ -135,5 +135,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
         renderShowMoreButton(data.length, initialDisplayCount);
     }
-    displayAppointmentData(PROJECTS_DATA);
+    await displayAppointmentData(PROJECTS_DATA);
 });
