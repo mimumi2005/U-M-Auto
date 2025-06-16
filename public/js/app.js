@@ -317,6 +317,7 @@ async function extractAndTranslateCarInfo(text) {
 // Function to translate text from english dynamically
 async function translateDynamicFromEnglish(text, responseLang = window.currentLanguage) {
   if (responseLang === 'en') return text;
+  if (text === '') return text;
 
   // Checks if it already exists in local dynamic translations
   const existingTranslation = await getTranslationFromDynamic(text, responseLang);
@@ -344,7 +345,8 @@ async function translateDynamicFromEnglish(text, responseLang = window.currentLa
 // Function to translate text to english dynamically
 async function translateDynamicToEnglish(text, sourceLang = window.currentLanguage) {
   if (sourceLang === 'en') return text;
-
+  if (text === '') return text;
+  
   const existingTranslation = await getTranslationFromDynamic(text, 'en');
   if (existingTranslation) {
     return existingTranslation;

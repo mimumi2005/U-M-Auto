@@ -18,7 +18,6 @@ import { attachUser } from "./src/middleware/attachUser.js";
 import { generateNonce } from "./src/middleware/nonceGen.js";
 
 // Database & Routes
-import pool from './src/config/db.js';
 import routes from "./src/routes/index.js";
 
 import "./src/helpers/cronJob.js";
