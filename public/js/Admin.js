@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ProjectDataContainer').classList.remove('nodisplay');
         document.getElementById('workerDataContainer').classList.add('nodisplay');
         let isAscending = true; // Flag to track ascending/descending order
-        let currentColumn = 'idProject'; // Default to sorting by 'User ID'
+        let currentColumn = 'idProject'; // Default to sorting by 'Project ID'
 
         const tableBody = document.getElementById('project-table-body');
         const headers = {

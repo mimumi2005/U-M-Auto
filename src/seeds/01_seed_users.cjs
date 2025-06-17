@@ -51,17 +51,10 @@ exports.seed = async function (knex) {
     password: hashedPassword,
   };
 
-  const normalAdmin = {
+  const normalUser = {
     Name: 'Janis',
     Username: 'JanisG',
     Email: 'janiskrisjanis.g@inbox.lv',
-    password: hashedPassword,
-  };
-
-  const normalUser = {
-    Name: 'JanaGaile',
-    Username: 'Mazanarina2',
-    Email: 'Mazanarina2g@gmail.com',
     password: hashedPassword,
   };
 
