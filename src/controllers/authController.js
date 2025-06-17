@@ -129,15 +129,16 @@ export const handleLogout = (req, res) => {
 
 // handleCreateAppointment
 export const handleCreateAppointment = async (req, res) => {
-  const idUser = req.user.userId;
+  const idUser = req.user.id;
   const { StartDate, EndDateProjection, ProjectInfo } = req.body;
   try {
-    isDateRangeAvailable = await authModel.isDateRangeAvailable(StartDate, EndDateProjection);
+    var isDateRangeAvailable = await authModel.isDateRangeAvailable(StartDate, EndDateProjection);
+
     // Checks if the date range is available
     if (!isDateRangeAvailable) {
       return res.status(401).json({ status: 'error', message: 'The selected date range is not available.' });
     }
-
+    console.log('Date range is available:', StartDate, EndDateProjection);
     // Calls the model to create an appointment
     await authModel.createAppointment(idUser, StartDate, EndDateProjection, ProjectInfo);
     res.status(201).json({ status: 'success', message: "Project registered successfully!" });

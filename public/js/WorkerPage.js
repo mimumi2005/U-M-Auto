@@ -77,15 +77,15 @@ function projectChangeEndTimeByWorker(idProjects, NewEndDateTime) {
     }
 }
 
-function renderShowMoreButton(totalRows, initialDisplayCount) {
+function renderShowMoreButton(totalAppointments, initialDisplayCount) {
     const existingButton = document.getElementById('show-more-projects-button');
     if (existingButton) existingButton.remove(); // Remove old button if it exists
 
-    if (totalRows <= initialDisplayCount) return; // No button needed if everything fits
+    if (totalAppointments <= initialDisplayCount) return; // No need for button if everything fits
 
     const button = document.createElement('button');
     button.textContent = translate('Show More');
-    button.classList.add('btn', 'btn-primary', 'my-3');
+    button.classList.add('btn', 'btn-primary', 'mt-3');
     button.style.display = 'block';
     button.style.margin = '0 auto';
     button.id = 'show-more-projects-button';
@@ -93,13 +93,13 @@ function renderShowMoreButton(totalRows, initialDisplayCount) {
     document.getElementById('ProjectDataContainer').appendChild(button);
 
     button.addEventListener('click', () => {
-        document.querySelectorAll('.project-row.d-none').forEach(row => {
-            row.classList.remove('d-none');
-        });
-        button.style.display = 'none';
+        const hiddenRows = document.querySelectorAll('.project-row.d-none');
+        for (let i = 0; i < 3 && i < hiddenRows.length; i++) {
+            hiddenRows[i].classList.remove('d-none');
+        }
+        if (hiddenRows.length == 0) button.style.display = 'none';
     });
 }
-
 
 // Function that displays projects by ID By Worker
 function searchProjectByIDByWorker(idProjects) {
@@ -394,7 +394,7 @@ function displayProjectDataForWorker(data) {
     headers.ProjectInfo.onclick = () => sortData('ProjectInfo');
     headers.Delayed.onclick = () => sortData('Delayed');
 
-    sortData('idUser'); // Initial sort by 'User ID'
+    sortData('StartDate'); // Initial sort by 'User ID'
 }
 
 
@@ -606,8 +606,9 @@ function removeDelayed(idProjects) {
         .then(data => {
             // Call a function to display the user data on the page
             if (data[0]) {
-                displayProjectDataForWorker(data);
-                showSuccessAlert('Project finished successfully');
+                showSuccessAlert('Project finished successfully', () => {
+                    searchDelayedProjects();
+                });
             }
         })
         .catch(error => {

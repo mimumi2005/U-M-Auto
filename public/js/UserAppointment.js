@@ -13,8 +13,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showSuccessAlert('Appointment successfully cancelled.', 2000);
-                    location.reload();
+                    showSuccessAlert('Appointment successfully cancelled.', () => {
+                        location.reload();
+                    });
+
+
                 } else {
                     button.classList.remove('disabled');
                     button.disabled = false;
@@ -41,10 +44,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('appointment-data').appendChild(button);
 
         button.addEventListener('click', () => {
-            document.querySelectorAll('.appointment-row.d-none').forEach(row => {
-                row.classList.remove('d-none');
-            });
-            button.style.display = 'none';
+            const hiddenRows = document.querySelectorAll('.appointment-row.d-none');
+            for (let i = 0; i < 3 && i < hiddenRows.length; i++) {
+                hiddenRows[i].classList.remove('d-none');
+            }
+            if (hiddenRows.length == 0) button.style.display = 'none';
         });
     }
 
@@ -52,13 +56,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         const tableBody = document.getElementById('appointment-table-body');
         tableBody.innerHTML = '';
 
+        const initialDisplayCount = window.innerWidth < 768 ? 1 : 3;
         // Sort by StartDate descending (latest first)
         data.sort((a, b) => new Date(b.StartDate) - new Date(a.StartDate));
 
-        // Determine how many to show initially
-        const initialDisplayCount = window.innerWidth < 768 ? 1 : 3;
-
-        data.forEach(async(appointment, index) => {
+        data.forEach(async (appointment, index) => {
             const row = document.createElement('tr');
             row.classList.add('appointment-row');
 

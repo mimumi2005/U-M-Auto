@@ -4,7 +4,6 @@
       <h2 class="text-center mb-4 text-white">
         <%= __('Your Appointments') %>
       </h2>
-
       <!-- Table to display appointment data -->
       <div id="appointment-data" class="table-responsive text-white">
         <table class="table table-bordered table-hover" id="appointments-table">
@@ -32,8 +31,8 @@
           </tbody>
         </table>
       </div>
-
     </div>
+    
     <script nonce="<%= nonce %>">const csrfToken = "<%= csrfToken %>";</script>
     <script nonce="<%= nonce %>">const PROJECTS_DATA = <%- JSON.stringify(projects) %>;</script>
     <script src="/js/UserAppointment.js" nonce="<%= nonce %>"></script>

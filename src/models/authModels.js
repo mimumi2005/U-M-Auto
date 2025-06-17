@@ -46,7 +46,7 @@ export const createAppointment = async (idUser, StartDate, EndDateProjection, Pr
 };
 
 // Function to validate the chosen date range for an appointment
-export const isDateRangeAvailable = async (StartDate, EndDateProjection) => {
+export const isDateRangeAvailable = async (EndDateProjection, StartDate) => {
     const sql_query = `
         SELECT COUNT(*) as count
         FROM projects
@@ -54,7 +54,7 @@ export const isDateRangeAvailable = async (StartDate, EndDateProjection) => {
             EndDateProjection <= ? OR StartDate >= ?
         )
     `;
-    const [rows] = await pool.query(sql_query, [StartDate, EndDateProjection]);
+    const [rows] = await pool.query(sql_query, [EndDateProjection, StartDate]);
     return rows[0].count === 0;
 };
 
