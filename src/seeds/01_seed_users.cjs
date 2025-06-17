@@ -66,7 +66,7 @@ exports.seed = async function (knex) {
     password: adminHashedPassword,
   };
 
-  await knex('users').insert([adminUser, normalAdmin, workerUser, normalUser, ...users]);
+  await knex('users').insert([adminUser, workerUser, normalUser, ...users]);
 
   console.log(`✅ Inserted ${userCount + 1} users into the database (including admin).`);
 };
