@@ -4,14 +4,14 @@ import * as serviceModel from '../models/serviceModels.js';
 
 // Send contact form email
 export const handleContactForm = async (req, res) => {
-    const { name, email, message } = req.body;
+  const { name, email, message } = req.body;
 
-    if (!name || !email || !message) {
-        return res.status(400).json({ message: 'All fields are required.' });
-    }
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
 
-    const subject = `New Contact Form Message from ${name}`;
-    const text = `
+  const subject = `New Contact Form Message from ${name}`;
+  const text = `
         You received a new message from your website contact form:
 
         Name: ${name}
@@ -20,13 +20,23 @@ export const handleContactForm = async (req, res) => {
         Message:
         ${message}
         `;
-    try {
-        await sendEmail('umautodarbnica+customers@inbox.lv', subject, text);
-        res.json({ message: 'Message sent successfully.' });
-    } catch (err) {
-        console.error('Error sending contact form email:', err);
-        res.status(500).json({ message: 'Failed to send message.' });
-    }
+        
+  const html = `
+  <h2>You received a new message from your website contact form:</h2>
+  <p><strong>Name:</strong> ${name}</p>
+  <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+  <p><strong>Message:</strong></p>
+  <div style="background-color:#f9f9f9; border:1px solid #ddd; padding:15px; font-family:sans-serif; white-space:pre-wrap;">
+    ${message}
+  </div>
+`;
+  try {
+    await sendEmail('umautodarbnica+customers@inbox.lv', subject, text, html);
+    res.json({ message: 'Message sent successfully.' });
+  } catch (err) {
+    console.error('Error sending contact form email:', err);
+    res.status(500).json({ message: 'Failed to send message.' });
+  }
 };
 
 // Add missing key

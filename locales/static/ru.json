@@ -658,5 +658,6 @@
 	"Additional Info:": "Additional Info:",
 	"Selected Date Range": "Selected Date Range",
 	"Creating appointment...": "Creating appointment...",
-	"Error creating appointment": "Error creating appointment"
+	"Error creating appointment": "Error creating appointment",
+	"Project is in progress": "Project is in progress"
 }

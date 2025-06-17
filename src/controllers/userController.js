@@ -24,14 +24,23 @@ export const requestPasswordReset = async (req, res) => {
     // Compose the reset link
     const resetLink = `${process.env.BASE_URL}/user/ResetPassword/${resetToken}`;
 
-    // Send email with reset link
-    await sendEmail(
-        email,
-        'Password Reset Request',
-        `Hello, click this link to reset your password:\n${resetLink}\nThis link expires in 1 hour.`
-    );
+    const text = `Hello,
+
+    Click this link to reset your password:
+    ${resetLink}
+
+    This link expires in 1 hour.`;
+
+    const html = `
+    <p>Hello,</p>
+    <p>Click the link below to reset your password:</p>
+    <p><a href="${resetLink}" style="color:#007BFF;">Reset Password</a></p>
+    <p style="font-size:0.9em;color:#666;">This link expires in 1 hour.</p>
+    `;
+    await sendEmail(email, 'Password Reset Request', text, html);
 
     res.json({ message: 'Reset email sent' });
+
 };
 
 // Reset password using the token
@@ -57,7 +66,7 @@ export const getResetPasswordPage = async (req, res) => {
     // Find the user with this token and make sure it hasn't expired
     const users = await verifyResetToken(token);
     if (users.length === 0) {
-        return res.render('pages/home', { nonce: res.locals.nonce, i18n: i18n, language: req.session.language || 'en'});
+        return res.render('pages/home', { nonce: res.locals.nonce, i18n: i18n, language: req.session.language || 'en' });
     }
 
     res.render('pages/ChangePassword', { nonce: res.locals.nonce, csrfToken: csrfTokenValue, i18n: i18n, language: req.session.language || 'en', token: token });

@@ -648,5 +648,6 @@
 	"Additional Info:": "Papildus informācija:",
 	"Selected Date Range": "Izvēlētais laika intervāls",
 	"Creating appointment...": "Piesaka remontu...",
-	"Error creating appointment": "Error creating appointment"
+	"Error creating appointment": "Error creating appointment",
+	"Project is in progress": "Project is in progress"
 }

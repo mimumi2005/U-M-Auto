@@ -13,52 +13,78 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-export const sendAppointmentReminder = async (appointment, readableDate) => {
+export const sendEmail = async (to, subject, text, html) => {
+  const mailOptions = {
+    from: process.env.MAIL_USER,
+    to,
+    subject,
+    text,
+    html,
+  };
 
-    const emailText = `Dear ${appointment.Username},\n\n` +
-        `You have an appointment scheduled in one hour at ${readableDate}. ` +
-        `\nPlease be sure to arrive at least 5 minutes before your scheduled time to ensure everything runs smoothly.\n\n` +
-        `Appointment:\n${appointment.ProjectInfo}\n\n` +
-        `Thank you for choosing our services! We look forward to seeing you soon.\n\n` +
-        `Best regards,\nU&M Auto`;
-    sendEmail(appointment.Email, 'Appointment Reminder', emailText);
-}
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to: ${to}`);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
+export const sendAppointmentReminder = async (appointment, readableDate) => {
+  const textVersion = `Dear ${appointment.Username},\n\n` +
+    `You have an appointment scheduled in one hour at ${readableDate}.\n` +
+    `Please be sure to arrive at least 5 minutes early to ensure everything runs smoothly.\n\n` +
+    `Appointment:\n${appointment.ProjectInfo}\n\n` +
+    `Thank you for choosing our services. We look forward to seeing you soon.\n\n` +
+    `Best regards,\nU&M Auto`;
+
+  const htmlVersion = `
+    <p>Dear ${appointment.Username},</p>
+    <p>You have an appointment scheduled in one hour at <strong>${readableDate}</strong>.</p>
+    <p>Please arrive at least 5 minutes early to ensure everything runs smoothly.</p>
+    <p>Appointment:</p>
+    <div style="background-color:#f4f4f4; border:1px solid #ccc; white-space:pre-wrap;">${appointment.ProjectInfo}</div>
+    <p>Thank you for choosing our services. We look forward to seeing you soon.</p>
+    <p>Best regards,<br>U&amp;M Auto</p>
+  `;
+
+  await sendEmail(appointment.Email, 'Appointment Reminder', textVersion, htmlVersion);
+};
 
 export const sendAppointmentStatusUpdateAlert = async (appointment, newStatus) => {
+  const textVersion = `Dear ${appointment.Username},\n\n` +
+    `Your appointment status has been updated to: ${newStatus}.\n\n` +
+    `Appointment:\n${appointment.ProjectInfo}\n\n` +
+    `Thank you for choosing our services. We hope you continue with us.\n\n` +
+    `Best regards,\nU&M Auto`;
 
-    const emailText = `Dear ${appointment.Username},\n\n` +
-        `Your appointments status has been updated to: ${newStatus}. ` +
-        `\nFor appointment of\n\n` +
-        `\n${appointment.ProjectInfo}\n\n` +
-        `Thank you for choosing our services! We hope you keep using our services.\n\n` +
-        `Best regards,\nU&M Auto`;
-    sendEmail(appointment.Email, 'Appointment Alert', emailText);
-}
+  const htmlVersion = `
+    <p>Dear ${appointment.Username},</p>
+    <p>Your appointment status has been updated to: <strong>${newStatus}</strong>.</p>
+    <p>Appointment:</p>
+    <div style="background-color:#f4f4f4; border:1px solid #ccc;white-space:pre-wrap;">${appointment.ProjectInfo}</div>
+    <p>Thank you for choosing our services. We hope you continue with us.</p>
+    <p>Best regards,<br>U&amp;M Auto</p>
+  `;
+
+  await sendEmail(appointment.Email, 'Appointment Alert', textVersion, htmlVersion);
+};
 
 export const sendAppointmentDateUpdateAlert = async (appointment, newEndDate) => {
+  const textVersion = `Dear ${appointment.Username},\n\n` +
+    `Your appointment has been delayed to: ${newEndDate}.\n\n` +
+    `Appointment:\n${appointment.ProjectInfo}\n\n` +
+    `We apologize for the inconvenience.\n\n` +
+    `Best regards,\nU&M Auto`;
 
-    const emailText = `Dear ${appointment.Username},\n\n` +
-        `Your appointments has been delayed to: ${newEndDate}. ` +
-        `\nFor appointment of\n\n` +
-        `\n${appointment.ProjectInfo}\n\n` +
-        `Sorry for the inconveniance.\n\n` +
-        `Best regards,\nU&M Auto`;
-    sendEmail(appointment.Email, 'Appointment Delay Alert', emailText);
-}
+  const htmlVersion = `
+    <p>Dear ${appointment.Username},</p>
+    <p>Your appointment has been <strong>delayed</strong> to: <strong>${newEndDate}</strong>.</p>
+    <p>Appointment:</p>
+    <div style="background-color:#f4f4f4; border:1px solid #ccc; white-space:pre-wrap;">${appointment.ProjectInfo}</div>
+    <p>We apologize for the inconvenience.</p>
+    <p>Best regards,<br>U&amp;M Auto</p>
+  `;
 
-// Function to send an email
-export const sendEmail = async (to, subject, text) => {
-    const mailOptions = {
-        from: process.env.MAIL_USER,
-        to,
-        subject,
-        text,
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`Email sent to: ${to}`);
-    } catch (error) {
-        console.error('Error sending email:', error);
-    }
-}; 
+  await sendEmail(appointment.Email, 'Appointment Delay Alert', textVersion, htmlVersion);
+};
